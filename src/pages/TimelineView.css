@@ -1,0 +1,47 @@
+.timeline-view {
+  width: 100%;
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 24px;
+}
+
+.timeline-view-header {
+  margin-bottom: 24px;
+}
+
+.timeline-view-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 16px;
+}
+
+.timeline-view-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #e8e8e8;
+  padding-bottom: 8px;
+}
+
+.timeline-tab {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #595959;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s;
+}
+
+.timeline-tab:hover {
+  background: #f0f0f0;
+  color: #262626;
+}
+
+.timeline-tab.active {
+  background: white;
+  color: #1890ff;
+  font-weight: 500;
+  border-bottom: 2px solid #1890ff;
+}

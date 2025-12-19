@@ -1,0 +1,123 @@
+.app-header {
+  background: #1890ff !important;
+  padding: 0 24px !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.logo-icon {
+  font-size: 24px;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  margin: 0 40px;
+}
+
+.header-tabs {
+  display: flex;
+  gap: 40px;
+}
+
+.header-tab {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 8px 0;
+  transition: all 0.3s;
+  border-bottom: 2px solid transparent;
+}
+
+.header-tab:hover,
+.header-tab.active {
+  color: white;
+  border-bottom-color: white;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.project-selector {
+  min-width: 160px;
+}
+
+.project-selector .ant-select-selection {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: transparent;
+  color: white;
+}
+
+.project-selector .ant-select-selection:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.project-selector .ant-select-arrow {
+  color: white;
+}
+
+.project-selector .ant-select-selection__rendered {
+  color: white;
+}
+
+.header-icon {
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.header-icon:hover {
+  transform: scale(1.1);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.user-name {
+  color: white;
+  font-size: 14px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1200px) {
+  .user-name {
+    display: none;
+  }
+  
+  .header-tabs {
+    gap: 20px;
+  }
+}

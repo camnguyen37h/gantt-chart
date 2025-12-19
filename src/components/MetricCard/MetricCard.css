@@ -1,0 +1,113 @@
+.metric-card {
+  height: 100%;
+  transition: all 0.3s;
+  border-radius: 4px;
+}
+
+.metric-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.metric-title {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.metric-info-icon {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
+.metric-value {
+  font-size: 30px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.metric-unit {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-left: 4px;
+  font-weight: normal;
+}
+
+.metric-subtitle {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  gap: 8px;
+}
+
+.subtitle-value {
+  font-weight: 600;
+}
+
+.subtitle-text {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* Color variants */
+.metric-card-red {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  color: white;
+}
+
+.metric-card-red .metric-title,
+.metric-card-red .metric-value,
+.metric-card-red .metric-unit,
+.metric-card-red .metric-subtitle,
+.metric-card-red .subtitle-text {
+  color: white;
+}
+
+.metric-card-orange {
+  background: linear-gradient(135deg, #ff7a45 0%, #ffa940 100%);
+  color: white;
+}
+
+.metric-card-orange .metric-title,
+.metric-card-orange .metric-value,
+.metric-card-orange .metric-unit,
+.metric-card-orange .metric-subtitle,
+.metric-card-orange .subtitle-text {
+  color: white;
+}
+
+.metric-card-blue {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  color: white;
+}
+
+.metric-card-blue .metric-title,
+.metric-card-blue .metric-value,
+.metric-card-blue .metric-unit,
+.metric-card-blue .metric-subtitle,
+.metric-card-blue .subtitle-text {
+  color: white;
+}
+
+.metric-card-green {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  color: white;
+}
+
+.metric-card-green .metric-title,
+.metric-card-green .metric-value,
+.metric-card-green .metric-unit,
+.metric-card-green .metric-subtitle,
+.metric-card-green .subtitle-text {
+  color: white;
+}

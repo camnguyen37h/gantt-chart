@@ -1,0 +1,117 @@
+.project-overview {
+  padding: 0;
+}
+
+.breadcrumb {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.breadcrumb-item {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.breadcrumb-item.active {
+  color: #1890ff;
+}
+
+.breadcrumb-separator {
+  margin: 0 8px;
+}
+
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.project-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag-large {
+  font-size: 14px;
+  padding: 4px 12px;
+  font-weight: 500;
+}
+
+.tag-medium {
+  font-size: 13px;
+  padding: 3px 10px;
+}
+
+.project-phase {
+  color: rgba(0, 0, 0, 0.45);
+  margin: 0 4px;
+}
+
+.project-dates {
+  color: #ff4d4f;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.project-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.view-financial-link {
+  color: #1890ff;
+  padding: 0;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.gantt-section {
+  margin-bottom: 24px;
+  background: white;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.gantt-header-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-bottom: 0;
+}
+
+.metrics-grid {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .project-header {
+    flex-direction: column;
+  }
+  
+  .project-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+}

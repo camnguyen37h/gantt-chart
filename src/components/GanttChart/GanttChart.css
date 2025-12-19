@@ -1,0 +1,152 @@
+.gantt-chart {
+  width: 100%;
+  background: white;
+  border-radius: 4px;
+  overflow-x: auto;
+  padding: 16px 0;
+}
+
+.gantt-header {
+  margin-bottom: 16px;
+}
+
+.gantt-timeline {
+  display: flex;
+  border-bottom: 2px solid #e8e8e8;
+  padding-bottom: 8px;
+  min-width: 1200px;
+}
+
+.timeline-month {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 500;
+}
+
+.gantt-timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  min-width: 1200px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.timeline-label {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  color: #1890ff;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.timeline-value {
+  font-weight: 600;
+}
+
+.gantt-body {
+  position: relative;
+  min-height: 300px;
+  min-width: 1200px;
+  padding: 16px 0;
+}
+
+.gantt-milestone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  z-index: 10;
+}
+
+.milestone-line {
+  width: 2px;
+  height: 100%;
+  background: #ff4d4f;
+  border-left: 2px dashed #ff4d4f;
+}
+
+.milestone-label {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.milestone-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  margin-bottom: 2px;
+}
+
+.milestone-date {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.gantt-row {
+  height: 40px;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.gantt-bar {
+  position: absolute;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.gantt-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.gantt-bar-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Task color variants */
+.gantt-bar-teal {
+  background: linear-gradient(135deg, #13c2c2 0%, #36cfc9 100%);
+}
+
+.gantt-bar-cyan {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+}
+
+.gantt-bar-orange {
+  background: linear-gradient(135deg, #fa8c16 0%, #ffa940 100%);
+}
+
+.gantt-bar-yellow {
+  background: linear-gradient(135deg, #fadb14 0%, #ffd666 100%);
+}
+
+.gantt-bar-red {
+  background: linear-gradient(135deg, #f5222d 0%, #ff4d4f 100%);
+}
+
+.gantt-bar-pink {
+  background: linear-gradient(135deg, #eb2f96 0%, #f759ab 100%);
+}
+
+.gantt-bar-blue {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+}

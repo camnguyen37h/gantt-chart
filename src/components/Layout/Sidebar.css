@@ -1,0 +1,81 @@
+.sidebar {
+  background: #fff !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 64px);
+  overflow: auto;
+}
+
+.sidebar-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sidebar-header:hover {
+  background: #f5f5f5;
+}
+
+.back-icon {
+  color: #1890ff;
+  font-size: 16px;
+}
+
+.sidebar-title {
+  font-size: 14px;
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.sidebar-menu {
+  border-right: none;
+}
+
+.sidebar-menu .ant-menu-item {
+  margin: 0;
+  height: 48px;
+  line-height: 48px;
+  padding-left: 24px !important;
+}
+
+.sidebar-menu .ant-menu-item-selected {
+  background-color: #e6f7ff;
+  border-right: 3px solid #1890ff;
+}
+
+.sidebar-menu .ant-menu-item-selected a {
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.sidebar-menu .ant-menu-item a {
+  color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-menu .ant-menu-item:hover {
+  background-color: #f5f5f5;
+}
+
+.sidebar-menu .ant-menu-item i {
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+.ant-layout-sider-collapsed .sidebar-header {
+  padding: 16px 8px;
+  justify-content: center;
+}
+
+.ant-layout-sider-collapsed .sidebar-title {
+  display: none;
+}
+
+.ant-layout-sider-collapsed .sidebar-menu .ant-menu-item {
+  padding-left: 0 !important;
+  text-align: center;
+}
