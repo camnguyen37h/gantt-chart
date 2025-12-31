@@ -76,7 +76,8 @@
   margin-bottom: 24px;
 }
 
-.gantt-section {
+.gantt-section,
+.timeline-section {
   margin-bottom: 24px;
   background: white;
   padding: 24px;
@@ -84,7 +85,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.gantt-header-section {
+.gantt-header-section,
+.timeline-header-section {
   margin-bottom: 20px;
 }
 

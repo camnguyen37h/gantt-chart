@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import GanttChartGoogle from '../components/GanttChart/GanttChartGoogle';
+import { Timeline } from '../lib/Timeline';
 import './ProjectOverview.css';
 
 const ProjectOverview = () => {
@@ -206,6 +207,33 @@ const ProjectOverview = () => {
     },
   ], []);
 
+  // Helper function to map resource to color
+  const getResourceColor = (resource) => {
+    const colorMap = {
+      'Planning': '#69c0ff',
+      'Finalized': '#597ef7',
+      'Implementing': '#ffa940',
+      'Resolved': '#95de64',
+      'Released': '#b37feb',
+      'No Start': '#bfbfbf'
+    };
+    return colorMap[resource] || '#5559df';
+  };
+
+  // Convert Gantt tasks to Timeline format
+  const timelineItems = useMemo(() => {
+    return ganttTasks.map(task => ({
+      id: task.id,
+      name: task.name,
+      startDate: task.start,
+      endDate: task.end,
+      resource: task.resource,
+      progress: task.progress,
+      // Map resource to colors
+      color: getResourceColor(task.resource)
+    }));
+  }, [ganttTasks]);
+
   return (
     <div className="project-overview">
       {/* Gantt Chart */}
@@ -216,6 +244,28 @@ const ProjectOverview = () => {
         </div>
         <GanttChartGoogle 
           tasks={ganttTasks}
+        />
+      </div>
+
+      {/* Timeline View Section */}
+      <div className="timeline-section">
+        <div className="timeline-header-section">
+          <h3 className="section-title">Project Timeline View</h3>
+          <p className="section-subtitle">Interactive timeline with resource tracking</p>
+        </div>
+        <Timeline 
+          items={timelineItems}
+          config={{
+            viewMode: 'months',
+            rowHeight: 50,
+            enableAutoScroll: true,
+            enableCurrentDate: true
+          }}
+          toolbarProps={{
+            showNewButton: false,
+            showSearch: true,
+            showFilters: false
+          }}
         />
       </div>
     </div>

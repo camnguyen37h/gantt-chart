@@ -1,0 +1,74 @@
+/* Main Timeline Component Styles */
+
+.timeline {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* Timeline Scroll Container */
+.timeline-scroll-container {
+  overflow-x: auto;
+  overflow-y: visible;
+  position: relative;
+  background: white;
+}
+
+.timeline-content {
+  min-width: 200%;
+  position: relative;
+}
+
+/* Scrollbar Styling */
+.timeline-scroll-container::-webkit-scrollbar {
+  height: 12px;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 6px;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-thumb {
+  background: #bfbfbf;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.timeline-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #8c8c8c;
+}
+
+/* Compact Mode */
+.timeline.timeline-compact {
+  box-shadow: none;
+  border: 1px solid #e8e8e8;
+}
+
+.timeline.timeline-compact .timeline-scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Print Styles */
+@media print {
+  .timeline {
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .timeline-toolbar,
+  .timeline-view-selector {
+    display: none;
+  }
+
+  .timeline-scroll-container {
+    overflow: visible;
+  }
+
+  .timeline-content {
+    min-width: 100%;
+  }
+}

@@ -1,0 +1,38 @@
+/* Timeline Toolbar Styles */
+
+.timeline-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: white;
+  border-bottom: 1px solid #e8e8e8;
+  gap: 12px;
+}
+
+.timeline-toolbar-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.timeline-toolbar-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .timeline-toolbar-left,
+  .timeline-toolbar-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

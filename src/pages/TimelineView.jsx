@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import TimelineChart from '../components/Timeline/TimelineChart';
+import { Timeline } from '../lib/Timeline';
 import './TimelineView.css';
 
 const TimelineView = () => {
@@ -217,6 +217,10 @@ const TimelineView = () => {
     }
   ], []);
 
+  const handleItemClick = (item) => {
+    console.log('Item clicked:', item);
+  };
+
   return (
     <div className="timeline-view">
       <div className="timeline-view-header">
@@ -228,7 +232,21 @@ const TimelineView = () => {
         </div>
       </div>
       
-      <TimelineChart items={timelineItems} />
+      <Timeline 
+        items={timelineItems}
+        onItemClick={handleItemClick}
+        config={{
+          viewMode: 'months',
+          enableAutoScroll: true,
+          enableCurrentDate: true,
+          enableGrid: true
+        }}
+        toolbarProps={{
+          showNewButton: true,
+          showSearch: true,
+          showFilters: true
+        }}
+      />
     </div>
   );
 };
