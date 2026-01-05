@@ -7,20 +7,30 @@ import moment from 'moment';
 import { VIEW_MODES, DATE_FORMATS } from '../constants';
 
 /**
- * Get date range from items
+ * Get date range from items (handles both range and milestone items)
  * @param {Array} items - Timeline items
  * @returns {Object} {start, end} moment objects
  */
 export const getDateRangeFromItems = (items) => {
   if (!items || items.length === 0) return null;
 
-  const validItems = items.filter(item => item.startDate && item.endDate);
-  if (validItems.length === 0) return null;
+  const allDates = [];
+  
+  items.forEach(item => {
+    // Handle range items
+    if (item.startDate && item.endDate) {
+      allDates.push(moment(item.startDate), moment(item.endDate));
+    }
+    // Handle milestone items
+    else if (item.createdDate) {
+      allDates.push(moment(item.createdDate));
+    }
+    else if (item.date) {
+      allDates.push(moment(item.date));
+    }
+  });
 
-  const allDates = validItems.flatMap(item => [
-    moment(item.startDate),
-    moment(item.endDate)
-  ]);
+  if (allDates.length === 0) return null;
 
   const start = moment.min(allDates).startOf('month');
   const end = moment.max(allDates).endOf('month').add(2, 'months');
@@ -33,21 +43,23 @@ export const getDateRangeFromItems = (items) => {
  * @param {moment} start - Start date
  * @param {moment} end - End date
  * @param {string} viewMode - View mode (days, weeks, months, etc.)
- * @returns {Array} Array of period objects
+ * @param {number} pixelsPerDay - Pixels per day for width calculation
+ * @returns {Array} Array of period objects with widthPx
  */
-export const generatePeriods = (start, end, viewMode) => {
+export const generatePeriods = (start, end, viewMode, pixelsPerDay = 40) => {
   const periods = [];
   let current = start.clone();
-  const totalDays = end.diff(start, 'days');
 
   switch (viewMode) {
     case VIEW_MODES.DAYS: {
       while (current.isBefore(end)) {
-        const widthPercent = (1 / totalDays) * 100;
+        const days = 1;
+        const widthPx = days * pixelsPerDay;
         periods.push({
           label: current.format('D'),
           sublabel: current.format('ddd'),
-          width: widthPercent,
+          width: widthPx,
+          days: days,
           start: current.clone(),
           type: 'day'
         });
@@ -59,12 +71,15 @@ export const generatePeriods = (start, end, viewMode) => {
     case VIEW_MODES.WEEKS: {
       current = start.clone().startOf('week');
       while (current.isBefore(end)) {
-        const weekDays = 7;
-        const widthPercent = (weekDays / totalDays) * 100;
+        const nextWeek = current.clone().add(1, 'week');
+        const periodEnd = nextWeek.isAfter(end) ? end : nextWeek;
+        const weekDays = periodEnd.diff(current, 'days', true);
+        const widthPx = weekDays * pixelsPerDay;
         periods.push({
           label: `Week ${current.format('W')}`,
           sublabel: current.format('MMM YYYY'),
-          width: widthPercent,
+          width: widthPx,
+          days: weekDays,
           start: current.clone(),
           type: 'week'
         });
@@ -75,16 +90,20 @@ export const generatePeriods = (start, end, viewMode) => {
 
     case VIEW_MODES.MONTHS: {
       while (current.isBefore(end)) {
-        const monthDays = current.daysInMonth();
-        const widthPercent = (monthDays / totalDays) * 100;
+        const nextMonth = current.clone().add(1, 'month');
+        const periodEnd = nextMonth.isAfter(end) ? end : nextMonth;
+        const monthDays = periodEnd.diff(current, 'days', true);
+        const widthPx = monthDays * pixelsPerDay;
         periods.push({
           label: current.format('MMMM'),
           sublabel: current.format('YYYY'),
-          width: widthPercent,
+          width: widthPx,
+          days: monthDays,
           start: current.clone(),
+          end: periodEnd.clone(),
           type: 'month'
         });
-        current.add(1, 'month');
+        current = nextMonth;
       }
       break;
     }
@@ -93,12 +112,14 @@ export const generatePeriods = (start, end, viewMode) => {
       current = start.clone().startOf('quarter');
       while (current.isBefore(end)) {
         const quarterEnd = current.clone().endOf('quarter');
-        const quarterDays = quarterEnd.diff(current, 'days');
-        const widthPercent = (quarterDays / totalDays) * 100;
+        const actualEnd = quarterEnd.isAfter(end) ? end : quarterEnd;
+        const quarterDays = actualEnd.diff(current, 'days', true);
+        const widthPx = quarterDays * pixelsPerDay;
         periods.push({
           label: `Q${current.format('Q')}`,
           sublabel: current.format('YYYY'),
-          width: widthPercent,
+          width: widthPx,
+          days: quarterDays,
           start: current.clone(),
           type: 'quarter'
         });
@@ -110,12 +131,15 @@ export const generatePeriods = (start, end, viewMode) => {
     case VIEW_MODES.YEARS: {
       current = start.clone().startOf('year');
       while (current.isBefore(end)) {
-        const yearDays = current.isLeapYear() ? 366 : 365;
-        const widthPercent = (yearDays / totalDays) * 100;
+        const yearEnd = current.clone().endOf('year');
+        const actualEnd = yearEnd.isAfter(end) ? end : yearEnd;
+        const yearDays = actualEnd.diff(current, 'days', true);
+        const widthPx = yearDays * pixelsPerDay;
         periods.push({
           label: current.format('YYYY'),
           sublabel: '',
-          width: widthPercent,
+          width: widthPx,
+          days: yearDays,
           start: current.clone(),
           type: 'year'
         });
@@ -139,7 +163,7 @@ export const generatePeriods = (start, end, viewMode) => {
  * @returns {number} Position percentage (0-100)
  */
 export const calculatePosition = (date, start, totalDays) => {
-  const days = moment(date).diff(start, 'days');
+  const days = moment(date).diff(start, 'days', true); // Use fractional days
   return (days / totalDays) * 100;
 };
 
@@ -151,7 +175,7 @@ export const calculatePosition = (date, start, totalDays) => {
  * @returns {number} Width percentage (0-100)
  */
 export const calculateWidth = (startDate, endDate, totalDays) => {
-  const days = moment(endDate).diff(moment(startDate), 'days');
+  const days = moment(endDate).diff(moment(startDate), 'days', true); // Fractional days
   return Math.max((days / totalDays) * 100, 0.5); // Minimum 0.5% width
 };
 

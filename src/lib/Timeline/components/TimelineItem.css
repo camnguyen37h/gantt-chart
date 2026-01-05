@@ -1,0 +1,206 @@
+/* Timeline Item Styles */
+
+/* Base Item Styles */
+.timeline-item {
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
+}
+
+.timeline-item:hover {
+  z-index: 40;
+}
+
+/* Range Item (Bar) */
+.timeline-range-item {
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.timeline-range-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.timeline-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.timeline-item-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  flex: 1;
+}
+
+/* Responsive item text */
+@media (max-width: 768px) {
+  .timeline-item-name {
+    font-size: 11px;
+  }
+  
+  .timeline-item-progress {
+    font-size: 10px;
+  }
+  
+  .milestone-label {
+    font-size: 10px;
+    max-width: 80px;
+  }
+  
+  .milestone-marker {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .milestone-inner {
+    width: 5px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-item-name {
+    font-size: 10px;
+  }
+  
+  .timeline-item-progress {
+    font-size: 9px;
+  }
+  
+  .milestone-label {
+    font-size: 9px;
+    max-width: 60px;
+  }
+  
+  .milestone-marker {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+  }
+  
+  .milestone-inner {
+    width: 4px;
+    height: 4px;
+  }
+}
+
+.timeline-item-progress {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  margin-left: 8px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.timeline-item-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.2);
+  transition: width 0.3s ease;
+  z-index: 1;
+}
+
+/* Milestone Item (Circle) */
+.timeline-milestone-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto !important;
+}
+
+.milestone-marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.milestone-inner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+
+.timeline-milestone-item:hover .milestone-marker {
+  transform: scale(1.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.milestone-label {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #262626;
+  white-space: nowrap;
+  text-align: center;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.timeline-milestone-item:hover .milestone-label {
+  opacity: 1;
+}
+
+/* Animations */
+@keyframes itemFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.timeline-item {
+  animation: itemFadeIn 0.3s ease-out;
+}
+
+/* Pulse animation for milestones */
+@keyframes milestonePulse {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.milestone-marker {
+  animation: milestonePulse 2s ease-in-out infinite;
+}
+
+.timeline-milestone-item:hover .milestone-marker {
+  animation: none;
+}

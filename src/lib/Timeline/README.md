@@ -41,6 +41,7 @@ import { Timeline } from '../lib/Timeline';
 
 const MyComponent = () => {
   const items = [
+    // Range items (with duration)
     {
       id: 1,
       name: 'Project Phase 1',
@@ -54,6 +55,19 @@ const MyComponent = () => {
       startDate: '2025-03-01',
       endDate: '2025-06-15',
       color: '#9b59d0'
+    },
+    // Milestone items (single point in time)
+    {
+      id: 3,
+      name: 'Project Kickoff',
+      createdDate: '2025-01-15',
+      color: '#52c41a'
+    },
+    {
+      id: 4,
+      name: 'Phase 1 Review',
+      createdDate: '2025-03-30',
+      color: '#faad14'
     }
   ];
 
@@ -100,6 +114,7 @@ const MyComponent = () => {
 ### Item Object
 
 ```typescript
+// Range Item (has duration)
 {
   id: string | number;          // Unique identifier
   name: string;                 // Display name
@@ -108,6 +123,18 @@ const MyComponent = () => {
   color?: string;               // Hex color code
   resource?: string;            // Resource/person assigned
   status?: string;              // Status label
+  progress?: number;            // Progress percentage (0-100)
+  // ... any custom properties
+}
+
+// Milestone Item (single point in time)
+{
+  id: string | number;          // Unique identifier
+  name: string;                 // Display name
+  createdDate: string;          // ISO date string (YYYY-MM-DD)
+  // OR
+  date: string;                 // ISO date string (YYYY-MM-DD)
+  color?: string;               // Hex color code (default: #ff4d4f)
   // ... any custom properties
 }
 ```
@@ -117,7 +144,41 @@ const MyComponent = () => {
 ```javascript
 {
   viewMode: 'months',           // 'days' | 'weeks' | 'months' | 'quarters' | 'years'
-  rowHeight: 50,                // Height of each row in pixels
+  roMilestone Support
+
+The timeline automatically handles items without `startDate` and `endDate`. Just provide `createdDate` or `date`:
+
+```jsx
+const items = [
+  {
+    id: 1,
+    name: 'Project Kickoff',
+    createdDate: '2025-01-15',  // Milestone
+    color: '#52c41a'
+  },
+  {
+    id: 2,
+    name: 'Development Phase',
+    startDate: '2025-01-15',    // Range item
+    endDate: '2025-06-30',
+    color: '#1890ff'
+  },
+  {
+    id: 3,
+    name: 'Launch Date',
+    date: '2025-06-30',         // Milestone (alternative field)
+    color: '#ff4d4f'
+  }
+];
+```
+
+Milestones are rendered as:
+- Circular markers (20px diameter)
+- Positioned at the exact date
+- Pulse animation
+- Label appears on hover
+
+### wHeight: 50,                // Height of each row in pixels
   itemHeight: 34,               // Height of each item bar
   itemPadding: 8,               // Padding around items
   enableAutoScroll: true,       // Auto-scroll to current date on mount

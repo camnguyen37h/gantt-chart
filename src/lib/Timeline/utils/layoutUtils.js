@@ -3,25 +3,27 @@
  * Handles positioning and auto-layout to prevent overlapping
  */
 
-import moment from 'moment';
 import { rangesOverlap } from './dateUtils';
+import { getItemDate, getItemEndDate } from './itemUtils';
 
 /**
- * Sort items by start date
+ * Sort items by date (handles both range and milestone)
  * @param {Array} items - Timeline items
  * @returns {Array} Sorted items
  */
 export const sortItemsByDate = (items) => {
   return [...items].sort((a, b) => {
-    const dateA = moment(a.startDate);
-    const dateB = moment(b.startDate);
+    const dateA = getItemDate(a);
+    const dateB = getItemDate(b);
+    if (!dateA || !dateB) return 0;
     return dateA.valueOf() - dateB.valueOf();
   });
 };
 
 /**
  * Auto-layout algorithm - assigns row indices to prevent overlapping
- * @param {Array} items - Timeline items with startDate and endDate
+ * Handles both range items and milestones
+ * @param {Array} items - Timeline items
  * @returns {Array} Items with added 'row' property
  */
 export const calculateItemLayout = (items) => {
@@ -31,15 +33,18 @@ export const calculateItemLayout = (items) => {
   const rows = [];
 
   sortedItems.forEach(item => {
-    if (!item.startDate || !item.endDate) return;
+    const startDate = getItemDate(item);
+    
+    if (!startDate) return; // Skip invalid items
 
-    // Find a row where this item doesn't overlap with the last item
+    // Find a row where this item doesn't overlap
     let rowIndex = rows.findIndex(row => {
       if (row.length === 0) return true;
       const lastItem = row[row.length - 1];
+      const lastEndDate = getItemEndDate(lastItem) || getItemDate(lastItem).clone().add(1, 'day');
       
       // Check if item starts after the last item in this row ends
-      return moment(item.startDate).isAfter(moment(lastItem.endDate));
+      return startDate.isAfter(lastEndDate);
     });
 
     // If no suitable row found, create a new one
@@ -58,7 +63,7 @@ export const calculateItemLayout = (items) => {
 
 /**
  * Advanced layout with conflict resolution
- * Uses more sophisticated overlap checking
+ * Uses sophisticated overlap checking, handles milestones
  * @param {Array} items - Timeline items
  * @returns {Array} Items with row assignments
  */
@@ -70,7 +75,13 @@ export const calculateAdvancedLayout = (items) => {
   const rows = []; // Array of arrays, each containing items in that row
 
   sortedItems.forEach(item => {
-    if (!item.startDate || !item.endDate) return;
+    const startDate = getItemDate(item);
+    const endDate = getItemEndDate(item);
+    
+    if (!startDate) return; // Skip invalid items
+
+    // For milestones, treat as having 1 day duration
+    const itemEndDate = endDate || startDate.clone().add(1, 'day');
 
     // Find the first row where this item doesn't overlap with any existing item
     let targetRow = -1;
@@ -78,12 +89,15 @@ export const calculateAdvancedLayout = (items) => {
       const rowItems = rows[rowIdx];
       
       // Check if item overlaps with any item in this row
-      const hasOverlap = rowItems.some(existingItem =>
-        rangesOverlap(
-          { start: item.startDate, end: item.endDate },
-          { start: existingItem.startDate, end: existingItem.endDate }
-        )
-      );
+      const hasOverlap = rowItems.some(existingItem => {
+        const existingStart = getItemDate(existingItem);
+        const existingEnd = getItemEndDate(existingItem) || existingStart.clone().add(1, 'day');
+        
+        return rangesOverlap(
+          { start: startDate.format('YYYY-MM-DD'), end: itemEndDate.format('YYYY-MM-DD') },
+          { start: existingStart.format('YYYY-MM-DD'), end: existingEnd.format('YYYY-MM-DD') }
+        );
+      });
 
       if (!hasOverlap) {
         targetRow = rowIdx;

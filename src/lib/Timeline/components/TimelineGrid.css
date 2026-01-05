@@ -16,11 +16,11 @@
 .timeline-header {
   display: flex;
   background: #f5f5f5;
-  border-bottom: 2px solid #d9d9d9;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  border-top: 2px solid #d9d9d9;
+  position: relative;
   min-height: 48px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .timeline-period {
@@ -32,7 +32,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 60px;
+  min-width: 80px; /* Ensure periods are readable */
+  flex-shrink: 0;
 }
 
 .timeline-period:last-child {
@@ -59,6 +60,61 @@
   min-height: 400px;
   background: white;
   padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .timeline-grid {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline-grid {
+    min-height: 300px;
+  }
+  
+  .timeline-header {
+    min-height: 40px;
+  }
+  
+  .timeline-period {
+    min-width: 60px;
+    padding: 6px 2px;
+  }
+  
+  .period-label {
+    font-size: 11px;
+  }
+  
+  .period-sublabel {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-grid {
+    min-height: 250px;
+  }
+  
+  .timeline-header {
+    min-height: 36px;
+  }
+  
+  .timeline-period {
+    min-width: 50px;
+    padding: 4px 2px;
+  }
+  
+  .period-label {
+    font-size: 10px;
+  }
+  
+  .period-sublabel {
+    font-size: 9px;
+  }
 }
 
 /* Grid Lines */
@@ -134,52 +190,6 @@
   border-bottom: 4px solid #e44258;
 }
 
-/* Timeline Items */
-.timeline-item {
-  position: absolute;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-  z-index: 10;
-}
-
-.timeline-item:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
-  z-index: 40;
-}
-
-.timeline-item-content {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0 12px;
-}
-
-.timeline-item-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: white;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
+/* Remove old timeline-item styles - now in TimelineItem.css */
 
 /* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.timeline-item {
-  animation: fadeIn 0.3s ease-out;
-}

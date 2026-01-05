@@ -16,13 +16,15 @@ export const DEFAULT_CONFIG = {
   rowHeight: 50,
   itemHeight: 34,
   itemPadding: 8,
+  pixelsPerDay: 8, // Width in pixels per day for timeline (compact view)
   minZoomLevel: 0.5,
   maxZoomLevel: 3,
   scrollSensitivity: 1,
   enableAutoScroll: true,
   enableCurrentDate: true,
   enableGrid: true,
-  enableTooltip: true
+  enableTooltip: true,
+  minContentWidth: 1200 // Minimum width for timeline content (px)
 };
 
 export const COLORS = {

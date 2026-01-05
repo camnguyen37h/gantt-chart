@@ -8,6 +8,8 @@
   border-bottom: 1px solid #e8e8e8;
   gap: 8px;
   flex-wrap: wrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .view-mode-btn {
@@ -21,6 +23,9 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 500;
   outline: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  user-select: none;
 }
 
 .view-mode-btn:hover {
@@ -41,16 +46,57 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .timeline-view-selector {
+    padding: 10px 16px;
+    gap: 6px;
+  }
+  
+  .view-mode-btn {
+    padding: 5px 14px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 768px) {
   .timeline-view-selector {
-    overflow-x: auto;
     justify-content: flex-start;
-    padding: 8px 16px;
+    padding: 8px 12px;
+    gap: 6px;
   }
 
   .view-mode-btn {
     padding: 5px 12px;
     font-size: 13px;
-    flex-shrink: 0;
   }
 }
+
+@media (max-width: 480px) {
+  .timeline-view-selector {
+    padding: 6px 8px;
+  }
+  
+  .view-mode-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+}
+
+/* Hide scrollbar but keep functionality */
+.timeline-view-selector::-webkit-scrollbar {
+  height: 4px;
+}
+
+.timeline-view-selector::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timeline-view-selector::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 2px;
+}
+
+.timeline-view-selector::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+

@@ -3,10 +3,11 @@
  * Renders the timeline grid with periods, items, and current date line
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { DATE_FORMATS } from '../constants';
+import TimelineItem from './TimelineItem';
 import './TimelineGrid.css';
 
 const TimelineGrid = ({
@@ -33,55 +34,40 @@ const TimelineGrid = ({
 
   const { periods } = timelineData;
 
-  // Default item renderer
-  const defaultRenderItem = (item, style) => (
-    <div
-      className="timeline-item"
-      style={{
-        ...style,
-        backgroundColor: item.color || '#5559df'
-      }}
-      onClick={() => onItemClick?.(item)}
-      onDoubleClick={() => onItemDoubleClick?.(item)}
-      onMouseEnter={() => onItemHover?.(item)}
-      title={`${item.name}\n${moment(item.startDate).format(DATE_FORMATS.short)} - ${moment(item.endDate).format(DATE_FORMATS.short)}`}
-    >
-      <div className="timeline-item-content">
-        <span className="timeline-item-name">{item.name}</span>
-      </div>
-    </div>
-  );
+  // Render using custom renderer or default TimelineItem
+  const renderTimelineItem = (item, style, index) => {
+    if (renderItem) {
+      return renderItem(item, style);
+    }
 
-  const itemRenderer = renderItem || defaultRenderItem;
+    return (
+      <TimelineItem
+        key={item.id || index}
+        item={item}
+        style={style}
+        onClick={onItemClick}
+        onDoubleClick={onItemDoubleClick}
+        onHover={onItemHover}
+      />
+    );
+  };
 
   return (
     <div className="timeline-grid-container">
-      {/* Timeline Header */}
-      <div className="timeline-header">
-        {periods.map((period, index) => (
-          <div
-            key={`period-${index}`}
-            className="timeline-period"
-            style={{ width: `${period.width}%` }}
-          >
-            <div className="period-label">{period.label}</div>
-            {period.sublabel && (
-              <div className="period-sublabel">{period.sublabel}</div>
-            )}
-          </div>
-        ))}
-      </div>
-
       {/* Timeline Grid */}
-      <div className="timeline-grid" style={{ minHeight: `${gridHeight}px` }}>
+      <div className="timeline-grid" style={{ minHeight: `${gridHeight}px`, width: `${timelineData?.totalWidth || 0}px` }}>
         {/* Vertical Grid Lines */}
-        {enableGrid && periods.map((period, index) => {
-          const left = periods.slice(0, index).reduce((sum, p) => sum + p.width, 0);
+        {enableGrid && timelineData && periods.map((period, index) => {
+          // Calculate position in pixels from timeline start
+          const { start } = timelineData;
+          const periodStart = period.start;
+          const daysFromStart = periodStart.diff(start, 'days', true);
+          const left = daysFromStart * (timelineData.totalWidth / timelineData.totalDays);
           return (
             <div
               key={`vline-${index}`}
               className="timeline-grid-line"
-              style={{ left: `${left}%` }}
+              style={{ left: `${left}px` }}
             />
           );
         })}
@@ -103,7 +89,7 @@ const TimelineGrid = ({
         {enableCurrentDate && currentDatePosition !== null && (
           <div
             className="timeline-current-date"
-            style={{ left: `${currentDatePosition}%` }}
+            style={{ left: `${currentDatePosition}px` }}
           >
             <div className="current-date-marker" />
             <div className="current-date-label">
@@ -115,12 +101,24 @@ const TimelineGrid = ({
         {/* Timeline Items */}
         {layoutItems.map((item, index) => {
           const style = getItemStyle(item);
-          return (
-            <React.Fragment key={item.id || index}>
-              {itemRenderer(item, style)}
-            </React.Fragment>
-          );
+          return renderTimelineItem(item, style, index);
         })}
+      </div>
+
+      {/* Timeline Header - Below Grid */}
+      <div className="timeline-header" style={{ width: `${timelineData?.totalWidth || 0}px` }}>
+        {periods.map((period, index) => (
+          <div
+            key={`period-${index}`}
+            className="timeline-period"
+            style={{ width: `${period.width}px` }}
+          >
+            <div className="period-label">{period.label}</div>
+            {period.sublabel && (
+              <div className="period-sublabel">{period.sublabel}</div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -146,4 +144,6 @@ TimelineGrid.defaultProps = {
   enableCurrentDate: true
 };
 
-export default TimelineGrid;
+// Memoize for performance
+export default memo(TimelineGrid);
+

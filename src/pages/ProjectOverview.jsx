@@ -222,7 +222,7 @@ const ProjectOverview = () => {
 
   // Convert Gantt tasks to Timeline format
   const timelineItems = useMemo(() => {
-    return ganttTasks.map(task => ({
+    const items = ganttTasks.map(task => ({
       id: task.id,
       name: task.name,
       startDate: task.start,
@@ -232,6 +232,36 @@ const ProjectOverview = () => {
       // Map resource to colors
       color: getResourceColor(task.resource)
     }));
+
+    // Add some milestone events
+    const milestones = [
+      {
+        id: 'milestone-1',
+        name: 'Project Start',
+        createdDate: '2023-01-10',
+        color: '#52c41a'
+      },
+      {
+        id: 'milestone-2',
+        name: 'Phase 1 Complete',
+        createdDate: '2023-05-30',
+        color: '#1890ff'
+      },
+      {
+        id: 'milestone-3',
+        name: 'Mid-Project Review',
+        createdDate: '2024-12-20',
+        color: '#faad14'
+      },
+      {
+        id: 'milestone-4',
+        name: 'Go-Live Target',
+        createdDate: '2027-03-31',
+        color: '#ff4d4f'
+      }
+    ];
+
+    return [...items, ...milestones];
   }, [ganttTasks]);
 
   return (

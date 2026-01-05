@@ -10,6 +10,7 @@ export { default as Timeline } from './components/Timeline';
 export { default as TimelineGrid } from './components/TimelineGrid';
 export { default as TimelineToolbar } from './components/TimelineToolbar';
 export { default as ViewModeSelector } from './components/ViewModeSelector';
+export { default as TimelineItem } from './components/TimelineItem';
 
 // Hooks
 export { useTimeline } from './hooks/useTimeline';
@@ -17,6 +18,7 @@ export { useTimeline } from './hooks/useTimeline';
 // Utils
 export * from './utils/dateUtils';
 export * from './utils/layoutUtils';
+export * from './utils/itemUtils';
 
 // Constants
 export * from './constants';
