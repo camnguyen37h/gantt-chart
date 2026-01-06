@@ -3,7 +3,7 @@
  * Renders different types of timeline items (range bars and milestones)
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { isMilestone } from '../utils/itemUtils';
 import './TimelineItem.css';
@@ -11,7 +11,7 @@ import './TimelineItem.css';
 /**
  * Timeline Range Item (bar with duration)
  */
-export const TimelineRangeItem = ({ item, style, onClick, onDoubleClick, onHover }) => {
+export const TimelineRangeItem = memo(({ item, style, onClick, onDoubleClick, onHover }) => {
   return (
     <div
       className="timeline-item timeline-range-item"
@@ -35,12 +35,12 @@ export const TimelineRangeItem = ({ item, style, onClick, onDoubleClick, onHover
       )}
     </div>
   );
-};
+});
 
 /**
  * Timeline Milestone Item (circular marker)
  */
-export const TimelineMilestoneItem = ({ item, style, onClick, onDoubleClick, onHover }) => {
+export const TimelineMilestoneItem = memo(({ item, style, onClick, onDoubleClick, onHover }) => {
   return (
     <div
       className="timeline-item timeline-milestone-item"
@@ -60,12 +60,12 @@ export const TimelineMilestoneItem = ({ item, style, onClick, onDoubleClick, onH
       <div className="milestone-label">{item.name}</div>
     </div>
   );
-};
+});
 
 /**
  * Smart Timeline Item - automatically renders correct type
  */
-export const TimelineItem = (props) => {
+export const TimelineItem = memo((props) => {
   const { item } = props;
   
   if (isMilestone(item)) {
@@ -73,7 +73,7 @@ export const TimelineItem = (props) => {
   }
   
   return <TimelineRangeItem {...props} />;
-};
+});
 
 TimelineRangeItem.propTypes = {
   item: PropTypes.object.isRequired,

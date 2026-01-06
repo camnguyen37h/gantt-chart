@@ -56,8 +56,8 @@ export const generatePeriods = (start, end, viewMode, pixelsPerDay = 40) => {
         const days = 1;
         const widthPx = days * pixelsPerDay;
         periods.push({
-          label: current.format('D'),
-          sublabel: current.format('ddd'),
+          label: current.format('M/D/YYYY'),
+          sublabel: '',
           width: widthPx,
           days: days,
           start: current.clone(),
@@ -95,8 +95,8 @@ export const generatePeriods = (start, end, viewMode, pixelsPerDay = 40) => {
         const monthDays = periodEnd.diff(current, 'days', true);
         const widthPx = monthDays * pixelsPerDay;
         periods.push({
-          label: current.format('MMMM'),
-          sublabel: current.format('YYYY'),
+          label: current.format('M/YYYY'),
+          sublabel: '',
           width: widthPx,
           days: monthDays,
           start: current.clone(),

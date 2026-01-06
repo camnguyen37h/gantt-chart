@@ -267,15 +267,15 @@ const ProjectOverview = () => {
   return (
     <div className="project-overview">
       {/* Gantt Chart */}
-      <div className="gantt-section">
-        <div className="gantt-header-section">
-          <h3 className="section-title">Schedule/Milestone</h3>
-          <p className="section-subtitle">Project timeline from Jan 2023 to Dec 2027</p>
-        </div>
-        <GanttChartGoogle 
-          tasks={ganttTasks}
-        />
-      </div>
+      {/*<div className="gantt-section">*/}
+      {/*  <div className="gantt-header-section">*/}
+      {/*    <h3 className="section-title">Schedule/Milestone</h3>*/}
+      {/*    <p className="section-subtitle">Project timeline from Jan 2023 to Dec 2027</p>*/}
+      {/*  </div>*/}
+      {/*  <GanttChartGoogle */}
+      {/*    tasks={ganttTasks}*/}
+      {/*  />*/}
+      {/*</div>*/}
 
       {/* Timeline View Section */}
       <div className="timeline-section">

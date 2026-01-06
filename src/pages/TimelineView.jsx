@@ -4,287 +4,327 @@ import './TimelineView.css';
 
 const TimelineView = () => {
   const [resourceFilter, setResourceFilter] = useState('all');
+  const [visibleStatuses, setVisibleStatuses] = useState({});
 
-  // Gantt tasks data (from ProjectOverview)
-  const ganttTasks = useMemo(() => [
+  // Project timeline data with unified status field
+  const projectTasks = useMemo(() => [
+    // Planning phase
     { 
       id: 1,
       name: 'Initial Planning', 
-      resource: 'Planning',
-      start: '2023-01-10', 
-      end: '2023-03-15', 
+      status: 'Finalized',
+      startDate: '2023-01-10', 
+      endDate: '2023-03-15', 
       progress: 100 
     },
     { 
       id: 2,
-      name: 'Requirement phase 1', 
-      resource: 'Finalized',
-      start: '2023-02-01', 
-      end: '2023-05-30', 
+      name: 'Requirement Analysis', 
+      status: 'Finalized',
+      startDate: '2023-02-01', 
+      endDate: '2023-05-30', 
       progress: 100 
     },
     { 
       id: 3,
       name: 'Technical Research', 
-      resource: 'Planning',
-      start: '2023-05-01', 
-      end: '2023-08-15', 
+      status: 'Finalized',
+      startDate: '2023-05-01', 
+      endDate: '2023-08-15', 
       progress: 100 
     },
+    
+    // Design phase
     { 
       id: 4,
       name: 'Architecture Design', 
-      resource: 'Finalized',
-      start: '2023-07-15', 
-      end: '2023-11-30', 
+      status: 'Finalized',
+      startDate: '2023-07-15', 
+      endDate: '2023-11-30', 
       progress: 100 
     },
     { 
       id: 5,
-      name: 'Prototype Development', 
-      resource: 'Released',
-      start: '2023-10-01', 
-      end: '2024-02-28', 
+      name: 'UI/UX Design', 
+      status: 'Released',
+      startDate: '2023-09-01', 
+      endDate: '2024-01-15', 
       progress: 100 
     },
+    
+    // Development phase
     { 
       id: 6,
-      name: 'Feasibility Study', 
-      resource: 'Planning',
-      start: '2024-01-15', 
-      end: '2024-04-30', 
+      name: 'Backend Development', 
+      status: 'Released',
+      startDate: '2023-10-01', 
+      endDate: '2024-06-30', 
       progress: 100 
     },
     { 
       id: 7,
-      name: 'Detailed Requirements', 
-      resource: 'Finalized',
-      start: '2024-03-01', 
-      end: '2024-06-15', 
+      name: 'Frontend Development', 
+      status: 'Released',
+      startDate: '2024-01-15', 
+      endDate: '2024-08-31', 
       progress: 100 
     },
     { 
       id: 8,
-      name: 'Core Module Development', 
-      resource: 'Released',
-      start: '2024-05-15', 
-      end: '2024-10-31', 
+      name: 'Database Design', 
+      status: 'Released',
+      startDate: '2024-03-01', 
+      endDate: '2024-06-15', 
       progress: 100 
     },
     { 
       id: 9,
-      name: 'Integration Testing', 
-      resource: 'Released',
-      start: '2024-09-01', 
-      end: '2024-12-20', 
+      name: 'API Integration', 
+      status: 'Released',
+      startDate: '2024-05-15', 
+      endDate: '2024-10-31', 
       progress: 100 
     },
+    
+    // Testing phase
     { 
       id: 10,
-      name: 'Delivery UI/UX Phase 1', 
-      resource: 'Finalized',
-      start: '2024-01-15', 
-      end: '2024-03-30', 
+      name: 'Unit Testing', 
+      status: 'Resolved',
+      startDate: '2024-06-01', 
+      endDate: '2024-09-30', 
       progress: 100 
     },
     { 
       id: 11,
-      name: 'Delivery phase 1', 
-      resource: 'Implementing',
-      start: '2024-03-01', 
-      end: '2024-06-15', 
+      name: 'Integration Testing', 
+      status: 'Resolved',
+      startDate: '2024-09-01', 
+      endDate: '2024-12-20', 
       progress: 100 
     },
     { 
       id: 12,
-      name: 'Delivery 4', 
-      resource: 'Implementing',
-      start: '2024-06-01', 
-      end: '2024-09-30', 
-      progress: 100 
-    },
-    { 
-      id: 13,
       name: 'UAT Testing', 
-      resource: 'Implementing',
-      start: '2024-08-15', 
-      end: '2024-11-30', 
+      status: 'Implementing',
+      startDate: '2024-11-15', 
+      endDate: '2025-03-31', 
       progress: 75 
     },
     { 
+      id: 13,
+      name: 'Performance Testing', 
+      status: 'Implementing',
+      startDate: '2025-01-01', 
+      endDate: '2025-04-30', 
+      progress: 60 
+    },
+    
+    // Bug fixing & optimization
+    { 
       id: 14,
       name: 'Bug Fixing Sprint 1', 
-      resource: 'Resolved',
-      start: '2024-11-01', 
-      end: '2025-01-31', 
-      progress: 50 
+      status: 'Resolved',
+      startDate: '2024-11-01', 
+      endDate: '2025-01-31', 
+      progress: 100 
     },
     { 
       id: 15,
-      name: 'Feature Enhancement', 
-      resource: 'Implementing',
-      start: '2025-01-15', 
-      end: '2025-04-30', 
-      progress: 25 
+      name: 'Bug Fixing Sprint 2', 
+      status: 'Implementing',
+      startDate: '2025-02-01', 
+      endDate: '2025-05-15', 
+      progress: 50 
     },
     { 
       id: 16,
-      name: 'System Integration Phase 2', 
-      resource: 'Planning',
-      start: '2025-03-01', 
-      end: '2025-06-30', 
+      name: 'Performance Optimization', 
+      status: 'Planning',
+      startDate: '2025-03-15', 
+      endDate: '2025-07-31', 
+      progress: 25 
+    },
+    
+    // Deployment preparation
+    { 
+      id: 17,
+      name: 'Security Audit', 
+      status: 'Planning',
+      startDate: '2025-06-01', 
+      endDate: '2025-09-30', 
       progress: 10 
     },
     { 
-      id: 17,
-      name: 'Load Testing', 
-      resource: 'No Start',
-      start: '2025-12-01', 
-      end: '2026-02-28', 
-      progress: 0 
-    },
-    { 
       id: 18,
-      name: 'Beta Release', 
-      resource: 'No Start',
-      start: '2026-02-15', 
-      end: '2026-05-15', 
+      name: 'Documentation', 
+      status: 'No Start',
+      startDate: '2025-08-01', 
+      endDate: '2025-11-30', 
       progress: 0 
     },
     { 
       id: 19,
-      name: 'Performance Optimization', 
-      resource: 'No Start',
-      start: '2026-05-15', 
-      end: '2026-08-30', 
+      name: 'Training Materials', 
+      status: 'No Start',
+      startDate: '2025-10-01', 
+      endDate: '2026-01-31', 
       progress: 0 
     },
+    
+    // Production rollout
     { 
       id: 20,
-      name: 'Security Audit', 
-      resource: 'No Start',
-      start: '2026-08-01', 
-      end: '2026-10-31', 
+      name: 'Staging Deployment', 
+      status: 'No Start',
+      startDate: '2025-12-01', 
+      endDate: '2026-02-28', 
       progress: 0 
     },
     { 
       id: 21,
-      name: 'Documentation & Training', 
-      resource: 'No Start',
-      start: '2026-10-01', 
-      end: '2027-01-15', 
+      name: 'Production Deployment', 
+      status: 'No Start',
+      startDate: '2026-03-01', 
+      endDate: '2026-05-31', 
       progress: 0 
     },
     { 
       id: 22,
-      name: 'Production Deployment', 
-      resource: 'No Start',
-      start: '2027-01-01', 
-      end: '2027-03-31', 
+      name: 'Post-Launch Monitoring', 
+      status: 'No Start',
+      startDate: '2026-06-01', 
+      endDate: '2026-09-30', 
       progress: 0 
     },
+    
+    // Maintenance
     { 
       id: 23,
-      name: 'Post-Launch Support', 
-      resource: 'No Start',
-      start: '2027-03-15', 
-      end: '2027-06-30', 
+      name: 'Maintenance Phase 1', 
+      status: 'No Start',
+      startDate: '2026-10-01', 
+      endDate: '2027-03-31', 
       progress: 0 
     },
     { 
       id: 24,
-      name: 'Maintenance Phase 1', 
-      resource: 'No Start',
-      start: '2027-06-01', 
-      end: '2027-09-30', 
+      name: 'Feature Enhancements', 
+      status: 'No Start',
+      startDate: '2027-04-01', 
+      endDate: '2027-09-30', 
       progress: 0 
     },
     { 
       id: 25,
       name: 'Project Closure', 
-      resource: 'No Start',
-      start: '2027-09-01', 
-      end: '2027-12-31', 
+      status: 'No Start',
+      startDate: '2027-10-01', 
+      endDate: '2027-12-31', 
       progress: 0 
     },
   ], []);
 
-  // Helper function to map resource to color
-  const getResourceColor = (resource) => {
-    const colorMap = {
-      'Planning': '#69c0ff',
-      'Finalized': '#597ef7',
-      'Implementing': '#ffa940',
-      'Resolved': '#95de64',
-      'Released': '#b37feb',
-      'No Start': '#bfbfbf'
-    };
-    return colorMap[resource] || '#5559df';
-  };
-
   // Convert to timeline format with milestones
   const allTimelineItems = useMemo(() => {
-    const items = ganttTasks.map(task => ({
+    const items = projectTasks.map(task => ({
       id: task.id,
       name: task.name,
-      startDate: task.start,
-      endDate: task.end,
-      resource: task.resource,
-      progress: task.progress,
-      color: getResourceColor(task.resource)
+      startDate: task.startDate,
+      endDate: task.endDate,
+      status: task.status,
+      progress: task.progress
     }));
 
-    // Add milestone events
+    // Milestone events (status: 'No Plan', startDate/endDate wrap actual milestone date)
     const milestones = [
       {
-        id: 'milestone-1',
-        name: 'Project Start',
-        createdDate: '2023-01-10',
-        resource: 'milestone',
-        color: '#52c41a'
+        id: 'ms-1',
+        name: 'Project Kickoff',
+        startDate: '2023-01-09',  // Actual: 2023-01-10
+        endDate: '2023-01-11',
+        status: 'No Plan',
+        progress: 0
       },
       {
-        id: 'milestone-2',
-        name: 'Phase 1 Complete',
-        createdDate: '2023-05-30',
-        resource: 'milestone',
-        color: '#1890ff'
+        id: 'ms-2',
+        name: 'Design Review Complete',
+        startDate: '2024-01-14',  // Actual: 2024-01-15
+        endDate: '2024-01-16',
+        status: 'No Plan',
+        progress: 0
       },
       {
-        id: 'milestone-3',
-        name: 'Mid-Project Review',
-        createdDate: '2024-12-20',
-        resource: 'milestone',
-        color: '#faad14'
+        id: 'ms-3',
+        name: 'Development Complete',
+        startDate: '2024-08-30',  // Actual: 2024-08-31
+        endDate: '2024-09-01',
+        status: 'No Plan',
+        progress: 0
       },
       {
-        id: 'milestone-4',
-        name: 'Go-Live Target',
-        createdDate: '2027-03-31',
-        resource: 'milestone',
-        color: '#ff4d4f'
+        id: 'ms-4',
+        name: 'UAT Sign-off',
+        startDate: '2025-03-30',  // Actual: 2025-03-31
+        endDate: '2025-04-01',
+        status: 'No Plan',
+        progress: 0
+      },
+      {
+        id: 'ms-5',
+        name: 'Go-Live',
+        startDate: '2026-05-30',  // Actual: 2026-05-31
+        endDate: '2026-06-01',
+        status: 'No Plan',
+        progress: 0
+      },
+      {
+        id: 'ms-6',
+        name: 'Project Closure',
+        startDate: '2027-12-30',  // Actual: 2027-12-31
+        endDate: '2028-01-01',
+        status: 'No Plan',
+        progress: 0
       }
     ];
 
     return [...items, ...milestones];
-  }, [ganttTasks]);
+  }, [projectTasks]);
 
-  // Filter items by resource
+  // Filter items by status
   const timelineItems = useMemo(() => {
-    if (resourceFilter === 'all') {
-      return allTimelineItems;
+    let filtered = allTimelineItems;
+    
+    // Filter by dropdown selection
+    if (resourceFilter !== 'all') {
+      filtered = filtered.filter(item => item.status === resourceFilter);
     }
-    return allTimelineItems.filter(item => item.resource === resourceFilter);
-  }, [allTimelineItems, resourceFilter]);
+    
+    // Filter by legend visibility toggles
+    const hasHiddenStatus = Object.values(visibleStatuses).some(v => v === false);
+    if (hasHiddenStatus) {
+      filtered = filtered.filter(item => visibleStatuses[item.status] !== false);
+    }
+    
+    return filtered;
+  }, [allTimelineItems, resourceFilter, visibleStatuses]);
 
-  // Get unique resources for filter
+  // Get unique statuses for filter (include all statuses from tasks and milestones)
   const resources = useMemo(() => {
-    const uniqueResources = [...new Set(ganttTasks.map(t => t.resource))];
-    return uniqueResources.sort();
-  }, [ganttTasks]);
+    const uniqueStatuses = [...new Set(allTimelineItems.map(t => t.status))];
+    return uniqueStatuses.filter(Boolean).sort();
+  }, [allTimelineItems]);
+
+  const handleStatusToggle = (status) => {
+    setVisibleStatuses(prev => ({
+      ...prev,
+      [status]: prev[status] === false ? true : false
+    }));
+  };
 
   const handleItemClick = (item) => {
-    console.log('Item clicked:', item);
+    // Handle item click - can be extended for modal/details view
+    console.info('Timeline item selected:', item.name);
   };
 
   return (
@@ -330,6 +370,11 @@ const TimelineView = () => {
           showNewButton: true,
           showSearch: true,
           showFilters: false
+        }}
+        showLegend={true}
+        legendProps={{
+          visibleStatuses: visibleStatuses,
+          onStatusToggle: handleStatusToggle
         }}
       />
     </div>

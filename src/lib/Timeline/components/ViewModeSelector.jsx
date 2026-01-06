@@ -3,7 +3,7 @@
  * Allows switching between different time scales
  */
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { VIEW_MODES } from '../constants';
 import './ViewModeSelector.css';
@@ -16,13 +16,16 @@ const VIEW_MODE_LABELS = {
   [VIEW_MODES.YEARS]: 'Years'
 };
 
-const ViewModeSelector = ({
+const ViewModeSelector = memo(({
   viewMode,
   onChange,
   availableModes,
   className
 }) => {
-  const modes = availableModes || Object.values(VIEW_MODES);
+  const modes = useMemo(() => 
+    availableModes || Object.values(VIEW_MODES), 
+    [availableModes]
+  );
 
   return (
     <div className={`timeline-view-selector ${className || ''}`}>
@@ -37,7 +40,7 @@ const ViewModeSelector = ({
       ))}
     </div>
   );
-};
+});
 
 ViewModeSelector.propTypes = {
   viewMode: PropTypes.string.isRequired,

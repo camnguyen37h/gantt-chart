@@ -19,11 +19,13 @@ export const ITEM_TYPES = {
  * @returns {string} ITEM_TYPES
  */
 export const getItemType = (item) => {
+  // Milestones are items with status: 'No Plan'
+  if (item.status === 'No Plan') {
+    return ITEM_TYPES.MILESTONE;
+  }
+  // Default to range if has startDate and endDate
   if (item.startDate && item.endDate) {
     return ITEM_TYPES.RANGE;
-  }
-  if (item.createdDate || item.date) {
-    return ITEM_TYPES.MILESTONE;
   }
   return null;
 };
@@ -44,14 +46,9 @@ export const isValidItem = (item) => {
  * @returns {moment|null} Date for positioning
  */
 export const getItemDate = (item) => {
-  const type = getItemType(item);
-  
-  if (type === ITEM_TYPES.RANGE) {
+  // All items now have startDate
+  if (item.startDate) {
     return moment(item.startDate);
-  }
-  
-  if (type === ITEM_TYPES.MILESTONE) {
-    return moment(item.createdDate || item.date);
   }
   
   return null;
@@ -63,9 +60,8 @@ export const getItemDate = (item) => {
  * @returns {moment|null} End date
  */
 export const getItemEndDate = (item) => {
-  const type = getItemType(item);
-  
-  if (type === ITEM_TYPES.RANGE) {
+  // All items now have endDate (including milestones)
+  if (item.endDate) {
     return moment(item.endDate);
   }
   
@@ -123,6 +119,21 @@ export const isMilestone = (item) => {
  * @returns {string} Hex color
  */
 export const getDefaultItemColor = (item) => {
+  // Status-based color mapping
+  const statusColors = {
+    'Planning': '#69c0ff',
+    'Finalized': '#597ef7',
+    'Implementing': '#ffa940',
+    'Resolved': '#95de64',
+    'Released': '#b37feb',
+    'No Start': '#bfbfbf',
+    'No Plan': '#ff4d4f'  // Milestone
+  };
+  
+  if (item.status && statusColors[item.status]) {
+    return statusColors[item.status];
+  }
+  
   if (isMilestone(item)) {
     return '#ff4d4f'; // Red for milestones
   }

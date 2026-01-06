@@ -105,14 +105,13 @@ export const useTimeline = (items = [], config = {}) => {
   const getItemStyle = useCallback((item) => {
     if (!timelineData) return {};
 
-    const startDate = getItemDate(item);
-    if (!startDate) return {};
-
+    const moment = require('moment');
     const pixelsPerDay = finalConfig.pixelsPerDay * zoomLevel;
 
-    // Handle milestones differently
+    // Handle milestones differently - position at createdDate (center)
     if (isMilestone(item)) {
-      const daysFromStart = startDate.diff(timelineData.start, 'days', true);
+      const milestoneDate = item.createdDate ? moment(item.createdDate) : moment(item.startDate);
+      const daysFromStart = milestoneDate.diff(timelineData.start, 'days', true);
       const left = daysFromStart * pixelsPerDay;
       const top = item.row * finalConfig.rowHeight + finalConfig.itemPadding;
 
@@ -123,6 +122,9 @@ export const useTimeline = (items = [], config = {}) => {
     }
 
     // Handle range items
+    const startDate = getItemDate(item);
+    if (!startDate) return {};
+    
     const endDate = getItemEndDate(item);
     const daysFromStart = startDate.diff(timelineData.start, 'days', true);
     const duration = endDate.diff(startDate, 'days', true);

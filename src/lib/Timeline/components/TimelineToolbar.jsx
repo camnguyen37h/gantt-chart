@@ -3,12 +3,12 @@
  * Provides controls for timeline (search, filter, actions)
  */
 
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Input, Icon } from 'antd';
 import './TimelineToolbar.css';
 
-const TimelineToolbar = ({
+const TimelineToolbar = memo(({
   searchQuery,
   onSearchChange,
   onTodayClick,
@@ -20,6 +20,10 @@ const TimelineToolbar = ({
   extraActions,
   className
 }) => {
+  const handleSearchChange = useCallback((e) => {
+    onSearchChange?.(e.target.value);
+  }, [onSearchChange]);
+
   return (
     <div className={`timeline-toolbar ${className || ''}`}>
       <div className="timeline-toolbar-left">
@@ -34,7 +38,7 @@ const TimelineToolbar = ({
             prefix={<Icon type="search" />}
             placeholder="Search items..."
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={handleSearchChange}
             style={{ width: 240 }}
             allowClear
           />
@@ -63,7 +67,7 @@ const TimelineToolbar = ({
       </div>
     </div>
   );
-};
+});
 
 TimelineToolbar.propTypes = {
   searchQuery: PropTypes.string,

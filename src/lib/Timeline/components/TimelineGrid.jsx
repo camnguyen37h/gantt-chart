@@ -55,7 +55,7 @@ const TimelineGrid = ({
   return (
     <div className="timeline-grid-container">
       {/* Timeline Grid */}
-      <div className="timeline-grid" style={{ minHeight: `${gridHeight}px`, width: `${timelineData?.totalWidth || 0}px` }}>
+      <div className="timeline-grid" style={{ minHeight: `${Math.max(gridHeight, 400)}px`, width: `${timelineData?.totalWidth || 0}px` }}>
         {/* Vertical Grid Lines */}
         {enableGrid && timelineData && periods.map((period, index) => {
           // Calculate position in pixels from timeline start
