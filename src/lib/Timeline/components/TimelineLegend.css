@@ -1,0 +1,74 @@
+/* Timeline Legend Styles */
+
+.timeline-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px 20px;
+  background: #f0f0f0 !important;
+  border-top: 2px solid #1890ff !important;
+  min-height: 60px;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.timeline-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.3s;
+}
+
+.timeline-legend-item:hover {
+  opacity: 0.8;
+}
+
+.timeline-legend-item.hidden {
+  opacity: 0.4;
+}
+
+.timeline-legend-item.hidden .timeline-legend-label {
+  text-decoration: line-through;
+}
+
+.timeline-legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.timeline-legend-label {
+  font-size: 13px;
+  color: #595959;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timeline-legend {
+    gap: 16px;
+    padding: 12px 16px;
+  }
+  
+  .timeline-legend-label {
+    font-size: 12px;
+  }
+  
+  .timeline-legend-color {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-legend {
+    gap: 12px;
+    padding: 10px 12px;
+  }
+}
