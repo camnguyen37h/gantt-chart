@@ -137,6 +137,15 @@ Task B:            [========]
          endA  startB
 
 ĐK: endA >= startB → Có overlap → Phải khác row ❌
+
+Trường hợp đặc biệt (endA = startB):
+Task A:     [========]
+Task B:              [========]
+            ^        ^
+         endA=startB
+
+ĐK: endA = startB → Vẫn coi là overlap → Khác row ❌
+(Cần buffer time giữa các tasks)
 ```
 
 **Code Implementation:**

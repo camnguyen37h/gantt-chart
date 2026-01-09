@@ -5,35 +5,49 @@
 
 import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { getStatusColor } from '../../../constants/statusColors';
 import './TimelineLegend.css';
 
 const TimelineLegend = memo(({ 
-  items = [],
+  statuses = [],
+  statusColorMap = {},
   visibleStatuses = {},
   onStatusToggle
 }) => {
-  // Status color mapping - always show all statuses
-  const statusColors = useMemo(() => ({
-    'Planning': '#69c0ff',
-    'Finalized': '#597ef7',
-    'Implementing': '#ffa940',
-    'Resolved': '#95de64',
-    'Released': '#b37feb',
-    'No Start': '#bfbfbf',
-    'No Plan': '#ff4d4f'  // Milestones
-  }), []);
+  // Build status colors from map
+  const statusColors = useMemo(() => {
+    if (!statuses || statuses.length === 0) {
+      return {};
+    }
+    
+    const colors = {};
+    for (let i = 0; i < statuses.length; i++) {
+      const status = statuses[i];
+      colors[status] = getStatusColor(status, statusColorMap);
+    }
+    return colors;
+  }, [statuses, statusColorMap]);
 
-  // Always show all statuses
-  const statuses = useMemo(() => Object.keys(statusColors), [statusColors]);
+  // Get status list (already sorted A-Z from parent)
+  const statusList = useMemo(() => {
+    if (!statuses || statuses.length === 0) {
+      return [];
+    }
+    return statuses;
+  }, [statuses]);
 
   const handleStatusClick = (status) => {
-    onStatusToggle?.(status);
+    if (onStatusToggle) {
+      onStatusToggle(status);
+    }
   };
 
   return (
     <div className="timeline-legend">
-      {statuses.map(status => {
+      {statusList.map(status => {
         const isVisible = visibleStatuses[status] !== false;
+        const color = statusColors[status];
+        
         return (
           <div
             key={status}
@@ -42,7 +56,7 @@ const TimelineLegend = memo(({
           >
             <span 
               className="timeline-legend-color"
-              style={{ backgroundColor: statusColors[status] || '#5559df' }}
+              style={{ backgroundColor: color }}
             />
             <span className="timeline-legend-label">{status}</span>
           </div>
@@ -53,7 +67,8 @@ const TimelineLegend = memo(({
 });
 
 TimelineLegend.propTypes = {
-  items: PropTypes.array,
+  statuses: PropTypes.arrayOf(PropTypes.string),
+  statusColorMap: PropTypes.object,
   visibleStatuses: PropTypes.object,
   onStatusToggle: PropTypes.func
 };

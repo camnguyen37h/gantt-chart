@@ -19,12 +19,12 @@ export const ITEM_TYPES = {
  * @returns {string} ITEM_TYPES
  */
 export const getItemType = (item) => {
-  // Milestones are items with status: 'No Plan'
-  if (item.status === 'No Plan') {
+  // Milestones are items with status: 'Milestone'
+  if (item && item.status === 'Milestone') {
     return ITEM_TYPES.MILESTONE;
   }
   // Default to range if has startDate and endDate
-  if (item.startDate && item.endDate) {
+  if (item && item.startDate && item.endDate) {
     return ITEM_TYPES.RANGE;
   }
   return null;
@@ -119,25 +119,13 @@ export const isMilestone = (item) => {
  * @returns {string} Hex color
  */
 export const getDefaultItemColor = (item) => {
-  // Status-based color mapping
-  const statusColors = {
-    'Planning': '#69c0ff',
-    'Finalized': '#597ef7',
-    'Implementing': '#ffa940',
-    'Resolved': '#95de64',
-    'Released': '#b37feb',
-    'No Start': '#bfbfbf',
-    'No Plan': '#ff4d4f'  // Milestone
-  };
-  
-  if (item.status && statusColors[item.status]) {
-    return statusColors[item.status];
+  // Color should come from item.color property set by parent
+  if (item && item.color) {
+    return item.color;
   }
   
-  if (isMilestone(item)) {
-    return '#ff4d4f'; // Red for milestones
-  }
-  return '#1890ff'; // Blue for ranges
+  // Fallback to default blue
+  return '#1890ff';
 };
 
 /**

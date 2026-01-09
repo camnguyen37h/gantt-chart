@@ -3,7 +3,6 @@
  * Handles positioning and auto-layout to prevent overlapping
  */
 
-import { rangesOverlap } from './dateUtils';
 import { getItemDate, getItemEndDate } from './itemUtils';
 
 /**
@@ -25,97 +24,130 @@ export const sortItemsByDate = (items) => {
  * Handles both range items and milestones
  * @param {Array} items - Timeline items
  * @returns {Array} Items with added 'row' property
+ * 
+ * Complexity: O(n × m) where n = items, m = rows
  */
 export const calculateItemLayout = (items) => {
   if (!items || items.length === 0) return [];
 
   const sortedItems = sortItemsByDate(items);
-  const rows = [];
+  const rows = []; // Each element stores endTime of last item
+  const result = [];
 
-  sortedItems.forEach(item => {
+  for (let i = 0; i < sortedItems.length; i++) {
+    const item = sortedItems[i];
     const startDate = getItemDate(item);
     
-    if (!startDate) return; // Skip invalid items
+    if (!startDate) continue;
 
-    // Find a row where this item doesn't overlap
-    let rowIndex = rows.findIndex(row => {
-      if (row.length === 0) return true;
-      const lastItem = row[row.length - 1];
-      const lastEndDate = getItemEndDate(lastItem) || getItemDate(lastItem).clone().add(1, 'day');
-      
-      // Check if item starts after the last item in this row ends
-      return startDate.isAfter(lastEndDate);
-    });
+    const endDate = getItemEndDate(item);
+    const itemEnd = endDate || startDate.clone().add(1, 'day');
+    const itemStartTime = startDate.valueOf();
+    const itemEndTime = itemEnd.valueOf();
 
-    // If no suitable row found, create a new one
-    if (rowIndex === -1) {
-      rowIndex = rows.length;
-      rows.push([]);
+    // Find first available row (greedy first-fit)
+    let rowIndex = -1;
+    
+    for (let r = 0; r < rows.length; r++) {
+      if (rows[r] < itemStartTime) {
+        rowIndex = r;
+        break;
+      }
     }
 
-    // Add item to the row
-    const layoutItem = { ...item, row: rowIndex };
-    rows[rowIndex].push(layoutItem);
-  });
+    // Create new row if needed
+    if (rowIndex === -1) {
+      rowIndex = rows.length;
+      rows.push(itemEndTime);
+    } else {
+      rows[rowIndex] = itemEndTime;
+    }
 
-  return rows.flat();
+    result.push({ ...item, row: rowIndex });
+  }
+
+  return result;
 };
 
 /**
  * Advanced layout with conflict resolution
- * Uses sophisticated overlap checking, handles milestones
+ * Uses greedy first-fit algorithm for optimal performance
  * @param {Array} items - Timeline items
  * @returns {Array} Items with row assignments
+ * 
+ * Complexity: O(n × m) where n = items, m = rows (typically m << n)
  */
 export const calculateAdvancedLayout = (items) => {
   if (!items || items.length === 0) return [];
 
   const sortedItems = sortItemsByDate(items);
+  const rows = []; // Each row stores {endTime} of last item
   const result = [];
-  const rows = []; // Array of arrays, each containing items in that row
 
-  sortedItems.forEach(item => {
+  for (let i = 0; i < sortedItems.length; i++) {
+    const item = sortedItems[i];
     const startDate = getItemDate(item);
-    const endDate = getItemEndDate(item);
     
-    if (!startDate) return; // Skip invalid items
+    if (!startDate) continue; // Skip invalid items
 
-    // For milestones, treat as having 1 day duration
-    const itemEndDate = endDate || startDate.clone().add(1, 'day');
+    const endDate = getItemEndDate(item);
+    const itemEnd = endDate || startDate.clone().add(1, 'day');
+    
+    // Cache timestamps for fast comparison
+    const itemStartTime = startDate.valueOf();
+    const itemEndTime = itemEnd.valueOf();
 
-    // Find the first row where this item doesn't overlap with any existing item
-    let targetRow = -1;
-    for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-      const rowItems = rows[rowIdx];
-      
-      // Check if item overlaps with any item in this row
-      const hasOverlap = rowItems.some(existingItem => {
-        const existingStart = getItemDate(existingItem);
-        const existingEnd = getItemEndDate(existingItem) || existingStart.clone().add(1, 'day');
-        
-        return rangesOverlap(
-          { start: startDate.format('YYYY-MM-DD'), end: itemEndDate.format('YYYY-MM-DD') },
-          { start: existingStart.format('YYYY-MM-DD'), end: existingEnd.format('YYYY-MM-DD') }
-        );
+    // Debug specific items
+    const isDebug = item.name && (item.name.includes('UI/UX') || item.name.includes('Frontend'));
+    if (isDebug) {
+      console.log('Processing:', {
+        name: item.name,
+        start: startDate.format('YYYY-MM-DD'),
+        end: itemEnd.format('YYYY-MM-DD'),
+        startTime: itemStartTime,
+        endTime: itemEndTime
       });
+    }
 
-      if (!hasOverlap) {
+    // Find first row where this item fits (greedy first-fit)
+    let targetRow = -1;
+    
+    for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
+      const rowEndTime = rows[rowIdx].endTime;
+      
+      if (isDebug) {
+        console.log(`  Check row ${rowIdx}:`, {
+          rowEndTime: rowEndTime,
+          rowEndDate: new Date(rowEndTime).toISOString().split('T')[0],
+          canFit: rowEndTime < itemStartTime,
+          comparison: `${rowEndTime} < ${itemStartTime}`
+        });
+      }
+      
+      // Check overlap: endA >= startB means overlap
+      // No overlap if: rowEndTime < itemStartTime (strictly less than)
+      if (rowEndTime < itemStartTime) {
         targetRow = rowIdx;
-        break;
+        break; // Early exit - found suitable row
       }
     }
 
-    // If no suitable row found, create a new one
+    // Create new row if no suitable row found
     if (targetRow === -1) {
       targetRow = rows.length;
-      rows.push([]);
+      rows.push({ endTime: itemEndTime });
+    } else {
+      // Update row's end time
+      rows[targetRow].endTime = itemEndTime;
     }
 
-    // Add item to the row
-    const layoutItem = { ...item, row: targetRow };
-    rows[targetRow].push(layoutItem);
-    result.push(layoutItem);
-  });
+    if (isDebug) {
+      console.log(`  → Assigned to row ${targetRow}, total rows: ${rows.length}`);
+    }
+
+    // Add item with row assignment
+    result.push({ ...item, row: targetRow });
+  }
 
   return result;
 };

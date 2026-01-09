@@ -207,6 +207,9 @@ export const formatDate = (date, format = DATE_FORMATS.display) => {
  * @param {Object} range1 - {start, end}
  * @param {Object} range2 - {start, end}
  * @returns {boolean} True if ranges overlap
+ * 
+ * Logic: endA >= startB → overlap (cần khác row)
+ *        endA < startB → không overlap (cùng row OK)
  */
 export const rangesOverlap = (range1, range2) => {
   const start1 = moment(range1.start);
@@ -214,7 +217,9 @@ export const rangesOverlap = (range1, range2) => {
   const start2 = moment(range2.start);
   const end2 = moment(range2.end);
 
-  return start1.isBefore(end2) && end1.isAfter(start2);
+  // Use isSameOrBefore/isSameOrAfter to treat equal dates as overlap
+  // Overlap if: start1 <= end2 AND end1 >= start2
+  return start1.isSameOrBefore(end2) && end1.isSameOrAfter(start2);
 };
 
 /**
