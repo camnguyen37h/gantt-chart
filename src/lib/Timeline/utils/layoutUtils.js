@@ -97,32 +97,11 @@ export const calculateAdvancedLayout = (items) => {
     const itemStartTime = startDate.valueOf();
     const itemEndTime = itemEnd.valueOf();
 
-    // Debug specific items
-    const isDebug = item.name && (item.name.includes('UI/UX') || item.name.includes('Frontend'));
-    if (isDebug) {
-      console.log('Processing:', {
-        name: item.name,
-        start: startDate.format('YYYY-MM-DD'),
-        end: itemEnd.format('YYYY-MM-DD'),
-        startTime: itemStartTime,
-        endTime: itemEndTime
-      });
-    }
-
     // Find first row where this item fits (greedy first-fit)
     let targetRow = -1;
     
     for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
       const rowEndTime = rows[rowIdx].endTime;
-      
-      if (isDebug) {
-        console.log(`  Check row ${rowIdx}:`, {
-          rowEndTime: rowEndTime,
-          rowEndDate: new Date(rowEndTime).toISOString().split('T')[0],
-          canFit: rowEndTime < itemStartTime,
-          comparison: `${rowEndTime} < ${itemStartTime}`
-        });
-      }
       
       // Check overlap: endA >= startB means overlap
       // No overlap if: rowEndTime < itemStartTime (strictly less than)
@@ -139,10 +118,6 @@ export const calculateAdvancedLayout = (items) => {
     } else {
       // Update row's end time
       rows[targetRow].endTime = itemEndTime;
-    }
-
-    if (isDebug) {
-      console.log(`  → Assigned to row ${targetRow}, total rows: ${rows.length}`);
     }
 
     // Add item with row assignment

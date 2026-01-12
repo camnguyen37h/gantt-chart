@@ -31,16 +31,6 @@ export const getItemType = (item) => {
 };
 
 /**
- * Validate item has required date fields
- * @param {Object} item - Timeline item
- * @returns {boolean} True if item is valid
- */
-export const isValidItem = (item) => {
-  const type = getItemType(item);
-  return type !== null;
-};
-
-/**
  * Get item date for positioning (handles both range and milestone)
  * @param {Object} item - Timeline item
  * @returns {moment|null} Date for positioning

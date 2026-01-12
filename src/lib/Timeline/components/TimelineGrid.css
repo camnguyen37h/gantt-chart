@@ -1,10 +1,20 @@
 /* Timeline Grid Styles */
 
+/* Loading state */
+.timeline-loading {
+  opacity: 0;
+}
+
+.timeline-loaded {
+  opacity: 1;
+}
+
 .timeline-grid-container {
   width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
+  will-change: opacity;
 }
 
 .timeline-grid-empty {
@@ -22,24 +32,17 @@
   border-bottom: 2px solid #e8e8e8;
   position: relative;
   margin-top: 0;
-  min-height: 52px;
+  min-height: 40px;
   width: 100%;
   box-sizing: border-box;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .timeline-period {
-  text-align: center;
-  padding: 12px 8px;
-  border-right: 1px solid #e0e0e0;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 70px;
+  border-right: 1px solid #d9d9d9;
   flex-shrink: 0;
-  transition: background-color 0.2s ease;
+  height: 100%;
 }
 
 .timeline-period:hover {
@@ -50,13 +53,23 @@
   border-right: none;
 }
 
-.period-label {
-  font-size: 13px;
-  font-weight: 500;
+.period-label-border {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  font-weight: 600;
   color: #262626;
-  letter-spacing: 0.2px;
+  background: #fafafa;
+  padding: 4px 10px;
+  border-radius: 4px;
   white-space: nowrap;
-  line-height: 1.4;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e0e0e0;
+  min-width: 50px;
+  text-align: center;
 }
 
 .period-sublabel {
@@ -75,6 +88,11 @@
   padding: 30px 0 20px 0;
   width: 100%;
   box-sizing: border-box;
+  /* Performance optimizations */
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 /* Responsive adjustments */
@@ -229,4 +247,79 @@
 
 /* Remove old timeline-item styles - now in TimelineItem.css */
 
-/* Animations */
+/* Animations - ECharts-like smooth transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Apply animations to timeline container */
+.timeline-grid-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animate header periods */
+.timeline-period {
+  animation: slideInFromLeft 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.timeline-period:nth-child(1) { animation-delay: 0.05s; }
+.timeline-period:nth-child(2) { animation-delay: 0.08s; }
+.timeline-period:nth-child(3) { animation-delay: 0.11s; }
+.timeline-period:nth-child(4) { animation-delay: 0.14s; }
+.timeline-period:nth-child(5) { animation-delay: 0.17s; }
+.timeline-period:nth-child(6) { animation-delay: 0.20s; }
+.timeline-period:nth-child(n+7) { animation-delay: 0.23s; }
+
+/* Grid lines animation */
+.timeline-grid-line,
+.timeline-horizontal-line {
+  animation: fadeIn 0.5s ease-out;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+}
+
+/* Current date line animation */
+.timeline-current-date {
+  animation: fadeIn 0.6s ease-out;
+  animation-delay: 0.3s;
+}
+
+.current-date-marker {
+  animation: fadeInUp 0.5s ease-out;
+  animation-delay: 0.4s;
+  animation-fill-mode: both;
+}
+
+.current-date-label {
+  animation: fadeInUp 0.5s ease-out;
+  animation-delay: 0.5s;
+  animation-fill-mode: both;
+}

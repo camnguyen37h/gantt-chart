@@ -22,8 +22,10 @@ const TimelineGrid = ({
   onItemClick,
   onItemDoubleClick,
   onItemHover,
-  renderItem
+  renderItem,
+  loading
 }) => {
+
   if (!timelineData) {
     return (
       <div className="timeline-grid-empty">
@@ -53,7 +55,7 @@ const TimelineGrid = ({
   };
 
   return (
-    <div className="timeline-grid-container">
+    <div className={`timeline-grid-container ${loading ? 'timeline-loading' : 'timeline-loaded'}`}>
       {/* Timeline Grid */}
       <div className="timeline-grid" style={{ minHeight: `${Math.max(gridHeight, 400)}px`, width: `${timelineData?.totalWidth || 0}px` }}>
         {/* Vertical Grid Lines */}
@@ -101,7 +103,13 @@ const TimelineGrid = ({
         {/* Timeline Items */}
         {layoutItems.map((item, index) => {
           const style = getItemStyle(item);
-          return renderTimelineItem(item, style, index);
+          // Add staggered animation delay
+          const animationDelay = Math.min(index * 0.02, 1); // Max 1s delay
+          const enhancedStyle = {
+            ...style,
+            animationDelay: `${animationDelay}s`
+          };
+          return renderTimelineItem(item, enhancedStyle, index);
         })}
       </div>
 
@@ -113,10 +121,8 @@ const TimelineGrid = ({
             className="timeline-period"
             style={{ width: `${period.width}px` }}
           >
-            <div className="period-label">{period.label}</div>
-            {period.sublabel && (
-              <div className="period-sublabel">{period.sublabel}</div>
-            )}
+            {/* Label on left border */}
+            <div className="period-label-border">{period.label}</div>
           </div>
         ))}
       </div>
@@ -136,12 +142,14 @@ TimelineGrid.propTypes = {
   onItemClick: PropTypes.func,
   onItemDoubleClick: PropTypes.func,
   onItemHover: PropTypes.func,
-  renderItem: PropTypes.func
+  renderItem: PropTypes.func,
+  loading: PropTypes.bool
 };
 
 TimelineGrid.defaultProps = {
   enableGrid: true,
-  enableCurrentDate: true
+  enableCurrentDate: true,
+  loading: false
 };
 
 // Memoize for performance

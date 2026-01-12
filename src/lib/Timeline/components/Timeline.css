@@ -28,6 +28,7 @@
   overflow-y: visible;
   position: relative;
   background: white;
+  padding: 40px;
 }
 
 .timeline-content {

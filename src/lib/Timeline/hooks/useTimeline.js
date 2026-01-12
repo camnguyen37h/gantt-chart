@@ -33,7 +33,6 @@ export const useTimeline = (items = [], config = {}) => {
   // Memoize config to prevent re-renders
   const finalConfig = useMemo(() => ({ ...DEFAULT_CONFIG, ...config }), [config]);
   
-  const [viewMode, setViewMode] = useState(finalConfig.viewMode);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({});
@@ -68,8 +67,8 @@ export const useTimeline = (items = [], config = {}) => {
 
     const { start, end } = dateRange;
     const totalDays = end.diff(start, 'days', true);
-    const periods = generatePeriods(start, end, viewMode, finalConfig.pixelsPerDay);
-    const totalWidth = totalDays * finalConfig.pixelsPerDay; // Calculate total width in pixels
+    const periods = generatePeriods(start, end, finalConfig.pixelsPerDay);
+    const totalWidth = totalDays * finalConfig.pixelsPerDay;
 
     return {
       start,
@@ -78,7 +77,7 @@ export const useTimeline = (items = [], config = {}) => {
       totalWidth,
       periods
     };
-  }, [dateRange, viewMode, finalConfig.pixelsPerDay]);
+  }, [dateRange, finalConfig.pixelsPerDay]);
 
   // Calculate current date position
   const currentDatePosition = useMemo(() => {
@@ -187,7 +186,6 @@ export const useTimeline = (items = [], config = {}) => {
 
   return {
     // State
-    viewMode,
     zoomLevel,
     searchQuery,
     filters,
@@ -202,7 +200,6 @@ export const useTimeline = (items = [], config = {}) => {
     containerRef,
     
     // Methods
-    setViewMode,
     setSearchQuery,
     setFilters,
     getItemStyle,

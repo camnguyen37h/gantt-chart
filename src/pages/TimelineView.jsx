@@ -2,9 +2,8 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Timeline } from '../lib/Timeline';
 import { fetchTimelineData } from '../utils/mockApiData';
 import { 
-  normalizeTimelineData, 
+  normalizeTimelineData,
   extractUniqueStatuses,
-  filterByStatus,
   filterByVisibleStatuses
 } from '../utils/timelineUtils';
 import { 
@@ -14,7 +13,6 @@ import {
 import './TimelineView.css';
 
 const TimelineView = () => {
-  const [resourceFilter, setResourceFilter] = useState('all');
   const [visibleStatuses, setVisibleStatuses] = useState({});
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,18 +63,10 @@ const TimelineView = () => {
     });
   }, [normalizedItems, statusColorMap]);
 
-  // Filter items by status and visibility (memoized for performance)
+  // Filter items by legend visibility (memoized for performance)
   const filteredItems = useMemo(() => {
-    let items = itemsWithColors;
-    
-    // Filter by dropdown selection
-    items = filterByStatus(items, resourceFilter);
-    
-    // Filter by legend visibility
-    items = filterByVisibleStatuses(items, visibleStatuses);
-    
-    return items;
-  }, [itemsWithColors, resourceFilter, visibleStatuses]);
+    return filterByVisibleStatuses(itemsWithColors, visibleStatuses);
+  }, [itemsWithColors, visibleStatuses]);
 
   const handleStatusToggle = (status) => {
     setVisibleStatuses(prev => {
@@ -120,37 +110,15 @@ const TimelineView = () => {
           <button className="timeline-tab active">Timeline</button>
         </div>
       </div>
-
-      <div className="timeline-filters">
-        <label className="filter-label">Filter by Status:</label>
-        <select 
-          className="filter-select"
-          value={resourceFilter}
-          onChange={(e) => setResourceFilter(e.target.value)}
-        >
-          <option value="all">All Statuses</option>
-          {uniqueStatuses.map(status => (
-            <option key={status} value={status}>{status}</option>
-          ))}
-        </select>
-        <span className="filter-count">
-          Showing {filteredItems.length} of {normalizedItems.length} items
-        </span>
-      </div>
       
       <Timeline 
         items={filteredItems}
         onItemClick={handleItemClick}
+        loading={loading}
         config={{
-          viewMode: 'months',
           enableAutoScroll: true,
           enableCurrentDate: true,
           enableGrid: true
-        }}
-        toolbarProps={{
-          showNewButton: true,
-          showSearch: true,
-          showFilters: false
         }}
         showLegend={true}
         legendProps={{

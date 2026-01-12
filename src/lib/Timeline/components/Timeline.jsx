@@ -7,7 +7,6 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useTimeline } from '../hooks/useTimeline';
 import TimelineToolbar from './TimelineToolbar';
-import ViewModeSelector from './ViewModeSelector';
 import TimelineGrid from './TimelineGrid';
 import TimelineLegend from './TimelineLegend';
 import { VIEW_MODES } from '../constants';
@@ -16,30 +15,25 @@ import './Timeline.css';
 const Timeline = memo(({
   items,
   config,
-  showToolbar,
-  showViewSelector,
   showLegend,
   toolbarProps,
-  viewSelectorProps,
   legendProps,
   onItemClick,
   onItemDoubleClick,
   onItemHover,
-  onNewItem,
   renderItem,
-  className
+  className,
+  loading
 }) => {
   const timeline = useTimeline(items, config);
 
   const {
-    viewMode,
     searchQuery,
     timelineData,
     layoutItems,
     gridHeight,
     currentDatePosition,
     containerRef,
-    setViewMode,
     setSearchQuery,
     getItemStyle,
     scrollToToday,
@@ -48,25 +42,17 @@ const Timeline = memo(({
 
   return (
     <div className={`timeline ${className || ''}`}>
-      {/* Toolbar */}
-      {showToolbar && (
-        <TimelineToolbar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          onTodayClick={scrollToToday}
-          onNewItem={onNewItem}
-          {...toolbarProps}
-        />
-      )}
-
-      {/* View Mode Selector */}
-      {showViewSelector && (
-        <ViewModeSelector
-          viewMode={viewMode}
-          onChange={setViewMode}
-          {...viewSelectorProps}
-        />
-      )}
+      {/* Toolbar - Only Today button */}
+      <TimelineToolbar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onTodayClick={scrollToToday}
+        showNewButton={false}
+        showSearch={false}
+        showFilters={false}
+        showTodayButton={true}
+        {...toolbarProps}
+      />
 
       {/* Scrollable Timeline Container */}
       <div className="timeline-scroll-container" ref={containerRef}>
@@ -84,6 +70,7 @@ const Timeline = memo(({
             onItemDoubleClick={onItemDoubleClick}
             onItemHover={onItemHover}
             renderItem={renderItem}
+            loading={loading}
           />
         </div>
       </div>
@@ -118,27 +105,20 @@ Timeline.propTypes = {
     enableCurrentDate: PropTypes.bool,
     enableGrid: PropTypes.bool
   }),
-  showToolbar: PropTypes.bool,
-  showViewSelector: PropTypes.bool,
   showLegend: PropTypes.bool,
   toolbarProps: PropTypes.object,
-  viewSelectorProps: PropTypes.object,
   legendProps: PropTypes.object,
   onItemClick: PropTypes.func,
   onItemDoubleClick: PropTypes.func,
   onItemHover: PropTypes.func,
-  onNewItem: PropTypes.func,
   renderItem: PropTypes.func,
   className: PropTypes.string
 };
 
 Timeline.defaultProps = {
   items: [],
-  showToolbar: true,
-  showViewSelector: true,
   showLegend: false,
   toolbarProps: {},
-  viewSelectorProps: {},
   legendProps: {}
 };
 
