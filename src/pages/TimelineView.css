@@ -1,3 +1,112 @@
+/* Timeline Skeleton Loading */
+.timeline-skeleton {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.skeleton-button {
+  width: 100px;
+  height: 36px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-grid {
+  position: relative;
+  min-height: 300px;
+  background: white;
+  padding: 30px 20px;
+  margin-bottom: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+.skeleton-item {
+  height: 32px;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #e3f2fd 25%, #bbdefb 50%, #e3f2fd 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-item-1 {
+  width: 60%;
+  margin-left: 5%;
+  animation-delay: 0s;
+}
+
+.skeleton-item-2 {
+  width: 45%;
+  margin-left: 15%;
+  animation-delay: 0.1s;
+}
+
+.skeleton-item-3 {
+  width: 70%;
+  margin-left: 0%;
+  animation-delay: 0.2s;
+}
+
+.skeleton-header {
+  display: flex;
+  background: #fafafa;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 2px solid #e8e8e8;
+  min-height: 40px;
+  margin-bottom: 20px;
+}
+
+.skeleton-month {
+  flex: 1;
+  margin: 10px;
+  height: 20px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 3px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 15px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.skeleton-status {
+  width: 80px;
+  height: 24px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 12px;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Timeline View Styles */
 .timeline-view {
   width: 100%;
   min-height: 100vh;

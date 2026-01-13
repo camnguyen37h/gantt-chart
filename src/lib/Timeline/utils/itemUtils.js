@@ -4,6 +4,7 @@
  */
 
 import moment from 'moment';
+import { DEFAULT_STATUS_COLOR } from '../../../constants/statusColors';
 
 /**
  * Item types
@@ -15,27 +16,39 @@ export const ITEM_TYPES = {
 
 /**
  * Determine item type
+ * No optional chaining for SonarQube compliance
  * @param {Object} item - Timeline item
  * @returns {string} ITEM_TYPES
  */
 export const getItemType = (item) => {
+  if (!item) {
+    return null;
+  }
+  
   // Milestones are items with status: 'Milestone'
-  if (item && item.status === 'Milestone') {
+  if (item.status === 'Milestone') {
     return ITEM_TYPES.MILESTONE;
   }
+  
   // Default to range if has startDate and endDate
-  if (item && item.startDate && item.endDate) {
+  if (item.startDate && item.endDate) {
     return ITEM_TYPES.RANGE;
   }
+  
   return null;
 };
 
 /**
  * Get item date for positioning (handles both range and milestone)
+ * No optional chaining for SonarQube compliance
  * @param {Object} item - Timeline item
  * @returns {moment|null} Date for positioning
  */
 export const getItemDate = (item) => {
+  if (!item) {
+    return null;
+  }
+  
   // All items now have startDate
   if (item.startDate) {
     return moment(item.startDate);
@@ -46,10 +59,15 @@ export const getItemDate = (item) => {
 
 /**
  * Get item end date (for range items)
+ * No optional chaining for SonarQube compliance
  * @param {Object} item - Timeline item
  * @returns {moment|null} End date
  */
 export const getItemEndDate = (item) => {
+  if (!item) {
+    return null;
+  }
+  
   // All items now have endDate (including milestones)
   if (item.endDate) {
     return moment(item.endDate);
@@ -60,34 +78,48 @@ export const getItemEndDate = (item) => {
 
 /**
  * Format item for tooltip/display
+ * No optional chaining for SonarQube compliance
  * @param {Object} item - Timeline item
  * @returns {Object} Formatted item info
  */
 export const formatItemInfo = (item) => {
+  if (!item) {
+    return null;
+  }
+  
   const type = getItemType(item);
   
   if (type === ITEM_TYPES.MILESTONE) {
-    const date = moment(item.createdDate || item.date);
+    const dateValue = item.createdDate || item.date;
+    if (!dateValue) {
+      return null;
+    }
+    
+    const date = moment(dateValue);
     return {
       type: 'milestone',
-      title: item.name,
+      title: item.name || '',
       date: date.format('DD MMM YYYY'),
-      tooltip: `${item.name}\nMilestone: ${date.format('ddd, DD MMM YYYY')}`
+      tooltip: `${item.name || 'Unnamed'}\nMilestone: ${date.format('ddd, DD MMM YYYY')}`
     };
   }
   
   if (type === ITEM_TYPES.RANGE) {
+    if (!item.startDate || !item.endDate) {
+      return null;
+    }
+    
     const start = moment(item.startDate);
     const end = moment(item.endDate);
     const duration = end.diff(start, 'days');
     
     return {
       type: 'range',
-      title: item.name,
+      title: item.name || '',
       startDate: start.format('DD MMM YYYY'),
       endDate: end.format('DD MMM YYYY'),
       duration: `${duration} days`,
-      tooltip: `${item.name}\n${start.format('DD MMM')} - ${end.format('DD MMM YYYY')}\nDuration: ${duration} days`
+      tooltip: `${item.name || 'Unnamed'}\n${start.format('DD MMM')} - ${end.format('DD MMM YYYY')}\nDuration: ${duration} days`
     };
   }
   
@@ -104,33 +136,25 @@ export const isMilestone = (item) => {
 };
 
 /**
- * Get default color for item type
- * @param {Object} item - Timeline item
- * @returns {string} Hex color
- */
-export const getDefaultItemColor = (item) => {
-  // Color should come from item.color property set by parent
-  if (item && item.color) {
-    return item.color;
-  }
-  
-  // Fallback to default blue
-  return '#1890ff';
-};
-
-/**
  * Normalize item (ensure consistent structure)
+ * No optional chaining for SonarQube compliance
  * @param {Object} item - Timeline item
  * @returns {Object} Normalized item
  */
 export const normalizeItem = (item) => {
+  if (!item) {
+    return null;
+  }
+  
   const type = getItemType(item);
+  const itemColor = item.color || DEFAULT_STATUS_COLOR;
   
   return {
     ...item,
     _type: type,
     _isMilestone: type === ITEM_TYPES.MILESTONE,
     _isValid: type !== null,
-    color: item.color || getDefaultItemColor(item)
+    // Color should already be set by parent component
+    color: itemColor
   };
 };

@@ -118,7 +118,7 @@ const TimelineGrid = ({
         {periods.map((period, index) => (
           <div
             key={`period-${index}`}
-            className="timeline-period"
+            className={`timeline-period ${index === 0 ? 'first-period' : ''}`}
             style={{ width: `${period.width}px` }}
           >
             {/* Label on left border */}

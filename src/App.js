@@ -29,7 +29,7 @@ const App = () => {
               }}
             >
               <Switch>
-                <Route exact path="/" render={() => <Redirect to="/project-overview" />} />
+                <Route exact path="/" render={() => <Redirect to="/timeline" />} />
                 <Route path="/project-overview" component={ProjectOverview} />
                 <Route path="/project-schedule" component={ProjectSchedule} />
                 <Route path="/workforce-planning" component={WorkforcePlanning} />

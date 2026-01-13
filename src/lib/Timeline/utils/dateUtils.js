@@ -7,15 +7,22 @@ import moment from 'moment';
 
 /**
  * Get date range from items (handles both range and milestone items)
+ * No optional chaining for SonarQube compliance
+ * Optimized for large datasets - uses for loop instead of forEach
  * @param {Array} items - Timeline items
  * @returns {Object} {start, end} moment objects
  */
 export const getDateRangeFromItems = (items) => {
-  if (!items || items.length === 0) return null;
+  if (!items || items.length === 0) {
+    return null;
+  }
 
   const allDates = [];
   
-  items.forEach(item => {
+  // Performance: use for loop for large datasets
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    
     // Handle range items
     if (item.startDate && item.endDate) {
       allDates.push(moment(item.startDate), moment(item.endDate));
@@ -27,9 +34,11 @@ export const getDateRangeFromItems = (items) => {
     else if (item.date) {
       allDates.push(moment(item.date));
     }
-  });
+  }
 
-  if (allDates.length === 0) return null;
+  if (allDates.length === 0) {
+    return null;
+  }
 
   const start = moment.min(allDates).startOf('month');
   const end = moment.max(allDates);

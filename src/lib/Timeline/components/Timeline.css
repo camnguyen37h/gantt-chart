@@ -98,8 +98,4 @@
   .timeline-scroll-container {
     overflow: visible;
   }
-
-  .timeline-content {
-    min-width: 100%;
-  }
 }

@@ -1,6 +1,13 @@
 /**
  * Layout Engine for Timeline Items
  * Handles positioning and auto-layout to prevent overlapping
+ * Optimized for million-scale datasets
+ * 
+ * Performance Optimizations:
+ * - Timestamp caching to avoid repeated moment() calls
+ * - Greedy first-fit algorithm O(n×m) where m << n
+ * - No optional chaining for better performance
+ * - Early exit optimizations
  */
 
 import { getItemDate, getItemEndDate } from './itemUtils';
@@ -70,40 +77,61 @@ export const calculateItemLayout = (items) => {
 };
 
 /**
- * Advanced layout with conflict resolution
- * Uses greedy first-fit algorithm for optimal performance
+ * Advanced layout with conflict resolution and performance optimization
+ * Uses greedy first-fit algorithm with timestamp caching
  * @param {Array} items - Timeline items
  * @returns {Array} Items with row assignments
  * 
  * Complexity: O(n × m) where n = items, m = rows (typically m << n)
+ * Optimizations:
+ * - Cache timestamps to avoid moment() calls in loop
+ * - Use valueOf() for fast numeric comparison
+ * - Early exit when suitable row found
  */
 export const calculateAdvancedLayout = (items) => {
-  if (!items || items.length === 0) return [];
+  if (!items || items.length === 0) {
+    return [];
+  }
 
-  const sortedItems = sortItemsByDate(items);
-  const rows = []; // Each row stores {endTime} of last item
-  const result = [];
-
-  for (let i = 0; i < sortedItems.length; i++) {
-    const item = sortedItems[i];
+  // Pre-process: cache timestamps for all items
+  const itemsWithTimestamps = [];
+  
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
     const startDate = getItemDate(item);
     
-    if (!startDate) continue; // Skip invalid items
+    if (!startDate) {
+      continue; // Skip invalid items
+    }
 
     const endDate = getItemEndDate(item);
     const itemEnd = endDate || startDate.clone().add(1, 'day');
     
-    // Cache timestamps for fast comparison
-    const itemStartTime = startDate.valueOf();
-    const itemEndTime = itemEnd.valueOf();
+    itemsWithTimestamps.push({
+      item: item,
+      startTime: startDate.valueOf(),
+      endTime: itemEnd.valueOf()
+    });
+  }
+
+  // Sort by start time for optimal layout
+  itemsWithTimestamps.sort((a, b) => a.startTime - b.startTime);
+
+  const rows = []; // Track end time for each row
+  const result = [];
+
+  for (let i = 0; i < itemsWithTimestamps.length; i++) {
+    const data = itemsWithTimestamps[i];
+    const item = data.item;
+    const itemStartTime = data.startTime;
+    const itemEndTime = data.endTime;
 
     // Find first row where this item fits (greedy first-fit)
     let targetRow = -1;
     
     for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-      const rowEndTime = rows[rowIdx].endTime;
+      const rowEndTime = rows[rowIdx];
       
-      // Check overlap: endA >= startB means overlap
       // No overlap if: rowEndTime < itemStartTime (strictly less than)
       if (rowEndTime < itemStartTime) {
         targetRow = rowIdx;
@@ -114,14 +142,19 @@ export const calculateAdvancedLayout = (items) => {
     // Create new row if no suitable row found
     if (targetRow === -1) {
       targetRow = rows.length;
-      rows.push({ endTime: itemEndTime });
+      rows.push(itemEndTime);
     } else {
       // Update row's end time
-      rows[targetRow].endTime = itemEndTime;
+      rows[targetRow] = itemEndTime;
     }
 
     // Add item with row assignment
-    result.push({ ...item, row: targetRow });
+    result.push({
+      ...item,
+      row: targetRow,
+      _startTime: itemStartTime,
+      _endTime: itemEndTime
+    });
   }
 
   return result;
@@ -134,9 +167,21 @@ export const calculateAdvancedLayout = (items) => {
  * @returns {number} Minimum height in pixels
  */
 export const calculateGridHeight = (layoutItems, rowHeight) => {
-  if (!layoutItems || layoutItems.length === 0) return rowHeight;
+  if (!layoutItems || layoutItems.length === 0) {
+    return rowHeight;
+  }
   
-  const maxRow = Math.max(...layoutItems.map(item => item.row || 0));
+  let maxRow = 0;
+  
+  for (let i = 0; i < layoutItems.length; i++) {
+    const item = layoutItems[i];
+    const row = item.row;
+    
+    if (typeof row === 'number' && row > maxRow) {
+      maxRow = row;
+    }
+  }
+  
   return (maxRow + 1) * rowHeight + 40; // +40 for padding
 };
 
@@ -147,51 +192,113 @@ export const calculateGridHeight = (layoutItems, rowHeight) => {
  * @returns {Object} Grouped items {groupName: [items]}
  */
 export const groupItems = (items, groupBy) => {
-  if (!items || !groupBy) return { 'All Items': items };
+  if (!items || !groupBy) {
+    return { 'All Items': items };
+  }
 
-  return items.reduce((groups, item) => {
+  const groups = {};
+  
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
     const key = item[groupBy] || 'Uncategorized';
-    if (!groups[key]) groups[key] = [];
+    
+    if (!groups[key]) {
+      groups[key] = [];
+    }
+    
     groups[key].push(item);
-    return groups;
-  }, {});
+  }
+  
+  return groups;
 };
 
 /**
  * Filter items based on criteria
+ * No optional chaining for performance
  * @param {Array} items - Timeline items
  * @param {Object} filters - Filter criteria {property: value}
  * @returns {Array} Filtered items
  */
 export const filterItems = (items, filters) => {
-  if (!items || !filters || Object.keys(filters).length === 0) return items;
+  if (!items) {
+    return [];
+  }
+  
+  if (!filters || Object.keys(filters).length === 0) {
+    return items;
+  }
 
-  return items.filter(item => {
-    return Object.entries(filters).every(([key, value]) => {
-      if (value === null || value === undefined || value === '') return true;
-      return item[key] === value;
-    });
-  });
+  const result = [];
+  const filterEntries = Object.entries(filters);
+  
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    let passesAllFilters = true;
+    
+    for (let j = 0; j < filterEntries.length; j++) {
+      const [key, value] = filterEntries[j];
+      
+      if (value === null || value === undefined || value === '') {
+        continue;
+      }
+      
+      if (item[key] !== value) {
+        passesAllFilters = false;
+        break;
+      }
+    }
+    
+    if (passesAllFilters) {
+      result.push(item);
+    }
+  }
+  
+  return result;
 };
 
 /**
- * Search items by text
+ * Search items by text (optimized for performance)
  * @param {Array} items - Timeline items
  * @param {string} searchText - Search query
  * @param {Array} searchFields - Fields to search in (default: ['name'])
  * @returns {Array} Matching items
  */
-export const searchItems = (items, searchText, searchFields = ['name']) => {
-  if (!items || !searchText) return items;
+export const searchItems = (items, searchText, searchFields) => {
+  if (!items) {
+    return [];
+  }
+  
+  if (!searchText) {
+    return items;
+  }
 
+  const fields = searchFields || ['name'];
   const query = searchText.toLowerCase().trim();
-  if (query === '') return items;
+  
+  if (query === '') {
+    return items;
+  }
 
-  return items.filter(item => {
-    return searchFields.some(field => {
+  const result = [];
+  
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    let found = false;
+    
+    for (let j = 0; j < fields.length; j++) {
+      const field = fields[j];
       const value = item[field];
-      if (!value) return false;
-      return String(value).toLowerCase().includes(query);
-    });
-  });
+      
+      if (value && String(value).toLowerCase().includes(query)) {
+        found = true;
+        break;
+      }
+    }
+    
+    if (found) {
+      result.push(item);
+    }
+  }
+  
+  return result;
 };

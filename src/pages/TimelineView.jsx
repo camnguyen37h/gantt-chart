@@ -93,8 +93,33 @@ const TimelineView = () => {
         <div className="timeline-view-header">
           <h2 className="timeline-view-title">Project Timeline View</h2>
         </div>
-        <div style={{ padding: '60px 20px', textAlign: 'center', color: '#8c8c8c' }}>
-          Loading timeline data...
+        <div className="timeline-skeleton">
+          {/* Skeleton Toolbar */}
+          <div className="skeleton-toolbar">
+            <div className="skeleton-button"></div>
+          </div>
+          
+          {/* Skeleton Grid */}
+          <div className="skeleton-grid">
+            {/* Skeleton Items */}
+            <div className="skeleton-item skeleton-item-1"></div>
+            <div className="skeleton-item skeleton-item-2"></div>
+            <div className="skeleton-item skeleton-item-3"></div>
+          </div>
+          
+          {/* Skeleton Header */}
+          <div className="skeleton-header">
+            {[1, 2, 3, 4, 5, 6].map((month) => (
+              <div key={month} className="skeleton-month"></div>
+            ))}
+          </div>
+          
+          {/* Skeleton Legend */}
+          <div className="skeleton-legend">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((status) => (
+              <div key={status} className="skeleton-status"></div>
+            ))}
+          </div>gi
         </div>
       </div>
     );
