@@ -28,7 +28,7 @@
   overflow-y: visible;
   position: relative;
   background: white;
-  padding: 40px;
+  padding: 40px 60px 0;
 }
 
 .timeline-content {
@@ -97,5 +97,9 @@
 
   .timeline-scroll-container {
     overflow: visible;
+  }
+
+  .timeline-content {
+    min-width: 100%;
   }
 }

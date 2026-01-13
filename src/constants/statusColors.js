@@ -47,8 +47,6 @@ export const DEFAULT_STATUS_COLOR = '#bfbfbf'; // Gray for > 30 statuses
 
 /**
  * Get color for status
- * This is the main function to assign colors to timeline items based on status
- * Used in parent components (e.g., TimelineView) to set item.color property
  * @param {string} status - Status name
  * @param {Object} statusColorMap - Map of status to color index
  * @returns {string} Hex color

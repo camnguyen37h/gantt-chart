@@ -24,29 +24,45 @@
   font-size: 14px;
 }
 
-/* Timeline Header */
+/* Timeline Header - ECharts Style */
 .timeline-header {
   display: flex;
-  background: linear-gradient(to bottom, #fafafa 0%, #f5f5f5 100%);
-  border-top: 1px solid #d9d9d9;
-  border-bottom: 2px solid #e8e8e8;
+  background: transparent;
+  border-top: 1px solid #e8e8e8;
   position: relative;
   margin-top: 0;
-  min-height: 40px;
+  min-height: 36px;
   width: 100%;
   box-sizing: border-box;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* X-Axis Line */
+.timeline-axis-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #333;
+  z-index: 5;
+}
+
+/* Tick Marks */
+.timeline-tick-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 6px;
+  background: #333;
+  z-index: 6;
 }
 
 .timeline-period {
   position: relative;
-  border-right: 1px solid #d9d9d9;
+  border-right: 1px solid #f0f0f0;
   flex-shrink: 0;
   height: 100%;
-}
-
-.timeline-period:hover {
-  background: rgba(24, 144, 255, 0.04);
 }
 
 .timeline-period:last-child {
@@ -56,19 +72,15 @@
 .period-label-border {
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 11px;
-  font-weight: 600;
-  color: #262626;
-  background: #fafafa;
-  padding: 4px 10px;
-  border-radius: 4px;
+  top: 8px;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 400;
+  color: #8c8c8c;
+  background: white;
+  padding: 2px 4px;
   white-space: nowrap;
   z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  border: 1px solid #e0e0e0;
-  min-width: 50px;
   text-align: center;
 }
 
@@ -171,13 +183,13 @@
   }
 }
 
-/* Grid Lines */
+/* Grid Lines - ECharts Style */
 .timeline-grid-line {
   position: absolute;
   top: 0;
   bottom: 0;
   width: 1px;
-  background: #f0f0f0;
+  background: rgba(0, 0, 0, 0.06);
   z-index: 1;
   pointer-events: none;
 }
@@ -187,7 +199,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: #f0f0f0;
+  background: rgba(0, 0, 0, 0.06);
   z-index: 1;
   pointer-events: none;
 }
@@ -268,6 +280,17 @@
   }
 }
 
+@keyframes fadeInCentered {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 @keyframes slideInFromLeft {
   from {
     opacity: 0;
@@ -313,13 +336,13 @@
 }
 
 .current-date-marker {
-  animation: fadeInUp 0.5s ease-out;
+  animation: fadeInCentered 0.5s ease-out;
   animation-delay: 0.4s;
   animation-fill-mode: both;
 }
 
 .current-date-label {
-  animation: fadeInUp 0.5s ease-out;
+  animation: fadeInCentered 0.5s ease-out;
   animation-delay: 0.5s;
   animation-fill-mode: both;
 }

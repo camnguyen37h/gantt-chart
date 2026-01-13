@@ -105,6 +105,8 @@ const TimelineView = () => {
             <div className="skeleton-item skeleton-item-1"></div>
             <div className="skeleton-item skeleton-item-2"></div>
             <div className="skeleton-item skeleton-item-3"></div>
+            <div className="skeleton-item skeleton-item-4"></div>
+            <div className="skeleton-item skeleton-item-5"></div>
           </div>
           
           {/* Skeleton Header */}
@@ -119,7 +121,7 @@ const TimelineView = () => {
             {[1, 2, 3, 4, 5, 6, 7, 8].map((status) => (
               <div key={status} className="skeleton-status"></div>
             ))}
-          </div>gi
+          </div>
         </div>
       </div>
     );

@@ -3,12 +3,10 @@
 /* Keyframe animations */
 @keyframes itemGrowWidth {
   from {
-    width: 0;
-    opacity: 0;
+    transform: scaleX(0);
   }
   to {
-    width: 100%;
-    opacity: 1;
+    transform: scaleX(1);
   }
 }
 
@@ -54,9 +52,9 @@
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   overflow: hidden;
+  transform-origin: left center;
   animation: itemGrowWidth 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   animation-fill-mode: both;
-  transform-origin: left center;
 }
 
 .timeline-range-item:hover {
@@ -228,9 +226,7 @@
   }
 }
 
-.timeline-item {
-  animation: itemFadeIn 0.3s ease-out;
-}
+/* Removed base animation - each item type has its own animation */
 
 /* Pulse animation for milestones */
 @keyframes milestonePulse {

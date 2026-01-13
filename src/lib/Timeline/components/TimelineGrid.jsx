@@ -64,7 +64,7 @@ const TimelineGrid = ({
           const { start } = timelineData;
           const periodStart = period.start;
           const daysFromStart = periodStart.diff(start, 'days', true);
-          const left = daysFromStart * (timelineData.totalWidth / timelineData.totalDays);
+          const left = daysFromStart * (timelineData.baseWidth / timelineData.totalDays);
           return (
             <div
               key={`vline-${index}`}
@@ -78,13 +78,20 @@ const TimelineGrid = ({
         {enableGrid && layoutItems.length > 0 && 
           Array.from({ 
             length: Math.max(...layoutItems.map(i => i.row || 0)) + 1 
-          }).map((_, index) => (
-            <div
-              key={`hline-${index}`}
-              className="timeline-horizontal-line"
-              style={{ top: `${index * rowHeight}px` }}
-            />
-          ))
+          }).map((_, index, array) => {
+            // Skip the last horizontal line as it falls in the padding area
+            if (index === array.length - 1) return null;
+            return (
+              <div
+                key={`hline-${index}`}
+                className="timeline-horizontal-line"
+                style={{ 
+                  top: `${index * rowHeight}px`,
+                  width: `${timelineData.baseWidth}px` // Limit to content width, exclude padding
+                }}
+              />
+            );
+          })
         }
 
         {/* Current Date Line */}
@@ -114,13 +121,18 @@ const TimelineGrid = ({
       </div>
 
       {/* Timeline Header - Below Grid */}
-      <div className="timeline-header" style={{ width: `${timelineData?.totalWidth || 0}px` }}>
+      <div className="timeline-header" style={{ width: `${timelineData?.baseWidth || 0}px` }}>
+        {/* X-Axis Line */}
+        <div className="timeline-axis-line" />
+        
         {periods.map((period, index) => (
           <div
             key={`period-${index}`}
-            className={`timeline-period ${index === 0 ? 'first-period' : ''}`}
+            className="timeline-period"
             style={{ width: `${period.width}px` }}
           >
+            {/* Tick mark */}
+            <div className="timeline-tick-mark" />
             {/* Label on left border */}
             <div className="period-label-border">{period.label}</div>
           </div>

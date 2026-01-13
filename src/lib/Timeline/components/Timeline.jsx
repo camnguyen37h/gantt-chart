@@ -9,7 +9,6 @@ import { useTimeline } from '../hooks/useTimeline';
 import TimelineToolbar from './TimelineToolbar';
 import TimelineGrid from './TimelineGrid';
 import TimelineLegend from './TimelineLegend';
-import LoadingIndicator from './LoadingIndicator';
 import { VIEW_MODES } from '../constants';
 import './Timeline.css';
 
@@ -31,14 +30,10 @@ const Timeline = memo(({
   const {
     searchQuery,
     timelineData,
-    visibleItems,
     layoutItems,
     gridHeight,
     currentDatePosition,
     containerRef,
-    handleScroll,
-    isCalculating,
-    calculationProgress,
     setSearchQuery,
     getItemStyle,
     scrollToToday,
@@ -60,15 +55,11 @@ const Timeline = memo(({
       />
 
       {/* Scrollable Timeline Container */}
-      <div 
-        className="timeline-scroll-container" 
-        ref={containerRef}
-        onScroll={handleScroll}
-      >
+      <div className="timeline-scroll-container" ref={containerRef}>
         <div className="timeline-content">
           <TimelineGrid
             timelineData={timelineData}
-            layoutItems={visibleItems}
+            layoutItems={layoutItems}
             gridHeight={gridHeight}
             currentDatePosition={currentDatePosition}
             getItemStyle={getItemStyle}
@@ -79,16 +70,9 @@ const Timeline = memo(({
             onItemDoubleClick={onItemDoubleClick}
             onItemHover={onItemHover}
             renderItem={renderItem}
-            loading={loading || isCalculating}
+            loading={loading}
           />
         </div>
-        
-        {/* Loading Indicator for Large Datasets */}
-        <LoadingIndicator 
-          isVisible={isCalculating} 
-          progress={calculationProgress}
-          message="Calculating timeline layout..."
-        />
       </div>
 
       {/* Timeline Legend */}

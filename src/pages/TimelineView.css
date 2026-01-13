@@ -60,6 +60,18 @@
   animation-delay: 0.2s;
 }
 
+.skeleton-item-4 {
+  width: 50%;
+  margin-left: 20%;
+  animation-delay: 0.3s;
+}
+
+.skeleton-item-5 {
+  width: 55%;
+  margin-left: 10%;
+  animation-delay: 0.4s;
+}
+
 .skeleton-header {
   display: flex;
   background: #fafafa;
