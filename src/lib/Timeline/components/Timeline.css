@@ -32,7 +32,6 @@
 }
 
 .timeline-content {
-  min-width: max(200%, 1200px); /* Ensure minimum width for readability */
   position: relative;
 }
 
@@ -65,10 +64,6 @@
 @media (max-width: 480px) {
   .timeline-scroll-container::-webkit-scrollbar {
     height: 6px;
-  }
-  
-  .timeline-content {
-    min-width: max(200%, 800px); /* Smaller min-width for mobile */
   }
 }
 

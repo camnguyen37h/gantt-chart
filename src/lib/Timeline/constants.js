@@ -19,9 +19,9 @@ export const RENDER_MODES = {
 export const DEFAULT_CONFIG = {
   viewMode: VIEW_MODES.MONTHS,
   renderMode: 'canvas', // 'canvas' or 'dom' - Use Canvas for better performance
-  rowHeight: 50,
+  rowHeight: 75,
   itemHeight: 34,
-  itemPadding: 8,
+  itemPadding: 15,
   pixelsPerDay: 8, // Width in pixels per day for timeline (compact view)
   minZoomLevel: 0.5,
   maxZoomLevel: 3,

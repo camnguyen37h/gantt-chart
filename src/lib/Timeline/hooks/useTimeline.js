@@ -33,8 +33,23 @@ export const useTimeline = (items = [], config = {}) => {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({});
+  const [containerWidth, setContainerWidth] = useState(null);
   
   const containerRef = useRef(null);
+
+  // Track container width for auto-scaling
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        const width = containerRef.current.offsetWidth;
+        setContainerWidth(width);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   // Normalize items (add helper properties)
   const normalizedItems = useMemo(() => {
@@ -65,20 +80,39 @@ export const useTimeline = (items = [], config = {}) => {
 
     const { start, end } = dateRange;
     const totalDays = end.diff(start, 'days', true);
-    const periods = generatePeriods(start, end, finalConfig.pixelsPerDay);
-    const baseWidth = totalDays * finalConfig.pixelsPerDay;
-    // Add padding to ensure scroll area includes padding (120px total: 60px left + 60px right)
-    const totalWidth = baseWidth + 60;
+    let periods = generatePeriods(start, end, finalConfig.pixelsPerDay);
+    let baseWidth = totalDays * finalConfig.pixelsPerDay;
+    let scaleFactor = 1;
+    
+    // Auto-scale if timeline is shorter than container (minimum 800px container width)
+    const minContainerWidth = containerWidth || 800;
+    const availableWidth = minContainerWidth - 120; // Subtract padding (60px left + 60px right)
+    
+    if (baseWidth < availableWidth && baseWidth > 0) {
+      scaleFactor = availableWidth / baseWidth;
+      
+      // Scale all periods proportionally
+      periods = periods.map(period => ({
+        ...period,
+        width: period.width * scaleFactor
+      }));
+      
+      baseWidth = availableWidth;
+    }
+    
+    const totalWidth = baseWidth + 60; // Add padding (60px left + 60px right)
 
     return {
       start,
       end,
       totalDays,
-      totalWidth, // Total scrollable width including padding
-      baseWidth,  // Actual content width without padding
-      periods
+      totalWidth,
+      baseWidth,
+      periods,
+      pixelsPerDay: finalConfig.pixelsPerDay * scaleFactor, // Scaled pixels per day
+      scaleFactor
     };
-  }, [dateRange, finalConfig.pixelsPerDay]);
+  }, [dateRange, finalConfig.pixelsPerDay, containerWidth]);
 
   // Calculate current date position
   const currentDatePosition = useMemo(() => {
@@ -87,9 +121,9 @@ export const useTimeline = (items = [], config = {}) => {
     const now = moment();
     if (now.isBefore(timelineData.start) || now.isAfter(timelineData.end)) return null;
     const daysFromStart = now.diff(timelineData.start, 'days', true);
-    return daysFromStart * finalConfig.pixelsPerDay;
+    return daysFromStart * timelineData.pixelsPerDay; // Use scaled pixelsPerDay
 
-  }, [timelineData, finalConfig.pixelsPerDay]);
+  }, [timelineData]);
 
   // Layout items with auto-positioning
   const layoutItems = useMemo(() => {
@@ -107,11 +141,13 @@ export const useTimeline = (items = [], config = {}) => {
     if (!timelineData) return {};
 
     const moment = require('moment');
-    const pixelsPerDay = finalConfig.pixelsPerDay * zoomLevel;
+    const pixelsPerDay = timelineData.pixelsPerDay * zoomLevel; // Use scaled pixelsPerDay
 
-    // Handle milestones differently - position at createdDate (center)
+    // Handle milestones differently - position at startDate or dueDate
     if (isMilestone(item)) {
-      const milestoneDate = item.createdDate ? moment(item.createdDate) : moment(item.startDate);
+      const milestoneDate = getItemDate(item);
+      if (!milestoneDate) return {};
+      
       const daysFromStart = milestoneDate.diff(timelineData.start, 'days', true);
       const left = daysFromStart * pixelsPerDay;
       const top = item.row * finalConfig.rowHeight + finalConfig.itemPadding;

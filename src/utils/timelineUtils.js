@@ -24,12 +24,15 @@ export const normalizeTimelineItem = (item) => {
   
   let normalizedStartDate = startDate;
   let normalizedDueDate = dueDate;
+  let originallyMilestone = false;
   
   // Case: both startDate and dueDate are null, but createdDate exists
-  if (!startDate && !dueDate && createdDate) {
+
+  if ((!startDate || !dueDate || moment(dueDate).isSameOrBefore(moment(startDate), 'day')) && createdDate) {
     const created = moment(createdDate);
     normalizedStartDate = created.clone().subtract(1, 'day').format('YYYY-MM-DD');
     normalizedDueDate = created.clone().add(1, 'day').format('YYYY-MM-DD');
+    originallyMilestone = true; // Flag: đây là milestone gốc
   }
   
   // Validate we have dates
@@ -47,13 +50,14 @@ export const normalizeTimelineItem = (item) => {
     id: issueId,
     name: issueName,
     startDate: normalizedStartDate,
-    endDate: normalizedDueDate, // Use endDate for timeline consistency
+    dueDate: normalizedDueDate,
     resolvedDate: resolvedDate || null,
     createdDate: createdDate || null,
     status: status || 'Unknown',
     duration: duration,
     lateTime: lateTime,
-    progress: calculateProgress(normalizedStartDate, normalizedDueDate, resolvedDate)
+    progress: calculateProgress(normalizedStartDate, normalizedDueDate, resolvedDate),
+    _originallyMilestone: originallyMilestone
   };
 };
 

@@ -64,21 +64,6 @@ const drawGridLines = (ctx, timelineData, layoutItems, rowHeight) => {
     ctx.stroke();
   }
 
-  // Horizontal grid lines
-  if (layoutItems.length > 0) {
-    const maxRow = Math.max(...layoutItems.map(i => i.row || 0));
-    
-    for (let i = 0; i <= maxRow; i++) {
-      if (i === maxRow) continue; // Skip last line
-
-      const top = i * rowHeight;
-      ctx.beginPath();
-      ctx.moveTo(0, top);
-      ctx.lineTo(baseWidth, top);
-      ctx.stroke();
-    }
-  }
-
   ctx.restore();
 };
 
@@ -238,18 +223,94 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress) => {
   const dpr = window.devicePixelRatio || 1;
   ctx.scale(dpr, dpr);
 
-  // Label with fade-in
+  // Label with background pill (always below diamond)
   ctx.globalAlpha = progress;
-  ctx.fillStyle = '#262626';
-  ctx.font = '400 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.textAlign = 'center';
+  const text = item.name || '';
+  const labelY = centerY + size / 2 + 18; // Increased from 12 to 18 for more spacing
+  
+  // Set font
+  ctx.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textBaseline = 'top';
   
-  const labelY = centerY + size / 2 + 4;
-  const text = item.name || '';
-  const maxWidth = 120;
+  // Measure full text
+  const textMetrics = ctx.measureText(text);
+  const fullTextWidth = textMetrics.width;
+  const canvasWidth = ctx.canvas.width / dpr;
   
-  ctx.fillText(text, centerX, labelY, maxWidth);
+  // Calculate max width based on position
+  let maxWidth = 120;
+  let textX = centerX;
+  let alignment = 'center';
+  
+  // Only adjust alignment if text actually overflows
+  const halfTextWidth = fullTextWidth / 2;
+  const padding = 6; // Pill padding
+  
+  if (centerX + halfTextWidth + padding > canvasWidth - 10) {
+    // Text overflows right edge
+    alignment = 'right';
+    textX = canvasWidth - 10;
+    maxWidth = Math.min(120, textX - 10);
+  } else if (centerX - halfTextWidth - padding < 10) {
+    // Text overflows left edge
+    alignment = 'left';
+    textX = 10;
+    maxWidth = Math.min(120, canvasWidth - textX - 10);
+  }
+  // Otherwise keep center alignment
+  
+  // Truncate text if needed
+  let displayText = text;
+  let displayWidth = fullTextWidth;
+  
+  if (fullTextWidth > maxWidth) {
+    // Smart truncation - keep start and end visible
+    let truncated = text;
+    while (ctx.measureText(truncated + '...').width > maxWidth && truncated.length > 3) {
+      truncated = truncated.slice(0, -1);
+    }
+    displayText = truncated + '...';
+    displayWidth = ctx.measureText(displayText).width;
+  }
+  
+  // Calculate background pill dimensions
+  // padding already declared above (6px)
+  const pillHeight = 18;
+  let pillX, pillWidth;
+  
+  if (alignment === 'center') {
+    pillWidth = displayWidth + padding * 2;
+    pillX = textX - pillWidth / 2;
+  } else if (alignment === 'left') {
+    pillWidth = displayWidth + padding * 2;
+    pillX = textX - padding;
+  } else {
+    pillWidth = displayWidth + padding * 2;
+    pillX = textX - pillWidth + padding;
+  }
+  
+  const pillY = labelY - 2;
+  
+  // Draw background pill
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetY = 1;
+  ctx.beginPath();
+  ctx.roundRect(pillX, pillY, pillWidth, pillHeight, 9);
+  ctx.fill();
+  
+  // Reset shadow for text
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+  ctx.shadowOffsetY = 0;
+  
+  // Draw text
+  ctx.fillStyle = '#262626';
+  ctx.textAlign = alignment;
+  ctx.textBaseline = 'top';
+  ctx.fillText(displayText, textX, labelY);
+  
   ctx.globalAlpha = 1;
 
   ctx.restore();

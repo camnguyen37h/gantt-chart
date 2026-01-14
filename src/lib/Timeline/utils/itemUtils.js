@@ -20,16 +20,19 @@ export const ITEM_TYPES = {
  * @returns {string} ITEM_TYPES
  */
 export const getItemType = (item) => {
-  // Milestones are items with status: 'Milestone'
-  if (item && item.status === 'Milestone') {
+  if (!item) {
+    return null;
+  }
+  
+  // Check flag từ normalizeTimelineItem (đã xử lý fake dates)
+  // Nếu ban đầu thiếu dates → đã được đánh dấu là milestone
+  if (item._originallyMilestone === true) {
     return ITEM_TYPES.MILESTONE;
   }
-  // Default to range if has startDate and endDate
-  if (item && item.startDate && item.endDate) {
-    return ITEM_TYPES.RANGE;
-  }
-  return null;
-};
+  
+  // Còn lại → RANGE (có đủ dates thực sự)
+  return ITEM_TYPES.RANGE;
+}
 
 /**
  * Get item date for positioning (handles both range and milestone)
@@ -37,9 +40,11 @@ export const getItemType = (item) => {
  * @returns {moment|null} Date for positioning
  */
 export const getItemDate = (item) => {
-  // All items now have startDate
-  if (item.startDate) {
-    return moment(item.startDate);
+  // Priority: startDate > dueDate > createdDate (for milestones)
+  const dateValue = item.startDate || item.dueDate || item.createdDate;
+  
+  if (dateValue) {
+    return moment(dateValue);
   }
   
   return null;
@@ -51,9 +56,11 @@ export const getItemDate = (item) => {
  * @returns {moment|null} End date
  */
 export const getItemEndDate = (item) => {
-  // All items now have endDate (including milestones)
-  if (item.endDate) {
-    return moment(item.endDate);
+  // Use dueDate as end date
+  const dateValue = item.dueDate;
+  
+  if (dateValue) {
+    return moment(dateValue);
   }
   
   return null;
@@ -68,27 +75,29 @@ export const formatItemInfo = (item) => {
   const type = getItemType(item);
   
   if (type === ITEM_TYPES.MILESTONE) {
-    const date = moment(item.createdDate || item.date);
+    const date = getItemDate(item);
+    if (!date) return null;
+    
     return {
       type: 'milestone',
-      title: item.name,
+      title: item.issueName || item.name,
       date: date.format('DD MMM YYYY'),
-      tooltip: `${item.name}\nMilestone: ${date.format('ddd, DD MMM YYYY')}`
+      tooltip: `${item.issueName || item.name}\nMilestone: ${date.format('ddd, DD MMM YYYY')}`
     };
   }
   
   if (type === ITEM_TYPES.RANGE) {
     const start = moment(item.startDate);
-    const end = moment(item.endDate);
+    const end = moment(item.dueDate);
     const duration = end.diff(start, 'days');
     
     return {
       type: 'range',
-      title: item.name,
+      title: item.issueName || item.name,
       startDate: start.format('DD MMM YYYY'),
-      endDate: end.format('DD MMM YYYY'),
+      dueDate: end.format('DD MMM YYYY'),
       duration: `${duration} days`,
-      tooltip: `${item.name}\n${start.format('DD MMM')} - ${end.format('DD MMM YYYY')}\nDuration: ${duration} days`
+      tooltip: `${item.issueName || item.name}\n${start.format('DD MMM')} - ${end.format('DD MMM YYYY')}\nDuration: ${duration} days`
     };
   }
   
@@ -115,7 +124,6 @@ export const normalizeItem = (item) => {
   return {
     ...item,
     _type: type,
-    _isMilestone: type === ITEM_TYPES.MILESTONE,
     _isValid: type !== null,
     color: item.color || DEFAULT_STATUS_COLOR
   };

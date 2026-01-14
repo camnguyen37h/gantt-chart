@@ -35,18 +35,11 @@ const TimelineCanvas = ({
   const animationProgressRef = useRef(0);
   const animationStartTimeRef = useRef(null);
 
-  if (!timelineData) {
-    return (
-      <div className="timeline-canvas-empty">
-        <p>No data to display</p>
-      </div>
-    );
-  }
-
   // Calculate canvas dimensions
-  const canvasWidth = timelineData.baseWidth;
+  const canvasWidth = timelineData?.totalWidth || 1000;
   const canvasHeight = Math.max(gridHeight, 400);
   const dpr = window.devicePixelRatio || 1;
+  const hasItems = layoutItems && layoutItems.length > 0;
 
   // Draw timeline on canvas
   const draw = useCallback(() => {
@@ -173,8 +166,17 @@ const TimelineCanvas = ({
       ref={containerRef}
       className={`timeline-canvas-container ${loading ? 'timeline-loading' : 'timeline-loaded'}`}
     >
-      {/* Canvas Grid Area (wrapped for scrolling) */}
-      <div className="timeline-canvas-wrapper" style={{ position: 'relative' }}>
+      {!timelineData ? (
+        /* Empty state if no timeline data */
+        <div className="timeline-canvas-empty">
+          <div className="empty-state-icon">📅</div>
+          <h3>No Timeline Available</h3>
+          <p>Unable to generate timeline. Please check your data.</p>
+        </div>
+      ) : (
+        <>
+          {/* Canvas Grid Area (wrapped for scrolling) */}
+          <div className="timeline-canvas-wrapper" style={{ position: 'relative' }}>
         {/* Main Canvas Layer */}
         <canvas
           ref={canvasRef}
@@ -211,23 +213,38 @@ const TimelineCanvas = ({
             </div>
           </div>
         )}
+
+        {/* Empty State Overlay (when no items) */}
+        {!hasItems && (
+          <div className="timeline-empty-overlay">
+            <div className="empty-state-content">
+              <div className="empty-state-icon">📆</div>
+              <h3 className="empty-state-title">No Timeline Items</h3>
+              <p className="empty-state-message">There are no tasks or milestones to display in this timeline view.</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Timeline Header (DOM for better text rendering) */}
-      <div className="timeline-header" style={{ width: `${timelineData.baseWidth}px` }}>
-        <div className="timeline-axis-line" />
-        
-        {timelineData.periods.map((period, index) => (
-          <div
-            key={`period-${index}`}
-            className="timeline-period"
-            style={{ width: `${period.width}px` }}
-          >
-            <div className="timeline-tick-mark" />
-            <div className="period-label-border">{period.label}</div>
-          </div>
-        ))}
-      </div>
+      {timelineData && timelineData.periods && (
+        <div className="timeline-header" style={{ width: `${timelineData.baseWidth}px` }}>
+          <div className="timeline-axis-line" />
+          
+          {timelineData.periods.map((period, index) => (
+            <div
+              key={`period-${index}`}
+              className="timeline-period"
+              style={{ width: `${period.width}px` }}
+            >
+              <div className="timeline-tick-mark" />
+              <div className="period-label-border">{period.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+        </>
+      )}
     </div>
   );
 };

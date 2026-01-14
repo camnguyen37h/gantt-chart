@@ -17,8 +17,8 @@ export const mockApiResponse = [
   {
     issueId: "258438",
     issueName: "Backend API Development",
-    startDate: "2023-10-01",
-    dueDate: "2024-06-30",
+    startDate: "2024-01-01",
+    dueDate: "2024-04-01",
     resolvedDate: "2024-07-05",
     createdDate: "2023-09-25",
     status: "Completed"
@@ -155,7 +155,7 @@ export const mockApiResponse = [
     dueDate: null,
     resolvedDate: null,
     createdDate: "2023-01-10",
-    status: "Milestone"
+    status: "Completed"
   },
   {
     issueId: "MS-002",
@@ -186,7 +186,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "MS-005",
-    issueName: "Go-Live",
+    issueName: "Go-Live Project Launch 2026-05-31",
     startDate: null,
     dueDate: null,
     resolvedDate: null,

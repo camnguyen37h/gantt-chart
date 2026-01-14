@@ -16,17 +16,31 @@ const isPointInRect = (x, y, rect) => {
 };
 
 /**
- * Check if point is inside milestone diamond
+ * Check if point is inside milestone diamond or its label
  */
-const isPointInMilestone = (x, y, style) => {
+const isPointInMilestone = (x, y, style, item) => {
   const left = parseFloat(style.left);
   const top = parseFloat(style.top);
   const size = 20;
   const centerX = left;
   const centerY = top + 15;
   
-  // Simple bounding box check for diamond
-  return Math.abs(x - centerX) + Math.abs(y - centerY) <= size / 2;
+  // Check diamond (simple bounding box)
+  const inDiamond = Math.abs(x - centerX) + Math.abs(y - centerY) <= size / 2;
+  
+  if (inDiamond) return true;
+  
+  // Check label area below diamond (extended hit area)
+  const labelY = centerY + size / 2 + 18; // Same as in renderer
+  const labelHeight = 18; // Pill height
+  const labelWidth = 120; // Max width
+  
+  const labelLeft = centerX - labelWidth / 2;
+  const labelRight = centerX + labelWidth / 2;
+  const labelTop = labelY - 2; // Pill top
+  const labelBottom = labelTop + labelHeight;
+  
+  return x >= labelLeft && x <= labelRight && y >= labelTop && y <= labelBottom;
 };
 
 /**
@@ -40,9 +54,9 @@ const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
     
     if (!style) continue;
 
-    // Check milestone
-    if (item._isMilestone || (!item.endDate && !item.end)) {
-      if (isPointInMilestone(x, y, style)) {
+    // Check milestone (dùng _originallyMilestone từ normalizeTimelineItem)
+    if (item._originallyMilestone) {
+      if (isPointInMilestone(x, y, style, item)) {
         return item;
       }
     } else {
@@ -98,8 +112,10 @@ export const handleCanvasEvents = (options) => {
     if (!tooltip) return;
 
     const rect = container.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+    const scrollLeft = container.scrollLeft || 0;
+    const scrollTop = container.scrollTop || 0;
+    const mouseX = event.clientX - rect.left + scrollLeft;
+    const mouseY = event.clientY - rect.top + scrollTop;
 
     // Update tooltip content
     const titleEl = tooltip.querySelector('.tooltip-title');
@@ -111,17 +127,32 @@ export const handleCanvasEvents = (options) => {
     
     if (detailsEl) {
       const moment = require('moment');
-      const startDate = item.startDate ? moment(item.startDate).format('MMM DD, YYYY') : 'N/A';
-      const endDate = item.endDate ? moment(item.endDate).format('MMM DD, YYYY') : 'N/A';
       const status = item.status || 'Unknown';
       const progress = item.progress !== undefined ? `${item.progress}%` : 'N/A';
       
-      detailsEl.innerHTML = `
-        <div class="tooltip-row"><span class="tooltip-label">Status:</span> <span class="tooltip-value">${status}</span></div>
-        <div class="tooltip-row"><span class="tooltip-label">Start:</span> <span class="tooltip-value">${startDate}</span></div>
-        <div class="tooltip-row"><span class="tooltip-label">End:</span> <span class="tooltip-value">${endDate}</span></div>
-        <div class="tooltip-row"><span class="tooltip-label">Progress:</span> <span class="tooltip-value">${progress}</span></div>
-      `;
+      // Check if this is a milestone (originally missing dates)
+      if (item._originallyMilestone) {
+        const createdDate = item.createdDate ? moment(item.createdDate).format('MMM DD, YYYY') : 'N/A';
+        detailsEl.innerHTML = `
+          <div class="tooltip-row"><span class="tooltip-label">Type:</span> <span class="tooltip-value">Milestone</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Status:</span> <span class="tooltip-value">${status}</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Created:</span> <span class="tooltip-value">${createdDate}</span></div>
+        `;
+      } else {
+        // Range item - show start and due dates
+        const startDate = item.startDate ? moment(item.startDate).format('MMM DD, YYYY') : 'N/A';
+        const dueDate = item.dueDate ? moment(item.dueDate).format('MMM DD, YYYY') : 'N/A';
+        const duration = item.duration !== undefined ? `${item.duration} days` : 'N/A';
+        
+        detailsEl.innerHTML = `
+          <div class="tooltip-row"><span class="tooltip-label">Type:</span> <span class="tooltip-value">Range</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Status:</span> <span class="tooltip-value">${status}</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Start:</span> <span class="tooltip-value">${startDate}</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Due:</span> <span class="tooltip-value">${dueDate}</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Duration:</span> <span class="tooltip-value">${duration}</span></div>
+          <div class="tooltip-row"><span class="tooltip-label">Progress:</span> <span class="tooltip-value">${progress}</span></div>
+        `;
+      }
     }
 
     // Position tooltip
@@ -133,26 +164,25 @@ export const handleCanvasEvents = (options) => {
       const tooltipRect = tooltip.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
       
+      // Calculate position relative to viewport (client coordinates)
+      const clientX = event.clientX - containerRect.left;
+      const clientY = event.clientY - containerRect.top;
+      
       let left = mouseX + 15;
       let top = mouseY + 10;
 
-      // Adjust if tooltip goes off-screen to the right
-      if (left + tooltipRect.width > containerRect.width) {
+      // Adjust if tooltip goes off-screen to the right (check against viewport)
+      if (clientX + 15 + tooltipRect.width > containerRect.width) {
         left = mouseX - tooltipRect.width - 15;
       }
 
-      // Adjust if tooltip goes off-screen to the bottom
-      if (top + tooltipRect.height > containerRect.height) {
+      // Adjust if tooltip goes off-screen to the bottom (check against viewport)
+      if (clientY + 10 + tooltipRect.height > containerRect.height) {
         top = mouseY - tooltipRect.height - 10;
       }
 
-      // Keep tooltip within bounds
-      left = Math.max(10, Math.min(left, containerRect.width - tooltipRect.width - 10));
-      top = Math.max(10, Math.min(top, containerRect.height - tooltipRect.height - 10));
-
       tooltip.style.left = `${left}px`;
       tooltip.style.top = `${top}px`;
-      hideTooltip();
       tooltip.style.opacity = '1';
     });
   };
@@ -192,25 +222,28 @@ export const handleCanvasEvents = (options) => {
     } else if (item) {
       // Update tooltip position on mouse move
       const rect = container.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+      const scrollLeft = container.scrollLeft || 0;
+      const scrollTop = container.scrollTop || 0;
+      const mouseX = event.clientX - rect.left + scrollLeft;
+      const mouseY = event.clientY - rect.top + scrollTop;
       
       if (tooltip && tooltip.style.display === 'block') {
         const tooltipRect = tooltip.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
         
+        // Calculate position relative to viewport (client coordinates)
+        const clientX = event.clientX - containerRect.left;
+        const clientY = event.clientY - containerRect.top;
+        
         let left = mouseX + 15;
         let top = mouseY + 10;
 
-        if (left + tooltipRect.width > containerRect.width) {
+        if (clientX + 15 + tooltipRect.width > containerRect.width) {
           left = mouseX - tooltipRect.width - 15;
         }
-        if (top + tooltipRect.height > containerRect.height) {
+        if (clientY + 10 + tooltipRect.height > containerRect.height) {
           top = mouseY - tooltipRect.height - 10;
         }
-
-        left = Math.max(10, Math.min(left, containerRect.width - tooltipRect.width - 10));
-        top = Math.max(10, Math.min(top, containerRect.height - tooltipRect.height - 10));
 
         tooltip.style.left = `${left}px`;
         tooltip.style.top = `${top}px`;

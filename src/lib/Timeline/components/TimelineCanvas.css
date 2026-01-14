@@ -180,3 +180,88 @@
   text-align: right;
   flex: 1;
 }
+
+/* Empty State Styles */
+.timeline-canvas-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 48px 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.timeline-canvas-empty .empty-state-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.timeline-canvas-empty h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.timeline-canvas-empty p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Empty State Overlay (for no items) */
+.timeline-empty-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 50;
+  pointer-events: none;
+}
+
+.empty-state-content {
+  text-align: center;
+  padding: 32px;
+  max-width: 400px;
+}
+
+.empty-state-content .empty-state-icon {
+  font-size: 72px;
+  margin-bottom: 20px;
+  opacity: 0.4;
+  animation: emptyStatePulse 2s ease-in-out infinite;
+}
+
+.empty-state-title {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.empty-state-message {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #7f8c8d;
+}
+
+@keyframes emptyStatePulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
