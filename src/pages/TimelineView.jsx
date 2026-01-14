@@ -145,7 +145,7 @@ const TimelineView = () => {
         config={{
           enableAutoScroll: true,
           enableCurrentDate: true,
-          enableGrid: true
+          enableGrid: true,
         }}
         showLegend={true}
         legendProps={{

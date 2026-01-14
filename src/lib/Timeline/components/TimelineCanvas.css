@@ -1,0 +1,182 @@
+/* Timeline Canvas Styles */
+
+.timeline-canvas-container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  will-change: opacity;
+}
+
+.timeline-canvas-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.timeline-canvas-empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+/* Canvas Layer */
+.timeline-canvas {
+  display: block;
+  background: white;
+}
+
+/* Overlay for Event Handling - Only over canvas, not header */
+.timeline-canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  z-index: 5;
+}
+
+/* Current Date Line in Canvas */
+.timeline-canvas-container .timeline-current-date {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e44258;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.timeline-canvas-container .current-date-marker {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background: #e44258;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(228, 66, 88, 0.4);
+  animation: fadeInCentered 0.5s ease-out 0.4s both;
+}
+
+.timeline-canvas-container .current-date-label {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e44258;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(228, 66, 88, 0.3);
+  z-index: 60;
+  animation: fadeInCentered 0.5s ease-out 0.5s both;
+}
+
+.timeline-canvas-container .current-date-label::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #e44258;
+}
+
+@keyframes fadeInCentered {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Loading state */
+.timeline-loading {
+  opacity: 0;
+}
+
+.timeline-loaded {
+  opacity: 1;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tooltip Styles */
+.timeline-canvas-tooltip {
+  position: absolute;
+  display: none;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  transition: opacity 0.2s ease-in-out;
+  max-width: 280px;
+  min-width: 200px;
+}
+
+.timeline-canvas-tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timeline-canvas-tooltip .tooltip-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  word-wrap: break-word;
+}
+
+.timeline-canvas-tooltip .tooltip-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.timeline-canvas-tooltip .tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.timeline-canvas-tooltip .tooltip-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.timeline-canvas-tooltip .tooltip-value {
+  color: #ffffff;
+  font-weight: 400;
+  text-align: right;
+  flex: 1;
+}

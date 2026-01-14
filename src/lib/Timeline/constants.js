@@ -11,8 +11,14 @@ export const VIEW_MODES = {
   YEARS: 'years'
 };
 
+export const RENDER_MODES = {
+  DOM: 'dom',      // Traditional DOM rendering
+  CANVAS: 'canvas'  // Canvas rendering (ECharts-style)
+};
+
 export const DEFAULT_CONFIG = {
   viewMode: VIEW_MODES.MONTHS,
+  renderMode: 'canvas', // 'canvas' or 'dom' - Use Canvas for better performance
   rowHeight: 50,
   itemHeight: 34,
   itemPadding: 8,

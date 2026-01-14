@@ -8,8 +8,9 @@ import PropTypes from 'prop-types';
 import { useTimeline } from '../hooks/useTimeline';
 import TimelineToolbar from './TimelineToolbar';
 import TimelineGrid from './TimelineGrid';
+import TimelineCanvas from './TimelineCanvas';
 import TimelineLegend from './TimelineLegend';
-import { VIEW_MODES } from '../constants';
+import { VIEW_MODES, RENDER_MODES } from '../constants';
 import './Timeline.css';
 
 const Timeline = memo(({
@@ -57,21 +58,39 @@ const Timeline = memo(({
       {/* Scrollable Timeline Container */}
       <div className="timeline-scroll-container" ref={containerRef}>
         <div className="timeline-content">
-          <TimelineGrid
-            timelineData={timelineData}
-            layoutItems={layoutItems}
-            gridHeight={gridHeight}
-            currentDatePosition={currentDatePosition}
-            getItemStyle={getItemStyle}
-            rowHeight={finalConfig.rowHeight}
-            enableGrid={finalConfig.enableGrid}
-            enableCurrentDate={finalConfig.enableCurrentDate}
-            onItemClick={onItemClick}
-            onItemDoubleClick={onItemDoubleClick}
-            onItemHover={onItemHover}
-            renderItem={renderItem}
-            loading={loading}
-          />
+          {finalConfig.renderMode === 'canvas' ? (
+            <TimelineCanvas
+              timelineData={timelineData}
+              layoutItems={layoutItems}
+              gridHeight={gridHeight}
+              currentDatePosition={currentDatePosition}
+              getItemStyle={getItemStyle}
+              rowHeight={finalConfig.rowHeight}
+              enableGrid={finalConfig.enableGrid}
+              enableCurrentDate={finalConfig.enableCurrentDate}
+              onItemClick={onItemClick}
+              onItemDoubleClick={onItemDoubleClick}
+              onItemHover={onItemHover}
+              loading={loading}
+              config={finalConfig}
+            />
+          ) : (
+            <TimelineGrid
+              timelineData={timelineData}
+              layoutItems={layoutItems}
+              gridHeight={gridHeight}
+              currentDatePosition={currentDatePosition}
+              getItemStyle={getItemStyle}
+              rowHeight={finalConfig.rowHeight}
+              enableGrid={finalConfig.enableGrid}
+              enableCurrentDate={finalConfig.enableCurrentDate}
+              onItemClick={onItemClick}
+              onItemDoubleClick={onItemDoubleClick}
+              onItemHover={onItemHover}
+              renderItem={renderItem}
+              loading={loading}
+            />
+          )}
         </div>
       </div>
 

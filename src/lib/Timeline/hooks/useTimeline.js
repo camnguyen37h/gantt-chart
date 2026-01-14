@@ -3,23 +3,20 @@
  * Centralizes all timeline calculations and state management
  */
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import {
-  getDateRangeFromItems,
-  generatePeriods
-} from '../utils/dateUtils';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { generatePeriods, getDateRangeFromItems } from '../utils/dateUtils';
 import {
   calculateAdvancedLayout,
   calculateGridHeight,
   filterItems,
-  searchItems
+  searchItems,
 } from '../utils/layoutUtils';
-import { 
-  normalizeItem, 
-  getItemDate, 
+import {
+  formatItemInfo,
+  getItemDate,
   getItemEndDate,
   isMilestone,
-  formatItemInfo
+  normalizeItem,
 } from '../utils/itemUtils';
 import { DEFAULT_CONFIG } from '../constants';
 
@@ -44,7 +41,8 @@ export const useTimeline = (items = [], config = {}) => {
     return items.map(item => {
       const normalized = normalizeItem(item);
       const info = formatItemInfo(normalized);
-      return { ...normalized, tooltip: info?.tooltip };
+      const tooltip = info && info.tooltip ? info.tooltip : undefined;
+      return { ...normalized, tooltip: tooltip };
     });
   }, [items]);
 
@@ -89,7 +87,8 @@ export const useTimeline = (items = [], config = {}) => {
     const now = moment();
     if (now.isBefore(timelineData.start) || now.isAfter(timelineData.end)) return null;
     const daysFromStart = now.diff(timelineData.start, 'days', true);
-    return daysFromStart * finalConfig.pixelsPerDay; // Return position in pixels
+    return daysFromStart * finalConfig.pixelsPerDay;
+
   }, [timelineData, finalConfig.pixelsPerDay]);
 
   // Layout items with auto-positioning
@@ -150,7 +149,8 @@ export const useTimeline = (items = [], config = {}) => {
 
     const container = containerRef.current;
     const containerWidth = container.clientWidth;
-    const scrollLeft = currentDatePosition - containerWidth / 2;
+    // Adjust for container padding (60px left from .timeline-scroll-container)
+    const scrollLeft = currentDatePosition - containerWidth / 2 + 60;
 
     container.scrollTo({
       left: Math.max(0, scrollLeft),
