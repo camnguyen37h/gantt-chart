@@ -3,7 +3,7 @@
  * Complete, reusable timeline component with all features
  */
 
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTimeline } from '../hooks/useTimeline';
 import TimelineToolbar from './TimelineToolbar';
@@ -38,8 +38,27 @@ const Timeline = memo(({
     setSearchQuery,
     getItemStyle,
     scrollToToday,
+    handleZoom,
+    zoomLevel,
     config: finalConfig
   } = timeline;
+
+  // Handle mouse wheel zoom (Direct scroll with smooth debouncing)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheel = (event) => {
+      event.preventDefault();
+      
+      // Smoother zoom based on scroll delta
+      const delta = -event.deltaY;
+      handleZoom(delta);
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [containerRef, handleZoom]);
 
   return (
     <div className={`timeline ${className || ''}`}>

@@ -36,6 +36,8 @@ export const useTimeline = (items = [], config = {}) => {
   const [containerWidth, setContainerWidth] = useState(null);
   
   const containerRef = useRef(null);
+  const hasAutoScrolledRef = useRef(false); // Track if already scrolled once
+  const zoomTimeoutRef = useRef(null); // Debounce zoom updates
 
   // Track container width for auto-scaling
   useEffect(() => {
@@ -80,21 +82,24 @@ export const useTimeline = (items = [], config = {}) => {
 
     const { start, end } = dateRange;
     const totalDays = end.diff(start, 'days', true);
-    let periods = generatePeriods(start, end, finalConfig.pixelsPerDay);
-    let baseWidth = totalDays * finalConfig.pixelsPerDay;
-    let scaleFactor = 1;
+    // Apply zoomLevel to pixelsPerDay
+    const zoomedPixelsPerDay = finalConfig.pixelsPerDay * zoomLevel;
+    let periods = generatePeriods(start, end, zoomedPixelsPerDay);
+    let baseWidth = totalDays * zoomedPixelsPerDay;
+    let scaleFactor = zoomLevel;
     
     // Auto-scale if timeline is shorter than container (minimum 800px container width)
     const minContainerWidth = containerWidth || 800;
     const availableWidth = minContainerWidth - 120; // Subtract padding (60px left + 60px right)
     
     if (baseWidth < availableWidth && baseWidth > 0) {
-      scaleFactor = availableWidth / baseWidth;
+      const autoScaleFactor = availableWidth / baseWidth;
+      scaleFactor = zoomLevel * autoScaleFactor;
       
       // Scale all periods proportionally
       periods = periods.map(period => ({
         ...period,
-        width: period.width * scaleFactor
+        width: period.width * autoScaleFactor
       }));
       
       baseWidth = availableWidth;
@@ -112,7 +117,7 @@ export const useTimeline = (items = [], config = {}) => {
       pixelsPerDay: finalConfig.pixelsPerDay * scaleFactor, // Scaled pixels per day
       scaleFactor
     };
-  }, [dateRange, finalConfig.pixelsPerDay, containerWidth]);
+  }, [dateRange, finalConfig.pixelsPerDay, containerWidth, zoomLevel]);
 
   // Calculate current date position
   const currentDatePosition = useMemo(() => {
@@ -141,7 +146,7 @@ export const useTimeline = (items = [], config = {}) => {
     if (!timelineData) return {};
 
     const moment = require('moment');
-    const pixelsPerDay = timelineData.pixelsPerDay * zoomLevel; // Use scaled pixelsPerDay
+    const pixelsPerDay = timelineData.pixelsPerDay; // Already includes zoomLevel
 
     // Handle milestones differently - position at startDate or dueDate
     if (isMilestone(item)) {
@@ -177,7 +182,7 @@ export const useTimeline = (items = [], config = {}) => {
       height: `${finalConfig.itemHeight}px`,
       backgroundColor: item.color
     };
-  }, [timelineData, finalConfig, zoomLevel]);
+  }, [timelineData, finalConfig]);
 
   // Scroll to today
   const scrollToToday = useCallback(() => {
@@ -194,9 +199,10 @@ export const useTimeline = (items = [], config = {}) => {
     });
   }, [currentDatePosition]);
 
-  // Auto-scroll to current date on mount
+  // Auto-scroll to current date on mount (only once)
   useEffect(() => {
     if (!finalConfig.enableAutoScroll) return;
+    if (hasAutoScrolledRef.current) return; // Already scrolled, don't do it again
     if (!containerRef.current || currentDatePosition === null) return;
     if (!timelineData) return;
 
@@ -204,24 +210,49 @@ export const useTimeline = (items = [], config = {}) => {
     const timer = setTimeout(() => {
       requestAnimationFrame(() => {
         scrollToToday();
+        hasAutoScrolledRef.current = true; // Mark as scrolled
       });
     }, 100);
 
     return () => clearTimeout(timer);
   }, [timelineData, currentDatePosition, finalConfig.enableAutoScroll, scrollToToday]);
 
-  // Zoom controls
+  // Zoom controls with smooth transitions
   const zoomIn = useCallback(() => {
-    setZoomLevel(prev => Math.min(prev * 1.2, finalConfig.maxZoomLevel));
+    setZoomLevel(prev => {
+      const newZoom = Math.min(prev * 1.15, finalConfig.maxZoomLevel);
+      return Math.round(newZoom * 100) / 100; // Round to 2 decimals for precision
+    });
   }, [finalConfig.maxZoomLevel]);
 
   const zoomOut = useCallback(() => {
-    setZoomLevel(prev => Math.max(prev / 1.2, finalConfig.minZoomLevel));
+    setZoomLevel(prev => {
+      const newZoom = Math.max(prev / 1.15, finalConfig.minZoomLevel);
+      return Math.round(newZoom * 100) / 100; // Round to 2 decimals for precision
+    });
   }, [finalConfig.minZoomLevel]);
 
   const resetZoom = useCallback(() => {
     setZoomLevel(1);
   }, []);
+
+  // Smooth zoom with debounce for continuous scrolling
+  const handleZoom = useCallback((direction) => {
+    if (zoomTimeoutRef.current) {
+      clearTimeout(zoomTimeoutRef.current);
+    }
+
+    if (direction > 0) {
+      zoomIn();
+    } else {
+      zoomOut();
+    }
+
+    // Debounce for smooth continuous zoom
+    zoomTimeoutRef.current = setTimeout(() => {
+      zoomTimeoutRef.current = null;
+    }, 50);
+  }, [zoomIn, zoomOut]);
 
   return {
     // State
@@ -246,6 +277,7 @@ export const useTimeline = (items = [], config = {}) => {
     zoomIn,
     zoomOut,
     resetZoom,
+    handleZoom,
     
     // Config
     config: finalConfig

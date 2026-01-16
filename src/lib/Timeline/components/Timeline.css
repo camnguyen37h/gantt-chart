@@ -29,10 +29,17 @@
   position: relative;
   background: white;
   padding: 40px 60px 0;
+  cursor: grab;
+  user-select: none;
+}
+
+.timeline-scroll-container:active {
+  cursor: grabbing;
 }
 
 .timeline-content {
   position: relative;
+  transition: transform 0.15s ease-out;
 }
 
 /* Scrollbar Styling */
