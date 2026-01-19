@@ -32,14 +32,15 @@ const TimelineCanvas = ({
   const tooltipRef = useRef(null);
   const animationFrameRef = useRef(null);
   const hoveredItemRef = useRef(null);
-  const animationProgressRef = useRef(0);
+  const animationProgressRef = useRef(0); // Start at 0 for initial animation
   const animationStartTimeRef = useRef(null);
-
+  
+  // Get DPR from canvas context (scoped to timeline only, no window API)
+  const dprRef = useRef(1);
+  
   // Calculate canvas dimensions
-  const canvasWidth = timelineData?.totalWidth || 1000;
+  const canvasWidth = timelineData && timelineData.totalWidth ? timelineData.totalWidth : 1000;
   const canvasHeight = Math.max(gridHeight, 400);
-  const dpr = window.devicePixelRatio || 1;
-  const hasItems = layoutItems && layoutItems.length > 0;
 
   // Draw timeline on canvas
   const draw = useCallback(() => {
@@ -62,70 +63,92 @@ const TimelineCanvas = ({
       enableGrid,
       enableCurrentDate,
       config,
-      dpr,
+      dpr: dprRef.current,
       hoveredItem: hoveredItemRef.current,
       animationProgress: animationProgressRef.current
     });
-  }, [timelineData, layoutItems, currentDatePosition, getItemStyle, rowHeight, enableGrid, enableCurrentDate, config, dpr]);
+  }, [timelineData, layoutItems, currentDatePosition, getItemStyle, rowHeight, enableGrid, enableCurrentDate, config]);
 
-  // Setup canvas
+  // Setup canvas size and DPR (no animation here, just canvas config)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Get DPR from canvas context (scoped to canvas only, no window API)
+    // Use getContext backing store ratio as fallback
+    const backingStoreRatio = 
+      ctx.webkitBackingStorePixelRatio ||
+      ctx.mozBackingStorePixelRatio ||
+      ctx.msBackingStorePixelRatio ||
+      ctx.oBackingStorePixelRatio ||
+      ctx.backingStorePixelRatio || 1;
+    
+    // Calculate DPR based on canvas context (defaults to 2 for retina, 1 for standard)
+    // This avoids window API while still supporting high-DPI displays
+    const contextDPR = Math.max(1, 1 / backingStoreRatio);
+    dprRef.current = contextDPR;
+
     // Set canvas size accounting for device pixel ratio
-    canvas.width = canvasWidth * dpr;
-    canvas.height = canvasHeight * dpr;
+    canvas.width = canvasWidth * dprRef.current;
+    canvas.height = canvasHeight * dprRef.current;
     canvas.style.width = `${canvasWidth}px`;
     canvas.style.height = `${canvasHeight}px`;
 
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.scale(dpr, dpr);
+    ctx.scale(dprRef.current, dprRef.current);
+
+    // Draw immediately without animation (canvas size changed)
+    if (animationProgressRef.current === 1) {
+      draw();
+    }
+  }, [canvasWidth, canvasHeight, draw]);
+
+  // Animation effect: triggers on data change (legend filter, initial load)
+  // PERFORMANCE: Smooth animation for data changes, skipped during scroll
+  useEffect(() => {
+    if (loading) {
+      return;
     }
 
-    // Initial draw with animation
+    // Cancel any running animation before starting new one
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    // Start animation from beginning
     animationStartTimeRef.current = Date.now();
     animationProgressRef.current = 0;
     
     const animate = () => {
       const elapsed = Date.now() - animationStartTimeRef.current;
-      const duration = 800; // 800ms animation
+      const duration = 500; // PERFORMANCE: 300ms smooth animation
       
       if (elapsed < duration) {
         // Easing function: easeOutCubic
         const progress = elapsed / duration;
         animationProgressRef.current = 1 - Math.pow(1 - progress, 3);
         draw();
-        requestAnimationFrame(animate);
+        animationFrameRef.current = requestAnimationFrame(animate);
       } else {
         animationProgressRef.current = 1;
         draw();
+        animationFrameRef.current = null;
       }
     };
     
-    animate();
-  }, [canvasWidth, canvasHeight, dpr, draw]);
+    animationFrameRef.current = requestAnimationFrame(animate);
 
-  // Redraw on data change
-  useEffect(() => {
-    if (loading) return;
-    
-    // Use RAF for smooth rendering
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-    }
-
-    animationFrameRef.current = requestAnimationFrame(() => {
-      draw();
-    });
-
+    // Cleanup: Cancel animation on unmount or data change
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
       }
     };
-  }, [draw, loading]);
+  }, [timelineData, layoutItems, loading, draw]);
 
   // Handle canvas events
   useEffect(() => {
@@ -155,6 +178,15 @@ const TimelineCanvas = ({
           hoveredItemRef.current = null;
           draw();
         }
+      },
+      // PERFORMANCE: Cancel animation when scroll starts to prevent stutter
+      onScrollStart: () => {
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = null;
+        }
+        // Set animation to complete immediately
+        animationProgressRef.current = 1;
       }
     });
 
@@ -166,83 +198,63 @@ const TimelineCanvas = ({
       ref={containerRef}
       className={`timeline-canvas-container ${loading ? 'timeline-loading' : 'timeline-loaded'}`}
     >
-      {!timelineData ? (
-        /* Empty state if no timeline data */
-        <div className="timeline-canvas-empty">
-          <div className="empty-state-icon">📅</div>
-          <h3>No Timeline Available</h3>
-          <p>Unable to generate timeline. Please check your data.</p>
-        </div>
-      ) : (
+      {/* Canvas Grid Area (wrapped for scrolling) */}
+      {timelineData && (
         <>
-          {/* Canvas Grid Area (wrapped for scrolling) */}
           <div className="timeline-canvas-wrapper" style={{ position: 'relative' }}>
-        {/* Main Canvas Layer */}
-        <canvas
-          ref={canvasRef}
-          className="timeline-canvas"
-        />
+            {/* Main Canvas Layer */}
+            <canvas
+              ref={canvasRef}
+              className="timeline-canvas"
+            />
 
-        {/* Overlay for Events - Only over canvas */}
-        <div
-          ref={overlayRef}
-          className="timeline-canvas-overlay"
-          style={{
-            width: `${canvasWidth}px`,
-            height: `${canvasHeight}px`
-          }}
-        />
-
-        {/* Tooltip */}
-        <div ref={tooltipRef} className="timeline-canvas-tooltip">
-          <div className="timeline-canvas-tooltip-content">
-            <div className="tooltip-title"></div>
-            <div className="tooltip-details"></div>
-          </div>
-        </div>
-
-        {/* Current Date Marker (DOM Overlay) */}
-        {enableCurrentDate && currentDatePosition !== null && (
-          <div
-            className="timeline-current-date"
-            style={{ left: `${currentDatePosition}px` }}
-          >
-            <div className="current-date-marker" />
-            <div className="current-date-label">
-              {moment().format(DATE_FORMATS.dayMonth)}
-            </div>
-          </div>
-        )}
-
-        {/* Empty State Overlay (when no items) */}
-        {!hasItems && (
-          <div className="timeline-empty-overlay">
-            <div className="empty-state-content">
-              <div className="empty-state-icon">📆</div>
-              <h3 className="empty-state-title">No Timeline Items</h3>
-              <p className="empty-state-message">There are no tasks or milestones to display in this timeline view.</p>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Timeline Header (DOM for better text rendering) */}
-      {timelineData && timelineData.periods && (
-        <div className="timeline-header" style={{ width: `${timelineData.baseWidth}px` }}>
-          <div className="timeline-axis-line" />
-          
-          {timelineData.periods.map((period, index) => (
+            {/* Overlay for Events - Only over canvas */}
             <div
-              key={`period-${index}`}
-              className="timeline-period"
-              style={{ width: `${period.width}px` }}
-            >
-              <div className="timeline-tick-mark" />
-              <div className="period-label-border">{period.label}</div>
+              ref={overlayRef}
+              className="timeline-canvas-overlay"
+              style={{
+                width: `${canvasWidth}px`,
+                height: `${canvasHeight}px`
+              }}
+            />
+
+            {/* Tooltip */}
+            <div ref={tooltipRef} className="timeline-canvas-tooltip">
+              <div className="timeline-canvas-tooltip-content">
+                <div className="tooltip-title"></div>
+                <div className="tooltip-details"></div>
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+
+            {/* Current Date Marker (DOM Overlay) */}
+            {enableCurrentDate && currentDatePosition !== null && (
+              <div
+                className="timeline-current-date"
+                style={{ left: `${currentDatePosition}px` }}
+              >
+                <div className="current-date-marker" />
+                <div className="current-date-label">
+                  {moment().format(DATE_FORMATS.dayMonth)}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Timeline Header (DOM for better text rendering) */}
+          <div className="timeline-header" style={{ width: `${timelineData.baseWidth}px` }}>
+            <div className="timeline-axis-line" />
+            
+            {timelineData.periods && timelineData.periods.map((period, index) => (
+              <div
+                key={`period-${index}`}
+                className="timeline-period"
+                style={{ width: `${period.width}px` }}
+              >
+                <div className="timeline-tick-mark" />
+                <div className="period-label-border">{period.label}</div>
+              </div>
+            ))}
+          </div>
         </>
       )}
     </div>

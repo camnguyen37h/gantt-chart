@@ -54,7 +54,7 @@ const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
     
     if (!style) continue;
 
-    // Check milestone (dùng _originallyMilestone từ normalizeTimelineItem)
+    // Check milestone (use _originallyMilestone from normalizeItem)
     if (item._originallyMilestone) {
       if (isPointInMilestone(x, y, style, item)) {
         return item;
@@ -85,7 +85,8 @@ export const handleCanvasEvents = (options) => {
     onItemClick,
     onItemDoubleClick,
     onItemHover,
-    onMouseLeave
+    onMouseLeave,
+    onScrollStart
   } = options;
 
   let currentHoveredItem = null;
@@ -288,6 +289,7 @@ export const handleCanvasEvents = (options) => {
     if (currentHoveredItem) {
       currentHoveredItem = null;
       overlay.style.cursor = 'default';
+      hideTooltip();
       
       if (onMouseLeave) {
         onMouseLeave();
@@ -295,19 +297,66 @@ export const handleCanvasEvents = (options) => {
     }
   };
 
-  // Attach event listeners
+  /**
+   * Handle scroll - hide tooltip when scrolling
+   * PERFORMANCE: Throttled to prevent excessive calls
+   * Cancels ongoing animations for smooth scroll experience
+   */
+  let scrollThrottleTimer = null;
+  let isScrolling = false;
+  
+  const handleScrollThrottled = () => {
+    if (isScrolling) {
+      return; // Skip if already processing
+    }
+    
+    isScrolling = true;
+    
+    // PERFORMANCE: Cancel any running animation when scroll starts
+    if (onScrollStart) {
+      onScrollStart();
+    }
+    
+    // Use RAF for smooth updates
+    requestAnimationFrame(() => {
+      if (currentHoveredItem) {
+        hideTooltip();
+        currentHoveredItem = null;
+        overlay.style.cursor = 'default';
+        
+        if (onMouseLeave) {
+          onMouseLeave();
+        }
+      }
+      
+      isScrolling = false;
+    });
+  };
+
+  // Attach event listeners with passive option for better scroll performance
   overlay.addEventListener('mousemove', handleMouseMove);
   overlay.addEventListener('click', handleClick);
   overlay.addEventListener('mouseleave', handleMouseLeave);
+  container.addEventListener('scroll', handleScrollThrottled, { passive: true });
+  container.addEventListener('wheel', handleScrollThrottled, { passive: true });
 
   // Cleanup function
   return () => {
     overlay.removeEventListener('mousemove', handleMouseMove);
     overlay.removeEventListener('click', handleClick);
     overlay.removeEventListener('mouseleave', handleMouseLeave);
+    container.removeEventListener('scroll', handleScrollThrottled);
+    container.removeEventListener('wheel', handleScrollThrottled);
     
     if (clickTimeout) {
       clearTimeout(clickTimeout);
     }
+    
+    if (scrollThrottleTimer) {
+      cancelAnimationFrame(scrollThrottleTimer);
+    }
+    
+    // Force hide tooltip on cleanup
+    hideTooltip();
   };
 };

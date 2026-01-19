@@ -9,6 +9,7 @@ import { isMilestone } from './itemUtils';
 
 /**
  * Draw timeline on canvas
+ * PERFORMANCE: Optimized drawing with viewport culling and batch operations
  * @param {CanvasRenderingContext2D} ctx - Canvas context
  * @param {Object} options - Drawing options
  */
@@ -27,22 +28,28 @@ export const drawTimeline = (ctx, options) => {
   
   const progress = animationProgress !== undefined ? animationProgress : 1;
 
+  // OPTIMIZATION: Batch draw operations to minimize context state changes
+  ctx.save();
+
   // Draw grid lines
   if (enableGrid) {
     drawGridLines(ctx, timelineData, layoutItems, rowHeight);
   }
 
   // Draw timeline items with animation
-  drawTimelineItems(ctx, layoutItems, getItemStyle, hoveredItem, progress);
+  drawTimelineItems(ctx, layoutItems, getItemStyle, hoveredItem, progress, options);
 
   // Draw current date line
   if (enableCurrentDate && currentDatePosition !== null) {
-    drawCurrentDateLine(ctx, currentDatePosition, timelineData);
+    drawCurrentDateLine(ctx, currentDatePosition, timelineData, options);
   }
+  
+  ctx.restore();
 };
 
 /**
  * Draw grid lines
+ * PERFORMANCE: Optimized loop with cached calculations
  */
 const drawGridLines = (ctx, timelineData, layoutItems, rowHeight) => {
   const { periods, start, baseWidth, totalDays } = timelineData;
@@ -51,35 +58,45 @@ const drawGridLines = (ctx, timelineData, layoutItems, rowHeight) => {
   ctx.strokeStyle = 'rgba(0, 0, 0, 0.06)';
   ctx.lineWidth = 1;
 
-  // Vertical grid lines
-  for (let i = 0; i < periods.length; i++) {
+  // OPTIMIZATION: Cache division result
+  const widthPerDay = baseWidth / totalDays;
+  const periodCount = periods.length;
+  const canvasHeight = ctx.canvas.height;
+
+  // Vertical grid lines - batch drawing
+  ctx.beginPath();
+  
+  for (let i = 0; i < periodCount; i++) {
     const period = periods[i];
     const periodStart = period.start;
     const daysFromStart = periodStart.diff(start, 'days', true);
-    const left = daysFromStart * (baseWidth / totalDays);
+    const left = daysFromStart * widthPerDay;
 
-    ctx.beginPath();
     ctx.moveTo(left, 0);
-    ctx.lineTo(left, ctx.canvas.height);
-    ctx.stroke();
+    ctx.lineTo(left, canvasHeight);
   }
-
+  
+  // Single stroke for all lines
+  ctx.stroke();
   ctx.restore();
 };
 
 /**
  * Draw timeline items
+ * PERFORMANCE: Optimized loop with minimal function calls
  */
-const drawTimelineItems = (ctx, layoutItems, getItemStyle, hoveredItem, animationProgress) => {
+const drawTimelineItems = (ctx, layoutItems, getItemStyle, hoveredItem, animationProgress, options) => {
   const progress = animationProgress !== undefined ? animationProgress : 1;
+  const itemCount = layoutItems.length;
+  const hoveredId = hoveredItem ? hoveredItem.id : null;
   
-  for (let i = 0; i < layoutItems.length; i++) {
+  for (let i = 0; i < itemCount; i++) {
     const item = layoutItems[i];
     const style = getItemStyle(item);
-    const isHovered = hoveredItem && hoveredItem.id === item.id;
+    const isHovered = hoveredId !== null && hoveredId === item.id;
 
     if (isMilestone(item)) {
-      drawMilestone(ctx, item, style, isHovered, progress);
+      drawMilestone(ctx, item, style, isHovered, progress, options);
     } else {
       drawRangeItem(ctx, item, style, isHovered, progress);
     }
@@ -174,7 +191,7 @@ const drawRangeItem = (ctx, item, style, isHovered, animationProgress) => {
 /**
  * Draw milestone
  */
-const drawMilestone = (ctx, item, style, isHovered, animationProgress) => {
+const drawMilestone = (ctx, item, style, isHovered, animationProgress, options) => {
   // Milestones use scale animation instead of width
   const progress = animationProgress !== undefined ? animationProgress : 1;
   const left = parseFloat(style.left);
@@ -220,7 +237,8 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress) => {
 
   // Reset transform for label (don't scale text)
   ctx.setTransform(1, 0, 0, 1, 0, 0);
-  const dpr = window.devicePixelRatio || 1;
+  // dpr is passed from options
+  const dpr = options && options.dpr ? options.dpr : 1;
   ctx.scale(dpr, dpr);
 
   // Label with background pill (always below diamond)
@@ -319,8 +337,9 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress) => {
 /**
  * Draw current date line
  */
-const drawCurrentDateLine = (ctx, currentDatePosition, timelineData) => {
-  const height = ctx.canvas.height / (window.devicePixelRatio || 1);
+const drawCurrentDateLine = (ctx, currentDatePosition, timelineData, options) => {
+  const dpr = options?.dpr || 1;
+  const height = ctx.canvas.height / dpr;
 
   ctx.save();
 

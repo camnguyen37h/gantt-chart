@@ -7,121 +7,96 @@ import { getItemDate, getItemEndDate } from './itemUtils';
 
 /**
  * Sort items by date (handles both range and milestone)
+ * PERFORMANCE: O(n log n) - optimized sort without spread operator
  * @param {Array} items - Timeline items
  * @returns {Array} Sorted items
  */
 export const sortItemsByDate = (items) => {
-  return [...items].sort((a, b) => {
+  // Use slice() instead of spread for better performance
+  return items.slice().sort((a, b) => {
     const dateA = getItemDate(a);
     const dateB = getItemDate(b);
-    if (!dateA || !dateB) return 0;
+    
+    if (!dateA || !dateB) {
+      return 0;
+    }
+    
     return dateA.valueOf() - dateB.valueOf();
   });
 };
 
 /**
- * Auto-layout algorithm - assigns row indices to prevent overlapping
- * Handles both range items and milestones
- * @param {Array} items - Timeline items
- * @returns {Array} Items with added 'row' property
- * 
- * Complexity: O(n × m) where n = items, m = rows
- */
-export const calculateItemLayout = (items) => {
-  if (!items || items.length === 0) return [];
-
-  const sortedItems = sortItemsByDate(items);
-  const rows = []; // Each element stores endTime of last item
-  const result = [];
-
-  for (let i = 0; i < sortedItems.length; i++) {
-    const item = sortedItems[i];
-    const startDate = getItemDate(item);
-    
-    if (!startDate) continue;
-
-    const endDate = getItemEndDate(item);
-    const itemEnd = endDate || startDate.clone().add(1, 'day');
-    const itemStartTime = startDate.valueOf();
-    const itemEndTime = itemEnd.valueOf();
-
-    // Find first available row (greedy first-fit)
-    let rowIndex = -1;
-    
-    for (let r = 0; r < rows.length; r++) {
-      if (rows[r] < itemStartTime) {
-        rowIndex = r;
-        break;
-      }
-    }
-
-    // Create new row if needed
-    if (rowIndex === -1) {
-      rowIndex = rows.length;
-      rows.push(itemEndTime);
-    } else {
-      rows[rowIndex] = itemEndTime;
-    }
-
-    result.push({ ...item, row: rowIndex });
-  }
-
-  return result;
-};
-
-/**
  * Advanced layout with conflict resolution
- * Uses greedy first-fit algorithm for optimal performance
+ * PERFORMANCE: O(n * m) where n = items, m = rows (typically m << n)
+ * Optimized for big data with early termination and minimal allocations
  * @param {Array} items - Timeline items
  * @returns {Array} Items with row assignments
- * 
- * Complexity: O(n × m) where n = items, m = rows (typically m << n)
  */
 export const calculateAdvancedLayout = (items) => {
-  if (!items || items.length === 0) return [];
+  if (!items || items.length === 0) {
+    return [];
+  }
 
   const sortedItems = sortItemsByDate(items);
   const rows = []; // Each row stores {endTime} of last item
   const result = [];
+  const itemCount = sortedItems.length;
 
-  for (let i = 0; i < sortedItems.length; i++) {
+  for (let i = 0; i < itemCount; i++) {
     const item = sortedItems[i];
     const startDate = getItemDate(item);
     
-    if (!startDate) continue; // Skip invalid items
+    if (!startDate) {
+      continue; // Skip invalid items
+    }
 
     const endDate = getItemEndDate(item);
-    const itemEnd = endDate || startDate.clone().add(1, 'day');
     
-    // Cache timestamps for fast comparison
+    // OPTIMIZATION: Avoid clone() - calculate timestamp directly
     const itemStartTime = startDate.valueOf();
-    const itemEndTime = itemEnd.valueOf();
-
+    const itemEndTime = endDate 
+      ? endDate.valueOf() 
+      : startDate.valueOf() + 86400000; // +1 day in milliseconds
+    
     // Find first row where this item fits (greedy first-fit)
     let targetRow = -1;
+    const rowCount = rows.length;
     
-    for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
-      const rowEndTime = rows[rowIdx].endTime;
+    for (let rowIdx = 0; rowIdx < rowCount; rowIdx++) {
+      const rowEndTime = rows[rowIdx];
       
-      // Check overlap: endA >= startB means overlap
       // No overlap if: rowEndTime < itemStartTime (strictly less than)
       if (rowEndTime < itemStartTime) {
         targetRow = rowIdx;
-        break; // Early exit - found suitable row
+        break; // OPTIMIZATION: Early exit - found suitable row
       }
     }
 
     // Create new row if no suitable row found
     if (targetRow === -1) {
-      targetRow = rows.length;
-      rows.push({ endTime: itemEndTime });
+      targetRow = rowCount; // Use current length before push
+      rows.push(itemEndTime);
     } else {
       // Update row's end time
-      rows[targetRow].endTime = itemEndTime;
+      rows[targetRow] = itemEndTime;
     }
 
-    // Add item with row assignment
-    result.push({ ...item, row: targetRow });
+    // OPTIMIZATION: Direct property assignment instead of spread
+    result.push({
+      id: item.id,
+      name: item.name,
+      startDate: item.startDate,
+      dueDate: item.dueDate,
+      createdDate: item.createdDate,
+      date: item.date,
+      status: item.status,
+      progress: item.progress,
+      color: item.color,
+      duration: item.duration,
+      _isValid: item._isValid,
+      _originallyMilestone: item._originallyMilestone,
+      row: targetRow
+    });
   }
 
   return result;
@@ -129,69 +104,107 @@ export const calculateAdvancedLayout = (items) => {
 
 /**
  * Calculate minimum grid height needed
+ * PERFORMANCE: O(n) single pass
  * @param {Array} layoutItems - Items with row assignments
  * @param {number} rowHeight - Height of each row
  * @returns {number} Minimum height in pixels
  */
 export const calculateGridHeight = (layoutItems, rowHeight) => {
-  if (!layoutItems || layoutItems.length === 0) return rowHeight;
+  if (!layoutItems || layoutItems.length === 0) {
+    return rowHeight;
+  }
   
-  const maxRow = Math.max(...layoutItems.map(item => item.row || 0));
+  // OPTIMIZATION: Single pass instead of map + Math.max
+  let maxRow = 0;
+  const itemCount = layoutItems.length;
+  
+  for (let i = 0; i < itemCount; i++) {
+    const itemRow = layoutItems[i].row;
+    if (itemRow !== undefined && itemRow !== null && itemRow > maxRow) {
+      maxRow = itemRow;
+    }
+  }
+  
   return (maxRow + 1) * rowHeight + 40; // +40 for padding
 };
 
 /**
- * Group items by a property (e.g., category, status, resource)
- * @param {Array} items - Timeline items
- * @param {string} groupBy - Property name to group by
- * @returns {Object} Grouped items {groupName: [items]}
- */
-export const groupItems = (items, groupBy) => {
-  if (!items || !groupBy) return { 'All Items': items };
-
-  return items.reduce((groups, item) => {
-    const key = item[groupBy] || 'Uncategorized';
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
-    return groups;
-  }, {});
-};
-
-/**
  * Filter items based on criteria
+ * PERFORMANCE: O(n * f) where f = filter count (typically small)
  * @param {Array} items - Timeline items
  * @param {Object} filters - Filter criteria {property: value}
  * @returns {Array} Filtered items
  */
 export const filterItems = (items, filters) => {
-  if (!items || !filters || Object.keys(filters).length === 0) return items;
+  if (!items) {
+    return [];
+  }
+  
+  if (!filters || Object.keys(filters).length === 0) {
+    return items;
+  }
 
+  // OPTIMIZATION: Pre-process filter entries once
+  const filterEntries = Object.entries(filters);
+  const filterCount = filterEntries.length;
+  
   return items.filter(item => {
-    return Object.entries(filters).every(([key, value]) => {
-      if (value === null || value === undefined || value === '') return true;
-      return item[key] === value;
-    });
+    for (let i = 0; i < filterCount; i++) {
+      const [key, value] = filterEntries[i];
+      
+      // Skip empty filters
+      if (value === null || value === undefined || value === '') {
+        continue;
+      }
+      
+      // Fail fast if filter doesn't match
+      if (item[key] !== value) {
+        return false;
+      }
+    }
+    return true;
   });
 };
 
 /**
  * Search items by text
+ * PERFORMANCE: O(n * s) where s = search fields (typically small)
+ * Optimized with early returns and toLowerCase caching
  * @param {Array} items - Timeline items
  * @param {string} searchText - Search query
  * @param {Array} searchFields - Fields to search in (default: ['name'])
  * @returns {Array} Matching items
  */
 export const searchItems = (items, searchText, searchFields = ['name']) => {
-  if (!items || !searchText) return items;
+  if (!items) {
+    return [];
+  }
+  
+  if (!searchText) {
+    return items;
+  }
 
   const query = searchText.toLowerCase().trim();
-  if (query === '') return items;
+  
+  if (query === '') {
+    return items;
+  }
 
+  const fieldCount = searchFields.length;
+  
   return items.filter(item => {
-    return searchFields.some(field => {
+    // OPTIMIZATION: Early return on first match
+    for (let i = 0; i < fieldCount; i++) {
+      const field = searchFields[i];
       const value = item[field];
-      if (!value) return false;
-      return String(value).toLowerCase().includes(query);
-    });
+      
+      if (value !== null && value !== undefined) {
+        const strValue = String(value).toLowerCase();
+        if (strValue.includes(query)) {
+          return true; // Early exit - found match
+        }
+      }
+    }
+    return false;
   });
 };

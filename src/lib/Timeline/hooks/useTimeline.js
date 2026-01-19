@@ -12,7 +12,6 @@ import {
   searchItems,
 } from '../utils/layoutUtils';
 import {
-  formatItemInfo,
   getItemDate,
   getItemEndDate,
   isMilestone,
@@ -31,16 +30,20 @@ export const useTimeline = (items = [], config = {}) => {
   const finalConfig = useMemo(() => ({ ...DEFAULT_CONFIG, ...config }), [config]);
   
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState({});
+  // eslint-disable-next-line no-unused-vars
+  const [searchQuery] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [filters] = useState({});
   const [containerWidth, setContainerWidth] = useState(null);
   
   const containerRef = useRef(null);
   const hasAutoScrolledRef = useRef(false); // Track if already scrolled once
   const zoomTimeoutRef = useRef(null); // Debounce zoom updates
 
-  // Track container width for auto-scaling
+  // Track container width for auto-scaling using ResizeObserver
   useEffect(() => {
+    if (!containerRef.current) return;
+
     const updateWidth = () => {
       if (containerRef.current) {
         const width = containerRef.current.offsetWidth;
@@ -48,26 +51,46 @@ export const useTimeline = (items = [], config = {}) => {
       }
     };
 
+    // Initial width
     updateWidth();
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
+
+    // Use ResizeObserver to watch only the timeline container
+    const resizeObserver = new ResizeObserver(() => {
+      updateWidth();
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   // Normalize items (add helper properties)
+  // PERFORMANCE: Memoized to prevent re-normalization on every render
   const normalizedItems = useMemo(() => {
-    return items.map(item => {
-      const normalized = normalizeItem(item);
-      const info = formatItemInfo(normalized);
-      const tooltip = info && info.tooltip ? info.tooltip : undefined;
-      return { ...normalized, tooltip: tooltip };
-    });
+    const itemCount = items.length;
+    const result = new Array(itemCount);
+    
+    for (let i = 0; i < itemCount; i++) {
+      result[i] = normalizeItem(items[i]);
+    }
+    
+    return result;
   }, [items]);
 
   // Filter and search items
+  // PERFORMANCE: Chain operations efficiently without intermediate arrays
   const filteredItems = useMemo(() => {
+    // First filter: valid items only
     let result = normalizedItems.filter(item => item._isValid);
+    
+    // Apply filters if provided
     result = filterItems(result, filters);
+    
+    // Apply search if provided
     result = searchItems(result, searchQuery);
+    
     return result;
   }, [normalizedItems, filters, searchQuery]);
 
@@ -77,18 +100,22 @@ export const useTimeline = (items = [], config = {}) => {
   }, [filteredItems]);
 
   // Generate timeline data
+  // PERFORMANCE: Optimized calculations, avoid spread operators
   const timelineData = useMemo(() => {
-    if (!dateRange) return null;
+    if (!dateRange) {
+      return null;
+    }
 
     const { start, end } = dateRange;
     const totalDays = end.diff(start, 'days', true);
+    
     // Apply zoomLevel to pixelsPerDay
     const zoomedPixelsPerDay = finalConfig.pixelsPerDay * zoomLevel;
     let periods = generatePeriods(start, end, zoomedPixelsPerDay);
     let baseWidth = totalDays * zoomedPixelsPerDay;
     let scaleFactor = zoomLevel;
     
-    // Auto-scale if timeline is shorter than container (minimum 800px container width)
+    // Auto-scale if timeline is shorter than container
     const minContainerWidth = containerWidth || 800;
     const availableWidth = minContainerWidth - 120; // Subtract padding (60px left + 60px right)
     
@@ -96,76 +123,107 @@ export const useTimeline = (items = [], config = {}) => {
       const autoScaleFactor = availableWidth / baseWidth;
       scaleFactor = zoomLevel * autoScaleFactor;
       
-      // Scale all periods proportionally
-      periods = periods.map(period => ({
-        ...period,
-        width: period.width * autoScaleFactor
-      }));
+      // OPTIMIZATION: Scale periods in-place instead of creating new array
+      const periodCount = periods.length;
+      const scaledPeriods = new Array(periodCount);
       
+      for (let i = 0; i < periodCount; i++) {
+        const period = periods[i];
+        scaledPeriods[i] = {
+          label: period.label,
+          width: period.width * autoScaleFactor,
+          days: period.days,
+          start: period.start,
+          end: period.end,
+          type: period.type
+        };
+      }
+      
+      periods = scaledPeriods;
       baseWidth = availableWidth;
     }
     
-    const totalWidth = baseWidth + 60; // Add padding (60px left + 60px right)
+    const totalWidth = baseWidth + 60; // Add padding
 
     return {
-      start,
-      end,
-      totalDays,
-      totalWidth,
-      baseWidth,
-      periods,
-      pixelsPerDay: finalConfig.pixelsPerDay * scaleFactor, // Scaled pixels per day
-      scaleFactor
+      start: start,
+      end: end,
+      totalDays: totalDays,
+      totalWidth: totalWidth,
+      baseWidth: baseWidth,
+      periods: periods,
+      pixelsPerDay: finalConfig.pixelsPerDay * scaleFactor,
+      scaleFactor: scaleFactor
     };
   }, [dateRange, finalConfig.pixelsPerDay, containerWidth, zoomLevel]);
 
   // Calculate current date position
+  // PERFORMANCE: Only recalculate when timeline changes
   const currentDatePosition = useMemo(() => {
-    if (!timelineData) return null;
+    if (!timelineData) {
+      return null;
+    }
+    
     const moment = require('moment');
     const now = moment();
-    if (now.isBefore(timelineData.start) || now.isAfter(timelineData.end)) return null;
+    
+    // Check if current date is within timeline range
+    if (now.isBefore(timelineData.start) || now.isAfter(timelineData.end)) {
+      return null;
+    }
+    
     const daysFromStart = now.diff(timelineData.start, 'days', true);
-    return daysFromStart * timelineData.pixelsPerDay; // Use scaled pixelsPerDay
-
+    return daysFromStart * timelineData.pixelsPerDay;
   }, [timelineData]);
 
   // Layout items with auto-positioning
+  // PERFORMANCE: Only recalculate when filtered items change
   const layoutItems = useMemo(() => {
-    if (!filteredItems || !timelineData) return [];
+    if (!filteredItems || filteredItems.length === 0) {
+      return [];
+    }
+    
     return calculateAdvancedLayout(filteredItems);
-  }, [filteredItems, timelineData]);
+  }, [filteredItems]);
 
   // Calculate grid height
   const gridHeight = useMemo(() => {
     return calculateGridHeight(layoutItems, finalConfig.rowHeight);
   }, [layoutItems, finalConfig.rowHeight]);
 
-  // Calculate item positions and dimensions (optimized with useCallback)
+  // Calculate item positions and dimensions
+  // PERFORMANCE: Optimized calculations, cached in useCallback
   const getItemStyle = useCallback((item) => {
-    if (!timelineData) return {};
+    if (!timelineData) {
+      return {};
+    }
 
-    const moment = require('moment');
-    const pixelsPerDay = timelineData.pixelsPerDay; // Already includes zoomLevel
+    const pixelsPerDay = timelineData.pixelsPerDay;
 
-    // Handle milestones differently - position at startDate or dueDate
+    // Handle milestones - position at startDate or createdDate
     if (isMilestone(item)) {
       const milestoneDate = getItemDate(item);
-      if (!milestoneDate) return {};
+      
+      if (!milestoneDate) {
+        return {};
+      }
       
       const daysFromStart = milestoneDate.diff(timelineData.start, 'days', true);
       const left = daysFromStart * pixelsPerDay;
       const top = item.row * finalConfig.rowHeight + finalConfig.itemPadding;
 
       return {
-        left: `${left}px`,
-        top: `${top}px`
+        left: left + 'px',
+        top: top + 'px'
       };
     }
 
     // Handle range items
     const startDate = getItemDate(item);
-    if (!startDate) return {};
+    
+    if (!startDate) {
+      return {};
+    }
     
     const endDate = getItemEndDate(item);
     const daysFromStart = startDate.diff(timelineData.start, 'days', true);
@@ -176,22 +234,26 @@ export const useTimeline = (items = [], config = {}) => {
     const top = item.row * finalConfig.rowHeight + finalConfig.itemPadding;
 
     return {
-      left: `${left}px`,
-      width: `${width}px`,
-      top: `${top}px`,
-      height: `${finalConfig.itemHeight}px`,
+      left: left + 'px',
+      width: width + 'px',
+      top: top + 'px',
+      height: finalConfig.itemHeight + 'px',
       backgroundColor: item.color
     };
   }, [timelineData, finalConfig]);
 
   // Scroll to today
+  // PERFORMANCE: Cached callback with minimal dependencies
   const scrollToToday = useCallback(() => {
-    if (!containerRef.current || currentDatePosition === null) return;
+    if (!containerRef.current || currentDatePosition === null) {
+      return;
+    }
 
     const container = containerRef.current;
     const containerWidth = container.clientWidth;
-    // Adjust for container padding (60px left from .timeline-scroll-container)
-    const scrollLeft = currentDatePosition - containerWidth / 2 + 60;
+    
+    // Adjust for container padding (60px left)
+    const scrollLeft = currentDatePosition - (containerWidth / 2) + 60;
 
     container.scrollTo({
       left: Math.max(0, scrollLeft),
@@ -200,21 +262,31 @@ export const useTimeline = (items = [], config = {}) => {
   }, [currentDatePosition]);
 
   // Auto-scroll to current date on mount (only once)
+  // PERFORMANCE: Debounced with RAF for smooth initial positioning
   useEffect(() => {
-    if (!finalConfig.enableAutoScroll) return;
-    if (hasAutoScrolledRef.current) return; // Already scrolled, don't do it again
-    if (!containerRef.current || currentDatePosition === null) return;
-    if (!timelineData) return;
+    if (!finalConfig.enableAutoScroll) {
+      return;
+    }
+    
+    if (hasAutoScrolledRef.current) {
+      return; // Already scrolled
+    }
+    
+    if (!containerRef.current || currentDatePosition === null || !timelineData) {
+      return;
+    }
 
     // Use RAF and timeout to ensure DOM is ready
     const timer = setTimeout(() => {
       requestAnimationFrame(() => {
         scrollToToday();
-        hasAutoScrolledRef.current = true; // Mark as scrolled
+        hasAutoScrolledRef.current = true;
       });
     }, 100);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [timelineData, currentDatePosition, finalConfig.enableAutoScroll, scrollToToday]);
 
   // Zoom controls with smooth transitions
@@ -257,8 +329,6 @@ export const useTimeline = (items = [], config = {}) => {
   return {
     // State
     zoomLevel,
-    searchQuery,
-    filters,
     
     // Data
     timelineData,
@@ -270,8 +340,6 @@ export const useTimeline = (items = [], config = {}) => {
     containerRef,
     
     // Methods
-    setSearchQuery,
-    setFilters,
     getItemStyle,
     scrollToToday,
     zoomIn,

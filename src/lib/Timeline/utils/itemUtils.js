@@ -16,6 +16,7 @@ export const ITEM_TYPES = {
 
 /**
  * Determine item type
+ * PERFORMANCE: Fast type detection with explicit checks
  * @param {Object} item - Timeline item
  * @returns {string} ITEM_TYPES
  */
@@ -24,13 +25,13 @@ export const getItemType = (item) => {
     return null;
   }
   
-  // Check flag từ normalizeTimelineItem (đã xử lý fake dates)
-  // Nếu ban đầu thiếu dates → đã được đánh dấu là milestone
+  // Check flag from normalizeItem (already processed fake dates)
+  // If initially missing dates -> marked as milestone
   if (item._originallyMilestone === true) {
     return ITEM_TYPES.MILESTONE;
   }
   
-  // Còn lại → RANGE (có đủ dates thực sự)
+  // Otherwise -> RANGE (has real dates)
   return ITEM_TYPES.RANGE;
 }
 
@@ -67,44 +68,6 @@ export const getItemEndDate = (item) => {
 };
 
 /**
- * Format item for tooltip/display
- * @param {Object} item - Timeline item
- * @returns {Object} Formatted item info
- */
-export const formatItemInfo = (item) => {
-  const type = getItemType(item);
-  
-  if (type === ITEM_TYPES.MILESTONE) {
-    const date = getItemDate(item);
-    if (!date) return null;
-    
-    return {
-      type: 'milestone',
-      title: item.issueName || item.name,
-      date: date.format('DD MMM YYYY'),
-      tooltip: `${item.issueName || item.name}\nMilestone: ${date.format('ddd, DD MMM YYYY')}`
-    };
-  }
-  
-  if (type === ITEM_TYPES.RANGE) {
-    const start = moment(item.startDate);
-    const end = moment(item.dueDate);
-    const duration = end.diff(start, 'days');
-    
-    return {
-      type: 'range',
-      title: item.issueName || item.name,
-      startDate: start.format('DD MMM YYYY'),
-      dueDate: end.format('DD MMM YYYY'),
-      duration: `${duration} days`,
-      tooltip: `${item.issueName || item.name}\n${start.format('DD MMM')} - ${end.format('DD MMM YYYY')}\nDuration: ${duration} days`
-    };
-  }
-  
-  return null;
-};
-
-/**
  * Check if item is milestone
  * @param {Object} item - Timeline item
  * @returns {boolean} True if milestone
@@ -115,16 +78,28 @@ export const isMilestone = (item) => {
 
 /**
  * Normalize item (ensure consistent structure)
+ * PERFORMANCE: Optimized - avoid spread operator
  * @param {Object} item - Timeline item
  * @returns {Object} Normalized item
  */
 export const normalizeItem = (item) => {
   const type = getItemType(item);
+  const color = item.color || DEFAULT_STATUS_COLOR;
   
+  // OPTIMIZATION: Direct property assignment instead of spread
   return {
-    ...item,
+    id: item.id,
+    name: item.name,
+    startDate: item.startDate,
+    dueDate: item.dueDate,
+    createdDate: item.createdDate,
+    date: item.date,
+    status: item.status,
+    progress: item.progress,
+    duration: item.duration,
+    _originallyMilestone: item._originallyMilestone,
     _type: type,
     _isValid: type !== null,
-    color: item.color || DEFAULT_STATUS_COLOR
+    color: color
   };
 };

@@ -7,36 +7,75 @@ import moment from 'moment';
 
 /**
  * Get date range from items (handles both range and milestone items)
+ * PERFORMANCE: O(n) single pass - optimized for big data
  * @param {Array} items - Timeline items
  * @returns {Object} {start, end} moment objects
  */
 export const getDateRangeFromItems = (items) => {
-  if (!items || items.length === 0) return null;
+  // Default range: 3 months (previous month, current month, next month)
+  if (!items || items.length === 0) {
+    const today = moment();
+    return {
+      start: today.clone().subtract(1, 'month').startOf('month'),
+      end: today.clone().add(1, 'months').startOf('month')
+    };
+  }
 
-  const allDates = [];
+  // OPTIMIZATION: Single pass O(n) instead of moment.min/max O(n) twice
+  // Track min/max timestamps directly without creating moment arrays
+  let minTimestamp = Number.MAX_SAFE_INTEGER;
+  let maxTimestamp = Number.MIN_SAFE_INTEGER;
+  let hasValidDate = false;
   
-  items.forEach(item => {
+  const itemCount = items.length;
+  for (let i = 0; i < itemCount; i++) {
+    const item = items[i];
+    let startTimestamp = null;
+    let endTimestamp = null;
+    
     // Handle range items
     if (item.startDate && item.dueDate) {
-      allDates.push(moment(item.startDate), moment(item.dueDate));
+      startTimestamp = moment(item.startDate).valueOf();
+      endTimestamp = moment(item.dueDate).valueOf();
+      hasValidDate = true;
     }
     // Handle milestone items
     else if (item.createdDate) {
-      allDates.push(moment(item.createdDate));
+      startTimestamp = moment(item.createdDate).valueOf();
+      endTimestamp = startTimestamp;
+      hasValidDate = true;
     }
     else if (item.date) {
-      allDates.push(moment(item.date));
+      startTimestamp = moment(item.date).valueOf();
+      endTimestamp = startTimestamp;
+      hasValidDate = true;
     }
-  });
+    
+    // Update min/max in single pass
+    if (startTimestamp !== null) {
+      if (startTimestamp < minTimestamp) {
+        minTimestamp = startTimestamp;
+      }
+      if (endTimestamp > maxTimestamp) {
+        maxTimestamp = endTimestamp;
+      }
+    }
+  }
 
-  if (allDates.length === 0) return null;
+  // Fallback if no valid dates found
+  if (!hasValidDate) {
+    const today = moment();
+    return {
+      start: today.clone().subtract(1, 'month').startOf('month'),
+      end: today.clone().add(1, 'months').startOf('month')
+    };
+  }
 
-  const start = moment.min(allDates).startOf('month');
-  const maxDate = moment.max(allDates);
+  // Convert timestamps back to moment only once
+  const start = moment(minTimestamp).startOf('month');
+  const maxDate = moment(maxTimestamp);
   
-  // Only add buffer month if maxDate is NOT the 1st day of month
-  // If maxDate is 1st day (e.g., 2024-06-01), timeline ends at that month start
-  // If maxDate is > 1st day (e.g., 2024-06-15), add buffer to next month start
+  // Add buffer month only if maxDate is not 1st day of month
   const end = maxDate.date() === 1 
     ? maxDate.clone().startOf('month')
     : maxDate.clone().add(1, 'month').startOf('month');
@@ -46,6 +85,7 @@ export const getDateRangeFromItems = (items) => {
 
 /**
  * Generate timeline periods (months only)
+ * PERFORMANCE: Optimized - minimize clone() operations
  * @param {moment} start - Start date
  * @param {moment} end - End date
  * @param {number} pixelsPerDay - Pixels per day for width calculation
@@ -61,15 +101,18 @@ export const generatePeriods = (start, end, pixelsPerDay = 40) => {
     const nextMonth = current.clone().add(1, 'month');
     const monthDays = nextMonth.diff(current, 'days', true);
     
+    // OPTIMIZATION: Store moment objects without extra clones
+    // These are used for comparison only, safe to reference
     periods.push({
       label: current.format('M/YYYY'),
       width: monthDays * pixelsPerDay,
       days: monthDays,
       start: current.clone(),
-      end: nextMonth.clone(),
+      end: nextMonth,
       type: 'month'
     });
     
+    // Mutate current instead of creating new instance
     current.add(1, 'month');
   }
 
@@ -78,8 +121,8 @@ export const generatePeriods = (start, end, pixelsPerDay = 40) => {
     label: endMonth.format('M/YYYY'),
     width: 0,
     days: 0,
-    start: endMonth.clone(),
-    end: endMonth.clone(),
+    start: endMonth,
+    end: endMonth,
     type: 'marker'
   });
 
