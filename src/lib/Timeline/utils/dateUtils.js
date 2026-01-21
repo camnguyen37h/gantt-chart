@@ -128,3 +128,54 @@ export const generatePeriods = (start, end, pixelsPerDay = 40) => {
 
   return periods;
 };
+
+/**
+ * Format date to display format or return N/A
+ *
+ * @param {string|Date|null} date - Date to format
+ *
+ * @returns {string}
+ */
+export const formatDate = date => {
+  return moment(date).isValid()
+    ? moment(date).format('YYYY-MM-DD')
+    : 'N/A'
+}
+
+/**
+ * Pluralize 'day' based on count
+ *
+ * @param {number} count - Number of days
+ *
+ * @returns {string} 'day' or 'days'
+ */
+const pluralizeDays = count => {
+  return Math.abs(count) === 1 ? 'day' : 'days'
+}
+
+/**
+ * Format duration with proper pluralization
+ *
+ * @param {number|undefined} diffDate - Duration in days
+ * @param {boolean} onlyPositive - Positive values
+ *
+ * @returns {string}
+ */
+export const formatDiffDate = (diffDate, onlyPositive = false) => {
+  if (diffDate === undefined) {
+    return 'N/A'
+  }
+
+  const unit = pluralizeDays(diffDate)
+
+  if (!onlyPositive) {
+    if (diffDate < 0) {
+      return `Late (${diffDate} ${unit})`
+    }
+
+    const sign = diffDate > 0 ? '+' : ''
+    return `On-time (${sign}${diffDate} ${unit})`
+  }
+
+  return [diffDate, unit].join(' ')
+}

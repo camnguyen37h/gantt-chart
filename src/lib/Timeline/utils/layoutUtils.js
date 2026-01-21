@@ -93,6 +93,7 @@ export const calculateAdvancedLayout = (items) => {
       progress: item.progress,
       color: item.color,
       duration: item.duration,
+      lateTime: item.lateTime,
       _isValid: item._isValid,
       _originallyMilestone: item._originallyMilestone,
       row: targetRow

@@ -148,9 +148,10 @@ const drawRangeItem = (ctx, item, style, isHovered, animationProgress) => {
   const textX = left + 12;
   const textY = top + height / 2;
   
-  // Check if warning will be displayed - always show if task is late
-  const hasWarning = item.lateTime && item.lateTime < 0;
-  const warningWidth = hasWarning ? 18 : 0; // Reserve space for corner badge
+  // Check if warning will be displayed
+  const MIN_WIDTH_FOR_WARNING = 50;
+  const hasWarning = item.lateTime && item.lateTime < 0 && width > MIN_WIDTH_FOR_WARNING;
+  const warningWidth = hasWarning ? 28 : 0; // Reserve space for warning triangle
   
   const maxTextWidth = width - 24 - warningWidth;
 
@@ -170,9 +171,11 @@ const drawRangeItem = (ctx, item, style, isHovered, animationProgress) => {
     }
   }
 
-  // Draw warning indicator for late tasks (corner badge)
+  // Draw warning indicator for late tasks
   // lateTime = dueDate - resolvedDate, so lateTime < 0 means late
-  if (hasWarning) {
+  // Only show warning if task bar is wide enough (> 50px to avoid visual clutter)
+  const MIN_WIDTH_FOR_WARNING = 50;
+  if (item.lateTime && item.lateTime < 0 && width > MIN_WIDTH_FOR_WARNING) {
     drawWarningIndicator(ctx, left + width, top, height);
   }
 
@@ -180,27 +183,43 @@ const drawRangeItem = (ctx, item, style, isHovered, animationProgress) => {
 };
 
 /**
- * Draw warning indicator for late tasks - Corner Badge pattern
+ * Draw warning indicator for late tasks
  * @param {CanvasRenderingContext2D} ctx - Canvas context
  * @param {number} right - Right edge of task bar
  * @param {number} top - Top position of task bar
  * @param {number} height - Height of task bar
  */
 const drawWarningIndicator = (ctx, right, top, height) => {
-  const size = 16; // Corner triangle size
-  const radius = 4; // Border radius to match task bar
+  const size = 18; // Triangle size
+  const centerY = Math.floor(top + height / 2);
+  const centerX = Math.floor(right - 14); // Center X position
+  
+  // Triangle pointing up with horizontal base
+  const topPoint = Math.floor(centerY - size / 2); // Top vertex
+  const bottomY = Math.floor(centerY + size / 2); // Base Y position
+  const leftX = Math.floor(centerX - size / 2); // Base left
+  const rightX = Math.floor(centerX + size / 2); // Base right
   
   ctx.save();
   
-  // Draw red corner triangle with rounded inner corner at top-right
+  // Draw warning triangle (red for late tasks)
   ctx.fillStyle = '#f5222d'; // Red error color
   ctx.beginPath();
-  ctx.moveTo(right - size, top); // Left point on top edge
-  ctx.lineTo(right - radius, top); // Move to start of top-right curve
-  ctx.quadraticCurveTo(right, top, right, top + radius); // Rounded top-right corner
-  ctx.lineTo(right, top + size); // Bottom point on right edge
+  ctx.moveTo(centerX, topPoint); // Top point
+  ctx.lineTo(leftX, bottomY); // Bottom left
+  ctx.lineTo(rightX, bottomY); // Bottom right
   ctx.closePath();
   ctx.fill();
+  
+  // Draw exclamation mark (!) - centered in triangle centroid
+  // Centroid of triangle is 2/3 from top (or 1/3 from bottom)
+  const triangleCenterY = Math.floor(topPoint + (size * 2 / 3));
+  
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('!', centerX, triangleCenterY);
   
   ctx.restore();
 };

@@ -131,12 +131,14 @@
   border-radius: 6px;
   font-size: 13px;
   pointer-events: none;
-  z-index: 100;
+  z-index: 1000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(8px);
   transition: opacity 0.2s ease-in-out;
-  max-width: 280px;
+  max-width: 320px;
+  max-height: 400px;
   min-width: 200px;
+  overflow-y: auto;
 }
 
 .timeline-canvas-tooltip-content {

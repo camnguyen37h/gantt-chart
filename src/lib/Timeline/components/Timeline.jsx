@@ -44,6 +44,11 @@ const Timeline = memo(({
       return;
     }
 
+    // Disable zoom when no items
+    if (!layoutItems || layoutItems.length === 0) {
+      return;
+    }
+
     let rafId = null;
     let lastWheelTime = 0;
     const THROTTLE_MS = 16; // ~60fps
@@ -82,7 +87,7 @@ const Timeline = memo(({
         cancelAnimationFrame(rafId);
       }
     };
-  }, [containerRef, handleZoom]);
+  }, [containerRef, handleZoom, layoutItems]);
 
   return (
     <div className={`timeline ${className || ''}`}>

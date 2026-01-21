@@ -132,8 +132,8 @@ export const mockApiResponse = [
     issueId: "258450",
     issueName: "Staging Deployment",
     startDate: "2025-12-01",
-    dueDate: "2026-02-28",
-    resolvedDate: null,
+    dueDate: "2025-12-05",
+    resolvedDate: '2026-03-28',
     createdDate: "2025-11-25",
     status: "Not Started"
   },
@@ -141,8 +141,8 @@ export const mockApiResponse = [
     issueId: "258451",
     issueName: "Production Deployment",
     startDate: "2026-03-01",
-    dueDate: "2026-05-31",
-    resolvedDate: null,
+    dueDate: "2026-05-15",
+    resolvedDate: "2026-05-31",
     createdDate: "2026-02-25",
     status: "Pending"
   },
@@ -164,7 +164,7 @@ export const mockApiResponse = [
     dueDate: null,
     resolvedDate: null,
     createdDate: "2024-01-15",
-    status: "Milestone"
+    status: "Design"
   },
   {
     issueId: "MS-003",
@@ -173,7 +173,7 @@ export const mockApiResponse = [
     dueDate: null,
     resolvedDate: null,
     createdDate: "2024-08-31",
-    status: "Milestone"
+    status: "Rejected"
   },
   {
     issueId: "MS-004",

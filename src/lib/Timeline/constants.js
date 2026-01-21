@@ -2,6 +2,7 @@
  * Timeline Library Constants
  * Centralized configuration for timeline components
  */
+import { formatDate, formatDiffDate } from './utils/dateUtils';
 
 export const DEFAULT_CONFIG = {
   rowHeight: 75,
@@ -27,13 +28,13 @@ export const COLORS = {
   purple: '#722ed1',
   magenta: '#eb2f96',
   
-  // Status colors
-  planning: '#69c0ff',
-  finalized: '#597ef7',
-  implementing: '#ffa940',
-  resolved: '#95de64',
-  released: '#b37feb',
-  noStart: '#bfbfbf',
+  // Status colors (phân biệt rõ với error/warning)
+  planning: '#69c0ff',      // Blue light - Planning
+  finalized: '#597ef7',     // Blue - Finalized/Approved
+  implementing: '#ff9c6e',  // Orange coral - In Progress (tránh trùng warning)
+  resolved: '#52c41a',      // Green - Completed/Resolved
+  released: '#9254de',      // Purple - Released/Deployed (tránh trùng magenta)
+  noStart: '#8c8c8c',       // Gray dark - Not Started (dễ phân biệt hơn)
   
   // UI colors
   currentDate: '#e44258',
@@ -60,3 +61,12 @@ export const INTERACTIONS = {
   HOVER: 'hover',
   CONTEXT_MENU: 'contextMenu'
 };
+
+export const TOOLTIP_FIELDS = [
+  { label: 'Start', getValue: item => formatDate(item.startDate) },
+  { label: 'End', getValue: item => formatDate(item.dueDate) },
+  { label: 'Status', getValue: item => item.status || 'N/A' },
+  { label: 'Duration', getValue: item => formatDiffDate(item.duration, true) },
+  { label: 'Resolved', getValue: item => formatDate(item.resolvedDate) },
+  { label: 'Late time', getValue: item => formatDiffDate(item.lateTime) },
+]

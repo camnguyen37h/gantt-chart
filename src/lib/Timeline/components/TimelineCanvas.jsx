@@ -40,7 +40,7 @@ const TimelineCanvas = ({
   
   // Calculate canvas dimensions
   const canvasWidth = timelineData && timelineData.totalWidth ? timelineData.totalWidth : 1000;
-  const canvasHeight = Math.max(gridHeight, 400);
+  const canvasHeight = Math.max(gridHeight, 450);
 
   // Draw timeline on canvas
   const draw = useCallback(() => {
@@ -219,7 +219,11 @@ const TimelineCanvas = ({
             />
 
             {/* Tooltip */}
-            <div ref={tooltipRef} className="timeline-canvas-tooltip">
+            <div 
+              ref={tooltipRef} 
+              className="timeline-canvas-tooltip"
+              style={{ display: 'none', opacity: 0 }}
+            >
               <div className="timeline-canvas-tooltip-content">
                 <div className="tooltip-title"></div>
                 <div className="tooltip-details"></div>

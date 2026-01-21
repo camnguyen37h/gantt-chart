@@ -1,46 +1,50 @@
 /**
  * Status Color Palette
- * 30 predefined colors based on international chart color standards
- * Optimized for visibility, accessibility, and color-blind friendly
- * Sources: Material Design, D3.js Category schemes, Chart.js defaults
+ * Optimized: 11 completely distinct hues, modern, vibrant
+ * Based on popular chart libraries + modern design trends
+ * No color family repetition, high visual contrast
+ * Avoids red/pink tones to prevent confusion with error/late status indicators
  */
 
 export const STATUS_COLORS = [
-  // Primary vibrant colors (Material Design + Chart.js)
-  '#2196F3', // Blue
-  '#4CAF50', // Green
-  '#FF9800', // Orange
-  '#F44336', // Red
-  '#9C27B0', // Purple
-  '#00BCD4', // Cyan
-  '#E91E63', // Pink
-  '#FF5722', // Deep Orange
-  '#3F51B5', // Indigo
-  '#8BC34A', // Light Green
+  // Top 11: DISTINCT HUES - Each color family appears only once
+  '#2196F3', // 1. Blue (most popular)
+  '#4CAF50', // 2. Green (success)
+  '#FF9800', // 3. Orange (attention)
+  '#9C27B0', // 4. Purple (premium)
+  '#00BCD4', // 5. Cyan (modern)
+  '#FFEB3B', // 6. Yellow (optimistic - brighter than amber)
+  '#607D8B', // 7. Blue Gray (neutral)
+  '#00897B', // 8. Teal (balanced - darker, distinct from cyan)
+  '#FFA000', // 9. Amber (warm gold - between orange and yellow)
+  '#CDDC39', // 10. Lime (energetic - distinct from green/yellow)
+  '#FF6F00', // 11. Deep Orange (bold - distinct from orange)
   
-  // Secondary balanced colors (D3 Category)
-  '#1f77b4', // D3 Blue
-  '#ff7f0e', // D3 Orange
-  '#2ca02c', // D3 Green
-  '#d62728', // D3 Red
-  '#9467bd', // D3 Purple
-  '#8c564b', // D3 Brown
-  '#e377c2', // D3 Pink
-  '#7f7f7f', // D3 Gray
-  '#bcbd22', // D3 Olive
-  '#17becf', // D3 Cyan
+  // 12-20: Darker variants (700 level) - same order as top 11
+  '#1976D2', // Blue 700
+  '#388E3C', // Green 700
+  '#F57C00', // Orange 700
+  '#7B1FA2', // Purple 700
+  '#0097A7', // Cyan 700
+  '#FBC02D', // Yellow 700
+  '#546E7A', // Blue Gray 700
+  '#00695C', // Teal 700
+  '#FF8F00', // Amber 700 (darker gold)
+  '#AFB42B', // Lime 700
+  '#E65100', // Deep Orange 700
   
-  // Tertiary soft colors (Material lighter tones)
-  '#64B5F6', // Light Blue
-  '#81C784', // Light Green
-  '#FFB74D', // Light Orange
-  '#E57373', // Light Red
-  '#BA68C8', // Light Purple
-  '#4DB6AC', // Light Teal
-  '#F06292', // Light Pink
-  '#FFD54F', // Amber
-  '#7986CB', // Light Indigo
-  '#AED581', // Lime
+  // 21-30: Lighter variants (600/400 level) - same order as top 11
+  '#0288D1', // Blue 600
+  '#43A047', // Green 600
+  '#FB8C00', // Orange 600
+  '#8E24AA', // Purple 600
+  '#00ACC1', // Cyan 600
+  '#FDD835', // Yellow 600
+  '#78909C', // Blue Gray 400
+  '#26A69A', // Teal 400
+  '#FFB300', // Amber 600 (light gold)
+  '#D4E157', // Lime 400
+  '#F4511E', // Deep Orange 600
 ];
 
 export const DEFAULT_STATUS_COLOR = '#bfbfbf'; // Gray for > 30 statuses

@@ -39,12 +39,13 @@ export const normalizeTimelineItem = (item) => {
   if (!normalizedStartDate || !normalizedDueDate) {
     return null;
   }
-  
-  // Calculate duration (days between startDate and dueDate)
-  const duration = calculateDuration(normalizedStartDate, normalizedDueDate);
-  
-  // Calculate lateTime (days late from dueDate to resolvedDate)
-  const lateTime = calculateLateTime(normalizedDueDate, resolvedDate);
+
+  const duration = calculateDiffDay(
+    normalizedStartDate,
+    normalizedDueDate,
+    true
+  )
+  const lateTime = calculateDiffDay(resolvedDate, normalizedDueDate)
   
   return {
     id: issueId,
@@ -63,47 +64,29 @@ export const normalizeTimelineItem = (item) => {
 
 /**
  * Calculate duration between start and due date
+ *
  * @param {string} startDate - Start date (YYYY-MM-DD)
  * @param {string} dueDate - Due date (YYYY-MM-DD)
- * @returns {number} Duration in days
+ * @param {boolean} onlyPositive - Positive values
+ *
+ * @returns {number} Diff days
  */
-export const calculateDuration = (startDate, dueDate) => {
-  if (!startDate || !dueDate) {
-    return 0;
+export const calculateDiffDay = (startDate, dueDate, onlyPositive = false) => {
+  if (!dueDate || !startDate) {
+    return 0
   }
-  
-  const start = moment(startDate);
-  const due = moment(dueDate);
-  
-  if (!start.isValid() || !due.isValid()) {
-    return 0;
-  }
-  
-  const duration = due.diff(start, 'days');
-  return duration >= 0 ? duration : 0;
-};
 
-/**
- * Calculate late time (days overdue)
- * @param {string} dueDate - Due date (YYYY-MM-DD)
- * @param {string} resolvedDate - Resolved date (YYYY-MM-DD)
- * @returns {number} Late days (0 if not late or no resolvedDate)
- */
-export const calculateLateTime = (dueDate, resolvedDate) => {
-  if (!dueDate || !resolvedDate) {
-    return 0;
+  const start = moment(startDate)
+  const due = moment(dueDate)
+
+  if (!start.isValid() || !due.isValid()) {
+    return 0
   }
-  
-  const due = moment(dueDate);
-  const resolved = moment(resolvedDate);
-  
-  if (!due.isValid() || !resolved.isValid()) {
-    return 0;
-  }
-  
-  const lateDays = resolved.diff(due, 'days');
-  return lateDays > 0 ? lateDays : 0;
-};
+
+  const diffDays = due.diff(start, 'days')
+
+  return onlyPositive ? Math.max(0, diffDays) : diffDays
+}
 
 /**
  * Calculate progress percentage

@@ -97,6 +97,7 @@ export const normalizeItem = (item) => {
     status: item.status,
     progress: item.progress,
     duration: item.duration,
+    lateTime: item.lateTime,
     _originallyMilestone: item._originallyMilestone,
     _type: type,
     _isValid: type !== null,

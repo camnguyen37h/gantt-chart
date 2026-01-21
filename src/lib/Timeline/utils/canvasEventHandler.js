@@ -3,6 +3,8 @@
  * Handles mouse events for canvas timeline
  */
 
+import { TOOLTIP_FIELDS } from '../constants';
+
 /**
  * Check if point is inside rectangle
  */
@@ -127,33 +129,12 @@ export const handleCanvasEvents = (options) => {
     }
     
     if (detailsEl) {
-      const moment = require('moment');
-      const status = item.status || 'Unknown';
-      const progress = item.progress !== undefined ? `${item.progress}%` : 'N/A';
-      
-      // Check if this is a milestone (originally missing dates)
-      if (item._originallyMilestone) {
-        const createdDate = item.createdDate ? moment(item.createdDate).format('MMM DD, YYYY') : 'N/A';
-        detailsEl.innerHTML = `
-          <div class="tooltip-row"><span class="tooltip-label">Type:</span> <span class="tooltip-value">Milestone</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Status:</span> <span class="tooltip-value">${status}</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Created:</span> <span class="tooltip-value">${createdDate}</span></div>
-        `;
-      } else {
-        // Range item - show start and due dates
-        const startDate = item.startDate ? moment(item.startDate).format('MMM DD, YYYY') : 'N/A';
-        const dueDate = item.dueDate ? moment(item.dueDate).format('MMM DD, YYYY') : 'N/A';
-        const duration = item.duration !== undefined ? `${item.duration} days` : 'N/A';
-        
-        detailsEl.innerHTML = `
-          <div class="tooltip-row"><span class="tooltip-label">Type:</span> <span class="tooltip-value">Range</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Status:</span> <span class="tooltip-value">${status}</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Start:</span> <span class="tooltip-value">${startDate}</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Due:</span> <span class="tooltip-value">${dueDate}</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Duration:</span> <span class="tooltip-value">${duration}</span></div>
-          <div class="tooltip-row"><span class="tooltip-label">Progress:</span> <span class="tooltip-value">${progress}</span></div>
-        `;
-      }
+      detailsEl.innerHTML = TOOLTIP_FIELDS.map(({ label, getValue }) => {
+        return `<div class="tooltip-row">
+            <span class="tooltip-label">${label}: </span>
+            <span class="tooltip-value">${getValue(item)}</span>
+          </div>`
+      }).join('')
     }
 
     // Position tooltip
