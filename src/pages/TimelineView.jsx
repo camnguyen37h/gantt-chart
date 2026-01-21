@@ -1,5 +1,6 @@
+import { Tabs } from 'antd'
 import React, { useMemo, useState, useEffect } from 'react';
-import { Timeline } from '../lib/Timeline';
+import { PROJECT_CHARTS, Timeline } from '../lib/Timeline';
 import { fetchTimelineData } from '../utils/mockApiData';
 import { 
   normalizeTimelineData,
@@ -10,6 +11,7 @@ import {
   buildStatusColorMap, 
   getStatusColor 
 } from '../constants/statusColors';
+import WorkforceChart from '../components/WorkforceChart/WorkforceChart';
 import './TimelineView.css';
 
 const TimelineView = () => {
@@ -128,34 +130,47 @@ const TimelineView = () => {
   }
 
   return (
-    <div className="timeline-view">
-      <div className="timeline-view-header">
-        <h2 className="timeline-view-title">Project Timeline View</h2>
-        <div className="timeline-view-tabs">
-          <button className="timeline-tab">All Views</button>
-          <button className="timeline-tab">Main Table</button>
-          <button className="timeline-tab active">Timeline</button>
+    <Tabs
+      defaultActiveKey={PROJECT_CHARTS.MILESTONE}
+      animated={false}
+      destroyInactiveTabPane={true}
+      className="mb-24">
+      <Tabs.TabPane
+        tab={PROJECT_CHARTS.MILESTONE}
+        key={PROJECT_CHARTS.MILESTONE}>
+        <div className="timeline-view">
+          <div className="timeline-view-header">
+            <h2 className="timeline-view-title">Project Timeline View</h2>
+            <div className="timeline-view-tabs">
+              <button className="timeline-tab">All Views</button>
+              <button className="timeline-tab">Main Table</button>
+              <button className="timeline-tab active">Timeline</button>
+            </div>
+          </div>
+
+          <Timeline
+            items={filteredItems}
+            onItemClick={handleItemClick}
+            loading={loading}
+            config={{
+              enableAutoScroll: true,
+              enableCurrentDate: true,
+              enableGrid: true,
+            }}
+            showLegend={true}
+            legendProps={{
+              statuses: uniqueStatuses,
+              statusColorMap: statusColorMap,
+              visibleStatuses: visibleStatuses,
+              onStatusToggle: handleStatusToggle
+            }}
+          />
         </div>
-      </div>
-      
-      <Timeline 
-        items={filteredItems}
-        onItemClick={handleItemClick}
-        loading={loading}
-        config={{
-          enableAutoScroll: true,
-          enableCurrentDate: true,
-          enableGrid: true,
-        }}
-        showLegend={true}
-        legendProps={{
-          statuses: uniqueStatuses,
-          statusColorMap: statusColorMap,
-          visibleStatuses: visibleStatuses,
-          onStatusToggle: handleStatusToggle
-        }}
-      />
-    </div>
+      </Tabs.TabPane>
+      <Tabs.TabPane tab={PROJECT_CHARTS.WORKLOAD} key={PROJECT_CHARTS.WORKLOAD}>
+        <WorkforceChart />
+      </Tabs.TabPane>
+    </Tabs>
   );
 };
 

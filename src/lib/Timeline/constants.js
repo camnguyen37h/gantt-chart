@@ -4,6 +4,11 @@
  */
 import { formatDate, formatDiffDate } from './utils/dateUtils';
 
+export const PROJECT_CHARTS = {
+  MILESTONE: 'Milestone',
+  WORKLOAD: 'Workload',
+}
+
 export const DEFAULT_CONFIG = {
   rowHeight: 75,
   itemHeight: 34,

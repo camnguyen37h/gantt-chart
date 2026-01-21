@@ -4,13 +4,16 @@
   "private": true,
   "dependencies": {
     "antd": "^3.26.20",
+    "echarts": "^6.0.0",
+    "echarts-for-react": "^3.0.6",
     "moment": "^2.29.4",
     "prop-types": "^15.8.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
-    "recharts": "^2.1.16"
+    "recharts": "^2.1.16",
+    "styled-components": "^6.3.8"
   },
   "scripts": {
     "start": "react-scripts start",
