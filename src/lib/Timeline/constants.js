@@ -13,8 +13,8 @@ export const DEFAULT_CONFIG = {
   rowHeight: 75,
   itemHeight: 34,
   itemPadding: 15,
-  pixelsPerDay: 8, // Width in pixels per day for timeline (compact view)
-  minZoomLevel: 0.5,
+  pixelsPerDay: 5, // PERFORMANCE: Reduced from 8 to 5 for more compact timeline (less lag when zoom out)
+  minZoomLevel: 0.7, // PERFORMANCE: Limit zoom out to prevent canvas too wide and lag
   maxZoomLevel: 3,
   scrollSensitivity: 1,
   enableAutoScroll: true,

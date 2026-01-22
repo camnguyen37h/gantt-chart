@@ -23,21 +23,32 @@ export const drawTimeline = (ctx, options) => {
     enableGrid,
     enableCurrentDate,
     hoveredItem,
-    animationProgress
+    animationProgress,
+    isZooming
   } = options;
   
   const progress = animationProgress !== undefined ? animationProgress : 1;
 
+  // OPTIMIZATION: Skip animations during zoom for better performance
+  const effectiveProgress = isZooming ? 1 : progress;
+
   // OPTIMIZATION: Batch draw operations to minimize context state changes
   ctx.save();
 
-  // Draw grid lines
-  if (enableGrid) {
+  // PERFORMANCE: Get zoom level for LOD decisions
+  const zoomLevel = options.zoomLevel || 1;
+
+  // Draw grid lines (skip when zoomed out far for performance)
+  if (enableGrid && zoomLevel >= 0.6) {
     drawGridLines(ctx, timelineData, layoutItems, rowHeight);
   }
 
-  // Draw timeline items with animation
-  drawTimelineItems(ctx, layoutItems, getItemStyle, hoveredItem, progress, options);
+  // Draw timeline items with LOD optimization (no scroll-based viewport culling)
+  // PERFORMANCE: Canvas draws FULL timeline once, scroll is pure CSS
+  drawTimelineItems(ctx, layoutItems, getItemStyle, hoveredItem, effectiveProgress, {
+    zoomLevel: options.zoomLevel,
+    isZooming: isZooming
+  });
 
   // Draw current date line
   if (enableCurrentDate && currentDatePosition !== null) {
@@ -83,12 +94,18 @@ const drawGridLines = (ctx, timelineData, layoutItems, rowHeight) => {
 
 /**
  * Draw timeline items
- * PERFORMANCE: Optimized loop with minimal function calls
+ * PERFORMANCE: Optimized loop with viewport culling and LOD
+ * NOTE: Canvas renders FULL timeline, scroll is pure CSS (no redraw needed)
+ * Viewport culling based on canvas dimensions, not scroll position
  */
 const drawTimelineItems = (ctx, layoutItems, getItemStyle, hoveredItem, animationProgress, options) => {
   const progress = animationProgress !== undefined ? animationProgress : 1;
   const itemCount = layoutItems.length;
   const hoveredId = hoveredItem ? hoveredItem.id : null;
+  
+  // OPTIMIZATION: Progressive Level of Detail (3 levels)
+  const zoomLevel = options.zoomLevel || 1;
+  const detailLevel = zoomLevel >= 0.9 ? 'normal' : zoomLevel >= 0.7 ? 'medium' : 'ultra-low';
   
   for (let i = 0; i < itemCount; i++) {
     const item = layoutItems[i];
@@ -96,84 +113,100 @@ const drawTimelineItems = (ctx, layoutItems, getItemStyle, hoveredItem, animatio
     const isHovered = hoveredId !== null && hoveredId === item.id;
 
     if (isMilestone(item)) {
-      drawMilestone(ctx, item, style, isHovered, progress, options);
+      drawMilestone(ctx, item, style, isHovered, progress, options, detailLevel);
     } else {
-      drawRangeItem(ctx, item, style, isHovered, progress);
+      drawTaskBar(ctx, item, style, isHovered, progress, detailLevel, options);
     }
   }
 };
 
 /**
- * Draw range item (bar)
+ * Draw task bar with progressive LOD (Level of Detail)
+ * PERFORMANCE: 3 detail levels - normal, medium (no shadow), ultra-low (simple rect only)
  */
-const drawRangeItem = (ctx, item, style, isHovered, animationProgress) => {
+const drawTaskBar = (ctx, item, style, isHovered, animationProgress, detailLevel, options) => {
+  const effectiveProgress = options && options.isZooming ? 1 : animationProgress !== undefined ? animationProgress : 1;
+  
   const left = parseFloat(style.left);
   const top = parseFloat(style.top);
   const fullWidth = parseFloat(style.width);
   const height = parseFloat(style.height);
   
   // Animate width from 0 to 100%
-  const progress = animationProgress !== undefined ? animationProgress : 1;
-  const width = fullWidth * progress;
+  const width = fullWidth * effectiveProgress;
 
   ctx.save();
 
-  // Shadow on hover
-  if (isHovered) {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.18)';
-    ctx.shadowBlur = 12;
-    ctx.shadowOffsetY = 4;
-  } else {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.12)';
-    ctx.shadowBlur = 3;
-    ctx.shadowOffsetY = 1;
+  // OPTIMIZATION: Progressive LOD for shadows
+  // normal: full shadow, medium: no shadow, ultra-low: no shadow
+  if (detailLevel === 'normal') {
+    if (isHovered) {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.18)';
+      ctx.shadowBlur = 12;
+      ctx.shadowOffsetY = 4;
+    } else {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.12)';
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetY = 1;
+    }
   }
 
   // Draw bar
   ctx.fillStyle = style.backgroundColor || item.color || '#1890ff';
-  ctx.beginPath();
-  ctx.roundRect(left, top, width, height, 4);
-  ctx.fill();
-
-  // Reset shadow
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.shadowOffsetY = 0;
-
-  // Draw text
-  ctx.fillStyle = 'white';
-  ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-  ctx.textBaseline = 'middle';
   
-  const textX = left + 12;
-  const textY = top + height / 2;
-  
-  // Check if warning will be displayed - always show if task is late
-  const hasWarning = item.lateTime && item.lateTime < 0;
-  const warningWidth = hasWarning ? 18 : 0; // Reserve space for corner badge
-  
-  const maxTextWidth = width - 24 - warningWidth;
-
-  if (maxTextWidth > 30) {
-    const text = item.name || '';
-    const metrics = ctx.measureText(text);
-    
-    if (metrics.width > maxTextWidth) {
-      // Truncate text
-      let truncated = text;
-      while (ctx.measureText(truncated + '...').width > maxTextWidth && truncated.length > 0) {
-        truncated = truncated.slice(0, -1);
-      }
-      ctx.fillText(truncated + '...', textX, textY);
-    } else {
-      ctx.fillText(text, textX, textY);
-    }
+  // OPTIMIZATION: Use simple rect for ultra-low detail (faster than roundRect)
+  if (detailLevel === 'ultra-low') {
+    ctx.fillRect(left, top, width, height);
+  } else {
+    ctx.beginPath();
+    ctx.roundRect(left, top, width, height, 4);
+    ctx.fill();
   }
 
-  // Draw warning indicator for late tasks (corner badge)
-  // lateTime = dueDate - resolvedDate, so lateTime < 0 means late
-  if (hasWarning) {
-    drawWarningIndicator(ctx, left + width, top, height);
+  // OPTIMIZATION: Skip text and warning in ultra-low detail
+  if (detailLevel !== 'ultra-low') {
+    // Reset shadow
+    if (detailLevel === 'normal') {
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+    }
+
+    // Draw text
+    ctx.fillStyle = 'white';
+    ctx.font = '500 13px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.textBaseline = 'middle';
+    
+    const textX = left + 12;
+    const textY = top + height / 2;
+    
+    // Check if warning will be displayed - always show if task is late
+    const hasWarning = item.lateTime && item.lateTime < 0;
+    const warningWidth = hasWarning ? 18 : 0; // Reserve space for corner badge
+    
+    const maxTextWidth = width - 24 - warningWidth;
+
+    if (maxTextWidth > 30) {
+      const text = item.name || '';
+      const metrics = ctx.measureText(text);
+      
+      if (metrics.width > maxTextWidth) {
+        // Truncate text
+        let truncated = text;
+        while (ctx.measureText(truncated + '...').width > maxTextWidth && truncated.length > 0) {
+          truncated = truncated.slice(0, -1);
+        }
+        ctx.fillText(truncated + '...', textX, textY);
+      } else {
+        ctx.fillText(text, textX, textY);
+      }
+    }
+
+    // Draw warning indicator for late tasks (corner badge)
+    // lateTime = dueDate - resolvedDate, so lateTime < 0 means late
+    if (hasWarning) {
+      drawWarningIndicator(ctx, left + width, top, height);
+    }
   }
 
   ctx.restore();
@@ -206,9 +239,10 @@ const drawWarningIndicator = (ctx, right, top, height) => {
 };
 
 /**
- * Draw milestone
+ * Draw milestone with progressive LOD
+ * PERFORMANCE: normal (full), medium (no shadow), ultra-low (simple diamond, no label)
  */
-const drawMilestone = (ctx, item, style, isHovered, animationProgress, options) => {
+const drawMilestone = (ctx, item, style, isHovered, animationProgress, options, detailLevel) => {
   // Milestones use scale animation instead of width
   const progress = animationProgress !== undefined ? animationProgress : 1;
   const left = parseFloat(style.left);
@@ -219,13 +253,15 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options) 
 
   ctx.save();
 
-  // Shadow
-  if (isHovered) {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-    ctx.shadowBlur = 8;
-  } else {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
-    ctx.shadowBlur = 4;
+  // OPTIMIZATION: Skip shadow in medium and ultra-low detail
+  if (detailLevel === 'normal') {
+    if (isHovered) {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = 8;
+    } else {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+      ctx.shadowBlur = 4;
+    }
   }
 
   // Animate scale for milestone (pop-in effect)
@@ -244,27 +280,29 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options) 
   ctx.closePath();
   ctx.fill();
 
-  // Inner circle
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = 'white';
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
-  ctx.fill();
+  // OPTIMIZATION: Skip inner circle and label in ultra-low detail
+  if (detailLevel !== 'ultra-low') {
+    // Inner circle
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+    ctx.fill();
 
-  // Reset transform for label (don't scale text)
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  // dpr is passed from options
-  const dpr = options && options.dpr ? options.dpr : 1;
-  ctx.scale(dpr, dpr);
+    // Reset transform for label (don't scale text)
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    // dpr is passed from options
+    const dpr = options && options.dpr ? options.dpr : 1;
+    ctx.scale(dpr, dpr);
 
-  // Label with background pill (always below diamond)
-  ctx.globalAlpha = progress;
-  const text = item.name || '';
-  const labelY = centerY + size / 2 + 18; // Increased from 12 to 18 for more spacing
-  
-  // Set font
-  ctx.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    // Label with background pill (always below diamond)
+    ctx.globalAlpha = progress;
+    const text = item.name || '';
+    const labelY = centerY + size / 2 + 18; // Increased from 12 to 18 for more spacing
+    
+    // Set font
+    ctx.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.textBaseline = 'top';
   
   // Measure full text
@@ -347,6 +385,7 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options) 
   ctx.fillText(displayText, textX, labelY);
   
   ctx.globalAlpha = 1;
+  }
 
   ctx.restore();
 };

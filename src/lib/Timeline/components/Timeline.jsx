@@ -33,7 +33,9 @@ const Timeline = memo(({
     getItemStyle,
     scrollToToday,
     handleZoom,
-    config: finalConfig
+    config: finalConfig,
+    isZooming,
+    zoomLevel
   } = timeline;
 
   // Handle mouse wheel zoom with optimized throttling
@@ -54,6 +56,14 @@ const Timeline = memo(({
     const THROTTLE_MS = 16; // ~60fps
 
     const handleWheel = (event) => {
+      const delta = -event.deltaY;
+      
+      // PERFORMANCE: Skip zoom when already at min/max limit to prevent unnecessary processing
+      if ((delta > 0 && zoomLevel >= finalConfig.maxZoomLevel) ||
+          (delta < 0 && zoomLevel <= finalConfig.minZoomLevel)) {
+        return; // Already at limit, do nothing
+      }
+      
       event.preventDefault();
       
       const now = Date.now();
@@ -72,7 +82,6 @@ const Timeline = memo(({
       
       // Use RAF for smooth rendering
       rafId = requestAnimationFrame(() => {
-        const delta = -event.deltaY;
         handleZoom(delta);
         rafId = null;
       });
@@ -87,7 +96,7 @@ const Timeline = memo(({
         cancelAnimationFrame(rafId);
       }
     };
-  }, [containerRef, handleZoom, layoutItems]);
+  }, [containerRef, handleZoom, layoutItems, zoomLevel, finalConfig.maxZoomLevel, finalConfig.minZoomLevel]);
 
   return (
     <div className={`timeline ${className || ''}`}>
@@ -120,6 +129,8 @@ const Timeline = memo(({
             onItemHover={onItemHover}
             loading={loading}
             config={finalConfig}
+            isZooming={isZooming}
+            zoomLevel={zoomLevel}
           />
         </div>
       </div>

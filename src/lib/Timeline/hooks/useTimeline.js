@@ -35,10 +35,12 @@ export const useTimeline = (items = [], config = {}) => {
   // eslint-disable-next-line no-unused-vars
   const [filters] = useState({});
   const [containerWidth, setContainerWidth] = useState(null);
+  const [isZooming, setIsZooming] = useState(false); // Track zoom state
   
   const containerRef = useRef(null);
   const hasAutoScrolledRef = useRef(false); // Track if already scrolled once
   const zoomTimeoutRef = useRef(null); // Debounce zoom updates
+  const zoomRAFRef = useRef(null); // RAF for smooth zoom
 
   // Track container width for auto-scaling using ResizeObserver
   useEffect(() => {
@@ -289,46 +291,102 @@ export const useTimeline = (items = [], config = {}) => {
     };
   }, [timelineData, currentDatePosition, finalConfig.enableAutoScroll, scrollToToday]);
 
-  // Zoom controls with smooth transitions
+  // Zoom controls with smooth transitions and RAF optimization
   const zoomIn = useCallback(() => {
-    setZoomLevel(prev => {
-      const newZoom = Math.min(prev * 1.15, finalConfig.maxZoomLevel);
-      return Math.round(newZoom * 100) / 100; // Round to 2 decimals for precision
+    // PERFORMANCE: Skip if already at max zoom to prevent unnecessary updates
+    if (zoomLevel >= finalConfig.maxZoomLevel) {
+      return;
+    }
+    
+    if (zoomRAFRef.current) {
+      cancelAnimationFrame(zoomRAFRef.current);
+    }
+    
+    setIsZooming(true);
+    
+    zoomRAFRef.current = requestAnimationFrame(() => {
+      setZoomLevel(prev => {
+        const newZoom = Math.min(prev * 1.15, finalConfig.maxZoomLevel);
+        return Math.round(newZoom * 100) / 100;
+      });
+      
+      if (zoomTimeoutRef.current) {
+        clearTimeout(zoomTimeoutRef.current);
+      }
+      zoomTimeoutRef.current = setTimeout(() => {
+        setIsZooming(false);
+      }, 150);
     });
-  }, [finalConfig.maxZoomLevel]);
+  }, [finalConfig.maxZoomLevel, zoomLevel]);
 
   const zoomOut = useCallback(() => {
-    setZoomLevel(prev => {
-      const newZoom = Math.max(prev / 1.15, finalConfig.minZoomLevel);
-      return Math.round(newZoom * 100) / 100; // Round to 2 decimals for precision
+    // PERFORMANCE: Skip if already at min zoom to prevent unnecessary updates
+    if (zoomLevel <= finalConfig.minZoomLevel) {
+      return;
+    }
+    
+    if (zoomRAFRef.current) {
+      cancelAnimationFrame(zoomRAFRef.current);
+    }
+    
+    setIsZooming(true);
+    
+    zoomRAFRef.current = requestAnimationFrame(() => {
+      setZoomLevel(prev => {
+        const newZoom = Math.max(prev / 1.15, finalConfig.minZoomLevel);
+        return Math.round(newZoom * 100) / 100;
+      });
+      
+      if (zoomTimeoutRef.current) {
+        clearTimeout(zoomTimeoutRef.current);
+      }
+      zoomTimeoutRef.current = setTimeout(() => {
+        setIsZooming(false);
+      }, 150);
     });
-  }, [finalConfig.minZoomLevel]);
+  }, [finalConfig.minZoomLevel, zoomLevel]);
 
   const resetZoom = useCallback(() => {
+    if (zoomRAFRef.current) {
+      cancelAnimationFrame(zoomRAFRef.current);
+    }
+    
+    setIsZooming(true);
     setZoomLevel(1);
-  }, []);
-
-  // Smooth zoom with debounce for continuous scrolling
-  const handleZoom = useCallback((direction) => {
+    
     if (zoomTimeoutRef.current) {
       clearTimeout(zoomTimeoutRef.current);
     }
+    zoomTimeoutRef.current = setTimeout(() => {
+      setIsZooming(false);
+    }, 150);
+  }, []);
 
+  // Smooth zoom with debounce and RAF for continuous scrolling
+  const handleZoom = useCallback((direction) => {
     if (direction > 0) {
       zoomIn();
     } else {
       zoomOut();
     }
-
-    // Debounce for smooth continuous zoom
-    zoomTimeoutRef.current = setTimeout(() => {
-      zoomTimeoutRef.current = null;
-    }, 50);
   }, [zoomIn, zoomOut]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (zoomTimeoutRef.current) {
+        clearTimeout(zoomTimeoutRef.current);
+      }
+      if (zoomRAFRef.current) {
+        cancelAnimationFrame(zoomRAFRef.current);
+      }
+    };
+  }, []);
 
   return {
     // State
     zoomLevel,
+    isZooming,
     
     // Data
     timelineData,

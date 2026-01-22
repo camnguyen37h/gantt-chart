@@ -24,7 +24,9 @@ const TimelineCanvas = ({
   onItemDoubleClick,
   onItemHover,
   loading,
-  config
+  config,
+  isZooming,
+  zoomLevel
 }) => {
   const canvasRef = useRef(null);
   const overlayRef = useRef(null);
@@ -65,9 +67,11 @@ const TimelineCanvas = ({
       config,
       dpr: dprRef.current,
       hoveredItem: hoveredItemRef.current,
-      animationProgress: animationProgressRef.current
+      animationProgress: animationProgressRef.current,
+      isZooming: isZooming,
+      zoomLevel: zoomLevel
     });
-  }, [timelineData, layoutItems, currentDatePosition, getItemStyle, rowHeight, enableGrid, enableCurrentDate, config]);
+  }, [timelineData, layoutItems, currentDatePosition, getItemStyle, rowHeight, enableGrid, enableCurrentDate, config, isZooming, zoomLevel]);
 
   // Setup canvas size and DPR (no animation here, just canvas config)
   useEffect(() => {
@@ -106,9 +110,16 @@ const TimelineCanvas = ({
   }, [canvasWidth, canvasHeight, draw]);
 
   // Animation effect: triggers on data change (legend filter, initial load)
-  // PERFORMANCE: Smooth animation for data changes, skipped during scroll
+  // PERFORMANCE: Smooth animation for data changes, skipped during zoom to prevent flicker
   useEffect(() => {
     if (loading) {
+      return;
+    }
+
+    // PERFORMANCE: Skip animation during zoom to prevent flicker
+    if (isZooming) {
+      animationProgressRef.current = 1;
+      draw();
       return;
     }
 
@@ -124,7 +135,7 @@ const TimelineCanvas = ({
     
     const animate = () => {
       const elapsed = Date.now() - animationStartTimeRef.current;
-      const duration = 500; // PERFORMANCE: 300ms smooth animation
+      const duration = 300; // PERFORMANCE: 300ms smooth animation (reduced from 500ms)
       
       if (elapsed < duration) {
         // Easing function: easeOutCubic
@@ -148,7 +159,7 @@ const TimelineCanvas = ({
         animationFrameRef.current = null;
       }
     };
-  }, [timelineData, layoutItems, loading, draw]);
+  }, [timelineData, layoutItems, loading, draw, isZooming]);
 
   // Handle canvas events
   useEffect(() => {
@@ -278,7 +289,9 @@ TimelineCanvas.propTypes = {
   onItemDoubleClick: PropTypes.func,
   onItemHover: PropTypes.func,
   loading: PropTypes.bool,
-  config: PropTypes.object
+  config: PropTypes.object,
+  isZooming: PropTypes.bool,
+  zoomLevel: PropTypes.number
 };
 
 TimelineCanvas.defaultProps = {
