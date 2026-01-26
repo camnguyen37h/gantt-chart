@@ -24,35 +24,44 @@ export const drawTimeline = (ctx, options) => {
     enableCurrentDate,
     hoveredItem,
     animationProgress,
-    isZooming
+    isZooming,
+    horizontalPadding
   } = options;
   
   const progress = animationProgress !== undefined ? animationProgress : 1;
+  const hPadding = horizontalPadding || 0;
 
   // OPTIMIZATION: Skip animations during zoom for better performance
   const effectiveProgress = isZooming ? 1 : progress;
 
   // OPTIMIZATION: Batch draw operations to minimize context state changes
   ctx.save();
+  
+  // Apply horizontal padding offset
+  if (hPadding > 0) {
+    ctx.translate(hPadding, 0);
+  }
 
   // PERFORMANCE: Get zoom level for LOD decisions
   const zoomLevel = options.zoomLevel || 1;
-
-  // Draw grid lines (skip when zoomed out far for performance)
-  if (enableGrid && zoomLevel >= 0.6) {
-    drawGridLines(ctx, timelineData, layoutItems, rowHeight);
-  }
 
   // Draw timeline items with LOD optimization (no scroll-based viewport culling)
   // PERFORMANCE: Canvas draws FULL timeline once, scroll is pure CSS
   drawTimelineItems(ctx, layoutItems, getItemStyle, hoveredItem, effectiveProgress, {
     zoomLevel: options.zoomLevel,
-    isZooming: isZooming
+    isZooming: isZooming,
+    dpr: options.dpr,
+    horizontalPadding: hPadding
   });
 
   // Draw current date line
   if (enableCurrentDate && currentDatePosition !== null) {
     drawCurrentDateLine(ctx, currentDatePosition, timelineData, options);
+  }
+  
+  // IMPORTANT: Draw grid lines LAST so they appear on top of milestone labels
+  if (enableGrid && zoomLevel >= 0.6) {
+    drawGridLines(ctx, timelineData, layoutItems, rowHeight);
   }
   
   ctx.restore();
@@ -107,15 +116,24 @@ const drawTimelineItems = (ctx, layoutItems, getItemStyle, hoveredItem, animatio
   const zoomLevel = options.zoomLevel || 1;
   const detailLevel = zoomLevel >= 0.9 ? 'normal' : zoomLevel >= 0.7 ? 'medium' : 'ultra-low';
   
+  // IMPORTANT: Draw in two passes to ensure milestones are on top
+  // Pass 1: Draw all ranges/task bars
   for (let i = 0; i < itemCount; i++) {
     const item = layoutItems[i];
-    const style = getItemStyle(item);
-    const isHovered = hoveredId !== null && hoveredId === item.id;
-
-    if (isMilestone(item)) {
-      drawMilestone(ctx, item, style, isHovered, progress, options, detailLevel);
-    } else {
+    if (!isMilestone(item)) {
+      const style = getItemStyle(item);
+      const isHovered = hoveredId !== null && hoveredId === item.id;
       drawTaskBar(ctx, item, style, isHovered, progress, detailLevel, options);
+    }
+  }
+  
+  // Pass 2: Draw all milestones (will appear on top with labels)
+  for (let i = 0; i < itemCount; i++) {
+    const item = layoutItems[i];
+    if (isMilestone(item)) {
+      const style = getItemStyle(item);
+      const isHovered = hoveredId !== null && hoveredId === item.id;
+      drawMilestone(ctx, item, style, isHovered, progress, options, detailLevel);
     }
   }
 };
@@ -205,7 +223,7 @@ const drawTaskBar = (ctx, item, style, isHovered, animationProgress, detailLevel
     // Draw warning indicator for late tasks (corner badge)
     // lateTime = dueDate - resolvedDate, so lateTime < 0 means late
     if (hasWarning) {
-      drawWarningIndicator(ctx, left + width, top, height);
+      drawWarningIndicator(ctx, left + width, top, height, width);
     }
   }
 
@@ -218,10 +236,19 @@ const drawTaskBar = (ctx, item, style, isHovered, animationProgress, detailLevel
  * @param {number} right - Right edge of task bar
  * @param {number} top - Top position of task bar
  * @param {number} height - Height of task bar
+ * @param {number} barWidth - Width of task bar for scaling
  */
-const drawWarningIndicator = (ctx, right, top, height) => {
-  const size = 16; // Corner triangle size
-  const radius = 4; // Border radius to match task bar
+const drawWarningIndicator = (ctx, right, top, height, barWidth) => {
+  // Always draw warning, but scale proportionally to bar width
+  // For very small bars, triangle will be tiny but still visible
+  const MAX_SIZE = 16; // Maximum size for large bars
+  const SCALE_FACTOR = 0.4; // 40% of bar width
+  const MIN_SIZE = 4; // Very small minimum to ensure visibility
+  
+  // Scale based on bar width, proportional scaling
+  const scaledSize = barWidth ? Math.min(MAX_SIZE, Math.max(MIN_SIZE, barWidth * SCALE_FACTOR)) : MAX_SIZE;
+  const size = Math.floor(scaledSize);
+  const radius = Math.min(4, size / 2); // Scale radius proportionally too
   
   ctx.save();
   
@@ -290,11 +317,20 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options, 
     ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
     ctx.fill();
 
+    // Save current transform before resetting for label
+    ctx.save();
+    
     // Reset transform for label (don't scale text)
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     // dpr is passed from options
     const dpr = options && options.dpr ? options.dpr : 1;
     ctx.scale(dpr, dpr);
+    
+    // Re-apply horizontal padding after transform reset
+    const hPadding = options && options.horizontalPadding ? options.horizontalPadding : 0;
+    if (hPadding > 0) {
+      ctx.translate(hPadding, 0);
+    }
 
     // Label with background pill (always below diamond)
     ctx.globalAlpha = progress;
@@ -308,36 +344,14 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options, 
   // Measure full text
   const textMetrics = ctx.measureText(text);
   const fullTextWidth = textMetrics.width;
-  const canvasWidth = ctx.canvas.width / dpr;
   
-  // Calculate max width based on position
-  let maxWidth = 120;
-  let textX = centerX;
-  let alignment = 'center';
-  
-  // Only adjust alignment if text actually overflows
-  const halfTextWidth = fullTextWidth / 2;
-  const padding = 6; // Pill padding
-  
-  if (centerX + halfTextWidth + padding > canvasWidth - 10) {
-    // Text overflows right edge
-    alignment = 'right';
-    textX = canvasWidth - 10;
-    maxWidth = Math.min(120, textX - 10);
-  } else if (centerX - halfTextWidth - padding < 10) {
-    // Text overflows left edge
-    alignment = 'left';
-    textX = 10;
-    maxWidth = Math.min(120, canvasWidth - textX - 10);
-  }
-  // Otherwise keep center alignment
-  
-  // Truncate text if needed
+  // IMPORTANT: Always center align labels under icon, allow overflow beyond canvas
+  const maxWidth = 150;
   let displayText = text;
   let displayWidth = fullTextWidth;
   
+  // Truncate text only if exceeds maxWidth
   if (fullTextWidth > maxWidth) {
-    // Smart truncation - keep start and end visible
     let truncated = text;
     while (ctx.measureText(truncated + '...').width > maxWidth && truncated.length > 3) {
       truncated = truncated.slice(0, -1);
@@ -346,22 +360,12 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options, 
     displayWidth = ctx.measureText(displayText).width;
   }
   
-  // Calculate background pill dimensions
-  // padding already declared above (6px)
+  // Calculate pill dimensions - always centered under icon
+  const padding = 6;
   const pillHeight = 18;
-  let pillX, pillWidth;
-  
-  if (alignment === 'center') {
-    pillWidth = displayWidth + padding * 2;
-    pillX = textX - pillWidth / 2;
-  } else if (alignment === 'left') {
-    pillWidth = displayWidth + padding * 2;
-    pillX = textX - padding;
-  } else {
-    pillWidth = displayWidth + padding * 2;
-    pillX = textX - pillWidth + padding;
-  }
-  
+  const pillWidth = displayWidth + padding * 2;
+  const textX = centerX; // Always center
+  const pillX = textX - pillWidth / 2;
   const pillY = labelY - 2;
   
   // Draw background pill
@@ -378,13 +382,17 @@ const drawMilestone = (ctx, item, style, isHovered, animationProgress, options, 
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
   
-  // Draw text
+  // Draw text in the SAME transform context as pill (for perfect alignment)
+  ctx.font = '500 11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   ctx.fillStyle = '#262626';
-  ctx.textAlign = alignment;
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   ctx.fillText(displayText, textX, labelY);
   
   ctx.globalAlpha = 1;
+  
+  // Restore transform after both pill and text are drawn
+  ctx.restore();
   }
 
   ctx.restore();

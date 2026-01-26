@@ -5,7 +5,7 @@
   background: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  overflow: visible; /* Allow milestone labels to overflow */
 }
 
 /* Responsive timeline container */
@@ -28,7 +28,7 @@
   overflow-y: visible;
   position: relative;
   background: white;
-  padding: 40px 60px 0;
+  padding: 40px 0 0; /* Removed horizontal padding - handled by canvas offset */
   cursor: grab;
   user-select: none;
 }

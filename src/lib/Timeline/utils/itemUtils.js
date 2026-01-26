@@ -57,8 +57,9 @@ export const getItemDate = (item) => {
  * @returns {moment|null} End date
  */
 export const getItemEndDate = (item) => {
-  // Use dueDate as end date
-  const dateValue = item.dueDate;
+  // Priority: resolvedDate > dueDate
+  // Use resolvedDate if available (actual end), otherwise use dueDate (planned end)
+  const dateValue = item.resolvedDate || item.dueDate;
   
   if (dateValue) {
     return moment(dateValue);

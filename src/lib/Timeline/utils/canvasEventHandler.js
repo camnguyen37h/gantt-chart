@@ -84,15 +84,18 @@ export const handleCanvasEvents = (options) => {
     tooltip,
     layoutItems,
     getItemStyle,
+    horizontalPadding,
     onItemClick,
     onItemDoubleClick,
     onItemHover,
     onMouseLeave,
-    onScrollStart
+    onScrollStart,
+    onScrollEnd
   } = options;
 
   let currentHoveredItem = null;
   let clickTimeout = null;
+  const hPadding = horizontalPadding || 0;
 
   /**
    * Get mouse position relative to container
@@ -103,7 +106,7 @@ export const handleCanvasEvents = (options) => {
     const scrollTop = container.scrollTop || 0;
     
     return {
-      x: event.clientX - rect.left + scrollLeft,
+      x: event.clientX - rect.left + scrollLeft - hPadding, // Subtract horizontal padding
       y: event.clientY - rect.top + scrollTop
     };
   };
@@ -284,6 +287,7 @@ export const handleCanvasEvents = (options) => {
    * Cancels ongoing animations for smooth scroll experience
    */
   let scrollThrottleTimer = null;
+  let scrollEndTimer = null;
   let isScrolling = false;
   
   const handleScrollThrottled = () => {
@@ -312,6 +316,17 @@ export const handleCanvasEvents = (options) => {
       
       isScrolling = false;
     });
+    
+    // PERFORMANCE: Detect scroll end and trigger callback
+    if (scrollEndTimer) {
+      clearTimeout(scrollEndTimer);
+    }
+    
+    scrollEndTimer = setTimeout(() => {
+      if (onScrollEnd) {
+        onScrollEnd();
+      }
+    }, 150); // Wait 150ms after last scroll event
   };
 
   // Attach event listeners with passive option for better scroll performance
@@ -335,6 +350,10 @@ export const handleCanvasEvents = (options) => {
     
     if (scrollThrottleTimer) {
       cancelAnimationFrame(scrollThrottleTimer);
+    }
+    
+    if (scrollEndTimer) {
+      clearTimeout(scrollEndTimer);
     }
     
     // Force hide tooltip on cleanup

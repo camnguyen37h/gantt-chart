@@ -6,11 +6,13 @@
   display: flex;
   flex-direction: column;
   will-change: opacity;
+  overflow: visible; /* Allow milestone labels to overflow */
 }
 
 .timeline-canvas-wrapper {
   position: relative;
   width: 100%;
+  overflow: visible; /* Allow milestone labels to overflow */
 }
 
 .timeline-canvas-empty {

@@ -268,10 +268,10 @@ export const mockApiResponse = [
   {
     issueId: "PRJ-030",
     issueName: "Enterprise Dashboard Suite",
-    startDate: "2025-11-15",
-    dueDate: "2026-06-30",
-    resolvedDate: null,
-    createdDate: "2025-11-01",
+    startDate: "2026-01-20",
+    dueDate: "2026-01-21",      // Due sau 1 ngày
+    resolvedDate: "2026-01-23",  // Resolved sau 3 ngày (LATE 2 ngày)
+    createdDate: "2026-01-20",
     status: "Delivery Finalized"
   },
   {

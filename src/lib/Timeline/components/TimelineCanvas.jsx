@@ -40,8 +40,11 @@ const TimelineCanvas = ({
   // Get DPR from canvas context (scoped to timeline only, no window API)
   const dprRef = useRef(1);
   
-  // Calculate canvas dimensions
-  const canvasWidth = timelineData && timelineData.totalWidth ? timelineData.totalWidth : 1000;
+  // Horizontal padding (replaces CSS padding for better label positioning)
+  const H_PADDING = 60; // Left padding in pixels
+  
+  // Calculate canvas dimensions (add left padding only, content shifts right)
+  const canvasWidth = timelineData && timelineData.totalWidth ? timelineData.totalWidth + H_PADDING : 1000;
   const canvasHeight = Math.max(gridHeight, 450);
 
   // Draw timeline on canvas
@@ -69,7 +72,8 @@ const TimelineCanvas = ({
       hoveredItem: hoveredItemRef.current,
       animationProgress: animationProgressRef.current,
       isZooming: isZooming,
-      zoomLevel: zoomLevel
+      zoomLevel: zoomLevel,
+      horizontalPadding: H_PADDING // Pass padding offset
     });
   }, [timelineData, layoutItems, currentDatePosition, getItemStyle, rowHeight, enableGrid, enableCurrentDate, config, isZooming, zoomLevel]);
 
@@ -113,6 +117,12 @@ const TimelineCanvas = ({
   // PERFORMANCE: Smooth animation for data changes, skipped during zoom to prevent flicker
   useEffect(() => {
     if (loading) {
+      return;
+    }
+
+    // PERFORMANCE: When zoom ends, draw immediately without animation
+    if (!isZooming && animationProgressRef.current === 1) {
+      draw();
       return;
     }
 
@@ -175,6 +185,7 @@ const TimelineCanvas = ({
       tooltip,
       layoutItems,
       getItemStyle,
+      horizontalPadding: H_PADDING, // Pass padding for mouse position adjustment
       onItemClick,
       onItemDoubleClick,
       onItemHover: (item, mouseEvent) => {
@@ -198,6 +209,13 @@ const TimelineCanvas = ({
         }
         // Set animation to complete immediately
         animationProgressRef.current = 1;
+        // Redraw to ensure canvas is in sync
+        draw();
+      },
+      // PERFORMANCE: Redraw when scroll ends to ensure final state is rendered
+      onScrollEnd: () => {
+        animationProgressRef.current = 1;
+        draw();
       }
     });
 
@@ -245,7 +263,7 @@ const TimelineCanvas = ({
             {enableCurrentDate && currentDatePosition !== null && (
               <div
                 className="timeline-current-date"
-                style={{ left: `${currentDatePosition}px` }}
+                style={{ left: `${currentDatePosition + H_PADDING}px` }} // Add horizontal padding offset
               >
                 <div className="current-date-marker" />
                 <div className="current-date-label">
@@ -256,7 +274,10 @@ const TimelineCanvas = ({
           </div>
 
           {/* Timeline Header (DOM for better text rendering) */}
-          <div className="timeline-header" style={{ width: `${timelineData.baseWidth}px` }}>
+          <div className="timeline-header" style={{ 
+            width: `${timelineData.baseWidth}px`,
+            marginLeft: `${H_PADDING}px` // Add horizontal padding offset to match canvas
+          }}>
             <div className="timeline-axis-line" />
             
             {timelineData.periods && timelineData.periods.map((period, index) => (

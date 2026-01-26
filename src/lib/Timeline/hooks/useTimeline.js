@@ -302,6 +302,11 @@ export const useTimeline = (items = [], config = {}) => {
       cancelAnimationFrame(zoomRAFRef.current);
     }
     
+    // Clear existing timeout
+    if (zoomTimeoutRef.current) {
+      clearTimeout(zoomTimeoutRef.current);
+    }
+    
     setIsZooming(true);
     
     zoomRAFRef.current = requestAnimationFrame(() => {
@@ -310,11 +315,10 @@ export const useTimeline = (items = [], config = {}) => {
         return Math.round(newZoom * 100) / 100;
       });
       
-      if (zoomTimeoutRef.current) {
-        clearTimeout(zoomTimeoutRef.current);
-      }
+      // Always set timeout to reset isZooming after zoom completes
       zoomTimeoutRef.current = setTimeout(() => {
         setIsZooming(false);
+        zoomTimeoutRef.current = null;
       }, 150);
     });
   }, [finalConfig.maxZoomLevel, zoomLevel]);
@@ -329,6 +333,11 @@ export const useTimeline = (items = [], config = {}) => {
       cancelAnimationFrame(zoomRAFRef.current);
     }
     
+    // Clear existing timeout
+    if (zoomTimeoutRef.current) {
+      clearTimeout(zoomTimeoutRef.current);
+    }
+    
     setIsZooming(true);
     
     zoomRAFRef.current = requestAnimationFrame(() => {
@@ -337,11 +346,10 @@ export const useTimeline = (items = [], config = {}) => {
         return Math.round(newZoom * 100) / 100;
       });
       
-      if (zoomTimeoutRef.current) {
-        clearTimeout(zoomTimeoutRef.current);
-      }
+      // Always set timeout to reset isZooming after zoom completes
       zoomTimeoutRef.current = setTimeout(() => {
         setIsZooming(false);
+        zoomTimeoutRef.current = null;
       }, 150);
     });
   }, [finalConfig.minZoomLevel, zoomLevel]);
