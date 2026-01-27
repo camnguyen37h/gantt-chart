@@ -4,11 +4,11 @@ import moment from 'moment'
 import { STATUS_CONFIG } from '../constants'
 
 /**
- * Transform API response item to normalized timeline item structure
+ * Transform API item to normalized structure
  *
  * @param {Object} item - API response item
  *
- * @return {Object|null} Normalized item or null if invalid
+ * @return {Object|null} Normalized item or null
  */
 export const normalizeTimelineItem = item => {
   if (!item) {
@@ -126,11 +126,11 @@ export const calculateDiffDay = (startDate, dueDate, onlyPositive = false) => {
 }
 
 /**
- * Extract and sort unique status values from items
+ * Extract and sort unique status values
  *
- * @param {Array} items - Array of timeline items
+ * @param {Array} items - Timeline items array
  *
- * @return {Array} Sorted array of unique status strings by STATUS_CONFIG order
+ * @return {Array} Sorted unique statuses
  */
 export const extractUniqueStatuses = items => {
   if (!items || !Array.isArray(items)) {
@@ -184,11 +184,11 @@ export const buildStatusColorMap = statuses => {
 }
 
 /**
- * Normalize array of API items with performance optimization
+ * Normalize array of API items
  *
- * @param {Array} data - Array of API response items
+ * @param {Array} data - API response items array
  *
- * @return {Array} Array of normalized timeline items
+ * @return {Array} Normalized timeline items
  */
 export const normalizeTimelineData = data => {
   if (isEmpty(data) || !isArray(data)) {

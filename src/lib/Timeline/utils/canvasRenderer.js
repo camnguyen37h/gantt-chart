@@ -88,7 +88,7 @@ export const drawTimeline = (ctx, options) => {
  * Draw vertical grid lines for timeline periods
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {Object} timelineData - Timeline data containing periods and dimensions
+ * @param {Object} timelineData - Timeline data with periods
  *
  * @return {void}
  */
@@ -134,13 +134,13 @@ const getDetailLevel = zoomLevel => {
 }
 
 /**
- * Draw all timeline items (tasks and milestones)
+ * Render all timeline items including tasks and milestones
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {Array} layoutItems - Array of layout items with positions
- * @param {Function} getItemStyle - Function to get item style
- * @param {Object} hoveredItem - Currently hovered item
- * @param {number} animationProgress - Animation progress (0-1)
+ * @param {Array} layoutItems - Timeline items with calculated positions
+ * @param {Function} getItemStyle - Callback to retrieve item styles
+ * @param {Object|null} hoveredItem - Currently hovered item
+ * @param {number} animationProgress - Animation progress (0.0 to 1.0)
  * @param {Object} options - Rendering options
  *
  * @return {void}
@@ -193,10 +193,10 @@ const drawTimelineItems = (
 }
 
 /**
- * Calculate effective animation progress considering zoom state
+ * Calculate effective animation progress
  *
- * @param {number} animationProgress - Raw animation progress (0-1)
- * @param {Object} options - Rendering options containing isZooming flag
+ * @param {number} animationProgress - Raw animation progress
+ * @param {Object} options - Rendering options
  *
  * @return {number} Effective progress value
  */
@@ -223,9 +223,9 @@ const clearShadow = ctx => {
  * Draw task bar background with rounded corners
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {Object} bounds - Bounding box {left, top, width, height}
+ * @param {Object} bounds - Bounding box coordinates
  * @param {string} color - Fill color
- * @param {string} detailLevel - Current detail level
+ * @param {string} detailLevel - Detail level
  *
  * @return {void}
  */
@@ -342,12 +342,12 @@ const isLate = item => {
 }
 
 /**
- * Draw task bar content including text and warning indicator
+ * Draw task bar content including text and indicators
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @param {Object} item - Timeline item data
- * @param {Object} bounds - Bounding box {left, top, width, height}
- * @param {string} detailLevel - Current detail level
+ * @param {Object} bounds - Bounding box coordinates
+ * @param {string} detailLevel - Detail level
  * @param {Object} options - Rendering options
  *
  * @return {void}
@@ -387,12 +387,12 @@ const drawTaskBarContent = (ctx, item, bounds, detailLevel, options) => {
 }
 
 /**
- * Render a complete task bar with a background, text, and effects
+ * Render a complete task bar with background and content
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @param {Object} item - Timeline item data
  * @param {Object} style - CSS style properties
- * @param {Object} renderState - State {isHovered, animationProgress, detailLevel}
+ * @param {Object} renderState - Rendering state
  * @param {Object} options - Rendering options
  *
  * @return {void}
@@ -577,7 +577,7 @@ const getMilestoneText = item => {
  * Configure canvas context for milestone label rendering
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {Object} options - Options containing dpr and horizontalPadding
+ * @param {Object} options - Rendering options
  *
  * @return {void}
  */
@@ -616,12 +616,12 @@ const drawLabelPill = (ctx, pillX, pillY, pillWidth) => {
 }
 
 /**
- * Render a complete milestone with diamond, center dot, and label
+ * Render a complete milestone with diamond and center dot
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @param {Object} item - Timeline item data
  * @param {Object} style - CSS style properties
- * @param {Object} renderState - State {isHovered, animationProgress, detailLevel}
+ * @param {Object} renderState - Rendering state
  * @param {Object} options - Rendering options
  *
  * @return {void}

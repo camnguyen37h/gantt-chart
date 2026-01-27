@@ -3,9 +3,9 @@ import moment from 'moment'
 import { NOT_AVAILABLE } from '../constants'
 
 /**
- * Get default date range spanning three months (last month to next month)
+ * Get default date range spanning three months
  *
- * @return {Object} Date range {start, end} as moment objects
+ * @return {Object} Date range {start, end}
  */
 const getDefaultDateRange = () => {
   const today = moment()
@@ -16,11 +16,11 @@ const getDefaultDateRange = () => {
 }
 
 /**
- * Extract start and end timestamps from timeline item
+ * Extract start and end timestamps from item
  *
- * @param {Object} item - Timeline item with date fields
+ * @param {Object} item - Timeline item
  *
- * @return {Object|null} Timestamps {start, end} or null if no valid dates
+ * @return {Object|null} Timestamps {start, end} or null
  */
 const getItemTimestamps = item => {
   if (item.startDateAfter && item.dueDateAfter) {
@@ -41,8 +41,9 @@ const getItemTimestamps = item => {
 /**
  * Calculate end date with month boundary handling
  *
- * @param {number} maxTimestamp - Maximum timestamp in milliseconds
- * @return {moment} End date aligned to month start
+ * @param {number} maxTimestamp - Maximum timestamp
+ *
+ * @return {moment} End date
  */
 const calculateEndDate = maxTimestamp => {
   const maxDate = moment(maxTimestamp)
@@ -52,11 +53,11 @@ const calculateEndDate = maxTimestamp => {
 }
 
 /**
- * Calculate date range from timeline items array
+ * Calculate date range from timeline items
  *
- * @param {Array} items - Array of timeline items
+ * @param {Array} items - Timeline items array
  *
- * @return {Object} Date range {start, end} as moment objects
+ * @return {Object} Date range {start, end}
  */
 export const getDateRangeFromItems = items => {
   if (!items || items.length === 0) {
@@ -92,9 +93,9 @@ export const getDateRangeFromItems = items => {
  *
  * @param {moment} start - Start date
  * @param {moment} end - End date
- * @param {number} pixelsPerDay - Pixels per day for width calculation
+ * @param {number} pixelsPerDay - Pixels per day
  *
- * @return {Array} Array of period objects with label, width, days
+ * @return {Array} Array of period objects
  */
 export const generatePeriods = (start, end, pixelsPerDay = 40) => {
   const periods = []
@@ -153,12 +154,12 @@ const pluralizeDays = count => {
 }
 
 /**
- * Format duration with late/on-time status or plain count
+ * Format duration with late/on-time status
  *
  * @param {number|undefined} diffDate - Duration in days
- * @param {boolean} onlyPositive - Return only positive count without status
+ * @param {boolean} onlyPositive - Return only positive count
  *
- * @return {string} Formatted duration string
+ * @return {string} Formatted duration
  */
 export const formatDiffDate = (diffDate, onlyPositive = false) => {
   if (diffDate === undefined) {

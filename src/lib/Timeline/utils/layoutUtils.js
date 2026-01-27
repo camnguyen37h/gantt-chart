@@ -20,11 +20,11 @@ export const sortItemsByDate = items => {
 }
 
 /**
- * Calculate row assignments to prevent item overlapping using greedy algorithm
+ * Calculate row assignments to prevent overlapping
  *
- * @param {Array} items - Array of timeline items
+ * @param {Array} items - Timeline items array
  *
- * @return {Array} Items with assigned row property
+ * @return {Array} Items with assigned rows
  */
 export const calculateAdvancedLayout = items => {
   if (!items || items.length === 0) {
@@ -95,12 +95,12 @@ export const calculateAdvancedLayout = items => {
 }
 
 /**
- * Calculate the minimum grid height required for all rows
+ * Calculate minimum grid height for all rows
  *
  * @param {Array} layoutItems - Items with row assignments
- * @param {number} rowHeight - Height of each row in pixels
+ * @param {number} rowHeight - Height of each row
  *
- * @return {number} Total grid height in pixels
+ * @return {number} Total grid height
  */
 export const calculateGridHeight = (layoutItems, rowHeight) => {
   if (!layoutItems || layoutItems.length === 0) {
@@ -121,12 +121,12 @@ export const calculateGridHeight = (layoutItems, rowHeight) => {
 }
 
 /**
- * Filter items by multiple criteria properties
+ * Filter items by multiple criteria
  *
- * @param {Array} items - Array of timeline items
- * @param {Object} filters - Filter criteria as property-value pairs
+ * @param {Array} items - Timeline items array
+ * @param {Object} filters - Filter criteria
  *
- * @return {Array} Filtered items array
+ * @return {Array} Filtered items
  */
 export const filterItems = (items, filters) => {
   if (!items) {

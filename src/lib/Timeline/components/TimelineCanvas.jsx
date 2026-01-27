@@ -7,6 +7,7 @@ import { drawTimeline } from '../utils/canvasRenderer'
 import { TimelineCanvasStyled } from './TimelineCanvas.styled'
 
 const TimelineCanvas = ({
+  containerRef: externalContainerRef,
   timelineData,
   layoutItems,
   gridHeight,
@@ -20,10 +21,16 @@ const TimelineCanvas = ({
   config,
   isZooming,
   zoomLevel,
+  scrollToToday,
+  hasAutoScrolledRef,
+  enableAutoScroll,
+  handleZoom,
+  maxZoomLevel,
+  minZoomLevel,
 }) => {
   const canvasRef = useRef(null)
   const overlayRef = useRef(null)
-  const containerRef = useRef(null)
+  const internalContainerRef = useRef(null)
   const tooltipRef = useRef(null)
   const animationFrameRef = useRef(null)
   const hoveredItemRef = useRef(null)
@@ -32,10 +39,43 @@ const TimelineCanvas = ({
   const dprRef = useRef(1)
   const H_PADDING = 60
 
+  // Use external containerRef if provided, otherwise use internal
+  const containerRef = externalContainerRef || internalContainerRef
+
+  // Ensure containerRef is set after component mounts
+  useEffect(() => {
+    // This forces a re-render/update after the ref is assigned
+    if (externalContainerRef && !externalContainerRef.current && internalContainerRef.current) {
+      externalContainerRef.current = internalContainerRef.current
+    }
+  }, [])
+
+  // Drag to scroll state
+  const isDraggingRef = useRef(false)
+  const dragStartXRef = useRef(0)
+  const dragStartYRef = useRef(0)
+  const scrollLeftStartRef = useRef(0)
+  const scrollTopStartRef = useRef(0)
+
   // Calculate canvas dimensions
   const canvasWidth =
     timelineData && timelineData.totalWidth ? timelineData.totalWidth : 1000
   const canvasHeight = Math.max(gridHeight, 450)
+
+  // Notify when container is mounted and ready
+  useEffect(() => {
+    if (containerRef.current && currentDatePosition !== null && timelineData) {
+      // Trigger a small delay to ensure container is fully rendered
+      const timer = setTimeout(() => {
+        // Force a re-check by touching containerRef
+        if (containerRef.current) {
+          containerRef.current.dataset.ready = 'true'
+        }
+      }, 100)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [containerRef, currentDatePosition, timelineData])
 
   // Draw timeline on canvas
   const draw = useCallback(() => {
@@ -142,6 +182,14 @@ const TimelineCanvas = ({
         animationProgressRef.current = 1
         draw()
         animationFrameRef.current = null
+        
+        // Trigger auto scroll after animation completes
+        if (enableAutoScroll && !hasAutoScrolledRef.current && scrollToToday && containerRef.current) {
+          requestAnimationFrame(() => {
+            scrollToToday()
+            hasAutoScrolledRef.current = true
+          })
+        }
       }
     }
 
@@ -153,7 +201,7 @@ const TimelineCanvas = ({
         animationFrameRef.current = null
       }
     }
-  }, [timelineData, layoutItems, loading, draw, isZooming])
+  }, [timelineData, layoutItems, loading, draw, isZooming, enableAutoScroll, scrollToToday, hasAutoScrolledRef, containerRef])
 
   // Handle canvas events
   useEffect(() => {
@@ -170,11 +218,22 @@ const TimelineCanvas = ({
       layoutItems,
       getItemStyle,
       horizontalPadding: H_PADDING,
+      isDraggingRef,
+      dragStartXRef,
+      dragStartYRef,
+      scrollLeftStartRef,
+      scrollTopStartRef,
+      handleZoom,
+      zoomLevel,
+      maxZoomLevel,
+      minZoomLevel,
       onItemHover: item => {
-        hoveredItemRef.current = item
-        draw()
-        if (onItemHover) {
-          onItemHover(item)
+        if (!isDraggingRef.current) {
+          hoveredItemRef.current = item
+          draw()
+          if (onItemHover) {
+            onItemHover(item)
+          }
         }
       },
       onMouseLeave: () => {
@@ -265,6 +324,7 @@ const TimelineCanvas = ({
 }
 
 TimelineCanvas.propTypes = {
+  containerRef: PropTypes.object,
   timelineData: PropTypes.object,
   layoutItems: PropTypes.array.isRequired,
   gridHeight: PropTypes.number.isRequired,
@@ -278,6 +338,12 @@ TimelineCanvas.propTypes = {
   config: PropTypes.object,
   isZooming: PropTypes.bool,
   zoomLevel: PropTypes.number,
+  scrollToToday: PropTypes.func,
+  hasAutoScrolledRef: PropTypes.object,
+  enableAutoScroll: PropTypes.bool,
+  handleZoom: PropTypes.func,
+  maxZoomLevel: PropTypes.number,
+  minZoomLevel: PropTypes.number,
 }
 
 TimelineCanvas.defaultProps = {

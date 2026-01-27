@@ -5,8 +5,9 @@ const TimelineCanvasStyled = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  padding-top: 40px;
   will-change: opacity;
-  overflow: visible;
+  overflow: auto;
 
   .timeline-canvas-wrapper {
     position: relative;
@@ -31,13 +32,18 @@ const TimelineCanvasStyled = styled.div`
     left: 0;
     pointer-events: auto;
     z-index: 5;
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
   }
 
   .timeline-current-date {
     position: absolute;
     top: 0;
     bottom: -1px;
-    width: 2px;
+    width: 1.5px;
     background: #db372d;
     z-index: 50;
     pointer-events: none;

@@ -2,11 +2,11 @@ import moment from 'moment'
 import { DEFAULT_STATUS_CONFIG, ITEM_TYPES, STATUS_CONFIG } from '../constants'
 
 /**
- * Determine if item is milestone or range type
+ * Determine item type (milestone or range)
  *
  * @param {Object} item - Timeline item
  *
- * @return {string|null} ITEM_TYPES.MILESTONE, ITEM_TYPES.RANGE, or null
+ * @return {string|null} Item type or null
  */
 export const getItemType = item => {
   if (!item) {
@@ -21,7 +21,7 @@ export const getItemType = item => {
 }
 
 /**
- * Convert date string to a moment object for positioning
+ * Convert date string to moment object
  *
  * @param {string|Date|null} date - Date value
  *
@@ -67,11 +67,11 @@ export const getStatusColor = (status) => {
 }
 
 /**
- * Normalize the item structure with consistent properties and metadata
+ * Normalize item structure with consistent properties
  *
  * @param {Object} item - Raw timeline item
  *
- * @return {Object} Normalized item with _type and _isValid flags
+ * @return {Object} Normalized item
  */
 export const normalizeItem = item => {
   const type = getItemType(item)

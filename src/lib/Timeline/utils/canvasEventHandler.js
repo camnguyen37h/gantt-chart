@@ -2,13 +2,13 @@ import { NOT_AVAILABLE, TOOLTIP_FIELDS, CANVAS_RENDERING } from '../constants'
 import { isMilestone } from './itemUtils'
 
 /**
- * Check if the point is inside rectangular bounds
+ * Check if point is inside rectangular bounds
  *
- * @param {number} x - X-coordinate
- * @param {number} y - Y-coordinate
- * @param {Object} rect - Rectangle {left, top, width, height}
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {Object} rect - Rectangle bounds
  *
- * @return {boolean} True if point is inside rectangle
+ * @return {boolean} True if point is inside
  */
 const isPointInRect = (x, y, rect) => {
   const left = Number.parseFloat(rect.left)
@@ -22,11 +22,11 @@ const isPointInRect = (x, y, rect) => {
 /**
  * Check if point is inside milestone diamond
  *
- * @param {number} x - X-coordinate
- * @param {number} y - Y-coordinate
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
  * @param {Object} style - Milestone style properties
  *
- * @return {boolean} True if point is inside a milestone
+ * @return {boolean} True if point is inside
  */
 const isPointInMilestone = (x, y, style) => {
   const left = Number.parseFloat(style.left)
@@ -40,12 +40,12 @@ const isPointInMilestone = (x, y, style) => {
 }
 
 /**
- * Find a timeline item at the specified position
+ * Find timeline item at specified position
  *
- * @param {number} x - X-coordinate
- * @param {number} y - Y-coordinate
- * @param {Array} layoutItems - Array of layout items
- * @param {Function} getItemStyle - Function to get item style
+ * @param {number} x - X coordinate
+ * @param {number} y - Y coordinate
+ * @param {Array} layoutItems - Timeline items array
+ * @param {Function} getItemStyle - Style retrieval function
  *
  * @return {Object|null} Found item or null
  */
@@ -80,7 +80,7 @@ const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
 }
 
 /**
- * Set up event handlers for canvas interactions (hover, tooltip, scroll)
+ * Initialize event handling for timeline canvas interactions
  *
  * @param {Object} options - Event handler configuration
  *
@@ -97,31 +97,43 @@ export const handleCanvasEvents = options => {
     onMouseLeave,
     onScrollStart,
     horizontalPadding = 0,
+    isDraggingRef,
+    dragStartXRef,
+    dragStartYRef,
+    scrollLeftStartRef,
+    scrollTopStartRef,
+    handleZoom,
+    zoomLevel,
+    maxZoomLevel,
+    minZoomLevel,
   } = options
 
   let currentHoveredItem = null
   let clickTimeout = null
 
   /**
-   * Get mouse position relative to scrollable container
+   * Get mouse position relative to container
    *
    * @param {MouseEvent} event - Mouse event
    *
    * @return {Object} Position {x, y}
    */
   const getMousePosition = event => {
-    const rect = overlay.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
     const scrollLeft = container.scrollLeft || 0
     const scrollTop = container.scrollTop || 0
+    
+    // Get container's computed padding-top
+    const containerPaddingTop = parseFloat(getComputedStyle(container).paddingTop) || 0    
 
     return {
-      x: event.clientX - rect.left + scrollLeft - horizontalPadding,
-      y: event.clientY - rect.top + scrollTop,
+      x: event.clientX - containerRect.left + scrollLeft - horizontalPadding,
+      y: event.clientY - containerRect.top + scrollTop - containerPaddingTop,
     }
   }
 
   /**
-   * Display tooltip with item details at mouse position
+   * Display tooltip with item details
    *
    * @param {Object} item - Timeline item data
    * @param {MouseEvent} event - Mouse event
@@ -212,13 +224,13 @@ export const handleCanvasEvents = options => {
   }
 
   /**
-   * Calculate tooltip position with boundary checking to prevent overflow
+   * Calculate tooltip position with boundary checking
    *
    * @param {MouseEvent} event - Mouse event
    * @param {HTMLElement} container - Container element
    * @param {HTMLElement} tooltip - Tooltip element
-   * @param {number} mouseX - Mouse X in container coordinates
-   * @param {number} mouseY - Mouse Y in container coordinates
+   * @param {number} mouseX - Mouse X coordinate
+   * @param {number} mouseY - Mouse Y coordinate
    *
    * @return {Object} Position {left, top}
    */
@@ -299,19 +311,22 @@ export const handleCanvasEvents = options => {
   }
 
   /**
-   * Handle mouse entering an item (show tooltip and cursor)
+   * Handle mouse entering an item
    *
    * @param {Object} item - Timeline item
    * @param {MouseEvent} event - Mouse event
    * @param {HTMLElement} overlay - Overlay element
-   * @param {Function} showTooltip - Function to show tooltip
+   * @param {Function} showTooltip - Show tooltip function
    * @param {Function} onItemHover - Hover callback
+   * @param {Object} isDraggingRef - Dragging state ref
    *
    * @return {void}
    */
-  const handleItemEnter = (item, event, overlay, showTooltip, onItemHover) => {
+  const handleItemEnter = (item, event, overlay, showTooltip, onItemHover, isDraggingRef) => {
     overlay.style.cursor = 'pointer'
-    showTooltip(item, event)
+    if (!isDraggingRef || !isDraggingRef.current) {
+      showTooltip(item, event)
+    }
     onItemHover && onItemHover(item, event)
   }
 
@@ -324,9 +339,11 @@ export const handleCanvasEvents = options => {
    *
    * @return {void}
    */
-  const handleItemLeave = (overlay, hideTooltip, onMouseLeave) => {
-    overlay.style.cursor = 'default'
-    hideTooltip()
+  const handleItemLeave = (overlay, hideTooltip, onMouseLeave, isDraggingRef) => {
+    overlay.style.cursor = 'grab'
+    if (!isDraggingRef || !isDraggingRef.current) {
+      hideTooltip()
+    }
     onMouseLeave && onMouseLeave()
   }
 
@@ -338,6 +355,11 @@ export const handleCanvasEvents = options => {
    * @return {void}
    */
   const handleMouseMove = event => {
+    // Don't show tooltip if dragging
+    if (isDraggingRef && isDraggingRef.current) {
+      return
+    }
+    
     const { x, y } = getMousePosition(event)
     const item = findItemAtPosition(x, y, layoutItems, getItemStyle)
 
@@ -347,9 +369,9 @@ export const handleCanvasEvents = options => {
       currentHoveredItem = item
 
       if (item) {
-        handleItemEnter(item, event, overlay, showTooltip, onItemHover)
+        handleItemEnter(item, event, overlay, showTooltip, onItemHover, isDraggingRef)
       } else {
-        handleItemLeave(overlay, hideTooltip, onMouseLeave)
+        handleItemLeave(overlay, hideTooltip, onMouseLeave, isDraggingRef)
       }
       return
     }
@@ -367,8 +389,10 @@ export const handleCanvasEvents = options => {
   const handleMouseLeave = () => {
     if (currentHoveredItem) {
       currentHoveredItem = null
-      overlay.style.cursor = 'default'
-      hideTooltip()
+      overlay.style.cursor = 'grab'
+      if (!isDraggingRef || !isDraggingRef.current) {
+        hideTooltip()
+      }
 
       if (onMouseLeave) {
         onMouseLeave()
@@ -394,7 +418,7 @@ export const handleCanvasEvents = options => {
       if (currentHoveredItem) {
         hideTooltip()
         currentHoveredItem = null
-        overlay.style.cursor = 'default'
+        overlay.style.cursor = 'grab'
 
         if (onMouseLeave) {
           onMouseLeave()
@@ -405,16 +429,133 @@ export const handleCanvasEvents = options => {
     })
   }
 
+  /**
+   * Handle mouse down to start drag-to-scroll
+   *
+   * @param {MouseEvent} e - Mouse event
+   *
+   * @return {void}
+   */
+  const handleDragMouseDown = (e) => {
+    if (e.button !== 0) return
+    
+    isDraggingRef.current = true
+    dragStartXRef.current = e.clientX
+    dragStartYRef.current = e.clientY
+    scrollLeftStartRef.current = container.scrollLeft
+    scrollTopStartRef.current = container.scrollTop
+    
+    overlay.style.cursor = 'grabbing'
+    overlay.style.userSelect = 'none'
+    
+    if (tooltip) {
+      tooltip.style.display = 'none'
+    }
+  }
+
+  /**
+   * Handle mouse move during drag-to-scroll
+   *
+   * @param {MouseEvent} e - Mouse event
+   *
+   * @return {void}
+   */
+  const handleDragMouseMove = (e) => {
+    if (!isDraggingRef.current) return
+    
+    const deltaX = e.clientX - dragStartXRef.current
+    const deltaY = e.clientY - dragStartYRef.current
+    
+    if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
+      e.preventDefault()
+      e.stopPropagation()
+      
+      container.scrollLeft = scrollLeftStartRef.current - deltaX
+      container.scrollTop = scrollTopStartRef.current - deltaY
+    }
+  }
+
+  /**
+   * Handle mouse up to end drag-to-scroll
+   *
+   * @return {void}
+   */
+  const handleDragMouseUp = () => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false
+      overlay.style.cursor = 'grab'
+      overlay.style.userSelect = ''
+    }
+  }
+
+  /**
+   * Create throttled wheel event handler for zoom
+   *
+   * @return {Function} Wheel event handler
+   */
+  const createWheelHandler = () => {
+    const ZOOM_THROTTLE_MS = 16 // ~60fps
+    let zoomRafId = null
+    let lastZoomTime = 0
+
+    return event => {
+      // Skip if zoom handlers not available
+      if (!handleZoom || typeof zoomLevel !== 'number' || 
+          typeof maxZoomLevel !== 'number' || typeof minZoomLevel !== 'number') {
+        return
+      }
+
+      event.preventDefault()
+
+      const zoomDelta = -event.deltaY
+      const isZoomingIn = zoomDelta > 0
+      const isZoomingOut = zoomDelta < 0
+
+      // Check zoom limits
+      if ((isZoomingIn && zoomLevel >= maxZoomLevel) ||
+          (isZoomingOut && zoomLevel <= minZoomLevel)) {
+        return
+      }
+
+      // Throttle zoom calls
+      const currentTime = Date.now()
+      if (currentTime - lastZoomTime < ZOOM_THROTTLE_MS) {
+        return
+      }
+
+      lastZoomTime = currentTime
+
+      // Cancel previous animation frame if exists
+      if (zoomRafId !== null) {
+        cancelAnimationFrame(zoomRafId)
+      }
+
+      // Schedule zoom execution
+      zoomRafId = requestAnimationFrame(() => {
+        handleZoom(zoomDelta)
+        zoomRafId = null
+      })
+    }
+  }
+
+  const handleWheel = createWheelHandler()
+
   overlay.addEventListener('mousemove', handleMouseMove)
   overlay.addEventListener('mouseleave', handleMouseLeave)
+  overlay.addEventListener('mousedown', handleDragMouseDown)
+  overlay.addEventListener('wheel', handleWheel, { passive: false })
+  container.addEventListener('mousemove', handleDragMouseMove)
+  container.addEventListener('mouseup', handleDragMouseUp)
   container.addEventListener('scroll', handleScrollThrottled, { passive: true })
-  container.addEventListener('wheel', handleScrollThrottled, { passive: true })
 
   return () => {
     overlay.removeEventListener('mousemove', handleMouseMove)
     overlay.removeEventListener('mouseleave', handleMouseLeave)
+    overlay.removeEventListener('mousedown', handleDragMouseDown)
+    overlay.removeEventListener('wheel', handleWheel)
+    container.removeEventListener('mousemove', handleDragMouseMove)
+    container.removeEventListener('mouseup', handleDragMouseUp)
     container.removeEventListener('scroll', handleScrollThrottled)
-    container.removeEventListener('wheel', handleScrollThrottled)
 
     if (clickTimeout) {
       clearTimeout(clickTimeout)

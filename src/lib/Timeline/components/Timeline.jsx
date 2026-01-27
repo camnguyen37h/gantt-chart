@@ -28,6 +28,8 @@ const Timeline = memo(
       containerRef,
       getItemStyle,
       scrollToToday,
+      hasAutoScrolledRef,
+      enableAutoScroll,
       handleZoom,
       config: finalConfig,
       isZooming,
@@ -56,66 +58,6 @@ const Timeline = memo(
         [filterType]: !prev[filterType],
       }))
     }
-
-    useEffect(() => {
-      const container = containerRef.current
-      if (!container) {
-        return
-      }
-
-      if (!layoutItems || layoutItems.length === 0) {
-        return
-      }
-
-      let rafId = null
-      let lastWheelTime = 0
-      const THROTTLE_MS = 16
-
-      const handleWheel = event => {
-        event.preventDefault()
-
-        const delta = -event.deltaY
-        if (
-          (delta > 0 && zoomLevel >= finalConfig.maxZoomLevel) ||
-          (delta < 0 && zoomLevel <= finalConfig.minZoomLevel)
-        ) {
-          return
-        }
-
-        const now = Date.now()
-        if (now - lastWheelTime < THROTTLE_MS) {
-          return
-        }
-
-        lastWheelTime = now
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId)
-        }
-
-        rafId = requestAnimationFrame(() => {
-          const delta = -event.deltaY
-          handleZoom(delta)
-          rafId = null
-        })
-      }
-
-      container.addEventListener('wheel', handleWheel, { passive: false })
-
-      return () => {
-        container.removeEventListener('wheel', handleWheel)
-
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId)
-        }
-      }
-    }, [
-      containerRef,
-      handleZoom,
-      layoutItems,
-      zoomLevel,
-      finalConfig.maxZoomLevel,
-      finalConfig.minZoomLevel,
-    ])
 
     return (
       <TimelineStyled className={className}>
@@ -150,47 +92,52 @@ const Timeline = memo(
         </div>
 
         {/* Scrollable Timeline Container */}
-        <div className="timeline-scroll-container" ref={containerRef}>
-          <div className="timeline-content">
-            {config.loading ? (
-              <div className="timeline-skeleton">
-                <div className="skeleton-grid">
-                  {new Array(5).fill(0).map((_, index) => (
-                    <div
-                      key={`skeleton-item-${index + 1}`}
-                      className={`skeleton-item skeleton-item-${
-                        index + 1
-                      }`}></div>
-                  ))}
-                </div>
-
-                <div className="skeleton-legend">
-                  {new Array(5).fill(0).map((_, index) => (
-                    <div
-                      key={`skeleton-status-${index + 1}`}
-                      className="skeleton-status"></div>
-                  ))}
-                </div>
+        <div className="timeline-content">
+          {config.loading ? (
+            <div className="timeline-skeleton">
+              <div className="skeleton-grid">
+                {new Array(5).fill(0).map((_, index) => (
+                  <div
+                    key={`skeleton-item-${index + 1}`}
+                    className={`skeleton-item skeleton-item-${
+                      index + 1
+                    }`}></div>
+                ))}
               </div>
-            ) : (
-              <TimelineCanvas
-                timelineData={timelineData}
-                layoutItems={filteredLayoutItems}
-                gridHeight={gridHeight}
-                currentDatePosition={currentDatePosition}
-                getItemStyle={getItemStyle}
-                rowHeight={finalConfig.rowHeight}
-                enableGrid={finalConfig.enableGrid}
-                enableCurrentDate={finalConfig.enableCurrentDate}
-                onItemDoubleClick={onItemDoubleClick}
-                onItemHover={onItemHover}
-                loading={config.loading}
-                config={finalConfig}
-                isZooming={isZooming}
-                zoomLevel={zoomLevel}
-              />
-            )}
-          </div>
+
+              <div className="skeleton-legend">
+                {new Array(5).fill(0).map((_, index) => (
+                  <div
+                    key={`skeleton-status-${index + 1}`}
+                    className="skeleton-status"></div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <TimelineCanvas
+              containerRef={containerRef}
+              timelineData={timelineData}
+              layoutItems={filteredLayoutItems}
+              gridHeight={gridHeight}
+              currentDatePosition={currentDatePosition}
+              getItemStyle={getItemStyle}
+              rowHeight={finalConfig.rowHeight}
+              enableGrid={finalConfig.enableGrid}
+              enableCurrentDate={finalConfig.enableCurrentDate}
+              onItemDoubleClick={onItemDoubleClick}
+              onItemHover={onItemHover}
+              loading={config.loading}
+              config={finalConfig}
+              isZooming={isZooming}
+              zoomLevel={zoomLevel}
+              scrollToToday={scrollToToday}
+              hasAutoScrolledRef={hasAutoScrolledRef}
+              enableAutoScroll={enableAutoScroll}
+              handleZoom={handleZoom}
+              maxZoomLevel={finalConfig.maxZoomLevel}
+              minZoomLevel={finalConfig.minZoomLevel}
+            />
+          )}
         </div>
 
         {/* Timeline Legend */}

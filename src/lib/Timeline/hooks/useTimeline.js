@@ -226,33 +226,7 @@ export const useTimeline = (items = [], config = {}) => {
     })
   }, [currentDatePosition])
 
-  useEffect(() => {
-    if (
-      !finalConfig.enableAutoScroll ||
-      hasAutoScrolledRef.current ||
-      !containerRef.current ||
-      currentDatePosition === null ||
-      !timelineData
-    ) {
-      return
-    }
-
-    const timer = setTimeout(() => {
-      requestAnimationFrame(() => {
-        scrollToToday()
-        hasAutoScrolledRef.current = true
-      })
-    }, 300)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [
-    timelineData,
-    currentDatePosition,
-    finalConfig.enableAutoScroll,
-    scrollToToday,
-  ])
+  // Auto scroll will be triggered by TimelineCanvas after animation completes
 
   const zoomIn = useCallback(() => {
     if (zoomLevel >= finalConfig.maxZoomLevel) {
@@ -372,6 +346,8 @@ export const useTimeline = (items = [], config = {}) => {
     containerRef,
     getItemStyle,
     scrollToToday,
+    hasAutoScrolledRef,
+    enableAutoScroll: finalConfig.enableAutoScroll,
     zoomIn,
     zoomOut,
     resetZoom,
