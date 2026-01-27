@@ -25,7 +25,7 @@ const TimelineLegend = memo(
             return (
               <button
                 key={`status-${status}`}
-                className={`timeline-legend-item ${isVisible ? '' : 'hidden'}`}
+                className={`timeline-legend-item ${!isVisible ? 'hidden' : ''}`}
                 onClick={() => handleStatusClick(status)}>
                 <span
                   className="timeline-legend-color"
@@ -41,6 +41,7 @@ const TimelineLegend = memo(
 )
 
 TimelineLegend.propTypes = {
+  statuses: PropTypes.arrayOf(PropTypes.string),
   statusColorMap: PropTypes.object,
   visibleStatuses: PropTypes.object,
   onStatusToggle: PropTypes.func,

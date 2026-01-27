@@ -1,11 +1,12 @@
 import { NOT_AVAILABLE, TOOLTIP_FIELDS } from '../constants'
 
 /**
- * Check if point is inside rectangular bounds
+ * Check if the point is inside rectangular bounds
  *
  * @param {number} x - X-coordinate
  * @param {number} y - Y-coordinate
  * @param {Object} rect - Rectangle {left, top, width, height}
+ *
  * @return {boolean} True if point is inside rectangle
  */
 const isPointInRect = (x, y, rect) => {
@@ -23,7 +24,8 @@ const isPointInRect = (x, y, rect) => {
  * @param {number} x - X-coordinate
  * @param {number} y - Y-coordinate
  * @param {Object} style - Milestone style properties
- * @return {boolean} True if point is inside milestone
+ *
+ * @return {boolean} True if point is inside a milestone
  */
 const isPointInMilestone = (x, y, style) => {
   const left = Number.parseFloat(style.left)
@@ -51,12 +53,13 @@ const isPointInMilestone = (x, y, style) => {
 }
 
 /**
- * Check if item is at the specified position
+ * Check if the item is at the specified position
  *
  * @param {Object} item - Timeline item
  * @param {number} x - X-coordinate
  * @param {number} y - Y-coordinate
  * @param {Object} style - Item style properties
+ *
  * @return {boolean} True if item is at position
  */
 const isItemAtPosition = (item, x, y, style) => {
@@ -66,12 +69,13 @@ const isItemAtPosition = (item, x, y, style) => {
 }
 
 /**
- * Find timeline item at the specified position
+ * Find a timeline item at the specified position
  *
  * @param {number} x - X-coordinate
  * @param {number} y - Y-coordinate
  * @param {Array} layoutItems - Array of layout items
  * @param {Function} getItemStyle - Function to get item style
+ *
  * @return {Object|null} Found item or null
  */
 const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
@@ -92,9 +96,10 @@ const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
 }
 
 /**
- * Setup event handlers for canvas interactions (hover, tooltip, scroll)
+ * Set up event handlers for canvas interactions (hover, tooltip, scroll)
  *
  * @param {Object} options - Event handler configuration
+ *
  * @return {Function} Cleanup function to remove event listeners
  */
 export const handleCanvasEvents = options => {
@@ -116,6 +121,7 @@ export const handleCanvasEvents = options => {
    * Get mouse position relative to scrollable container
    *
    * @param {MouseEvent} event - Mouse event
+   *
    * @return {Object} Position {x, y}
    */
   const getMousePosition = event => {
@@ -134,6 +140,7 @@ export const handleCanvasEvents = options => {
    *
    * @param {Object} item - Timeline item data
    * @param {MouseEvent} event - Mouse event
+   *
    * @return {void}
    */
   const showTooltip = (item, event) => {
@@ -204,116 +211,133 @@ export const handleCanvasEvents = options => {
   }
 
   /**
- * Calculate tooltip position with boundary checking to prevent overflow
- *
- * @param {MouseEvent} event - Mouse event
- * @param {HTMLElement} container - Container element
- * @param {HTMLElement} tooltip - Tooltip element
- * @param {number} mouseX - Mouse X in container coordinates
- * @param {number} mouseY - Mouse Y in container coordinates
- * @return {Object} Position {left, top}
- */
-const calculateTooltipPosition = (event, container, tooltip, mouseX, mouseY) => {
-  const tooltipRect = tooltip.getBoundingClientRect()
-  const containerRect = container.getBoundingClientRect()
-  
-  const clientX = event.clientX - containerRect.left
-  const clientY = event.clientY - containerRect.top
-  
-  let left = mouseX + 15
-  let top = mouseY + 10
-  
-  if (clientX + 15 + tooltipRect.width > containerRect.width) {
-    left = mouseX - tooltipRect.width - 15
-  }
-  
-  if (clientY + 10 + tooltipRect.height > containerRect.height) {
-    top = mouseY - tooltipRect.height - 10
-  }
-  
-  return { left, top }
-}
+   * Calculate tooltip position with boundary checking to prevent overflow
+   *
+   * @param {MouseEvent} event - Mouse event
+   * @param {HTMLElement} container - Container element
+   * @param {HTMLElement} tooltip - Tooltip element
+   * @param {number} mouseX - Mouse X in container coordinates
+   * @param {number} mouseY - Mouse Y in container coordinates
+   *
+   * @return {Object} Position {left, top}
+   */
+  const calculateTooltipPosition = (
+    event,
+    container,
+    tooltip,
+    mouseX,
+    mouseY
+  ) => {
+    const tooltipRect = tooltip.getBoundingClientRect()
+    const containerRect = container.getBoundingClientRect()
 
-/**
- * Update tooltip position following mouse movement
- *
- * @param {MouseEvent} event - Mouse event
- * @param {HTMLElement} container - Container element
- * @param {HTMLElement} tooltip - Tooltip element
- * @return {void}
- */
-const updateTooltipPosition = (event, container, tooltip) => {
-  if (!tooltip || tooltip.style.display !== 'block') return
-  
-  const rect = container.getBoundingClientRect()
-  const scrollLeft = container.scrollLeft || 0
-  const scrollTop = container.scrollTop || 0
-  const mouseX = event.clientX - rect.left + scrollLeft
-  const mouseY = event.clientY - rect.top + scrollTop
-  
-  const { left, top } = calculateTooltipPosition(event, container, tooltip, mouseX, mouseY)
-  
-  tooltip.style.left = `${left}px`
-  tooltip.style.top = `${top}px`
-}
+    const clientX = event.clientX - containerRect.left
+    const clientY = event.clientY - containerRect.top
 
-/**
- * Handle mouse entering an item (show tooltip and cursor)
- *
- * @param {Object} item - Timeline item
- * @param {MouseEvent} event - Mouse event
- * @param {HTMLElement} overlay - Overlay element
- * @param {Function} showTooltip - Function to show tooltip
- * @param {Function} onItemHover - Hover callback
- * @return {void}
- */
-const handleItemEnter = (item, event, overlay, showTooltip, onItemHover) => {
-  overlay.style.cursor = 'pointer'
-  showTooltip(item, event)
-  onItemHover?.(item, event)
-}
+    let left = mouseX + 15
+    let top = mouseY + 10
 
-/**
- * Handle mouse leaving an item (hide tooltip and reset cursor)
- *
- * @param {HTMLElement} overlay - Overlay element
- * @param {Function} hideTooltip - Function to hide tooltip
- * @param {Function} onMouseLeave - Leave callback
- * @return {void}
- */
-const handleItemLeave = (overlay, hideTooltip, onMouseLeave) => {
-  overlay.style.cursor = 'default'
-  hideTooltip()
-  onMouseLeave && onMouseLeave()
-}
-
-/**
- * Handle mouse movement over canvas to detect item hover
- *
- * @param {MouseEvent} event - Mouse event
- * @return {void}
- */
-const handleMouseMove = event => {
-  const { x, y } = getMousePosition(event)
-  const item = findItemAtPosition(x, y, layoutItems, getItemStyle)
-  
-  const itemChanged = item !== currentHoveredItem
-  
-  if (itemChanged) {
-    currentHoveredItem = item
-    
-    if (item) {
-      handleItemEnter(item, event, overlay, showTooltip, onItemHover)
-    } else {
-      handleItemLeave(overlay, hideTooltip, onMouseLeave)
+    if (clientX + 15 + tooltipRect.width > containerRect.width) {
+      left = mouseX - tooltipRect.width - 15
     }
-    return
+
+    if (clientY + 10 + tooltipRect.height > containerRect.height) {
+      top = mouseY - tooltipRect.height - 10
+    }
+
+    return { left, top }
   }
-  
-  if (item) {
-    updateTooltipPosition(event, container, tooltip)
+
+  /**
+   * Update tooltip position following mouse movement
+   *
+   * @param {MouseEvent} event - Mouse event
+   * @param {HTMLElement} container - Container element
+   * @param {HTMLElement} tooltip - Tooltip element
+   *
+   * @return {void}
+   */
+  const updateTooltipPosition = (event, container, tooltip) => {
+    if (!tooltip || tooltip.style.display !== 'block') return
+
+    const rect = container.getBoundingClientRect()
+    const scrollLeft = container.scrollLeft || 0
+    const scrollTop = container.scrollTop || 0
+    const mouseX = event.clientX - rect.left + scrollLeft
+    const mouseY = event.clientY - rect.top + scrollTop
+
+    const { left, top } = calculateTooltipPosition(
+      event,
+      container,
+      tooltip,
+      mouseX,
+      mouseY
+    )
+
+    tooltip.style.left = `${left}px`
+    tooltip.style.top = `${top}px`
   }
-}
+
+  /**
+   * Handle mouse entering an item (show tooltip and cursor)
+   *
+   * @param {Object} item - Timeline item
+   * @param {MouseEvent} event - Mouse event
+   * @param {HTMLElement} overlay - Overlay element
+   * @param {Function} showTooltip - Function to show tooltip
+   * @param {Function} onItemHover - Hover callback
+   *
+   * @return {void}
+   */
+  const handleItemEnter = (item, event, overlay, showTooltip, onItemHover) => {
+    overlay.style.cursor = 'pointer'
+    showTooltip(item, event)
+    onItemHover && onItemHover(item, event)
+  }
+
+  /**
+   * Handle mouse leaving an item (hide tooltip and reset cursor)
+   *
+   * @param {HTMLElement} overlay - Overlay element
+   * @param {Function} hideTooltip - Function to hide tooltip
+   * @param {Function} onMouseLeave - Leave callback
+   *
+   * @return {void}
+   */
+  const handleItemLeave = (overlay, hideTooltip, onMouseLeave) => {
+    overlay.style.cursor = 'default'
+    hideTooltip()
+    onMouseLeave && onMouseLeave()
+  }
+
+  /**
+   * Handle mouse movement over canvas to detect item hover
+   *
+   * @param {MouseEvent} event - Mouse event
+   *
+   * @return {void}
+   */
+  const handleMouseMove = event => {
+    const { x, y } = getMousePosition(event)
+    const item = findItemAtPosition(x, y, layoutItems, getItemStyle)
+
+    const itemChanged = item !== currentHoveredItem
+
+    if (itemChanged) {
+      currentHoveredItem = item
+
+      if (item) {
+        handleItemEnter(item, event, overlay, showTooltip, onItemHover)
+      } else {
+        handleItemLeave(overlay, hideTooltip, onMouseLeave)
+      }
+      return
+    }
+
+    if (item) {
+      updateTooltipPosition(event, container, tooltip)
+    }
+  }
 
   /**
    * Handle mouse leaving canvas area

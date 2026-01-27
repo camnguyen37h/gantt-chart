@@ -6,6 +6,7 @@ import moment from 'moment'
  * Transform API response item to normalized timeline item structure
  *
  * @param {Object} item - API response item
+ *
  * @return {Object|null} Normalized item or null if invalid
  */
 export const normalizeTimelineItem = item => {
@@ -81,6 +82,7 @@ export const normalizeTimelineItem = item => {
  * @param {string} startDate - Start date (YYYY-MM-DD)
  * @param {string} dueDate - Due date (YYYY-MM-DD)
  * @param {boolean} onlyPositive - Return only positive values
+ *
  * @return {number|undefined} Day difference or undefined if invalid
  */
 export const calculateDiffDay = (startDate, dueDate, onlyPositive = false) => {
@@ -108,6 +110,7 @@ export const calculateDiffDay = (startDate, dueDate, onlyPositive = false) => {
  * Extract and sort unique status values from items
  *
  * @param {Array} items - Array of timeline items
+ *
  * @return {Array} Sorted array of unique status strings
  */
 export const extractUniqueStatuses = items => {
@@ -133,6 +136,7 @@ export const extractUniqueStatuses = items => {
  * Create mapping from status to color palette index
  *
  * @param {Array} statuses - Array of unique status strings
+ *
  * @return {Object} Map of status to color index
  */
 export const buildStatusColorMap = statuses => {
@@ -155,6 +159,7 @@ export const buildStatusColorMap = statuses => {
  * Normalize array of API items with performance optimization
  *
  * @param {Array} data - Array of API response items
+ *
  * @return {Array} Array of normalized timeline items
  */
 export const normalizeTimelineData = data => {
@@ -179,6 +184,7 @@ export const normalizeTimelineData = data => {
  *
  * @param {Array} items - Array of timeline items
  * @param {Object} visibleStatuses - Map of status to visibility boolean
+ *
  * @return {Array} Filtered items array
  */
 export const filterByVisibleStatuses = (items, visibleStatuses) => {

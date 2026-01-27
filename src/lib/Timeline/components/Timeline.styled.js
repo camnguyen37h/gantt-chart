@@ -58,7 +58,7 @@ const TimelineStyled = styled.div`
 
   .timeline-toolbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 8px 16px;
     align-items: center;
     margin-bottom: 8px;
@@ -68,7 +68,9 @@ const TimelineStyled = styled.div`
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     gap: 8px 16px;
+    padding: 16px 16px 0;
     .timeline-legend-type {
       position: relative;
       border: none;

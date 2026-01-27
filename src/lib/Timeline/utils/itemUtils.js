@@ -5,6 +5,7 @@ import { DEFAULT_STATUS_COLOR, ITEM_TYPES, STATUS_COLORS } from '../constants'
  * Determine if item is milestone or range type
  *
  * @param {Object} item - Timeline item
+ *
  * @return {string|null} ITEM_TYPES.MILESTONE, ITEM_TYPES.RANGE, or null
  */
 export const getItemType = item => {
@@ -20,9 +21,10 @@ export const getItemType = item => {
 }
 
 /**
- * Convert date string to moment object for positioning
+ * Convert date string to a moment object for positioning
  *
  * @param {string|Date|null} date - Date value
+ *
  * @return {moment|null} Moment object or null
  */
 export const getItemDate = date => {
@@ -34,10 +36,11 @@ export const getItemDate = date => {
 }
 
 /**
- * Check if item represents a milestone
+ * Check if an item represents a milestone
  *
  * @param {Object} item - Timeline item
- * @return {boolean} True if item is milestone
+ *
+ * @return {boolean} True if item is a milestone
  */
 export const isMilestone = item => {
   return getItemType(item) === ITEM_TYPES.MILESTONE
@@ -48,6 +51,7 @@ export const isMilestone = item => {
  *
  * @param {string} status - Status name
  * @param {Object} statusColorMap - Map of status to color index
+ *
  * @return {string} Hex color code
  */
 export const getStatusColor = (status, statusColorMap) => {
@@ -55,20 +59,26 @@ export const getStatusColor = (status, statusColorMap) => {
     return DEFAULT_STATUS_COLOR
   }
 
-  if (statusColorMap && statusColorMap[status] !== undefined) {
-    const colorIndex = statusColorMap[status]
-    if (colorIndex < STATUS_COLORS.length) {
-      return STATUS_COLORS[colorIndex]
-    }
+  if (status.toLowerCase() === 'cancel') {
+    return '#78909C'
   }
+
+  if (status)
+    if (statusColorMap && statusColorMap[status] !== undefined) {
+      const colorIndex = statusColorMap[status]
+      if (colorIndex < STATUS_COLORS.length) {
+        return STATUS_COLORS[colorIndex]
+      }
+    }
 
   return DEFAULT_STATUS_COLOR
 }
 
 /**
- * Normalize item structure with consistent properties and metadata
+ * Normalize the item structure with consistent properties and metadata
  *
  * @param {Object} item - Raw timeline item
+ *
  * @return {Object} Normalized item with _type and _isValid flags
  */
 export const normalizeItem = item => {

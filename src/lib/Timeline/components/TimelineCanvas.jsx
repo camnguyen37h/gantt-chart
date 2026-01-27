@@ -198,7 +198,9 @@ const TimelineCanvas = ({
   return (
     <TimelineCanvasStyled
       ref={containerRef}
-      className={`timeline-canvas-container ${loading ? 'timeline-loading' : 'timeline-loaded'}`}>
+      className={`timeline-canvas-container ${
+        loading ? 'timeline-loading' : 'timeline-loaded'
+      }`}>
       {timelineData && (
         <div>
           <div className="timeline-canvas-wrapper">

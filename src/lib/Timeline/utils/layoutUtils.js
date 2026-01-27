@@ -4,6 +4,7 @@ import { getItemDate } from './itemUtils'
  * Sort timeline items by start date in ascending order
  *
  * @param {Array} items - Array of timeline items
+ *
  * @return {Array} Sorted items array
  */
 export const sortItemsByDate = items => {
@@ -22,6 +23,7 @@ export const sortItemsByDate = items => {
  * Calculate row assignments to prevent item overlapping using greedy algorithm
  *
  * @param {Array} items - Array of timeline items
+ *
  * @return {Array} Items with assigned row property
  */
 export const calculateAdvancedLayout = items => {
@@ -93,10 +95,11 @@ export const calculateAdvancedLayout = items => {
 }
 
 /**
- * Calculate minimum grid height required for all rows
+ * Calculate the minimum grid height required for all rows
  *
  * @param {Array} layoutItems - Items with row assignments
  * @param {number} rowHeight - Height of each row in pixels
+ *
  * @return {number} Total grid height in pixels
  */
 export const calculateGridHeight = (layoutItems, rowHeight) => {
@@ -122,6 +125,7 @@ export const calculateGridHeight = (layoutItems, rowHeight) => {
  *
  * @param {Array} items - Array of timeline items
  * @param {Object} filters - Filter criteria as property-value pairs
+ *
  * @return {Array} Filtered items array
  */
 export const filterItems = (items, filters) => {

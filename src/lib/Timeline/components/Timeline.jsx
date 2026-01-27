@@ -117,14 +117,6 @@ const Timeline = memo(
 
         {/* Toolbar - Only Today button */}
         <div className="timeline-toolbar">
-          <div className="timeline-legend-types">
-            <button className="timeline-legend-type range-time">
-              Delivery ticket
-            </button>
-            <button className="timeline-legend-type abnormal">
-              Delivery ticket unable to determine timeframe
-            </button>
-          </div>
           <Button
             onClick={scrollToToday}
             disabled={moment(timelineData.end).isBefore(moment(), 'day')}
@@ -150,7 +142,9 @@ const Timeline = memo(
 
                 <div className="skeleton-legend">
                   {new Array(5).fill(0).map((_, index) => (
-                    <div key={`skeleton-status-${index + 1}`} className="skeleton-status"></div>
+                    <div
+                      key={`skeleton-status-${index + 1}`}
+                      className="skeleton-status"></div>
                   ))}
                 </div>
               </div>
@@ -176,6 +170,14 @@ const Timeline = memo(
         </div>
 
         {/* Timeline Legend */}
+        <div className="timeline-legend-types">
+          <button className="timeline-legend-type range-time">
+            Delivery ticket
+          </button>
+          <button className="timeline-legend-type abnormal">
+            Delivery ticket unable to determine timeframe
+          </button>
+        </div>
         <TimelineLegend items={items} {...legendProps} />
       </TimelineStyled>
     )

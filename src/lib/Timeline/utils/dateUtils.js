@@ -19,6 +19,7 @@ const getDefaultDateRange = () => {
  * Extract start and end timestamps from timeline item
  *
  * @param {Object} item - Timeline item with date fields
+ *
  * @return {Object|null} Timestamps {start, end} or null if no valid dates
  */
 const getItemTimestamps = item => {
@@ -28,12 +29,12 @@ const getItemTimestamps = item => {
       end: moment(item.dueDateAfter).valueOf(),
     }
   }
-  
+
   if (item.createdDate) {
     const timestamp = moment(item.createdDate).valueOf()
     return { start: timestamp, end: timestamp }
   }
-  
+
   return null
 }
 
@@ -54,6 +55,7 @@ const calculateEndDate = maxTimestamp => {
  * Calculate date range from timeline items array
  *
  * @param {Array} items - Array of timeline items
+ *
  * @return {Object} Date range {start, end} as moment objects
  */
 export const getDateRangeFromItems = items => {
@@ -67,7 +69,7 @@ export const getDateRangeFromItems = items => {
 
   for (const item of items) {
     const timestamps = getItemTimestamps(item)
-    
+
     if (timestamps) {
       hasValidDate = true
       minTimestamp = Math.min(minTimestamp, timestamps.start)
@@ -91,6 +93,7 @@ export const getDateRangeFromItems = items => {
  * @param {moment} start - Start date
  * @param {moment} end - End date
  * @param {number} pixelsPerDay - Pixels per day for width calculation
+ *
  * @return {Array} Array of period objects with label, width, days
  */
 export const generatePeriods = (start, end, pixelsPerDay = 40) => {
@@ -130,6 +133,7 @@ export const generatePeriods = (start, end, pixelsPerDay = 40) => {
  * Format date to DD/MM/YYYY or return N/A if invalid
  *
  * @param {string|Date|null} date - Date to format
+ *
  * @return {string} Formatted date string
  */
 export const formatDate = date => {
@@ -153,6 +157,7 @@ const pluralizeDays = count => {
  *
  * @param {number|undefined} diffDate - Duration in days
  * @param {boolean} onlyPositive - Return only positive count without status
+ *
  * @return {string} Formatted duration string
  */
 export const formatDiffDate = (diffDate, onlyPositive = false) => {
