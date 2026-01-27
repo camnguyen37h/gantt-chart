@@ -6,14 +6,17 @@
     "antd": "^3.26.20",
     "echarts": "^6.0.0",
     "echarts-for-react": "^3.0.6",
+    "lodash": "^4.17.23",
     "moment": "^2.29.4",
+    "prettier": "2.8.7",
     "prop-types": "^15.8.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-notifications": "^1.7.4",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "recharts": "^2.1.16",
-    "styled-components": "^6.3.8"
+    "styled-components": "^5.3.11"
   },
   "scripts": {
     "start": "react-scripts start",

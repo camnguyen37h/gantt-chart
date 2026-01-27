@@ -1,77 +1,131 @@
-/**
- * Timeline Library Constants
- * Centralized configuration for timeline components
- */
-import { formatDate, formatDiffDate } from './utils/dateUtils';
+import { formatDate, formatDiffDate } from './utils/dateUtils'
 
-export const PROJECT_CHARTS = {
+const NOT_AVAILABLE = 'N/A'
+
+const PROJECT_CHARTS = {
   MILESTONE: 'Milestone',
   WORKLOAD: 'Workload',
 }
 
-export const DEFAULT_CONFIG = {
-  rowHeight: 75,
+const ITEM_TYPES = {
+  RANGE: 'range',
+  MILESTONE: 'milestone',
+}
+
+const DEFAULT_CONFIG = {
+  rowHeight: 80,
   itemHeight: 34,
-  itemPadding: 15,
-  pixelsPerDay: 5, // PERFORMANCE: Reduced from 8 to 5 for more compact timeline (less lag when zoom out)
-  minZoomLevel: 0.7, // PERFORMANCE: Limit zoom out to prevent canvas too wide and lag
+  itemPadding: 16,
+  pixelsPerDay: 4, // Width in pixels per day for timeline (compact view)
+  minZoomLevel: 0.7,
   maxZoomLevel: 3,
   scrollSensitivity: 1,
   enableAutoScroll: true,
   enableCurrentDate: true,
   enableGrid: true,
   enableTooltip: true,
-  minContentWidth: 1200 // Minimum width for timeline content (px)
-};
+  minContentWidth: 800, // Minimum width for timeline content (px)
+}
 
-export const COLORS = {
-  primary: '#1890ff',
-  success: '#52c41a',
-  warning: '#faad14',
-  error: '#f5222d',
-  info: '#13c2c2',
-  purple: '#722ed1',
-  magenta: '#eb2f96',
-  
-  // Status colors (phân biệt rõ với error/warning)
-  planning: '#69c0ff',      // Blue light - Planning
-  finalized: '#597ef7',     // Blue - Finalized/Approved
-  implementing: '#ff9c6e',  // Orange coral - In Progress (tránh trùng warning)
-  resolved: '#52c41a',      // Green - Completed/Resolved
-  released: '#9254de',      // Purple - Released/Deployed (tránh trùng magenta)
-  noStart: '#8c8c8c',       // Gray dark - Not Started (dễ phân biệt hơn)
-  
-  // UI colors
-  currentDate: '#e44258',
-  gridLine: '#f0f0f0',
-  border: '#d9d9d9',
-  background: '#ffffff',
-  hover: '#e6f7ff'
-};
+const STATUS_COLORS = [
+  '#2196F3',
+  '#4CAF50',
+  '#FF9800',
+  '#9C27B0',
+  '#00BCD4',
+  '#FFEB3B',
+  '#607D8B',
+  '#00897B',
+  '#FFA000',
+  '#CDDC39',
+  '#FF6F00',
+  '#1976D2',
+  '#388E3C',
+  '#F57C00',
+  '#7B1FA2',
+  '#0097A7',
+  '#FBC02D',
+  '#546E7A',
+  '#00695C',
+  '#FF8F00',
+  '#AFB42B',
+  '#E65100',
+  '#0288D1',
+  '#43A047',
+  '#FB8C00',
+  '#8E24AA',
+  '#00ACC1',
+  '#FDD835',
+  '#78909C',
+  '#26A69A',
+  '#FFB300',
+  '#D4E157',
+  '#F4511E',
+]
 
-export const DATE_FORMATS = {
-  display: 'DD MMM YYYY',
-  short: 'DD MMM',
-  monthYear: 'MMMM YYYY',
-  dayMonth: 'D MMM',
-  input: 'YYYY-MM-DD',
-  tooltip: 'ddd, DD MMM YYYY'
-};
+const DEFAULT_STATUS_COLOR = '#bfbfbf'
 
-export const INTERACTIONS = {
-  CLICK: 'click',
-  DOUBLE_CLICK: 'doubleClick',
-  DRAG: 'drag',
-  RESIZE: 'resize',
-  HOVER: 'hover',
-  CONTEXT_MENU: 'contextMenu'
-};
-
-export const TOOLTIP_FIELDS = [
-  { label: 'Start', getValue: item => formatDate(item.startDate) },
-  { label: 'End', getValue: item => formatDate(item.dueDate) },
-  { label: 'Status', getValue: item => item.status || 'N/A' },
+const TOOLTIP_FIELDS = [
+  { label: 'Start', getValue: item => formatDate(item.startDateBefore) },
+  { label: 'End', getValue: item => formatDate(item.dueDateBefore) },
+  { label: 'Status', getValue: item => item.status || NOT_AVAILABLE },
   { label: 'Duration', getValue: item => formatDiffDate(item.duration, true) },
   { label: 'Resolved', getValue: item => formatDate(item.resolvedDate) },
-  { label: 'Late time', getValue: item => formatDiffDate(item.lateTime) },
+  {
+    label: 'Late time',
+    getValue: item => formatDiffDate(item.lateTime),
+    getColor: item => {
+      if (item.lateTime === undefined) return ''
+      return item.lateTime < 0 ? 'text-danger' : 'text-success'
+    },
+  },
 ]
+
+const ALL_PROJECTS = 'All'
+
+const CHART_WORKLOAD_MODES = {
+  HEAD_COUNT: 'Head Count',
+  MM_MONTHS: 'MM',
+}
+
+const MODE_CONFIG = {
+  [CHART_WORKLOAD_MODES.HEAD_COUNT]: {
+    actualKey: 'actualHeadCount',
+    planKey: 'planHeadCount',
+  },
+  [CHART_WORKLOAD_MODES.MM_MONTHS]: {
+    actualKey: 'actualManMonth',
+    planKey: 'planManMonth',
+  },
+}
+
+const CHART_COLORS = {
+  ACTUAL: '#629c44',
+  PLAN: '#3d8af7',
+}
+
+const CANVAS_RENDERING = {
+  MILESTONE_SIZE: 24,
+  MILESTONE_CENTER_DOT_RADIUS: 4,
+  MILESTONE_LABEL_MAX_WIDTH: 120,
+  MILESTONE_LABEL_PADDING: 8,
+  MILESTONE_LABEL_HEIGHT: 20,
+  MILESTONE_LABEL_OFFSET: 18,
+  FONT_FAMILY:
+    "500 13px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+}
+
+export {
+  NOT_AVAILABLE,
+  PROJECT_CHARTS,
+  ITEM_TYPES,
+  DEFAULT_CONFIG,
+  STATUS_COLORS,
+  DEFAULT_STATUS_COLOR,
+  TOOLTIP_FIELDS,
+  ALL_PROJECTS,
+  CHART_WORKLOAD_MODES,
+  MODE_CONFIG,
+  CHART_COLORS,
+  CANVAS_RENDERING,
+}

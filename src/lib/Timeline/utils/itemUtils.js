@@ -1,107 +1,96 @@
-/**
- * Item Utilities
- * Helper functions for timeline items
- */
-
-import moment from 'moment';
-import { DEFAULT_STATUS_COLOR } from '../../../constants/statusColors'; 
+import moment from 'moment'
+import { DEFAULT_STATUS_COLOR, ITEM_TYPES, STATUS_COLORS } from '../constants'
 
 /**
- * Item types
- */
-export const ITEM_TYPES = {
-  RANGE: 'range',      // Has startDate and endDate
-  MILESTONE: 'milestone' // Has only createdDate or single date
-};
-
-/**
- * Determine item type
- * PERFORMANCE: Fast type detection with explicit checks
+ * Determine if item is milestone or range type
+ *
  * @param {Object} item - Timeline item
- * @returns {string} ITEM_TYPES
+ * @return {string|null} ITEM_TYPES.MILESTONE, ITEM_TYPES.RANGE, or null
  */
-export const getItemType = (item) => {
+export const getItemType = item => {
   if (!item) {
-    return null;
+    return null
   }
-  
-  // Check flag from normalizeItem (already processed fake dates)
-  // If initially missing dates -> marked as milestone
+
   if (item._originallyMilestone === true) {
-    return ITEM_TYPES.MILESTONE;
+    return ITEM_TYPES.MILESTONE
   }
-  
-  // Otherwise -> RANGE (has real dates)
-  return ITEM_TYPES.RANGE;
+
+  return ITEM_TYPES.RANGE
 }
 
 /**
- * Get item date for positioning (handles both range and milestone)
- * @param {Object} item - Timeline item
- * @returns {moment|null} Date for positioning
+ * Convert date string to moment object for positioning
+ *
+ * @param {string|Date|null} date - Date value
+ * @return {moment|null} Moment object or null
  */
-export const getItemDate = (item) => {
-  // Priority: startDate > dueDate > createdDate (for milestones)
-  const dateValue = item.startDate || item.dueDate || item.createdDate;
-  
-  if (dateValue) {
-    return moment(dateValue);
+export const getItemDate = date => {
+  if (!date) {
+    return null
   }
-  
-  return null;
-};
+
+  return moment(date)
+}
 
 /**
- * Get item end date (for range items)
+ * Check if item represents a milestone
+ *
  * @param {Object} item - Timeline item
- * @returns {moment|null} End date
+ * @return {boolean} True if item is milestone
  */
-export const getItemEndDate = (item) => {
-  // Priority: resolvedDate > dueDate
-  // Use resolvedDate if available (actual end), otherwise use dueDate (planned end)
-  const dateValue = item.resolvedDate || item.dueDate;
-  
-  if (dateValue) {
-    return moment(dateValue);
+export const isMilestone = item => {
+  return getItemType(item) === ITEM_TYPES.MILESTONE
+}
+
+/**
+ * Get color for status from predefined color palette
+ *
+ * @param {string} status - Status name
+ * @param {Object} statusColorMap - Map of status to color index
+ * @return {string} Hex color code
+ */
+export const getStatusColor = (status, statusColorMap) => {
+  if (!status) {
+    return DEFAULT_STATUS_COLOR
   }
-  
-  return null;
-};
+
+  if (statusColorMap && statusColorMap[status] !== undefined) {
+    const colorIndex = statusColorMap[status]
+    if (colorIndex < STATUS_COLORS.length) {
+      return STATUS_COLORS[colorIndex]
+    }
+  }
+
+  return DEFAULT_STATUS_COLOR
+}
 
 /**
- * Check if item is milestone
- * @param {Object} item - Timeline item
- * @returns {boolean} True if milestone
+ * Normalize item structure with consistent properties and metadata
+ *
+ * @param {Object} item - Raw timeline item
+ * @return {Object} Normalized item with _type and _isValid flags
  */
-export const isMilestone = (item) => {
-  return getItemType(item) === ITEM_TYPES.MILESTONE;
-};
+export const normalizeItem = item => {
+  const type = getItemType(item)
+  const color = item.color || DEFAULT_STATUS_COLOR
 
-/**
- * Normalize item (ensure consistent structure)
- * PERFORMANCE: Optimized - avoid spread operator
- * @param {Object} item - Timeline item
- * @returns {Object} Normalized item
- */
-export const normalizeItem = (item) => {
-  const type = getItemType(item);
-  const color = item.color || DEFAULT_STATUS_COLOR;
-  
-  // OPTIMIZATION: Direct property assignment instead of spread
   return {
     id: item.id,
     name: item.name,
-    startDate: item.startDate,
-    dueDate: item.dueDate,
+    issueKey: item.issueKey,
+    startDateBefore: item.startDateBefore,
+    dueDateBefore: item.dueDateBefore,
+    startDateAfter: item.startDateAfter,
+    dueDateAfter: item.dueDateAfter,
+    resolvedDate: item.resolvedDate,
     createdDate: item.createdDate,
-    date: item.date,
     status: item.status,
-    progress: item.progress,
     duration: item.duration,
     lateTime: item.lateTime,
+    color: color,
     _originallyMilestone: item._originallyMilestone,
     _type: type,
     _isValid: type !== null,
-    color: color
-  };
-};
+  }
+}

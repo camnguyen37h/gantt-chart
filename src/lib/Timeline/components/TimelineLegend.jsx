@@ -1,76 +1,49 @@
-/**
- * Timeline Legend Component
- * Shows status legend with toggle functionality
- */
+import { isEmpty } from 'lodash'
+import PropTypes from 'prop-types'
+import { memo } from 'react'
+import { getStatusColor } from '../utils/itemUtils'
+import { TimelineLegendStyled } from './TimelineLegend.styled'
 
-import React, { memo, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { getStatusColor } from '../../../constants/statusColors';
-import './TimelineLegend.css';
-
-const TimelineLegend = memo(({ 
-  statuses = [],
-  statusColorMap = {},
-  visibleStatuses = {},
-  onStatusToggle
-}) => {
-  // Build status colors from map
-  const statusColors = useMemo(() => {
-    if (!statuses || statuses.length === 0) {
-      return {};
+const TimelineLegend = memo(
+  ({ statusColorMap = {}, visibleStatuses = {}, onStatusToggle }) => {
+    const handleStatusClick = status => {
+      if (onStatusToggle) {
+        onStatusToggle(status)
+      }
     }
-    
-    const colors = {};
-    for (let i = 0; i < statuses.length; i++) {
-      const status = statuses[i];
-      colors[status] = getStatusColor(status, statusColorMap);
-    }
-    return colors;
-  }, [statuses, statusColorMap]);
 
-  // Get status list (already sorted A-Z from parent)
-  const statusList = useMemo(() => {
-    if (!statuses || statuses.length === 0) {
-      return [];
-    }
-    return statuses;
-  }, [statuses]);
+    return (
+      <TimelineLegendStyled
+        style={
+          isEmpty(statusColorMap) ? { minHeight: 0, padding: 0 } : undefined
+        }>
+        {!isEmpty(statusColorMap) &&
+          Object.entries(statusColorMap).map(([status]) => {
+            const isVisible = visibleStatuses[status] !== false
+            const color = getStatusColor(status, statusColorMap)
 
-  const handleStatusClick = (status) => {
-    if (onStatusToggle) {
-      onStatusToggle(status);
-    }
-  };
-
-  return (
-    <div className="timeline-legend">
-      {statusList.map(status => {
-        const isVisible = visibleStatuses[status] !== false;
-        const color = statusColors[status];
-        
-        return (
-          <div
-            key={status}
-            className={`timeline-legend-item ${!isVisible ? 'hidden' : ''}`}
-            onClick={() => handleStatusClick(status)}
-          >
-            <span 
-              className="timeline-legend-color"
-              style={{ backgroundColor: color }}
-            />
-            <span className="timeline-legend-label">{status}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
-});
+            return (
+              <button
+                key={`status-${status}`}
+                className={`timeline-legend-item ${isVisible ? '' : 'hidden'}`}
+                onClick={() => handleStatusClick(status)}>
+                <span
+                  className="timeline-legend-color"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="timeline-legend-label">{status}</span>
+              </button>
+            )
+          })}
+      </TimelineLegendStyled>
+    )
+  }
+)
 
 TimelineLegend.propTypes = {
-  statuses: PropTypes.arrayOf(PropTypes.string),
   statusColorMap: PropTypes.object,
   visibleStatuses: PropTypes.object,
-  onStatusToggle: PropTypes.func
-};
+  onStatusToggle: PropTypes.func,
+}
 
-export default TimelineLegend;
+export default TimelineLegend

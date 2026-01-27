@@ -6,6 +6,7 @@
 export const mockApiResponse = [
   {
     issueId: "PRJ-001",
+    issueKey: "PRJ-001",
     issueName: "Global Payment Gateway Integration",
     startDate: "2024-01-15",
     dueDate: "2024-06-30",
@@ -15,6 +16,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-002",
+    issueKey: "PRJ-002",
     issueName: "Customer Portal Redesign",
     startDate: null,
     dueDate: "2024-03-31",
@@ -24,6 +26,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-003",
+    issueKey: "PRJ-003",
     issueName: "Mobile App Development Phase 1",
     startDate: "2024-02-01",
     dueDate: null,
@@ -33,6 +36,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-004",
+    issueKey: "PRJ-004",
     issueName: "Data Migration Project",
     startDate: "2024-03-15",
     dueDate: "2024-08-31",
@@ -42,6 +46,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-005",
+    issueKey: "PRJ-005",
     issueName: "API Security Enhancement",
     startDate: "2024-04-01",
     dueDate: "2024-07-15",
@@ -51,6 +56,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-006",
+    issueKey: "PRJ-006",
     issueName: "Legacy System Decommission",
     startDate: null,
     dueDate: null,
@@ -60,6 +66,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-007",
+    issueKey: "PRJ-007",
     issueName: "Cloud Infrastructure Migration",
     startDate: "2024-05-01",
     dueDate: "2024-12-31",
@@ -69,6 +76,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-008",
+    issueKey: "PRJ-008",
     issueName: "AI Chatbot Implementation",
     startDate: "2024-06-15",
     dueDate: "2024-11-30",
@@ -78,6 +86,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-009",
+    issueKey: "PRJ-009",
     issueName: "Blockchain Integration POC",
     startDate: null,
     dueDate: "2024-09-30",
@@ -87,6 +96,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-010",
+    issueKey: "PRJ-010",
     issueName: "Real-time Analytics Dashboard",
     startDate: "2024-07-01",
     dueDate: "2025-01-31",
@@ -96,6 +106,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-011",
+    issueKey: "PRJ-011",
     issueName: "Multi-language Support",
     startDate: "2024-08-15",
     dueDate: "2025-02-28",
@@ -105,6 +116,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-012",
+    issueKey: "PRJ-012",
     issueName: "Performance Optimization Initiative",
     startDate: "2024-09-01",
     dueDate: null,
@@ -114,6 +126,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-013",
+    issueKey: "PRJ-013",
     issueName: "Compliance Audit System",
     startDate: null,
     dueDate: "2025-03-31",
@@ -123,6 +136,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-014",
+    issueKey: "PRJ-014",
     issueName: "Microservices Architecture Transition",
     startDate: "2024-10-01",
     dueDate: "2025-06-30",
@@ -132,6 +146,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-015",
+    issueKey: "PRJ-015",
     issueName: "Advanced Reporting Module",
     startDate: "2024-11-15",
     dueDate: "2025-04-30",
@@ -141,6 +156,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-016",
+    issueKey: "PRJ-016",
     issueName: "Email Campaign Automation",
     startDate: null,
     dueDate: null,
@@ -150,6 +166,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-017",
+    issueKey: "PRJ-017",
     issueName: "Third-party Integration Hub",
     startDate: "2024-12-01",
     dueDate: "2025-05-31",
@@ -159,6 +176,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-018",
+    issueKey: "PRJ-018",
     issueName: "User Authentication Revamp",
     startDate: "2025-01-15",
     dueDate: "2025-07-31",
@@ -168,6 +186,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-019",
+    issueKey: "PRJ-019",
     issueName: "Inventory Management System",
     startDate: "2025-02-01",
     dueDate: null,
@@ -177,6 +196,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-020",
+    issueKey: "PRJ-020",
     issueName: "Customer Feedback Portal",
     startDate: null,
     dueDate: "2025-08-31",
@@ -186,6 +206,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-021",
+    issueKey: "PRJ-021",
     issueName: "DevOps Pipeline Enhancement",
     startDate: "2025-03-01",
     dueDate: "2025-09-30",
@@ -195,6 +216,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-022",
+    issueKey: "PRJ-022",
     issueName: "Mobile App Version 2.0",
     startDate: "2025-04-15",
     dueDate: "2025-12-31",
@@ -204,6 +226,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-023",
+    issueKey: "PRJ-023",
     issueName: "Social Media Integration",
     startDate: "2025-05-01",
     dueDate: "2025-10-31",
@@ -213,6 +236,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-024",
+    issueKey: "PRJ-024",
     issueName: "Video Conferencing Feature",
     startDate: null,
     dueDate: null,
@@ -222,6 +246,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-025",
+    issueKey: "PRJ-025",
     issueName: "Smart Notification System",
     startDate: "2025-06-01",
     dueDate: "2026-01-31",
@@ -231,6 +256,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-026",
+    issueKey: "PRJ-026",
     issueName: "Document Management System",
     startDate: "2025-07-15",
     dueDate: null,
@@ -240,6 +266,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-027",
+    issueKey: "PRJ-027",
     issueName: "Workflow Automation Engine",
     startDate: "2025-08-01",
     dueDate: "2026-03-31",
@@ -249,6 +276,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-028",
+    issueKey: "PRJ-028",
     issueName: "Advanced Search Functionality",
     startDate: null,
     dueDate: "2026-05-31",
@@ -258,6 +286,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-029",
+    issueKey: "PRJ-029",
     issueName: "Payment Processing Upgrade",
     startDate: "2025-10-01",
     dueDate: "2026-04-30",
@@ -267,6 +296,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-030",
+    issueKey: "PRJ-030",
     issueName: "Enterprise Dashboard Suite",
     startDate: "2026-01-20",
     dueDate: "2026-01-21",      // Due sau 1 ngày
@@ -276,6 +306,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-031",
+    issueKey: "PRJ-031",
     issueName: "Data Warehouse Modernization",
     startDate: "2024-01-01",
     dueDate: "2024-09-30",
@@ -285,6 +316,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-032",
+    issueKey: "PRJ-032",
     issueName: "CRM Integration Suite",
     startDate: null,
     dueDate: "2024-05-31",
@@ -294,6 +326,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-033",
+    issueKey: "PRJ-033",
     issueName: "IoT Device Management",
     startDate: "2024-03-01",
     dueDate: null,
@@ -303,6 +336,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-034",
+    issueKey: "PRJ-034",
     issueName: "Supply Chain Optimization",
     startDate: "2024-04-15",
     dueDate: "2024-10-31",
@@ -312,6 +346,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-035",
+    issueKey: "PRJ-035",
     issueName: "E-commerce Platform Upgrade",
     startDate: null,
     dueDate: null,
@@ -321,6 +356,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-036",
+    issueKey: "PRJ-036",
     issueName: "Machine Learning Pipeline",
     startDate: "2024-05-15",
     dueDate: "2025-02-28",
@@ -330,6 +366,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-037",
+    issueKey: "PRJ-037",
     issueName: "Vendor Management System",
     startDate: "2024-06-01",
     dueDate: "2024-12-15",
@@ -339,6 +376,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-038",
+    issueKey: "PRJ-038",
     issueName: "Digital Asset Management",
     startDate: null,
     dueDate: "2025-01-31",
@@ -348,6 +386,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-039",
+    issueKey: "PRJ-039",
     issueName: "Network Security Hardening",
     startDate: "2024-08-01",
     dueDate: null,
@@ -357,6 +396,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-040",
+    issueKey: "PRJ-040",
     issueName: "Business Intelligence Portal",
     startDate: "2024-09-15",
     dueDate: "2025-05-31",
@@ -366,6 +406,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-041",
+    issueKey: "PRJ-041",
     issueName: "API Gateway Modernization",
     startDate: null,
     dueDate: null,
@@ -375,6 +416,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-042",
+    issueKey: "PRJ-042",
     issueName: "Customer Loyalty Program",
     startDate: "2024-11-01",
     dueDate: "2025-06-30",
@@ -384,6 +426,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-043",
+    issueKey: "PRJ-043",
     issueName: "Disaster Recovery System",
     startDate: "2024-12-15",
     dueDate: "2025-08-31",
@@ -393,6 +436,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-044",
+    issueKey: "PRJ-044",
     issueName: "Edge Computing Infrastructure",
     startDate: "2025-01-01",
     dueDate: null,
@@ -402,6 +446,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-045",
+    issueKey: "PRJ-045",
     issueName: "Compliance Reporting Tool",
     startDate: null,
     dueDate: "2025-09-30",
@@ -411,6 +456,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-046",
+    issueKey: "PRJ-046",
     issueName: "Content Delivery Network",
     startDate: "2025-02-15",
     dueDate: "2025-11-30",
@@ -420,6 +466,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-047",
+    issueKey: "PRJ-047",
     issueName: "HR Management System",
     startDate: "2025-03-20",
     dueDate: "2025-10-15",
@@ -429,6 +476,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-048",
+    issueKey: "PRJ-048",
     issueName: "Blockchain Ledger System",
     startDate: null,
     dueDate: null,
@@ -438,6 +486,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-049",
+    issueKey: "PRJ-049",
     issueName: "Voice Recognition Integration",
     startDate: "2025-05-10",
     dueDate: "2026-02-28",
@@ -447,6 +496,7 @@ export const mockApiResponse = [
   },
   {
     issueId: "PRJ-050",
+    issueKey: "PRJ-050",
     issueName: "Quantum Computing Research",
     startDate: "2025-06-15",
     dueDate: "2026-08-31",
@@ -467,3 +517,4 @@ export const fetchTimelineData = () => {
     }, 300);
   });
 };
+
