@@ -32,6 +32,11 @@ const TimelineCanvas = ({
   const dprRef = useRef(1)
   const H_PADDING = 60
 
+  // Drag-to-scroll state
+  const isDraggingRef = useRef(false)
+  const dragStartXRef = useRef(0)
+  const scrollLeftRef = useRef(0)
+
   // Calculate canvas dimensions
   const canvasWidth =
     timelineData && timelineData.totalWidth ? timelineData.totalWidth : 1000
@@ -155,6 +160,76 @@ const TimelineCanvas = ({
     }
   }, [timelineData, layoutItems, loading, draw, isZooming])
 
+  // Drag-to-scroll handlers
+  useEffect(() => {
+    const container = containerRef.current
+    const overlay = overlayRef.current
+    if (!container || !overlay) return
+
+    const handleMouseDown = e => {
+      // Only trigger drag on left mouse button
+      if (e.button !== 0) return
+
+      // Check if clicking on overlay (not on an item)
+      const rect = overlay.getBoundingClientRect()
+      const isOnOverlay = 
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
+
+      if (!isOnOverlay) return
+
+      isDraggingRef.current = true
+      dragStartXRef.current = e.pageX
+      scrollLeftRef.current = container.scrollLeft
+      container.style.cursor = 'grabbing'
+      container.style.userSelect = 'none'
+      overlay.style.pointerEvents = 'none'
+    }
+
+    const handleMouseMove = e => {
+      if (!isDraggingRef.current) return
+
+      e.preventDefault()
+
+      const deltaX = e.pageX - dragStartXRef.current
+
+      // Only scroll horizontally
+      container.scrollLeft = scrollLeftRef.current - deltaX
+    }
+
+    const handleMouseUp = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false
+        container.style.cursor = ''
+        container.style.userSelect = ''
+        overlay.style.pointerEvents = ''
+      }
+    }
+
+    const handleMouseLeave = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false
+        container.style.cursor = ''
+        container.style.userSelect = ''
+        overlay.style.pointerEvents = ''
+      }
+    }
+
+    container.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+    container.addEventListener('mouseleave', handleMouseLeave)
+
+    return () => {
+      container.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      container.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [])
+
   // Handle canvas events
   useEffect(() => {
     const overlay = overlayRef.current
@@ -162,6 +237,9 @@ const TimelineCanvas = ({
     if (!overlay || !container) return
 
     const tooltip = tooltipRef.current
+    
+    // Enable pointer events for overlay to handle hover
+    overlay.style.pointerEvents = 'auto'
 
     return handleCanvasEvents({
       overlay,

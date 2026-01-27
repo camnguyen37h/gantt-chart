@@ -6,7 +6,14 @@ const TimelineCanvasStyled = styled.div`
   display: flex;
   flex-direction: column;
   will-change: opacity;
-  overflow: visible;
+  overflow-x: auto;
+  overflow-y: visible;
+  cursor: grab;
+  padding-top: 50px;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   .timeline-canvas-wrapper {
     position: relative;
@@ -29,7 +36,7 @@ const TimelineCanvasStyled = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    pointer-events: auto;
+    pointer-events: none;
     z-index: 5;
   }
 
@@ -39,7 +46,7 @@ const TimelineCanvasStyled = styled.div`
     bottom: -1px;
     width: 2px;
     background: #db372d;
-    z-index: 50;
+    z-index: 100;
     pointer-events: none;
   }
 
@@ -54,6 +61,7 @@ const TimelineCanvasStyled = styled.div`
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(228, 66, 88, 0.4);
     animation: fadeInCentered 0.5s ease-out 0.4s both;
+    z-index: 101;
   }
 
   .current-date-label {
@@ -69,7 +77,7 @@ const TimelineCanvasStyled = styled.div`
     font-weight: 600;
     white-space: nowrap;
     box-shadow: 0 2px 6px rgba(228, 66, 88, 0.3);
-    z-index: 60;
+    z-index: 102;
     animation: fadeInCentered 0.5s ease-out 0.5s both;
   }
 

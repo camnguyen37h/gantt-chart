@@ -215,11 +215,18 @@ export const useTimeline = (items = [], config = {}) => {
       return
     }
 
+    // Find the actual scrollable container (TimelineCanvas container)
     const container = containerRef.current
-    const containerWidth = container.clientWidth
+    const scrollableContainer = container.querySelector('.timeline-canvas-container')
+    
+    if (!scrollableContainer) {
+      return
+    }
+
+    const containerWidth = scrollableContainer.clientWidth
     const scrollLeft = currentDatePosition - containerWidth / 2 + 60
 
-    container.scrollTo({
+    scrollableContainer.scrollTo({
       left: Math.max(0, scrollLeft),
       behavior: 'smooth',
     })
