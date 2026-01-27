@@ -1,6 +1,7 @@
 import { DateFormat } from '../constants/DateFormat'
 import { isArray, isEmpty, isObject } from 'lodash'
 import moment from 'moment'
+import { STATUS_CONFIG } from '../constants'
 
 /**
  * Transform API response item to normalized timeline item structure
@@ -57,7 +58,25 @@ export const normalizeTimelineItem = item => {
   }
 
   const duration = calculateDiffDay(startDate, dueDate, true)
-  const lateTime = calculateDiffDay(resolvedDate, dueDate, false)
+  
+  // Calculate lateTime based on resolved date or today
+  let lateTime
+  if (resolvedDate) {
+    // If resolved, compare resolved date with due date
+    lateTime = calculateDiffDay(resolvedDate, dueDate, false)
+  } else {
+    // If not resolved, compare today with due date
+    const today = moment().format(DateFormat.YYYY_MM_DD)
+    const diffFromToday = calculateDiffDay(today, dueDate, false)
+    
+    // If due date > today (still has time), no late time yet
+    if (diffFromToday > 0) {
+      lateTime = undefined
+    } else {
+      // If due date <= today, it's late
+      lateTime = diffFromToday
+    }
+  }
 
   return {
     id: issueId,
@@ -111,7 +130,7 @@ export const calculateDiffDay = (startDate, dueDate, onlyPositive = false) => {
  *
  * @param {Array} items - Array of timeline items
  *
- * @return {Array} Sorted array of unique status strings
+ * @return {Array} Sorted array of unique status strings by STATUS_CONFIG order
  */
 export const extractUniqueStatuses = items => {
   if (!items || !Array.isArray(items)) {
@@ -127,7 +146,16 @@ export const extractUniqueStatuses = items => {
   }
 
   const uniqueStatuses = Array.from(statusSet)
-  uniqueStatuses.sort((a, b) => a.localeCompare(b))
+  
+  // Sort by STATUS_CONFIG order, unknowns go to end
+  uniqueStatuses.sort((a, b) => {
+    const orderA = STATUS_CONFIG[a]?.order ?? 999
+    const orderB = STATUS_CONFIG[b]?.order ?? 999
+    if (orderA !== orderB) {
+      return orderA - orderB
+    }
+    return a.localeCompare(b)
+  })
 
   return uniqueStatuses
 }

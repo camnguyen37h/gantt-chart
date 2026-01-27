@@ -183,6 +183,7 @@ export const useTimeline = (items = [], config = {}) => {
         return {
           left: `${left}px`,
           top: `${top}px`,
+          height: `${finalConfig.itemHeight}px`,
         }
       }
 

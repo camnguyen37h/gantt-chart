@@ -54,10 +54,10 @@ const ProjectChartTabs = ({ projectId, projectStart, projectEnd }) => {
     return dataSource.map(item => {
       return {
         ...item,
-        color: getStatusColor(item.status, statusColorMap),
+        color: getStatusColor(item.status),
       }
     })
-  }, [dataSource, statusColorMap])
+  }, [dataSource])
 
   const filteredItems = useMemo(() => {
     return filterByVisibleStatuses(itemsWithColors, visibleStatuses)

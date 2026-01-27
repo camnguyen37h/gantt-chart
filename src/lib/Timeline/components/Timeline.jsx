@@ -2,12 +2,13 @@ import { Button, Icon } from 'antd'
 import { isObject } from 'lodash'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useState, useMemo } from 'react'
 import { TimelineStyled } from './Timeline.styled'
 import TimelineCanvas from './TimelineCanvas'
 import TimelineLegend from './TimelineLegend'
 import useTimeline from '../hooks/useTimeline'
 import { DateFormat } from '../constants/DateFormat'
+import { isMilestone } from '../utils/itemUtils'
 
 const Timeline = memo(
   ({
@@ -32,6 +33,29 @@ const Timeline = memo(
       isZooming,
       zoomLevel,
     } = useTimeline(items, config)
+
+    const [activeFilters, setActiveFilters] = useState({
+      range: true,
+      milestone: true,
+    })
+
+    const filteredLayoutItems = useMemo(() => {
+      if (!layoutItems) return layoutItems
+      
+      return layoutItems.filter(item => {
+        const isItemMilestone = isMilestone(item)
+        if (isItemMilestone && !activeFilters.milestone) return false
+        if (!isItemMilestone && !activeFilters.range) return false
+        return true
+      })
+    }, [layoutItems, activeFilters])
+
+    const toggleFilter = (filterType) => {
+      setActiveFilters(prev => ({
+        ...prev,
+        [filterType]: !prev[filterType],
+      }))
+    }
 
     useEffect(() => {
       const container = containerRef.current
@@ -151,7 +175,7 @@ const Timeline = memo(
             ) : (
               <TimelineCanvas
                 timelineData={timelineData}
-                layoutItems={layoutItems}
+                layoutItems={filteredLayoutItems}
                 gridHeight={gridHeight}
                 currentDatePosition={currentDatePosition}
                 getItemStyle={getItemStyle}
@@ -171,10 +195,16 @@ const Timeline = memo(
 
         {/* Timeline Legend */}
         <div className="timeline-legend-types">
-          <button className="timeline-legend-type range-time">
+          <button 
+            className={`timeline-legend-type range-time ${activeFilters.range ? '' : 'hidden'}`}
+            onClick={() => toggleFilter('range')}
+          >
             Delivery ticket
           </button>
-          <button className="timeline-legend-type abnormal">
+          <button 
+            className={`timeline-legend-type abnormal ${activeFilters.milestone ? '' : 'hidden'}`}
+            onClick={() => toggleFilter('milestone')}
+          >
             Delivery ticket unable to determine timeframe
           </button>
         </div>
@@ -189,8 +219,10 @@ Timeline.propTypes = {
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       name: PropTypes.string.isRequired,
-      startDate: PropTypes.string.isRequired,
-      endDate: PropTypes.string.isRequired,
+      startDateBefore: PropTypes.string,
+      dueDateBefore: PropTypes.string,
+      startDateAfter: PropTypes.string,
+      dueDateAfter: PropTypes.string,
       status: PropTypes.string,
     })
   ).isRequired,

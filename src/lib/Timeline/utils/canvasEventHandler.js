@@ -1,4 +1,5 @@
-import { NOT_AVAILABLE, TOOLTIP_FIELDS } from '../constants'
+import { NOT_AVAILABLE, TOOLTIP_FIELDS, CANVAS_RENDERING } from '../constants'
+import { isMilestone } from './itemUtils'
 
 /**
  * Check if the point is inside rectangular bounds
@@ -19,7 +20,7 @@ const isPointInRect = (x, y, rect) => {
 }
 
 /**
- * Check if point is inside milestone diamond or label area
+ * Check if point is inside milestone diamond
  *
  * @param {number} x - X-coordinate
  * @param {number} y - Y-coordinate
@@ -30,42 +31,12 @@ const isPointInRect = (x, y, rect) => {
 const isPointInMilestone = (x, y, style) => {
   const left = Number.parseFloat(style.left)
   const top = Number.parseFloat(style.top)
-  const size = 20
+  const size = CANVAS_RENDERING.MILESTONE_SIZE
   const centerX = left
   const centerY = top + 15
 
-  const inDiamond = Math.abs(x - centerX) + Math.abs(y - centerY) <= size / 2
-
-  if (inDiamond) {
-    return true
-  }
-
-  const labelY = centerY + size / 2 + 18
-  const labelHeight = 18
-  const labelWidth = 120
-
-  const labelLeft = centerX - labelWidth / 2
-  const labelRight = centerX + labelWidth / 2
-  const labelTop = labelY - 2
-  const labelBottom = labelTop + labelHeight
-
-  return x >= labelLeft && x <= labelRight && y >= labelTop && y <= labelBottom
-}
-
-/**
- * Check if the item is at the specified position
- *
- * @param {Object} item - Timeline item
- * @param {number} x - X-coordinate
- * @param {number} y - Y-coordinate
- * @param {Object} style - Item style properties
- *
- * @return {boolean} True if item is at position
- */
-const isItemAtPosition = (item, x, y, style) => {
-  return item._originallyMilestone
-    ? isPointInMilestone(x, y, style)
-    : isPointInRect(x, y, style)
+  // Check diamond area using Manhattan distance
+  return Math.abs(x - centerX) + Math.abs(y - centerY) <= size / 2
 }
 
 /**
@@ -79,15 +50,28 @@ const isItemAtPosition = (item, x, y, style) => {
  * @return {Object|null} Found item or null
  */
 const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
-  for (let i = layoutItems.length - 1; i >= 0; i--) {
+  // First pass: check for milestones (they should have priority)
+  for (let i = 0; i < layoutItems.length; i++) {
     const item = layoutItems[i]
+    if (!isMilestone(item)) continue
+    
     const style = getItemStyle(item)
+    if (!style) continue
 
-    if (!style) {
-      continue
+    if (isPointInMilestone(x, y, style)) {
+      return item
     }
+  }
 
-    if (isItemAtPosition(item, x, y, style)) {
+  // Second pass: check for ranges
+  for (let i = 0; i < layoutItems.length; i++) {
+    const item = layoutItems[i]
+    if (isMilestone(item)) continue
+    
+    const style = getItemStyle(item)
+    if (!style) continue
+
+    if (isPointInRect(x, y, style)) {
       return item
     }
   }
@@ -112,6 +96,7 @@ export const handleCanvasEvents = options => {
     onItemHover,
     onMouseLeave,
     onScrollStart,
+    horizontalPadding = 0,
   } = options
 
   let currentHoveredItem = null
@@ -130,7 +115,7 @@ export const handleCanvasEvents = options => {
     const scrollTop = container.scrollTop || 0
 
     return {
-      x: event.clientX - rect.left + scrollLeft,
+      x: event.clientX - rect.left + scrollLeft - horizontalPadding,
       y: event.clientY - rect.top + scrollTop,
     }
   }
@@ -145,12 +130,6 @@ export const handleCanvasEvents = options => {
    */
   const showTooltip = (item, event) => {
     if (!tooltip) return
-
-    const rect = container.getBoundingClientRect()
-    const scrollLeft = container.scrollLeft || 0
-    const scrollTop = container.scrollTop || 0
-    const mouseX = event.clientX - rect.left + scrollLeft
-    const mouseY = event.clientY - rect.top + scrollTop
 
     const titleEl = tooltip.querySelector('.tooltip-title')
     const detailsEl = tooltip.querySelector('.tooltip-details')
@@ -178,20 +157,42 @@ export const handleCanvasEvents = options => {
 
     requestAnimationFrame(() => {
       const tooltipRect = tooltip.getBoundingClientRect()
-      const containerRect = container.getBoundingClientRect()
-
-      const clientX = event.clientX - containerRect.left
-      const clientY = event.clientY - containerRect.top
-      let left = mouseX + 15
-      let top = mouseY + 10
-
-      if (clientX + 15 + tooltipRect.width > containerRect.width) {
-        left = mouseX - tooltipRect.width - 15
+      
+      // Use screen coordinates (fixed positioning)
+      const mouseScreenX = event.clientX
+      const mouseScreenY = event.clientY
+      
+      // Calculate space on both sides
+      const spaceOnRight = window.innerWidth - mouseScreenX
+      const spaceOnLeft = mouseScreenX
+      const spaceBelow = window.innerHeight - mouseScreenY
+      const spaceAbove = mouseScreenY
+      const tooltipWidth = tooltipRect.width + 15
+      const tooltipHeight = tooltipRect.height + 10
+      
+      let left, top
+      
+      // Show on side with more space (horizontal)
+      if (spaceOnRight >= spaceOnLeft || spaceOnRight >= tooltipWidth) {
+        // Show on right
+        left = mouseScreenX + 15
+      } else {
+        // Show on left
+        left = mouseScreenX - tooltipRect.width - 15
       }
-
-      if (clientY + 10 + tooltipRect.height > containerRect.height) {
-        top = mouseY - tooltipRect.height - 10
+      
+      // Show on side with more space (vertical)
+      if (spaceBelow >= spaceAbove || spaceBelow >= tooltipHeight) {
+        // Show below
+        top = mouseScreenY + 10
+      } else {
+        // Show above
+        top = mouseScreenY - tooltipRect.height - 10
       }
+      
+      // Ensure tooltip doesn't go off screen
+      left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10))
+      top = Math.max(10, Math.min(top, window.innerHeight - tooltipRect.height - 10))
 
       tooltip.style.left = `${left}px`
       tooltip.style.top = `${top}px`
@@ -229,21 +230,40 @@ export const handleCanvasEvents = options => {
     mouseY
   ) => {
     const tooltipRect = tooltip.getBoundingClientRect()
-    const containerRect = container.getBoundingClientRect()
-
-    const clientX = event.clientX - containerRect.left
-    const clientY = event.clientY - containerRect.top
-
-    let left = mouseX + 15
-    let top = mouseY + 10
-
-    if (clientX + 15 + tooltipRect.width > containerRect.width) {
-      left = mouseX - tooltipRect.width - 15
+    
+    // Use screen coordinates (fixed positioning)
+    const mouseScreenX = event.clientX
+    const mouseScreenY = event.clientY
+    
+    // Calculate space on both sides
+    const spaceOnRight = window.innerWidth - mouseScreenX
+    const spaceOnLeft = mouseScreenX
+    const spaceBelow = window.innerHeight - mouseScreenY
+    const spaceAbove = mouseScreenY
+    const tooltipWidth = tooltipRect.width + 15
+    const tooltipHeight = tooltipRect.height + 10
+    
+    let left, top
+    
+    // Show on side with more space (horizontal)
+    if (spaceOnRight >= spaceOnLeft || spaceOnRight >= tooltipWidth) {
+      left = mouseScreenX + 15
+    } else {
+      left = mouseScreenX - tooltipRect.width - 15
     }
-
-    if (clientY + 10 + tooltipRect.height > containerRect.height) {
-      top = mouseY - tooltipRect.height - 10
+    
+    // Show on side with more space (vertical)
+    if (spaceBelow >= spaceAbove || spaceBelow >= tooltipHeight) {
+      // Show below
+      top = mouseScreenY + 10
+    } else {
+      // Show above
+      top = mouseScreenY - tooltipRect.height - 10
     }
+    
+    // Ensure tooltip doesn't go off screen
+    left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10))
+    top = Math.max(10, Math.min(top, window.innerHeight - tooltipRect.height - 10))
 
     return { left, top }
   }

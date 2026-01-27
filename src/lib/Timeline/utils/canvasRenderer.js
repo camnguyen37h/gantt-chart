@@ -1,20 +1,34 @@
 import {
   DEFAULT_CONFIG,
-  DEFAULT_STATUS_COLOR,
+  DEFAULT_STATUS_CONFIG,
   NOT_AVAILABLE,
   CANVAS_RENDERING,
+  STATUS_CONFIG,
 } from '../constants'
 import { isMilestone } from './itemUtils'
 
-const {
-  MILESTONE_SIZE,
-  MILESTONE_CENTER_DOT_RADIUS,
-  MILESTONE_LABEL_MAX_WIDTH,
-  MILESTONE_LABEL_PADDING,
-  MILESTONE_LABEL_HEIGHT,
-  MILESTONE_LABEL_OFFSET,
-  FONT_FAMILY,
-} = CANVAS_RENDERING
+const { MILESTONE_SIZE, MILESTONE_CENTER_DOT_RADIUS, MILESTONE_LABEL_HEIGHT } =
+  CANVAS_RENDERING
+
+/**
+ * Get text color for a given status
+ *
+ * @param {string} status - Status name
+ *
+ * @return {string} Hex color code for text
+ */
+const getStatusTextColor = status => {
+  if (!status) {
+    return DEFAULT_STATUS_CONFIG.color
+  }
+
+  const config = STATUS_CONFIG[status]
+  if (config) {
+    return config.color
+  }
+
+  return DEFAULT_STATUS_CONFIG.color
+}
 
 /**
  * Draw timeline on canvas with items and grid lines
@@ -145,6 +159,25 @@ const drawTimelineItems = (
   const zoomLevel = options.zoomLevel || 1
   const detailLevel = getDetailLevel(zoomLevel)
 
+  // Draw hover background first (behind all items)
+  if (hoveredId !== null) {
+    for (let i = 0; i < itemCount; i++) {
+      const item = layoutItems[i]
+      if (item.id === hoveredId) {
+        const style = getItemStyle(item)
+        const top = Number.parseFloat(style.top)
+        const height = Number.parseFloat(style.height)
+
+        const padding = 8
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'
+        // Fill entire row width
+        ctx.fillRect(0, top - padding, ctx.canvas.width, height + padding * 2)
+        break
+      }
+    }
+  }
+
   for (let i = 0; i < itemCount; i++) {
     const item = layoutItems[i]
     const style = getItemStyle(item)
@@ -174,29 +207,6 @@ const getEffectiveProgress = (animationProgress, options) => {
 }
 
 /**
- * Apply shadow effect based on detail level and hover state
- *
- * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {string} detailLevel - Current detail level
- * @param {boolean} isHovered - Whether item is hovered
- *
- * @return {void}
- */
-const applyShadow = (ctx, detailLevel, isHovered) => {
-  if (detailLevel !== 'normal') return
-
-  if (isHovered) {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.18)'
-    ctx.shadowBlur = 12
-    ctx.shadowOffsetY = 4
-  } else {
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.12)'
-    ctx.shadowBlur = 3
-    ctx.shadowOffsetY = 1
-  }
-}
-
-/**
  * Clear all shadow effects from canvas context
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
@@ -222,12 +232,19 @@ const clearShadow = ctx => {
 const drawBarBackground = (ctx, bounds, color, detailLevel) => {
   ctx.fillStyle = color
 
+  //TODO: Border radius for ultra-low detail level can be optimized
   if (detailLevel === 'ultra-low') {
     ctx.fillRect(bounds.left, bounds.top, bounds.width, bounds.height)
+    ctx.strokeStyle = '#0052cc'
+    ctx.lineWidth = 1
+    ctx.strokeRect(bounds.left, bounds.top, bounds.width, bounds.height)
   } else {
     ctx.beginPath()
     ctx.roundRect(bounds.left, bounds.top, bounds.width, bounds.height, 4)
     ctx.fill()
+    ctx.strokeStyle = '#0052cc'
+    ctx.lineWidth = 1
+    ctx.stroke()
   }
 }
 
@@ -262,11 +279,12 @@ const truncateText = (ctx, text, maxWidth) => {
  * Configure canvas context for text rendering
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
+ * @param {string} textColor - Text color to use
  *
  * @return {void}
  */
-const setupTextContext = ctx => {
-  ctx.fillStyle = 'white'
+const setupTextContext = (ctx, textColor = 'white') => {
+  ctx.fillStyle = textColor
   ctx.font =
     "500 13px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
   ctx.textBaseline = 'middle'
@@ -283,7 +301,8 @@ const setupTextContext = ctx => {
  * @return {void}
  */
 const drawTaskBarText = (ctx, item, bounds, warningWidth = 0) => {
-  setupTextContext(ctx)
+  const textColor = getStatusTextColor(item.status)
+  setupTextContext(ctx, textColor)
 
   const textX = bounds.left + 12
   const textY = bounds.top + bounds.height / 2
@@ -296,6 +315,30 @@ const drawTaskBarText = (ctx, item, bounds, warningWidth = 0) => {
   const displayText = truncateText(ctx, text, maxTextWidth)
 
   ctx.fillText(displayText, textX, textY)
+}
+
+/**
+ * Check if item is on-time (resolved before due date or still has time)
+ *
+ * @param {Object} item - Timeline item
+ *
+ * @return {boolean} True if on-time
+ */
+const isOnTime = item => {
+  // Only show success indicator if actually resolved on-time
+  // lateTime > 0 means resolved before due date
+  return item.lateTime !== undefined && item.lateTime > 0
+}
+
+/**
+ * Check if item is late
+ *
+ * @param {Object} item - Timeline item
+ *
+ * @return {boolean} True if late
+ */
+const isLate = item => {
+  return item.lateTime !== undefined && item.lateTime < 0
 }
 
 /**
@@ -316,13 +359,23 @@ const drawTaskBarContent = (ctx, item, bounds, detailLevel, options) => {
     clearShadow(ctx)
   }
 
-  const hasWarning = item.lateTime && item.lateTime < 0
-  const warningWidth = hasWarning ? 12 : 0
+  const hasWarning = isLate(item)
+  const hasSuccess = isOnTime(item)
+  const indicatorWidth = hasWarning || hasSuccess ? 12 : 0
 
-  drawTaskBarText(ctx, item, bounds, warningWidth)
+  drawTaskBarText(ctx, item, bounds, indicatorWidth)
 
   if (hasWarning) {
     drawWarningIndicator(
+      ctx,
+      bounds.left + bounds.width,
+      bounds.top,
+      bounds.height,
+      bounds.width,
+      options.zoomLevel
+    )
+  } else if (hasSuccess) {
+    drawSuccessIndicator(
       ctx,
       bounds.left + bounds.width,
       bounds.top,
@@ -356,10 +409,13 @@ const drawTaskBar = (ctx, item, style, renderState, options) => {
 
   ctx.save()
 
-  applyShadow(ctx, detailLevel, isHovered)
+  if (isHovered) {
+    ctx.globalAlpha = 0.7
+  }
 
   const bounds = { left, top, width, height }
-  const barColor = style.backgroundColor || item.color || DEFAULT_STATUS_COLOR
+  const barColor =
+    style.backgroundColor || item.color || DEFAULT_STATUS_CONFIG.backgroundColor
   drawBarBackground(ctx, bounds, barColor, detailLevel)
 
   drawTaskBarContent(ctx, item, bounds, detailLevel, options)
@@ -392,6 +448,41 @@ const drawWarningIndicator = (ctx, right, top, height, barWidth, zoomLevel) => {
 
   ctx.save()
   ctx.fillStyle = '#f5222d'
+  ctx.beginPath()
+  ctx.moveTo(right - size, top)
+  ctx.lineTo(right - radius, top)
+  ctx.quadraticCurveTo(right, top, right, top + radius)
+  ctx.lineTo(right, top + size)
+  ctx.closePath()
+  ctx.fill()
+  ctx.restore()
+}
+
+/**
+ * Draw success indicator checkmark for on-time tasks
+ *
+ * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
+ * @param {number} right - Right edge x-coordinate
+ * @param {number} top - Top edge y-coordinate
+ * @param {number} height - Bar height
+ * @param {number} barWidth - Bar width for scaling
+ * @param {number} zoomLevel - Current zoom level
+ *
+ * @return {void}
+ */
+const drawSuccessIndicator = (ctx, right, top, height, barWidth, zoomLevel) => {
+  const MAX_SIZE = 12
+  const SCALE_FACTOR = 0.4
+  const MIN_SIZE = (DEFAULT_CONFIG.pixelsPerDay - 1) * zoomLevel
+
+  const scaledSize = barWidth
+    ? Math.min(MAX_SIZE, Math.max(MIN_SIZE, barWidth * SCALE_FACTOR))
+    : MAX_SIZE
+  const size = Math.floor(scaledSize)
+  const radius = Math.min(4, size / 2)
+
+  ctx.save()
+  ctx.fillStyle = '#52c41a'
   ctx.beginPath()
   ctx.moveTo(right - size, top)
   ctx.lineTo(right - radius, top)
@@ -440,7 +531,7 @@ const applyMilestoneTransform = (ctx, centerX, centerY, scale) => {
 const drawMilestoneDiamond = (ctx, centerX, centerY, color) => {
   const halfSize = MILESTONE_SIZE / 2
 
-  ctx.fillStyle = color || DEFAULT_STATUS_COLOR
+  ctx.fillStyle = color || DEFAULT_STATUS_CONFIG.backgroundColor
   ctx.beginPath()
   ctx.moveTo(centerX, centerY - halfSize)
   ctx.lineTo(centerX + halfSize, centerY)
@@ -448,6 +539,10 @@ const drawMilestoneDiamond = (ctx, centerX, centerY, color) => {
   ctx.lineTo(centerX - halfSize, centerY)
   ctx.closePath()
   ctx.fill()
+
+  ctx.strokeStyle = '#0052cc'
+  ctx.lineWidth = 1.5
+  ctx.stroke()
 }
 
 /**
@@ -541,7 +636,9 @@ const drawMilestone = (ctx, item, style, renderState, options) => {
 
   ctx.save()
 
-  applyShadow(ctx, detailLevel, isHovered)
+  if (isHovered) {
+    ctx.globalAlpha = 0.7
+  }
 
   const scale = getAnimationScale(progress)
   applyMilestoneTransform(ctx, centerX, centerY, scale)

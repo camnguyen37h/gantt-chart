@@ -20,7 +20,7 @@ const TimelineLegend = memo(
         {!isEmpty(statusColorMap) &&
           Object.entries(statusColorMap).map(([status]) => {
             const isVisible = visibleStatuses[status] !== false
-            const color = getStatusColor(status, statusColorMap)
+            const color = getStatusColor(status)
 
             return (
               <button

@@ -117,7 +117,7 @@ export const calculateGridHeight = (layoutItems, rowHeight) => {
     }
   }
 
-  return (maxRow + 1) * rowHeight + 40
+  return (maxRow + 1) * rowHeight + 16
 }
 
 /**

@@ -13,8 +13,8 @@ const ITEM_TYPES = {
 }
 
 const DEFAULT_CONFIG = {
-  rowHeight: 80,
-  itemHeight: 34,
+  rowHeight: 44,
+  itemHeight: 32,
   itemPadding: 16,
   pixelsPerDay: 4, // Width in pixels per day for timeline (compact view)
   minZoomLevel: 0.7,
@@ -27,22 +27,48 @@ const DEFAULT_CONFIG = {
   minContentWidth: 800, // Minimum width for timeline content (px)
 }
 
-const STATUS_COLORS = [
-  '#0052cc',
-  '#4CAF50',
-  '#78909C',
-  '#0052cc',
-  '#4CAF50',
-  '#78909C',
-  '#0052cc',
-  '#4CAF50',
-  '#78909C',
-  '#0052cc',
-  '#4CAF50',
-  '#78909C',
-]
+const STATUS_CONFIG = {
+  'Delivery Planning': {
+    backgroundColor: '#0052cc',
+    color: '#ffffff',
+    order: 1,
+  },
+  'Delivery Finalized': {
+    backgroundColor: '#deebff',
+    color: '#0647a6',
+    order: 2,
+  },
+  'Package Implementing': {
+    backgroundColor: '#deebff',
+    color: '#0647a6',
+    order: 3,
+  },
+  'Package Resolved': {
+    backgroundColor: '#deebff',
+    color: '#0647a6',
+    order: 4,
+  },
+  'Package Released': {
+    backgroundColor: '#e3fcef',
+    color: '#0b6644',
+    order: 5,
+  },
+  'Close': {
+    backgroundColor: '#dfe1e5',
+    color: '#42526e',
+    order: 6,
+  },
+  'Cancel': {
+    backgroundColor: '#dfe1e5',
+    color: '#42526e',
+    order: 7,
+  },
+}
 
-const DEFAULT_STATUS_COLOR = '#bfbfbf'
+const DEFAULT_STATUS_CONFIG = {
+  backgroundColor: '#deebff',
+  color: '#0647a6',
+}
 
 const TOOLTIP_FIELDS = [
   { label: 'Start', getValue: item => formatDate(item.startDateBefore) },
@@ -99,8 +125,8 @@ export {
   PROJECT_CHARTS,
   ITEM_TYPES,
   DEFAULT_CONFIG,
-  STATUS_COLORS,
-  DEFAULT_STATUS_COLOR,
+  STATUS_CONFIG,
+  DEFAULT_STATUS_CONFIG,
   TOOLTIP_FIELDS,
   ALL_PROJECTS,
   CHART_WORKLOAD_MODES,

@@ -76,6 +76,8 @@ const TimelineStyled = styled.div`
       border: none;
       background-color: transparent;
       padding: 4px 0 4px 36px;
+      cursor: pointer;
+      transition: all 0.2s ease;
 
       &::before {
         content: '';
@@ -83,6 +85,7 @@ const TimelineStyled = styled.div`
         top: 50%;
         transform: translateY(-50%);
         border: solid 1px #d9d9d9;
+        transition: all 0.2s ease;
       }
 
       &.range-time {
@@ -113,6 +116,14 @@ const TimelineStyled = styled.div`
           border-radius: 50%;
           transform: translate(-50%, -50%);
         }
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &.hidden {
+        opacity: 0.4;
       }
     }
   }

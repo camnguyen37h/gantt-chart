@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { DEFAULT_STATUS_COLOR, ITEM_TYPES, STATUS_COLORS } from '../constants'
+import { DEFAULT_STATUS_CONFIG, ITEM_TYPES, STATUS_CONFIG } from '../constants'
 
 /**
  * Determine if item is milestone or range type
@@ -47,31 +47,23 @@ export const isMilestone = item => {
 }
 
 /**
- * Get color for status from predefined color palette
+ * Get color for status from STATUS_CONFIG
  *
  * @param {string} status - Status name
- * @param {Object} statusColorMap - Map of status to color index
  *
- * @return {string} Hex color code
+ * @return {string} Hex color code for background
  */
-export const getStatusColor = (status, statusColorMap) => {
+export const getStatusColor = (status) => {
   if (!status) {
-    return DEFAULT_STATUS_COLOR
+    return DEFAULT_STATUS_CONFIG.backgroundColor
   }
 
-  if (status.toLowerCase() === 'cancel') {
-    return '#78909C'
+  const config = STATUS_CONFIG[status]
+  if (config) {
+    return config.backgroundColor
   }
 
-  if (status)
-    if (statusColorMap && statusColorMap[status] !== undefined) {
-      const colorIndex = statusColorMap[status]
-      if (colorIndex < STATUS_COLORS.length) {
-        return STATUS_COLORS[colorIndex]
-      }
-    }
-
-  return DEFAULT_STATUS_COLOR
+  return DEFAULT_STATUS_CONFIG.backgroundColor
 }
 
 /**
@@ -83,7 +75,7 @@ export const getStatusColor = (status, statusColorMap) => {
  */
 export const normalizeItem = item => {
   const type = getItemType(item)
-  const color = item.color || DEFAULT_STATUS_COLOR
+  const color = item.color || getStatusColor(item.status)
 
   return {
     id: item.id,
