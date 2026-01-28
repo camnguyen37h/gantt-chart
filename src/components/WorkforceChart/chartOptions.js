@@ -37,8 +37,10 @@ export const getChartOption = ({ chartData, isAllZero, actualKey, planKey }) => 
         type: 'inside',
         start: 0,
         end: 100,
-        moveOnMouseWheel: true,
-      },
+        moveOnMouseWheel: false,      // ← TẮT move bằng scroll
+        zoomOnMouseWheel: true,       // ← BẬT zoom bằng scroll
+        preventDefaultMouseMove: false,
+      }
     ],
     xAxis: {
       type: 'category',
@@ -61,12 +63,14 @@ export const getChartOption = ({ chartData, isAllZero, actualKey, planKey }) => 
         data: chartData.map(item => formatFloatNumber(item[actualKey])),
         itemStyle: { color: CHART_COLORS.ACTUAL },
         barGap: '0%',
+        barWidth: '20%',  // Mỗi bar chiếm 40% khoảng trống của mỗi category
       },
       {
         name: 'Plan',
         type: 'bar',
         data: chartData.map(item => formatFloatNumber(item[planKey])),
         itemStyle: { color: CHART_COLORS.PLAN },
+        barWidth: '20%',  // Mỗi bar chiếm 40% khoảng trống của mỗi category
       },
     ],
     graphic: [],

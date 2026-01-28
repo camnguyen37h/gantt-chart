@@ -1,5 +1,6 @@
 import { Tabs } from 'antd'
 import React, { useMemo, useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { PROJECT_CHARTS, Timeline } from '../lib/Timeline';
 import { fetchTimelineData } from '../utils/mockApiData';
 import { 
@@ -15,6 +16,11 @@ import WorkforceChart from '../components/WorkforceChart/WorkforceChart';
 import './TimelineView.css';
 
 const TimelineView = () => {
+  const history = useHistory();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const initialTab = urlParams.get('tab') || PROJECT_CHARTS.MILESTONE;
+  
   const [visibleStatuses, setVisibleStatuses] = useState({});
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -89,49 +95,67 @@ const TimelineView = () => {
     });
   };
 
+  const handleTabChange = (key) => {
+    history.push(`${location.pathname}?tab=${key}`);
+  };
+
   if (loading) {
     return (
-      <div className="timeline-view">
-        <div className="timeline-view-header">
-          <h2 className="timeline-view-title">Project Timeline View</h2>
-        </div>
-        <div className="timeline-skeleton">
-          {/* Skeleton Toolbar */}
-          <div className="skeleton-toolbar">
-            <div className="skeleton-button"></div>
+      <Tabs
+        defaultActiveKey={initialTab}
+        animated={false}
+        destroyInactiveTabPane={true}
+        className="mb-24">
+        <Tabs.TabPane
+          tab={PROJECT_CHARTS.MILESTONE}
+          key={PROJECT_CHARTS.MILESTONE}>
+          <div className="timeline-view">
+            <div className="timeline-view-header">
+              <h2 className="timeline-view-title">Project Timeline View</h2>
+            </div>
+            <div className="timeline-skeleton">
+              {/* Skeleton Toolbar */}
+              <div className="skeleton-toolbar">
+                <div className="skeleton-button"></div>
+              </div>
+              
+              {/* Skeleton Grid */}
+              <div className="skeleton-grid">
+                {/* Skeleton Items */}
+                <div className="skeleton-item skeleton-item-1"></div>
+                <div className="skeleton-item skeleton-item-2"></div>
+                <div className="skeleton-item skeleton-item-3"></div>
+                <div className="skeleton-item skeleton-item-4"></div>
+                <div className="skeleton-item skeleton-item-5"></div>
+              </div>
+              
+              {/* Skeleton Header */}
+              <div className="skeleton-header">
+                {[1, 2, 3, 4, 5, 6].map((month) => (
+                  <div key={month} className="skeleton-month"></div>
+                ))}
+              </div>
+              
+              {/* Skeleton Legend */}
+              <div className="skeleton-legend">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((status) => (
+                  <div key={status} className="skeleton-status"></div>
+                ))}
+              </div>
+            </div>
           </div>
-          
-          {/* Skeleton Grid */}
-          <div className="skeleton-grid">
-            {/* Skeleton Items */}
-            <div className="skeleton-item skeleton-item-1"></div>
-            <div className="skeleton-item skeleton-item-2"></div>
-            <div className="skeleton-item skeleton-item-3"></div>
-            <div className="skeleton-item skeleton-item-4"></div>
-            <div className="skeleton-item skeleton-item-5"></div>
-          </div>
-          
-          {/* Skeleton Header */}
-          <div className="skeleton-header">
-            {[1, 2, 3, 4, 5, 6].map((month) => (
-              <div key={month} className="skeleton-month"></div>
-            ))}
-          </div>
-          
-          {/* Skeleton Legend */}
-          <div className="skeleton-legend">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((status) => (
-              <div key={status} className="skeleton-status"></div>
-            ))}
-          </div>
-        </div>
-      </div>
+        </Tabs.TabPane>
+        <Tabs.TabPane tab={PROJECT_CHARTS.WORKLOAD} key={PROJECT_CHARTS.WORKLOAD}>
+          <div>Loading...</div>
+        </Tabs.TabPane>
+      </Tabs>
     );
   }
 
   return (
     <Tabs
-      defaultActiveKey={PROJECT_CHARTS.MILESTONE}
+      defaultActiveKey={initialTab}
+      onChange={handleTabChange}
       animated={false}
       destroyInactiveTabPane={true}
       className="mb-24">
