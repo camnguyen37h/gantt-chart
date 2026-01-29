@@ -1,7 +1,7 @@
 import { DateFormat } from '../constants/DateFormat'
 import { isArray, isEmpty, isObject } from 'lodash'
 import moment from 'moment'
-import { STATUS_CONFIG } from '../constants'
+import { ITEM_TYPES, PROJECT_CHARTS, STATUS_CONFIG } from '../constants'
 
 /**
  * Transform API item to normalized structure
@@ -32,7 +32,7 @@ export const normalizeTimelineItem = item => {
 
   let normalizedStartDate = startDate
   let normalizedDueDate = dueDate
-  let originallyMilestone = false
+  let normalizedType = ITEM_TYPES.RANGE
 
   // startDate or dueDate are null or dueDate >= startDate, but createdDate exists
   if (
@@ -50,7 +50,7 @@ export const normalizeTimelineItem = item => {
       .clone()
       .add(1, 'day')
       .format(DateFormat.YYYY_MM_DD)
-    originallyMilestone = true
+    normalizedType = ITEM_TYPES.MILESTONE
   }
 
   if (!normalizedStartDate || !normalizedDueDate) {
@@ -58,22 +58,17 @@ export const normalizeTimelineItem = item => {
   }
 
   const duration = calculateDiffDay(startDate, dueDate, true)
-  
-  // Calculate lateTime based on resolved date or today
+
   let lateTime
   if (resolvedDate) {
-    // If resolved, compare resolved date with due date
     lateTime = calculateDiffDay(resolvedDate, dueDate, false)
   } else {
-    // If not resolved, compare today with due date
     const today = moment().format(DateFormat.YYYY_MM_DD)
     const diffFromToday = calculateDiffDay(today, dueDate, false)
-    
-    // If due date > today (still has time), no late time yet
+
     if (diffFromToday > 0) {
       lateTime = undefined
     } else {
-      // If due date <= today, it's late
       lateTime = diffFromToday
     }
   }
@@ -91,7 +86,7 @@ export const normalizeTimelineItem = item => {
     status: status || 'Unknown',
     duration: duration,
     lateTime: lateTime,
-    _originallyMilestone: originallyMilestone,
+    type: normalizedType,
   }
 }
 
@@ -140,24 +135,52 @@ export const extractUniqueStatuses = items => {
   const statusSet = new Set()
 
   for (const item of items) {
-    if (item && item.status) {
-      statusSet.add(item.status)
-    }
+    if (!item || !item.type) continue
+
+    statusSet.add(item.status)
   }
 
   const uniqueStatuses = Array.from(statusSet)
-  
-  // Sort by STATUS_CONFIG order, unknowns go to end
+
   uniqueStatuses.sort((a, b) => {
-    const orderA = STATUS_CONFIG[a]?.order ?? 999
-    const orderB = STATUS_CONFIG[b]?.order ?? 999
+    const orderA = STATUS_CONFIG[a] ? STATUS_CONFIG[a].order : 999
+    const orderB = STATUS_CONFIG[b] ? STATUS_CONFIG[b].order : 999
     if (orderA !== orderB) {
       return orderA - orderB
     }
+
     return a.localeCompare(b)
   })
 
   return uniqueStatuses
+}
+
+/**
+ * Extract unique types from timeline items
+ *
+ * @param {Array} items - Array of timeline items
+ *
+ * @returns {Array} Array of unique types
+ */
+export const extractUniqueTypeTimeline = items => {
+  if (!items || !Array.isArray(items)) {
+    return []
+  }
+
+  const typeTimelineSet = new Set()
+  const maxTypes = Object.keys(PROJECT_CHARTS).length
+
+  for (const item of items) {
+    if (!item || !item.type) continue
+
+    typeTimelineSet.add(item.type)
+
+    if (typeTimelineSet.size >= maxTypes) {
+      break
+    }
+  }
+
+  return Array.from(typeTimelineSet)
 }
 
 /**

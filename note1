@@ -1,0 +1,9 @@
+index.jsx (Tabs với destroyInactiveTabPane={true})
+└── Tabs.TabPane (Milestone)
+    └── Timeline.jsx
+        └── useTimeline hook (containerRef, hasAutoScrolledRef)
+            └── TimelineCanvas.jsx
+                └── handleCanvasEvents (event listeners)
+
+
+Milestone → Workload (unmount Timeline) → Milestone (mount Timeline lại)

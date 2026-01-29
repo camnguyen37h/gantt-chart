@@ -1,7 +1,4 @@
-import { Tabs } from 'antd'
-import { PROJECT_CHARTS } from '../lib/Timeline/constants'
 import ProjectChartTabs from '../lib/Timeline'
-import WorkforceChart from '../components/WorkforceChart/WorkforceChart'
 import './TimelineView.css'
 
 const TimelineView = () => {

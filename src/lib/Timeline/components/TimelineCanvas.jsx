@@ -39,45 +39,40 @@ const TimelineCanvas = ({
   const dprRef = useRef(1)
   const H_PADDING = 60
 
-  // Use external containerRef if provided, otherwise use internal
   const containerRef = externalContainerRef || internalContainerRef
 
-  // Ensure containerRef is set after component mounts
   useEffect(() => {
-    // This forces a re-render/update after the ref is assigned
-    if (externalContainerRef && !externalContainerRef.current && internalContainerRef.current) {
+    if (
+      externalContainerRef &&
+      !externalContainerRef.current &&
+      internalContainerRef.current
+    ) {
       externalContainerRef.current = internalContainerRef.current
     }
   }, [])
 
-  // Drag to scroll state
   const isDraggingRef = useRef(false)
   const dragStartXRef = useRef(0)
   const dragStartYRef = useRef(0)
   const scrollLeftStartRef = useRef(0)
   const scrollTopStartRef = useRef(0)
 
-  // Calculate canvas dimensions
   const canvasWidth =
     timelineData && timelineData.totalWidth ? timelineData.totalWidth : 1000
-  const canvasHeight = Math.max(gridHeight, 450)
+  const canvasHeight = Math.max(gridHeight, 400)
 
-  // Notify when container is mounted and ready
   useEffect(() => {
     if (containerRef.current && currentDatePosition !== null && timelineData) {
-      // Trigger a small delay to ensure container is fully rendered
       const timer = setTimeout(() => {
-        // Force a re-check by touching containerRef
         if (containerRef.current) {
           containerRef.current.dataset.ready = 'true'
         }
       }, 100)
-      
+
       return () => clearTimeout(timer)
     }
   }, [containerRef, currentDatePosition, timelineData])
 
-  // Draw timeline on canvas
   const draw = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -182,9 +177,13 @@ const TimelineCanvas = ({
         animationProgressRef.current = 1
         draw()
         animationFrameRef.current = null
-        
-        // Trigger auto scroll after animation completes
-        if (enableAutoScroll && !hasAutoScrolledRef.current && scrollToToday && containerRef.current) {
+
+        if (
+          enableAutoScroll &&
+          !hasAutoScrolledRef.current &&
+          scrollToToday &&
+          containerRef.current
+        ) {
           requestAnimationFrame(() => {
             scrollToToday()
             hasAutoScrolledRef.current = true
@@ -201,7 +200,17 @@ const TimelineCanvas = ({
         animationFrameRef.current = null
       }
     }
-  }, [timelineData, layoutItems, loading, draw, isZooming, enableAutoScroll, scrollToToday, hasAutoScrolledRef, containerRef])
+  }, [
+    timelineData,
+    layoutItems,
+    loading,
+    draw,
+    isZooming,
+    enableAutoScroll,
+    scrollToToday,
+    hasAutoScrolledRef,
+    containerRef,
+  ])
 
   // Handle canvas events
   useEffect(() => {
@@ -261,7 +270,7 @@ const TimelineCanvas = ({
         loading ? 'timeline-loading' : 'timeline-loaded'
       }`}>
       {timelineData && (
-        <div>
+        <div style={{ minWidth: '100%', width: 'fit-content' }}>
           <div className="timeline-canvas-wrapper">
             <canvas ref={canvasRef} className="timeline-canvas" />
 

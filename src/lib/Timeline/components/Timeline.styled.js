@@ -76,6 +76,9 @@ const TimelineStyled = styled.div`
       border: none;
       background-color: transparent;
       padding: 4px 0 4px 36px;
+      font-size: 13px;
+      color: #595959;
+      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
 
@@ -84,35 +87,36 @@ const TimelineStyled = styled.div`
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        border: solid 1px #d9d9d9;
+        border: solid 1px #595959;
         transition: all 0.2s ease;
       }
 
       &.range-time {
         &::before {
-          left: 0;
-          width: 28px;
-          height: 20px;
+          left: 18px;
+          width: 24px;
+          height: 16px;
           border-radius: 4px;
+          transform: translate(-50%, -50%);
         }
       }
 
       &.abnormal {
         &::before {
-          left: 18px;
-          width: 18px;
-          height: 18px;
+          left: 16px;
+          width: 16px;
+          height: 16px;
           transform: translate(-50%, -50%) rotate(45deg);
         }
 
         &::after {
           content: '';
           position: absolute;
-          left: 18px;
+          left: 16px;
           top: 50%;
-          width: 12px;
-          height: 12px;
-          border: solid 2px #d9d9d9;
+          width: 8px;
+          height: 8px;
+          border: solid 1px #595959;
           border-radius: 50%;
           transform: translate(-50%, -50%);
         }

@@ -12,6 +12,12 @@ const ITEM_TYPES = {
   MILESTONE: 'milestone',
 }
 
+const PROJECT_DETAIL_LEVEL = {
+  NORMAL: 'normal',
+  MEDIUM: 'medium',
+  ULTRA_LOW: 'ultra-low',
+}
+
 const DEFAULT_CONFIG = {
   rowHeight: 44,
   itemHeight: 32,
@@ -29,8 +35,8 @@ const DEFAULT_CONFIG = {
 
 const STATUS_CONFIG = {
   'Delivery Planning': {
-    backgroundColor: '#0052cc',
-    color: '#ffffff',
+    backgroundColor: '#deebff',
+    color: '#0647a6',
     order: 1,
   },
   'Delivery Finalized': {
@@ -53,12 +59,12 @@ const STATUS_CONFIG = {
     color: '#0b6644',
     order: 5,
   },
-  'Close': {
+  Close: {
     backgroundColor: '#dfe1e5',
     color: '#42526e',
     order: 6,
   },
-  'Cancel': {
+  Cancel: {
     backgroundColor: '#dfe1e5',
     color: '#42526e',
     order: 7,
@@ -66,8 +72,8 @@ const STATUS_CONFIG = {
 }
 
 const DEFAULT_STATUS_CONFIG = {
-  backgroundColor: '#deebff',
-  color: '#0647a6',
+  backgroundColor: '#dfe1e5',
+  color: '#42526e',
 }
 
 const TOOLTIP_FIELDS = [
@@ -118,11 +124,14 @@ const CANVAS_RENDERING = {
   MILESTONE_LABEL_OFFSET: 18,
   FONT_FAMILY:
     "500 13px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+  INDICATOR_MAX_SIZE: 12,
+  INDICATOR_SCALE_FACTOR: 0.4,
 }
 
 export {
   NOT_AVAILABLE,
   PROJECT_CHARTS,
+  PROJECT_DETAIL_LEVEL,
   ITEM_TYPES,
   DEFAULT_CONFIG,
   STATUS_CONFIG,

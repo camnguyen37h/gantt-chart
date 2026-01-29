@@ -1,8 +1,8 @@
-import { NOT_AVAILABLE, TOOLTIP_FIELDS, CANVAS_RENDERING } from '../constants'
+import { CANVAS_RENDERING, NOT_AVAILABLE, TOOLTIP_FIELDS } from '../constants'
 import { isMilestone } from './itemUtils'
 
 /**
- * Check if point is inside rectangular bounds
+ * Check if the point is inside rectangular bounds
  *
  * @param {number} x - X coordinate
  * @param {number} y - Y coordinate
@@ -35,7 +35,6 @@ const isPointInMilestone = (x, y, style) => {
   const centerX = left
   const centerY = top + 15
 
-  // Check diamond area using Manhattan distance
   return Math.abs(x - centerX) + Math.abs(y - centerY) <= size / 2
 }
 
@@ -50,11 +49,9 @@ const isPointInMilestone = (x, y, style) => {
  * @return {Object|null} Found item or null
  */
 const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
-  // First pass: check for milestones (they should have priority)
-  for (let i = 0; i < layoutItems.length; i++) {
-    const item = layoutItems[i]
+  for (const item of layoutItems) {
     if (!isMilestone(item)) continue
-    
+
     const style = getItemStyle(item)
     if (!style) continue
 
@@ -63,11 +60,9 @@ const findItemAtPosition = (x, y, layoutItems, getItemStyle) => {
     }
   }
 
-  // Second pass: check for ranges
-  for (let i = 0; i < layoutItems.length; i++) {
-    const item = layoutItems[i]
+  for (const item of layoutItems) {
     if (isMilestone(item)) continue
-    
+
     const style = getItemStyle(item)
     if (!style) continue
 
@@ -122,9 +117,9 @@ export const handleCanvasEvents = options => {
     const containerRect = container.getBoundingClientRect()
     const scrollLeft = container.scrollLeft || 0
     const scrollTop = container.scrollTop || 0
-    
-    // Get container's computed padding-top
-    const containerPaddingTop = parseFloat(getComputedStyle(container).paddingTop) || 0    
+
+    const containerPaddingTop =
+      Number.parseFloat(getComputedStyle(container).paddingTop) || 0
 
     return {
       x: event.clientX - containerRect.left + scrollLeft - horizontalPadding,
@@ -147,7 +142,8 @@ export const handleCanvasEvents = options => {
     const detailsEl = tooltip.querySelector('.tooltip-details')
 
     if (titleEl) {
-      titleEl.textContent = item.name || NOT_AVAILABLE
+      titleEl.textContent =
+        [item.issueKey, item.name].filter(Boolean).join(': ') || NOT_AVAILABLE
     }
 
     if (detailsEl) {
@@ -169,11 +165,11 @@ export const handleCanvasEvents = options => {
 
     requestAnimationFrame(() => {
       const tooltipRect = tooltip.getBoundingClientRect()
-      
+
       // Use screen coordinates (fixed positioning)
       const mouseScreenX = event.clientX
       const mouseScreenY = event.clientY
-      
+
       // Calculate space on both sides
       const spaceOnRight = window.innerWidth - mouseScreenX
       const spaceOnLeft = mouseScreenX
@@ -181,30 +177,29 @@ export const handleCanvasEvents = options => {
       const spaceAbove = mouseScreenY
       const tooltipWidth = tooltipRect.width + 15
       const tooltipHeight = tooltipRect.height + 10
-      
+
       let left, top
-      
-      // Show on side with more space (horizontal)
+
       if (spaceOnRight >= spaceOnLeft || spaceOnRight >= tooltipWidth) {
-        // Show on right
         left = mouseScreenX + 15
       } else {
-        // Show on left
         left = mouseScreenX - tooltipRect.width - 15
       }
-      
-      // Show on side with more space (vertical)
+
       if (spaceBelow >= spaceAbove || spaceBelow >= tooltipHeight) {
-        // Show below
         top = mouseScreenY + 10
       } else {
-        // Show above
         top = mouseScreenY - tooltipRect.height - 10
       }
-      
-      // Ensure tooltip doesn't go off screen
-      left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10))
-      top = Math.max(10, Math.min(top, window.innerHeight - tooltipRect.height - 10))
+
+      left = Math.max(
+        10,
+        Math.min(left, window.innerWidth - tooltipRect.width - 10)
+      )
+      top = Math.max(
+        10,
+        Math.min(top, window.innerHeight - tooltipRect.height - 10)
+      )
 
       tooltip.style.left = `${left}px`
       tooltip.style.top = `${top}px`
@@ -242,40 +237,38 @@ export const handleCanvasEvents = options => {
     mouseY
   ) => {
     const tooltipRect = tooltip.getBoundingClientRect()
-    
-    // Use screen coordinates (fixed positioning)
+
     const mouseScreenX = event.clientX
     const mouseScreenY = event.clientY
-    
-    // Calculate space on both sides
     const spaceOnRight = window.innerWidth - mouseScreenX
     const spaceOnLeft = mouseScreenX
     const spaceBelow = window.innerHeight - mouseScreenY
     const spaceAbove = mouseScreenY
     const tooltipWidth = tooltipRect.width + 15
     const tooltipHeight = tooltipRect.height + 10
-    
+
     let left, top
-    
-    // Show on side with more space (horizontal)
+
     if (spaceOnRight >= spaceOnLeft || spaceOnRight >= tooltipWidth) {
       left = mouseScreenX + 15
     } else {
       left = mouseScreenX - tooltipRect.width - 15
     }
-    
-    // Show on side with more space (vertical)
+
     if (spaceBelow >= spaceAbove || spaceBelow >= tooltipHeight) {
-      // Show below
       top = mouseScreenY + 10
     } else {
-      // Show above
       top = mouseScreenY - tooltipRect.height - 10
     }
-    
-    // Ensure tooltip doesn't go off screen
-    left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10))
-    top = Math.max(10, Math.min(top, window.innerHeight - tooltipRect.height - 10))
+
+    left = Math.max(
+      10,
+      Math.min(left, window.innerWidth - tooltipRect.width - 10)
+    )
+    top = Math.max(
+      10,
+      Math.min(top, window.innerHeight - tooltipRect.height - 10)
+    )
 
     return { left, top }
   }
@@ -322,7 +315,14 @@ export const handleCanvasEvents = options => {
    *
    * @return {void}
    */
-  const handleItemEnter = (item, event, overlay, showTooltip, onItemHover, isDraggingRef) => {
+  const handleItemEnter = (
+    item,
+    event,
+    overlay,
+    showTooltip,
+    onItemHover,
+    isDraggingRef
+  ) => {
     overlay.style.cursor = 'pointer'
     if (!isDraggingRef || !isDraggingRef.current) {
       showTooltip(item, event)
@@ -336,10 +336,16 @@ export const handleCanvasEvents = options => {
    * @param {HTMLElement} overlay - Overlay element
    * @param {Function} hideTooltip - Function to hide tooltip
    * @param {Function} onMouseLeave - Leave callback
+   * @param {Object} isDraggingRef - React ref object tracking dragging state
    *
    * @return {void}
    */
-  const handleItemLeave = (overlay, hideTooltip, onMouseLeave, isDraggingRef) => {
+  const handleItemLeave = (
+    overlay,
+    hideTooltip,
+    onMouseLeave,
+    isDraggingRef
+  ) => {
     overlay.style.cursor = 'grab'
     if (!isDraggingRef || !isDraggingRef.current) {
       hideTooltip()
@@ -355,11 +361,10 @@ export const handleCanvasEvents = options => {
    * @return {void}
    */
   const handleMouseMove = event => {
-    // Don't show tooltip if dragging
     if (isDraggingRef && isDraggingRef.current) {
       return
     }
-    
+
     const { x, y } = getMousePosition(event)
     const item = findItemAtPosition(x, y, layoutItems, getItemStyle)
 
@@ -369,7 +374,14 @@ export const handleCanvasEvents = options => {
       currentHoveredItem = item
 
       if (item) {
-        handleItemEnter(item, event, overlay, showTooltip, onItemHover, isDraggingRef)
+        handleItemEnter(
+          item,
+          event,
+          overlay,
+          showTooltip,
+          onItemHover,
+          isDraggingRef
+        )
       } else {
         handleItemLeave(overlay, hideTooltip, onMouseLeave, isDraggingRef)
       }
@@ -382,7 +394,7 @@ export const handleCanvasEvents = options => {
   }
 
   /**
-   * Handle mouse leaving canvas area
+   * Handle mouse leaving the canvas area
    *
    * @return {void}
    */
@@ -436,18 +448,18 @@ export const handleCanvasEvents = options => {
    *
    * @return {void}
    */
-  const handleDragMouseDown = (e) => {
+  const handleDragMouseDown = e => {
     if (e.button !== 0) return
-    
+
     isDraggingRef.current = true
     dragStartXRef.current = e.clientX
     dragStartYRef.current = e.clientY
     scrollLeftStartRef.current = container.scrollLeft
     scrollTopStartRef.current = container.scrollTop
-    
+
     overlay.style.cursor = 'grabbing'
     overlay.style.userSelect = 'none'
-    
+
     if (tooltip) {
       tooltip.style.display = 'none'
     }
@@ -460,16 +472,16 @@ export const handleCanvasEvents = options => {
    *
    * @return {void}
    */
-  const handleDragMouseMove = (e) => {
+  const handleDragMouseMove = e => {
     if (!isDraggingRef.current) return
-    
+
     const deltaX = e.clientX - dragStartXRef.current
     const deltaY = e.clientY - dragStartYRef.current
-    
+
     if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
       e.preventDefault()
       e.stopPropagation()
-      
+
       container.scrollLeft = scrollLeftStartRef.current - deltaX
       container.scrollTop = scrollTopStartRef.current - deltaY
     }
@@ -485,39 +497,52 @@ export const handleCanvasEvents = options => {
       isDraggingRef.current = false
       overlay.style.cursor = 'grab'
       overlay.style.userSelect = ''
+      
+      // Force re-check hover state after drag ends
+      requestAnimationFrame(() => {
+        if (!isDraggingRef.current) {
+          overlay.style.cursor = currentHoveredItem ? 'pointer' : 'grab'
+        }
+      })
     }
   }
 
   /**
-   * Create throttled wheel event handler for zoom
+   * Create a throttled wheel event handler for zoom
    *
    * @return {Function} Wheel event handler
    */
   const createWheelHandler = () => {
-    const ZOOM_THROTTLE_MS = 16 // ~60fps
+    const ZOOM_THROTTLE_MS = 16
     let zoomRafId = null
     let lastZoomTime = 0
 
     return event => {
-      // Skip if zoom handlers not available
-      if (!handleZoom || typeof zoomLevel !== 'number' || 
-          typeof maxZoomLevel !== 'number' || typeof minZoomLevel !== 'number') {
+      if (
+        !handleZoom ||
+        typeof zoomLevel !== 'number' ||
+        typeof maxZoomLevel !== 'number' ||
+        typeof minZoomLevel !== 'number'
+      ) {
         return
       }
-
-      event.preventDefault()
 
       const zoomDelta = -event.deltaY
       const isZoomingIn = zoomDelta > 0
       const isZoomingOut = zoomDelta < 0
 
-      // Check zoom limits
-      if ((isZoomingIn && zoomLevel >= maxZoomLevel) ||
-          (isZoomingOut && zoomLevel <= minZoomLevel)) {
+      // Check zoom limits before preventing default - allow browser scroll when at limits
+      if (
+        (isZoomingIn && zoomLevel >= maxZoomLevel) ||
+        (isZoomingOut && zoomLevel <= minZoomLevel)
+      ) {
+        // Don't prevent default - allow normal scroll behavior
         return
       }
 
-      // Throttle zoom calls
+      // Only prevent default when actually zooming
+      event.preventDefault()
+
       const currentTime = Date.now()
       if (currentTime - lastZoomTime < ZOOM_THROTTLE_MS) {
         return
@@ -525,12 +550,10 @@ export const handleCanvasEvents = options => {
 
       lastZoomTime = currentTime
 
-      // Cancel previous animation frame if exists
       if (zoomRafId !== null) {
         cancelAnimationFrame(zoomRafId)
       }
 
-      // Schedule zoom execution
       zoomRafId = requestAnimationFrame(() => {
         handleZoom(zoomDelta)
         zoomRafId = null
@@ -540,22 +563,40 @@ export const handleCanvasEvents = options => {
 
   const handleWheel = createWheelHandler()
 
+  // DEBUG: Log event listener setup
+  console.log('[canvasEventHandler] Setting up event listeners', {
+    overlay: !!overlay,
+    container: !!container,
+    tooltip: !!tooltip,
+    layoutItems: layoutItems?.length
+  })
+
   overlay.addEventListener('mousemove', handleMouseMove)
   overlay.addEventListener('mouseleave', handleMouseLeave)
   overlay.addEventListener('mousedown', handleDragMouseDown)
   overlay.addEventListener('wheel', handleWheel, { passive: false })
   container.addEventListener('mousemove', handleDragMouseMove)
   container.addEventListener('mouseup', handleDragMouseUp)
+  container.addEventListener('mouseleave', handleDragMouseUp) // Stop drag when leaving container
   container.addEventListener('scroll', handleScrollThrottled, { passive: true })
+  window.addEventListener('mouseup', handleDragMouseUp) // Global mouseup to catch all cases
+
+  console.log('[canvasEventHandler] Event listeners attached successfully')
 
   return () => {
+    console.log('[canvasEventHandler] CLEANUP - Removing event listeners')
+    
     overlay.removeEventListener('mousemove', handleMouseMove)
     overlay.removeEventListener('mouseleave', handleMouseLeave)
     overlay.removeEventListener('mousedown', handleDragMouseDown)
     overlay.removeEventListener('wheel', handleWheel)
     container.removeEventListener('mousemove', handleDragMouseMove)
     container.removeEventListener('mouseup', handleDragMouseUp)
+    container.removeEventListener('mouseleave', handleDragMouseUp)
     container.removeEventListener('scroll', handleScrollThrottled)
+    window.removeEventListener('mouseup', handleDragMouseUp)
+
+    console.log('[canvasEventHandler] Event listeners removed')
 
     if (clickTimeout) {
       clearTimeout(clickTimeout)

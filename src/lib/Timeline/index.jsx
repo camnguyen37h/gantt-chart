@@ -8,11 +8,13 @@ import { getStatusColor } from './utils/itemUtils'
 import {
   buildStatusColorMap,
   extractUniqueStatuses,
+  extractUniqueTypeTimeline,
   filterByVisibleStatuses,
   normalizeTimelineData,
 } from './utils/timelineUtils'
 import { fetchTimelineData } from '../../utils/mockApiData'
 import { NotificationManager } from 'react-notifications'
+import WorkforceChart from '../../components/WorkforceChart/WorkforceChart'
 
 const { Panel } = Collapse
 
@@ -46,6 +48,10 @@ const ProjectChartTabs = ({ projectId, projectStart, projectEnd }) => {
     return buildStatusColorMap(extractUniqueStatuses(dataSource))
   }, [dataSource])
 
+  const typeTimelineMap = useMemo(() => {
+    return extractUniqueTypeTimeline(dataSource)
+  }, [dataSource])
+
   const itemsWithColors = useMemo(() => {
     if (!dataSource || dataSource.length === 0) {
       return []
@@ -54,10 +60,10 @@ const ProjectChartTabs = ({ projectId, projectStart, projectEnd }) => {
     return dataSource.map(item => {
       return {
         ...item,
-        color: getStatusColor(item.status),
+        color: getStatusColor(item.status).color,
       }
     })
-  }, [dataSource])
+  }, [dataSource, statusColorMap])
 
   const filteredItems = useMemo(() => {
     return filterByVisibleStatuses(itemsWithColors, visibleStatuses)
@@ -97,6 +103,7 @@ const ProjectChartTabs = ({ projectId, projectStart, projectEnd }) => {
                 loading: loading,
               }}
               legendProps={{
+                typeTimelineMap: typeTimelineMap,
                 statusColorMap: statusColorMap,
                 visibleStatuses: visibleStatuses,
                 onStatusToggle: handleStatusToggle,
@@ -106,7 +113,7 @@ const ProjectChartTabs = ({ projectId, projectStart, projectEnd }) => {
           <Tabs.TabPane
             tab={PROJECT_CHARTS.WORKLOAD}
             key={PROJECT_CHARTS.WORKLOAD}>
-            <div>workforce</div>
+            <WorkforceChart />
           </Tabs.TabPane>
         </Tabs>
       </Panel>

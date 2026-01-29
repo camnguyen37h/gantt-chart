@@ -86,8 +86,8 @@ export const calculateAdvancedLayout = items => {
       duration: item.duration,
       lateTime: item.lateTime,
       row: targetRow,
+      type: item.type,
       _isValid: item._isValid,
-      _originallyMilestone: item._originallyMilestone,
     })
   }
 

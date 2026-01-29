@@ -21,25 +21,34 @@ export const useTimeline = (items = [], config = {}) => {
   const zoomRAFRef = useRef(null)
 
   useEffect(() => {
-    if (!containerRef.current) {
-      return
-    }
+    const setupResizeObserver = () => {
+      if (!containerRef.current) {
+        requestAnimationFrame(setupResizeObserver)
+        return
+      }
 
-    const updateWidth = () => {
-      if (containerRef.current) {
-        const widthContainer = containerRef.current.offsetWidth
-        setContainerWidth(widthContainer)
+      const updateWidth = () => {
+        if (containerRef.current) {
+          const widthContainer = containerRef.current.offsetWidth
+          setContainerWidth(widthContainer)
+        }
+      }
+
+      updateWidth()
+      const resizeObserver = new ResizeObserver(() => {
+        updateWidth()
+      })
+      resizeObserver.observe(containerRef.current)
+
+      return () => {
+        resizeObserver.disconnect()
       }
     }
 
-    updateWidth()
-    const resizeObserver = new ResizeObserver(() => {
-      updateWidth()
-    })
-    resizeObserver.observe(containerRef.current)
-
+    const cleanup = setupResizeObserver()
+    
     return () => {
-      resizeObserver.disconnect()
+      if (cleanup) cleanup()
     }
   }, [])
 

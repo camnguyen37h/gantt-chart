@@ -3,12 +3,13 @@ import moment from 'moment'
 import { NOT_AVAILABLE } from '../constants'
 
 /**
- * Get default date range spanning three months
+ * Get a default date range spanning three months
  *
  * @return {Object} Date range {start, end}
  */
 const getDefaultDateRange = () => {
   const today = moment()
+
   return {
     start: today.clone().subtract(1, 'month').startOf('month'),
     end: today.clone().add(1, 'months').startOf('month'),
@@ -43,10 +44,11 @@ const getItemTimestamps = item => {
  *
  * @param {number} maxTimestamp - Maximum timestamp
  *
- * @return {moment} End date
+ * @return {moment.Moment} End date
  */
 const calculateEndDate = maxTimestamp => {
   const maxDate = moment(maxTimestamp)
+
   return maxDate.date() === 1
     ? maxDate.clone().startOf('month')
     : maxDate.clone().add(1, 'month').startOf('month')
@@ -144,7 +146,7 @@ export const formatDate = date => {
 }
 
 /**
- * Get singular or plural form of 'day' based on count
+ * Get a singular or plural form of 'day' based on count
  *
  * @param {number} count - Number of days
  * @return {string} 'day' or 'days'

@@ -20,16 +20,16 @@ const TimelineLegend = memo(
         {!isEmpty(statusColorMap) &&
           Object.entries(statusColorMap).map(([status]) => {
             const isVisible = visibleStatuses[status] !== false
-            const color = getStatusColor(status)
+            const { backgroundColor, color } = getStatusColor(status)
 
             return (
               <button
                 key={`status-${status}`}
-                className={`timeline-legend-item ${!isVisible ? 'hidden' : ''}`}
+                className={`timeline-legend-item ${isVisible ? '' : 'hidden'}`}
                 onClick={() => handleStatusClick(status)}>
                 <span
                   className="timeline-legend-color"
-                  style={{ backgroundColor: color }}
+                  style={{ backgroundColor, borderColor: color }}
                 />
                 <span className="timeline-legend-label">{status}</span>
               </button>
@@ -41,7 +41,6 @@ const TimelineLegend = memo(
 )
 
 TimelineLegend.propTypes = {
-  statuses: PropTypes.arrayOf(PropTypes.string),
   statusColorMap: PropTypes.object,
   visibleStatuses: PropTypes.object,
   onStatusToggle: PropTypes.func,

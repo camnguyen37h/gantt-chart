@@ -1,34 +1,18 @@
 import {
-  DEFAULT_CONFIG,
-  DEFAULT_STATUS_CONFIG,
-  NOT_AVAILABLE,
   CANVAS_RENDERING,
-  STATUS_CONFIG,
+  DEFAULT_CONFIG,
+  NOT_AVAILABLE,
+  PROJECT_DETAIL_LEVEL,
 } from '../constants'
-import { isMilestone } from './itemUtils'
+import { getStatusColor, isMilestone } from './itemUtils'
 
-const { MILESTONE_SIZE, MILESTONE_CENTER_DOT_RADIUS, MILESTONE_LABEL_HEIGHT } =
-  CANVAS_RENDERING
-
-/**
- * Get text color for a given status
- *
- * @param {string} status - Status name
- *
- * @return {string} Hex color code for text
- */
-const getStatusTextColor = status => {
-  if (!status) {
-    return DEFAULT_STATUS_CONFIG.color
-  }
-
-  const config = STATUS_CONFIG[status]
-  if (config) {
-    return config.color
-  }
-
-  return DEFAULT_STATUS_CONFIG.color
-}
+const {
+  FONT_FAMILY,
+  MILESTONE_SIZE,
+  MILESTONE_CENTER_DOT_RADIUS,
+  INDICATOR_MAX_SIZE,
+  INDICATOR_SCALE_FACTOR,
+} = CANVAS_RENDERING
 
 /**
  * Draw timeline on canvas with items and grid lines
@@ -51,7 +35,7 @@ export const drawTimeline = (ctx, options) => {
   } = options
 
   const hPadding = horizontalPadding || 0
-  const progress = animationProgress !== undefined ? animationProgress : 1
+  const progress = animationProgress || 1
   const effectiveProgress = isZooming ? 1 : progress
 
   ctx.save()
@@ -127,10 +111,10 @@ const drawGridLines = (ctx, timelineData) => {
  * @return {string} Detail level: 'normal', 'medium', or 'ultra-low'
  */
 const getDetailLevel = zoomLevel => {
-  if (zoomLevel >= 0.9) return 'normal'
-  if (zoomLevel >= 0.7) return 'medium'
+  if (zoomLevel >= 0.9) return PROJECT_DETAIL_LEVEL.NORMAL
+  if (zoomLevel >= 0.7) return PROJECT_DETAIL_LEVEL.MEDIUM
 
-  return 'ultra-low'
+  return PROJECT_DETAIL_LEVEL.ULTRA_LOW
 }
 
 /**
@@ -153,13 +137,12 @@ const drawTimelineItems = (
   animationProgress,
   options
 ) => {
-  const progress = animationProgress !== undefined ? animationProgress : 1
+  const progress = animationProgress || 1
   const itemCount = layoutItems.length
   const hoveredId = hoveredItem ? hoveredItem.id : null
   const zoomLevel = options.zoomLevel || 1
   const detailLevel = getDetailLevel(zoomLevel)
 
-  // Draw hover background first (behind all items)
   if (hoveredId !== null) {
     for (let i = 0; i < itemCount; i++) {
       const item = layoutItems[i]
@@ -171,7 +154,6 @@ const drawTimelineItems = (
         const padding = 8
 
         ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'
-        // Fill entire row width
         ctx.fillRect(0, top - padding, ctx.canvas.width, height + padding * 2)
         break
       }
@@ -185,7 +167,7 @@ const drawTimelineItems = (
     const renderState = { isHovered, animationProgress: progress, detailLevel }
 
     if (isMilestone(item)) {
-      drawMilestone(ctx, item, style, renderState, options)
+      drawMilestone(ctx, item, style, renderState)
     } else {
       drawTaskBar(ctx, item, style, renderState, options)
     }
@@ -224,25 +206,25 @@ const clearShadow = ctx => {
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @param {Object} bounds - Bounding box coordinates
- * @param {string} color - Fill color
+ * @param {Object} colorConfig - Fill color
  * @param {string} detailLevel - Detail level
  *
  * @return {void}
  */
-const drawBarBackground = (ctx, bounds, color, detailLevel) => {
-  ctx.fillStyle = color
+const drawBarBackground = (ctx, bounds, colorConfig, detailLevel) => {
+  const { backgroundColor, color } = colorConfig
+  ctx.fillStyle = backgroundColor
 
-  //TODO: Border radius for ultra-low detail level can be optimized
-  if (detailLevel === 'ultra-low') {
+  if (detailLevel === PROJECT_DETAIL_LEVEL.ULTRA_LOW) {
     ctx.fillRect(bounds.left, bounds.top, bounds.width, bounds.height)
-    ctx.strokeStyle = '#0052cc'
+    ctx.strokeStyle = color
     ctx.lineWidth = 1
     ctx.strokeRect(bounds.left, bounds.top, bounds.width, bounds.height)
   } else {
     ctx.beginPath()
     ctx.roundRect(bounds.left, bounds.top, bounds.width, bounds.height, 4)
     ctx.fill()
-    ctx.strokeStyle = '#0052cc'
+    ctx.strokeStyle = color
     ctx.lineWidth = 1
     ctx.stroke()
   }
@@ -285,8 +267,7 @@ const truncateText = (ctx, text, maxWidth) => {
  */
 const setupTextContext = (ctx, textColor = 'white') => {
   ctx.fillStyle = textColor
-  ctx.font =
-    "500 13px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+  ctx.font = FONT_FAMILY
   ctx.textBaseline = 'middle'
 }
 
@@ -301,8 +282,8 @@ const setupTextContext = (ctx, textColor = 'white') => {
  * @return {void}
  */
 const drawTaskBarText = (ctx, item, bounds, warningWidth = 0) => {
-  const textColor = getStatusTextColor(item.status)
-  setupTextContext(ctx, textColor)
+  const { color } = getStatusColor(item.status)
+  setupTextContext(ctx, color)
 
   const textX = bounds.left + 12
   const textY = bounds.top + bounds.height / 2
@@ -318,28 +299,22 @@ const drawTaskBarText = (ctx, item, bounds, warningWidth = 0) => {
 }
 
 /**
- * Check if item is on-time (resolved before due date or still has time)
+ * Check if an item is on-time (resolved before the due date or still has time)
  *
  * @param {Object} item - Timeline item
  *
  * @return {boolean} True if on-time
  */
-const isOnTime = item => {
-  // Only show success indicator if actually resolved on-time
-  // lateTime > 0 means resolved before due date
-  return item.lateTime !== undefined && item.lateTime > 0
-}
+const isOnTime = item => item.lateTime !== undefined && item.lateTime > 0
 
 /**
- * Check if item is late
+ * Check if an item is late
  *
  * @param {Object} item - Timeline item
  *
  * @return {boolean} True if late
  */
-const isLate = item => {
-  return item.lateTime !== undefined && item.lateTime < 0
-}
+const isLate = item => item.lateTime !== undefined && item.lateTime < 0
 
 /**
  * Draw task bar content including text and indicators
@@ -353,9 +328,9 @@ const isLate = item => {
  * @return {void}
  */
 const drawTaskBarContent = (ctx, item, bounds, detailLevel, options) => {
-  if (detailLevel === 'ultra-low') return
+  if (detailLevel === PROJECT_DETAIL_LEVEL.ULTRA_LOW) return
 
-  if (detailLevel === 'normal') {
+  if (detailLevel === PROJECT_DETAIL_LEVEL.NORMAL) {
     clearShadow(ctx)
   }
 
@@ -414,9 +389,10 @@ const drawTaskBar = (ctx, item, style, renderState, options) => {
   }
 
   const bounds = { left, top, width, height }
-  const barColor =
-    style.backgroundColor || item.color || DEFAULT_STATUS_CONFIG.backgroundColor
-  drawBarBackground(ctx, bounds, barColor, detailLevel)
+
+  const colorConfig = getStatusColor(item.status)
+
+  drawBarBackground(ctx, bounds, colorConfig, detailLevel)
 
   drawTaskBarContent(ctx, item, bounds, detailLevel, options)
 
@@ -436,13 +412,14 @@ const drawTaskBar = (ctx, item, style, renderState, options) => {
  * @return {void}
  */
 const drawWarningIndicator = (ctx, right, top, height, barWidth, zoomLevel) => {
-  const MAX_SIZE = 12
-  const SCALE_FACTOR = 0.4
   const MIN_SIZE = (DEFAULT_CONFIG.pixelsPerDay - 1) * zoomLevel
 
   const scaledSize = barWidth
-    ? Math.min(MAX_SIZE, Math.max(MIN_SIZE, barWidth * SCALE_FACTOR))
-    : MAX_SIZE
+    ? Math.min(
+        INDICATOR_MAX_SIZE,
+        Math.max(MIN_SIZE, barWidth * INDICATOR_SCALE_FACTOR)
+      )
+    : INDICATOR_MAX_SIZE
   const size = Math.floor(scaledSize)
   const radius = Math.min(4, size / 2)
 
@@ -471,13 +448,14 @@ const drawWarningIndicator = (ctx, right, top, height, barWidth, zoomLevel) => {
  * @return {void}
  */
 const drawSuccessIndicator = (ctx, right, top, height, barWidth, zoomLevel) => {
-  const MAX_SIZE = 12
-  const SCALE_FACTOR = 0.4
   const MIN_SIZE = (DEFAULT_CONFIG.pixelsPerDay - 1) * zoomLevel
 
   const scaledSize = barWidth
-    ? Math.min(MAX_SIZE, Math.max(MIN_SIZE, barWidth * SCALE_FACTOR))
-    : MAX_SIZE
+    ? Math.min(
+        INDICATOR_MAX_SIZE,
+        Math.max(MIN_SIZE, barWidth * INDICATOR_SCALE_FACTOR)
+      )
+    : INDICATOR_MAX_SIZE
   const size = Math.floor(scaledSize)
   const radius = Math.min(4, size / 2)
 
@@ -524,14 +502,15 @@ const applyMilestoneTransform = (ctx, centerX, centerY, scale) => {
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @param {number} centerX - Center x-coordinate
  * @param {number} centerY - Center y-coordinate
- * @param {string} color - Fill color
+ * @param {Object} colorConfig - Fill color
  *
  * @return {void}
  */
-const drawMilestoneDiamond = (ctx, centerX, centerY, color) => {
+const drawMilestoneDiamond = (ctx, centerX, centerY, colorConfig) => {
   const halfSize = MILESTONE_SIZE / 2
+  const { backgroundColor, color } = colorConfig
 
-  ctx.fillStyle = color || DEFAULT_STATUS_CONFIG.backgroundColor
+  ctx.fillStyle = backgroundColor
   ctx.beginPath()
   ctx.moveTo(centerX, centerY - halfSize)
   ctx.lineTo(centerX + halfSize, centerY)
@@ -540,8 +519,8 @@ const drawMilestoneDiamond = (ctx, centerX, centerY, color) => {
   ctx.closePath()
   ctx.fill()
 
-  ctx.strokeStyle = '#0052cc'
-  ctx.lineWidth = 1.5
+  ctx.strokeStyle = color
+  ctx.lineWidth = 1
   ctx.stroke()
 }
 
@@ -551,68 +530,19 @@ const drawMilestoneDiamond = (ctx, centerX, centerY, color) => {
  * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
  * @param {number} centerX - Center x-coordinate
  * @param {number} centerY - Center y-coordinate
+ * @param {Object} colorConfig - Fill color
  *
  * @return {void}
  */
-const drawMilestoneCenter = (ctx, centerX, centerY) => {
+const drawMilestoneCenter = (ctx, centerX, centerY, colorConfig) => {
   clearShadow(ctx)
-  ctx.fillStyle = 'white'
+  ctx.fillStyle = '#FFFFFF'
   ctx.beginPath()
   ctx.arc(centerX, centerY, MILESTONE_CENTER_DOT_RADIUS, 0, Math.PI * 2)
   ctx.fill()
-}
-
-/**
- * Generate display text for milestone label
- *
- * @param {Object} item - Timeline item data
- *
- * @return {string} Formatted text
- */
-const getMilestoneText = item => {
-  return [item.issueKey, item.name].filter(Boolean).join(': ') || NOT_AVAILABLE
-}
-
-/**
- * Configure canvas context for milestone label rendering
- *
- * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {Object} options - Rendering options
- *
- * @return {void}
- */
-const setupLabelContext = (ctx, options) => {
-  ctx.setTransform(1, 0, 0, 1, 0, 0)
-
-  const dpr = options && options.dpr ? options.dpr : 1
-  ctx.scale(dpr, dpr)
-
-  const hPadding =
-    options && options.horizontalPadding ? options.horizontalPadding : 0
-  if (hPadding > 0) {
-    ctx.translate(hPadding, 0)
-  }
-}
-
-/**
- * Draw rounded background pill for milestone label
- *
- * @param {CanvasRenderingContext2D} ctx - Canvas rendering context
- * @param {number} pillX - Pill x-coordinate
- * @param {number} pillY - Pill y-coordinate
- * @param {number} pillWidth - Pill width
- *
- * @return {void}
- */
-const drawLabelPill = (ctx, pillX, pillY, pillWidth) => {
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.95)'
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.15)'
-  ctx.shadowBlur = 4
-  ctx.shadowOffsetY = 1
-  ctx.beginPath()
-  ctx.roundRect(pillX, pillY, pillWidth, MILESTONE_LABEL_HEIGHT, 4)
-  ctx.fill()
-  clearShadow(ctx)
+  ctx.strokeStyle = colorConfig.color
+  ctx.lineWidth = 1
+  ctx.stroke()
 }
 
 /**
@@ -622,13 +552,12 @@ const drawLabelPill = (ctx, pillX, pillY, pillWidth) => {
  * @param {Object} item - Timeline item data
  * @param {Object} style - CSS style properties
  * @param {Object} renderState - Rendering state
- * @param {Object} options - Rendering options
  *
  * @return {void}
  */
-const drawMilestone = (ctx, item, style, renderState, options) => {
+const drawMilestone = (ctx, item, style, renderState) => {
   const { isHovered, animationProgress, detailLevel } = renderState
-  const progress = animationProgress !== undefined ? animationProgress : 1
+  const progress = animationProgress || 1
   const left = Number.parseFloat(style.left)
   const top = Number.parseFloat(style.top)
   const centerX = left
@@ -643,10 +572,11 @@ const drawMilestone = (ctx, item, style, renderState, options) => {
   const scale = getAnimationScale(progress)
   applyMilestoneTransform(ctx, centerX, centerY, scale)
 
-  drawMilestoneDiamond(ctx, centerX, centerY, item.color)
+  const colorConfig = getStatusColor(item.status)
+  drawMilestoneDiamond(ctx, centerX, centerY, colorConfig)
 
-  if (detailLevel !== 'ultra-low') {
-    drawMilestoneCenter(ctx, centerX, centerY)
+  if (detailLevel !== PROJECT_DETAIL_LEVEL.ULTRA_LOW) {
+    drawMilestoneCenter(ctx, centerX, centerY, colorConfig)
   }
 
   ctx.restore()

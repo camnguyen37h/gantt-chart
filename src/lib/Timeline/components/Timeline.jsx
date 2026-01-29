@@ -1,14 +1,15 @@
+import { DateFormat } from '../constants/DateFormat'
 import { Button, Icon } from 'antd'
 import { isObject } from 'lodash'
 import moment from 'moment'
 import PropTypes from 'prop-types'
-import { memo, useEffect, useState, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
+import { useTimeline } from '../hooks/useTimeline'
+import { ITEM_TYPES } from '../constants'
+import { isMilestone } from '../utils/itemUtils'
 import { TimelineStyled } from './Timeline.styled'
 import TimelineCanvas from './TimelineCanvas'
 import TimelineLegend from './TimelineLegend'
-import useTimeline from '../hooks/useTimeline'
-import { DateFormat } from '../constants/DateFormat'
-import { isMilestone } from '../utils/itemUtils'
 
 const Timeline = memo(
   ({
@@ -35,6 +36,7 @@ const Timeline = memo(
       isZooming,
       zoomLevel,
     } = useTimeline(items, config)
+    const { typeTimelineMap } = legendProps
 
     const [activeFilters, setActiveFilters] = useState({
       range: true,
@@ -42,17 +44,21 @@ const Timeline = memo(
     })
 
     const filteredLayoutItems = useMemo(() => {
-      if (!layoutItems) return layoutItems
-      
+      if (!layoutItems) {
+        return layoutItems
+      }
+
       return layoutItems.filter(item => {
         const isItemMilestone = isMilestone(item)
-        if (isItemMilestone && !activeFilters.milestone) return false
-        if (!isItemMilestone && !activeFilters.range) return false
-        return true
+
+        return !(
+          (isItemMilestone && !activeFilters.milestone) ||
+          (!isItemMilestone && !activeFilters.range)
+        )
       })
     }, [layoutItems, activeFilters])
 
-    const toggleFilter = (filterType) => {
+    const toggleFilter = filterType => {
       setActiveFilters(prev => ({
         ...prev,
         [filterType]: !prev[filterType],
@@ -142,18 +148,24 @@ const Timeline = memo(
 
         {/* Timeline Legend */}
         <div className="timeline-legend-types">
-          <button 
-            className={`timeline-legend-type range-time ${activeFilters.range ? '' : 'hidden'}`}
-            onClick={() => toggleFilter('range')}
-          >
-            Delivery ticket
-          </button>
-          <button 
-            className={`timeline-legend-type abnormal ${activeFilters.milestone ? '' : 'hidden'}`}
-            onClick={() => toggleFilter('milestone')}
-          >
-            Delivery ticket unable to determine timeframe
-          </button>
+          {typeTimelineMap.includes(ITEM_TYPES.RANGE) && (
+            <button
+              className={`timeline-legend-type range-time ${
+                activeFilters.range ? '' : 'hidden'
+              }`}
+              onClick={() => toggleFilter('range')}>
+              Delivery ticket
+            </button>
+          )}
+          {typeTimelineMap.includes(ITEM_TYPES.MILESTONE) && (
+            <button
+              className={`timeline-legend-type abnormal ${
+                activeFilters.milestone ? '' : 'hidden'
+              }`}
+              onClick={() => toggleFilter('milestone')}>
+              Delivery ticket unable to determine timeframe
+            </button>
+          )}
         </div>
         <TimelineLegend items={items} {...legendProps} />
       </TimelineStyled>
@@ -191,7 +203,6 @@ Timeline.propTypes = {
 }
 
 Timeline.defaultProps = {
-  items: [],
   legendProps: {},
   headerProps: {},
 }

@@ -31,11 +31,12 @@ const TimelineLegendStyled = styled.div`
   }
 
   .timeline-legend-color {
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
     display: inline-block;
     flex-shrink: 0;
+    width: 24px;
+    height: 16px;
+    border-radius: 4px;
+    border: 1px solid;
   }
 
   .timeline-legend-label {
