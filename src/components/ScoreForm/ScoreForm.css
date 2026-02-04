@@ -1,0 +1,153 @@
+.score-form {
+  width: 100%;
+}
+
+.score-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.btn-add-row,
+.btn-save {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-add-row {
+  background: #4caf50;
+  color: white;
+}
+
+.btn-add-row:hover {
+  background: #45a049;
+}
+
+.btn-save {
+  background: #2196f3;
+  color: white;
+}
+
+.btn-save:hover {
+  background: #0b7dda;
+}
+
+.score-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.score-table thead {
+  background: #f5f5f5;
+}
+
+.score-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.score-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.score-table tr:last-child td {
+  border-bottom: none;
+}
+
+.score-table tr:hover {
+  background: #f9f9f9;
+}
+
+.td-center {
+  text-align: center;
+}
+
+.score-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.score-input:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.score-input.error {
+  border-color: #f44336;
+  background: #fff5f5;
+}
+
+.score-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #ffebee;
+}
+
+.btn-delete:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.general-error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 12px;
+  border-radius: 4px;
+  margin-top: 16px;
+  font-size: 14px;
+  border-left: 4px solid #f44336;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .score-table-wrapper {
+    overflow-x: scroll;
+  }
+
+  .score-input {
+    min-width: 120px;
+  }
+}
