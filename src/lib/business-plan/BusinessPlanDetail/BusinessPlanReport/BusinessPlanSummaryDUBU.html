@@ -1,0 +1,427 @@
+<style>
+  html {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(230, 230, 230);
+  }
+  @media print {
+    img {
+      display: block;
+      page-break-inside: avoid;
+    }
+    html {
+      background-color: white;
+    }
+    body {
+      background-color: white;
+    }
+    ._container {
+      max-height: 1122px;
+    }
+  }
+  body {
+    width: 100%;
+    background-color: rgb(230, 230, 230);
+    padding: 0;
+    margin: 0;
+  }
+  fieldset {
+    border: 4px solid black;
+  }
+  ._container {
+    /* format page print of browser */
+    width: 1500px;
+    /*height: 1122px;*/
+    background-color: white;
+    padding: 30px 30px 15px 30px;
+    margin: 0 auto;
+  }
+  ._header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  ._header_logo {
+    /*background: url("images/logo.png");*/
+    width: 300px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: block;
+  }
+  ._heade_title {
+    font-size: 18px;
+    line-height: 22px;
+    display: block;
+  }
+  .head-page {
+    float: left;
+  }
+  ._legend_title {
+    font-size: 20px;
+    font-weight: 700;
+    border-bottom: 2px solid black;
+  }
+  .legend-secondary {
+    font-size: 16px;
+    font-weight: 500;
+    border-bottom: 1px solid black;
+    margin-top: 10px;
+  }
+  ._issue_info {
+    display: flex;
+    justify-content: space-between;
+  }
+  ._issue_info-content {
+    width: 100%;
+    float: left;
+  }
+  ._issue_info_qrCode {
+    width: 180px;
+    /*height: 177px !important;*/
+    border: 4px solid black;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-top: 9px;
+    padding-bottom: 2px;
+  }
+
+  ._issue_status-table {
+    border-radius: 1px;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: normal;
+    border: 1px solid black;
+    /* border-collapse: collapse; */
+    width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    margin: 10px 10px 10px 0px;
+    text-align: center;
+  }
+  .tblInfo tr td {
+    margin-right: 10px;
+  }
+  ._issue_status-table td,
+  .fl-table th {
+    text-align: left !important;
+    padding: 6px;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+  }
+
+  ._issue_status-table td {
+    border-right: 1px solid #c5c5c5;
+    font-size: 14px;
+    line-height: 18px;
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+  }
+
+  ._issue_status-table thead th {
+    color: #3a3a3a;
+    background: #a2cbe2;
+    font-size: 16px;
+    line-height: 26px;
+  }
+  ._issue_status-table thead th:nth-child(odd) {
+    color: #111111;
+    background: #a2cbe2;
+  }
+
+  ._issue_status-table tr:nth-child(even) {
+    background: #e9e9e9;
+  }
+  ._issue_status-table tr:nth-child(odd) {
+    background: #f8f8f8;
+  }
+  .business-plan-unit {
+    text-align: center;
+    padding: 10px 4px;
+    border: 1px solid #000;
+    width: 120px;
+    float: right;
+    margin-bottom: 14px;
+  }
+  .marginBottom {
+    margin-bottom: 20px;
+  }
+  .narrow-column {
+    width: 200px; /* Điều chỉnh chiều rộng theo nhu cầu */
+    word-wrap: break-word;
+    white-space: normal;
+  }
+  .du-bu-column {
+    width: 70px;
+  }
+  footer {
+    text-align: center;
+  }
+</style>
+<html>
+  <header>
+    <title>CONTRACT-9996 Review</title>
+  </header>
+  <body>
+    <div class="_container">
+      <div class="_issue_status marginBottom">
+        <fieldset class="field-approve">
+          <legend class="legend-approve">
+            <span class="_legend_title">BUSINESS PLAN SUMMARY</span>
+          </legend>
+          <div class="business-plan-unit">Unit: 1,000VND</div>
+          <table class="_issue_status-table">
+            <thead>
+              <tr id="table-header"></tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </fieldset>
+      </div>
+      <div style="text-align: center">
+        CMC Global ©2021 Created by CMC Corporation
+      </div>
+    </div>
+  </body>
+  <script>
+    const headers = [
+      'Items',
+      'th1',
+      'th2',
+      'th3',
+      'th4',
+      'th5',
+      'th6',
+      'th7',
+      'th8',
+      'th9',
+      'th10',
+      'th11',
+      'th12',
+    ]
+    const data = [
+      {
+        items: 'Unit price',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Revenues',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Cost of sales',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Selling expenses',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Delivery expenses',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Tax expenses',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Direct Margin',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Direct Margin before incentives and Project bonus',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Allocation of pool and unbillable',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Indirect Margin',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Direct Margin rate',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Direct Margin before Incentives and Project bonus rate',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+      {
+        items: 'Indirect margin rate',
+        th1: '100000000',
+        th2: '100000000',
+        th3: '100000000',
+        th4: '100000000',
+        th5: '100000000',
+        th6: '100000000',
+        th7: '100000000',
+        th8: '100000000',
+        th9: '100000000',
+        th10: '100000000',
+        th11: '100000000',
+        th12: '100000000',
+      },
+    ]
+
+    const tableHeader = document.getElementById('table-header')
+    const tableBody = document.getElementById('table-body')
+
+    // Tạo các thẻ <th> từ mảng headers
+    headers.forEach(header => {
+      const th = document.createElement('th')
+      th.textContent = header
+      tableHeader.appendChild(th)
+    })
+
+    // Tạo các hàng <tr> từ mảng data
+    data.forEach(item => {
+      const row = document.createElement('tr')
+      headers.forEach((header, index) => {
+        const td = document.createElement('td')
+        td.textContent = item[header.toLowerCase()]
+        if (index === 0) {
+          td.classList.add('narrow-column') // Áp dụng lớp CSS cho cột đầu tiên
+        } else {
+          td.classList.add('du-bu-column')
+        }
+        row.appendChild(td)
+      })
+      tableBody.appendChild(row)
+    })
+  </script>
+</html>

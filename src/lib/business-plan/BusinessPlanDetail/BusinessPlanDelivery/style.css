@@ -1,0 +1,128 @@
+/* Business Plan Delivery */
+.delivery-collapse .ant-collapse-item .ant-collapse-header {
+    font-size: 14px;
+    font-weight: 400;
+    border-bottom: 0px solid;
+  }
+  
+  .delivery-collapse .ant-collapse-content {
+    margin-left: 24px;
+  }
+
+  .delivery-reference-table .ant-table-thead > tr > th {
+    background: rgb(212, 212, 212);
+  }
+  
+  .delivery-reference-table .ant-table-tbody > tr:nth-child(even) {
+    background: rgb(235, 235, 235);
+  }
+  
+  .delivery-reference-table .ant-table-thead > tr > th,
+  .delivery-reference-table .ant-table-tbody > tr > td {
+    font-size: 14px;
+  }
+  
+  /* Border */
+  .delivery-reference-table {
+    border: 1px solid #b0b0b0;
+  }
+  
+  /* Border bottom */
+  .delivery-reference-table .ant-table-thead > tr > th,
+  .delivery-reference-table .ant-table-tbody > tr:not(:last-child) > td {
+    border-bottom: 1px solid #b0b0b0;
+  }
+  
+  /* Border right */
+  .delivery-reference-table .ant-table-thead > tr > th:not(:last-child),
+  .delivery-reference-table .ant-table-tbody > tr > td:not(:last-child) {
+    border-right: 1px solid #b0b0b0;
+  }
+
+  .delivery-reference-table .ant-table-thead > tr > th, 
+  .delivery-reference-table .ant-table-tbody > tr > td {
+    height: 42px;
+    padding: 8px 16px;
+  }
+  .ant-popover-inner-content:has(.ant-menu) {
+    padding: 0;
+  }
+  .ant-popover-inner-content:has(.ant-menu) .ant-menu .ant-menu-item {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .head-count-table .ant-table .ant-table-thead > tr > th {
+    padding: 16px 8px;
+  }
+  .head-count-table .ant-table .ant-table-tbody > tr > td {
+    padding: 8px;
+  }
+  .head-count-table .ant-table .ant-table-tbody .head-count-table-sub-row > td {
+    padding: 4px 8px;
+  }
+
+  .head-count-table .ant-table .ant-table-tbody:has(.ant-table-expanded-row) > .ant-table-expanded-row > td {
+    padding: 0px;
+  }
+  .head-count-table .head-count-table-row {
+    height: 50px;
+  }
+  .head-count-table .head-count-warning-column {
+    padding: 0px !important;
+  }
+  .resource-type-tooltip .ant-tooltip-content {
+    width: 400px;
+  }
+  .delivery-plan-error-tooltip .ant-tooltip-content { 
+    width: 260px;
+  }
+
+  .other-expenses-table-hidden, .head-count-table-column-hidden {
+    padding: 0px !important;
+  }
+
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ant-select-dropdown--empty .ant-select-dropdown-menu :has(.not-found-resource) {
+    padding: 0px !important;
+  }
+  .ant-select-dropdown-menu-item-disabled:has(.not-found-resource) {
+    color: rgba(0, 0, 0, 0.65);
+  }
+  .ant-select-dropdown-menu-item-disabled:has(.not-found-resource) :hover {
+    color: rgba(0, 0, 0, 0.65);
+  }
+
+  .labor-cost-table .ant-table .ant-table-thead > tr > th,
+  .labor-cost-table .ant-table .ant-table-tbody > tr > td {
+    padding: 16px 8px;
+  }
+  .labor-cost-table .ant-table-fixed-left {
+    top: -1px;
+  }
+  /* set height for main row */
+  .other-expenses-table .ant-table-tbody > tr {
+    height: 50px !important;
+  }
+  .other-expenses-table .ant-table .ant-table-tbody  .other-expenses-sub-row > td {
+    padding: 4px 8px;
+    /* height: 40px !important; */
+  }
+
+  .other-expenses-table .ant-table .ant-table-thead > tr > th,
+  .other-expenses-table .ant-table .ant-table-tbody > tr > td {
+    padding: 16px 8px;
+  }
+
+  .select-error {
+    border: 1px red;
+    border-radius: 4px;
+  }
+  .select-error .ant-select-selection:hover {
+    border-color: red;
+  }

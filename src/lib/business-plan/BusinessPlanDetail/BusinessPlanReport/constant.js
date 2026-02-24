@@ -1,0 +1,332 @@
+export const GeneralInformationTotalTemplate = data => {
+//   const { generalInformation } = data
+  const dataMap = [
+    {
+      stt: 1,
+      items: 'Unit price',
+      date: '2024-07-26',
+    },
+    {
+      stt: 2,
+      items: 'Revenues',
+      date: '2024-07-26',
+    },
+    {
+      stt: 3,
+      items: 'Cost of sales',
+      date: '2024-07-26',
+    },
+    {
+      stt: 4,
+      items: 'Selling expenses',
+      date: '2024-07-26',
+    },
+    {
+      stt: 5,
+      items: 'Delivery expenses',
+      date: '2024-07-26',
+    },
+    {
+      stt: 6,
+      items: 'Tax expenses',
+      date: '2024-07-26',
+    },
+    {
+      stt: 7,
+      items: 'Direct Margin',
+      date: '2024-07-26',
+    },
+    {
+      stt: 8,
+      items: 'Direct Margin before incentives and Project bonus',
+      date: '2024-07-26',
+    },
+    {
+      stt: 9,
+      items: 'Allocation of pool and unbillable',
+      date: '2024-07-26',
+    },
+    {
+      stt: 10,
+      items: 'Indirect Margin',
+      date: '2024-07-26',
+    },
+    {
+      stt: 11,
+      items: 'Direct Margin rate',
+      date: '2024-07-26',
+    },
+    {
+      stt: 12,
+      items: 'Direct Margin before Incentives and Project bonus rate',
+      date: '2024-07-26',
+    },
+    {
+      stt: 13,
+      items: 'Indirect Margin rate',
+      date: '2024-07-26',
+    },
+  ]
+  let rows = ''
+  dataMap.forEach(item => {
+    rows += `
+      <tr>
+        <td width="10%">${item.stt}</td>
+        <td width="60%" style="text-align: left !important">${item.items}</td>
+        <td width="30%">${item.date}</td>
+      </tr>
+    `
+  })
+  return `
+<html>
+  <header>
+    <title>CONTRACT-9996 Review</title>
+    <style>
+      html {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: rgb(230, 230, 230);
+      }
+      @media print {
+        img {
+          display: block;
+          page-break-inside: avoid;
+        }
+        html {
+          background-color: white;
+        }
+        body {
+          background-color: white;
+        }
+        ._container {
+          max-height: 1122px;
+        }
+      }
+      body {
+        width: 100%;
+        background-color: rgb(230, 230, 230);
+        padding: 0;
+        margin: 0;
+      }
+      fieldset {
+        border: 4px solid black;
+      }
+    .field-approve {
+        padding : 14px
+    }
+      ._container {
+        /* format page print of browser */
+        width: 793px;
+        /*height: 1122px;*/
+        background-color: white;
+        padding: 30px 30px 15px 30px;
+        margin: 0 auto;
+      }
+      ._header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+      ._header_logo {
+        /*background: url("images/logo.png");*/
+        width: 300px;
+        height: 50px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        display: block;
+      }
+      ._heade_title {
+        font-size: 18px;
+        line-height: 22px;
+        display: block;
+      }
+      .head-page {
+        float: left;
+      }
+      ._legend_title {
+        font-size: 20px;
+        font-weight: 700;
+        border-bottom: 2px solid black;
+      }
+      .legend-secondary {
+        font-size: 16px;
+        font-weight: 500;
+        border-bottom: 1px solid black;
+        margin-top: 10px;
+      }
+      ._issue_info {
+        display: flex;
+        justify-content: space-between;
+      }
+      ._issue_info-content {
+        width: 100%;
+        float: left;
+      }
+      ._issue_info_qrCode {
+        width: 180px;
+        /*height: 177px !important;*/
+        border: 4px solid black;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-top: 9px;
+        padding-bottom: 2px;
+      }
+
+      ._issue_status-table {
+        border-radius: 1px;
+        font-size: 16px;
+        line-height: 18px;
+        font-weight: normal;
+        border: 1px solid black;
+        /* border-collapse: collapse; */
+        width: 100%;
+        white-space: nowrap;
+        background-color: white;
+        margin: 10px 10px 10px 0px;
+        text-align: center;
+      }
+      .tblInfo tr td {
+        margin-right: 10px;
+      }
+      ._issue_status-table td,
+      .fl-table th {
+        text-align: center !important;
+        padding: 8px;
+        word-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+      }
+
+      ._issue_status-table td {
+        border-right: 1px solid #c5c5c5;
+        font-size: 14px;
+        line-height: 18px;
+        word-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+      }
+
+      ._issue_status-table thead th {
+        color: #3a3a3a;
+        background: #a2cbe2;
+        font-size: 16px;
+        line-height: 26px;
+      }
+      ._issue_status-table thead th:nth-child(odd) {
+        color: #111111;
+        background: #a2cbe2;
+      }
+
+      ._issue_status-table tr:nth-child(even) {
+        background: #e9e9e9;
+      }
+      ._issue_status-table tr:nth-child(odd) {
+        background: #f8f8f8;
+      }
+      .business-plan-unit {
+        text-align: center;
+        padding: 10px 4px;
+        border: 1px solid #000;
+        width: 120px;
+        float: right;
+        margin-bottom: 14px;
+      }
+      .marginBottom {
+        margin-bottom: 20px;
+      }
+      footer {
+        text-align: center;
+      }
+    </style>
+  </header>
+  <body>
+    <div class="_container">
+      <div class="_header marginBottom">
+        <div class="_header_logo">
+          <img
+            style="width: 250px"
+            height="50px"
+            src="/images/QR_Code_Contract/logo.png"
+            alt="Logo"
+          />
+        </div>
+        <div class="_heade_title">
+          <h4>Business Plan</h4>
+          <h5 style="text-align: end !important">GLBOD2400064</h5>
+        </div>
+      </div>
+      <div class="_issue_info marginBottom">
+        <div class="_issue_info-content">
+          <fieldset class="field-approve">
+            <legend>
+              <span class="_legend_title">General Information</span>
+            </legend>
+            <table class="tblInfo">
+              <tr>
+                <td>Customer Name:</td>
+                <td>test ddddd</td>
+              </tr>
+              <tr>
+                <td>Project Name:</td>
+                <td>nthuong15 v2</td>
+              </tr>
+              <tr>
+                <td>Order Type :</td>
+                <td>T&M</td>
+              </tr>
+              <tr>
+                <td>Customer Market:</td>
+                <td>APAC</td>
+              </tr>
+              <tr>
+                <td>Original Revenue(---):</td>
+                <td>---</td>
+              </tr>
+              <tr>
+                <td>Revenues (VND):</td>
+                <td>---</td>
+              </tr>
+              <tr>
+                <td>Version:</td>
+                <td>---</td>
+              </tr>
+              <tr>
+                <td>AM:</td>
+                <td>ldap</td>
+              </tr>
+              <tr>
+                <td>Status:</td>
+                <td>Approved by CEO</td>
+              </tr>
+            </table>
+          </fieldset>
+        </div>
+      </div>
+      <div class="_issue_status marginBottom">
+        <fieldset class="field-approve">
+          <legend class="legend-approve">
+            <span class="_legend_title">BUSINESS PLAN SUMMARY</span>
+          </legend>
+          <div class="business-plan-unit">Unit: 1,000VND</div>
+          <table class="_issue_status-table">
+            <thead>
+              <tr>
+                <th width="10%">STT</th>
+                <th width="50%">Summary</th>
+                <th width="40%">Total</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              ${rows}
+            </tbody>
+          </table>
+        </fieldset>
+      </div>
+      <div style="text-align: center">
+        CMC Global ©2021 Created by CMC Corporation
+      </div>
+    </div>
+
+  </body>
+</html>
+`
+}
