@@ -8,7 +8,7 @@ import {
 import { Layout } from 'antd'
 import AppHeader from './components/Layout/AppHeader'
 import Sidebar from './components/Layout/Sidebar'
-import BusinessPlanDetailPage from './pages/BusinessPlanDetailPage'
+import ExportDemoPage from './pages/ExportDemoPage'
 import './App.css'
 
 const { Content } = Layout
@@ -30,11 +30,12 @@ const App = () => {
                 borderRadius: 4,
               }}>
               <Switch>
-                <Route exact path="/" render={() => <Redirect to="/" />} />
                 <Route
-                  path="/business-plan/:buId"
-                  component={BusinessPlanDetailPage}
+                  exact
+                  path="/"
+                  render={() => <Redirect to="/export-demo" />}
                 />
+                <Route path="/export-demo" component={ExportDemoPage} />
               </Switch>
             </Content>
           </Layout>
