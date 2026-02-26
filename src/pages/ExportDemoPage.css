@@ -1,0 +1,57 @@
+/**
+ * ExportDemoPage Styles
+ */
+
+.export-demo-page {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: calc(100vh - 64px);
+}
+
+.export-demo-header {
+  margin-bottom: 24px;
+}
+
+.export-demo-header h2 {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.export-demo-header p {
+  margin-bottom: 0;
+  max-width: 800px;
+}
+
+.status-card {
+  position: sticky;
+  top: 24px;
+}
+
+.status-card .ant-card-body {
+  padding: 20px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .export-demo-page {
+    padding: 16px;
+  }
+
+  .status-card {
+    position: relative;
+    top: auto;
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .export-demo-page {
+    padding: 12px;
+  }
+
+  .export-demo-header h2 {
+    font-size: 20px;
+  }
+}

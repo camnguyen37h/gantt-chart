@@ -1,0 +1,96 @@
+/**
+ * ExportModal Styles
+ */
+
+.export-modal {
+  user-select: none;
+}
+
+.export-modal-content {
+  padding: 24px 0;
+  text-align: center;
+}
+
+.export-modal-icon {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.export-modal-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 12px;
+  line-height: 1.35;
+}
+
+.export-modal-description {
+  font-size: 14px;
+  color: #595959;
+  margin-bottom: 24px;
+  line-height: 1.5;
+  padding: 0 16px;
+}
+
+.export-modal-progress {
+  margin: 24px 0;
+  padding: 0 24px;
+}
+
+.export-modal-actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.export-modal-actions button {
+  min-width: 120px;
+}
+
+/* Animation for icon */
+.export-modal-icon .anticon {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Progress animation */
+.export-modal-progress .ant-progress-line {
+  transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .export-modal {
+    width: 90% !important;
+    margin: 0 auto;
+  }
+
+  .export-modal-title {
+    font-size: 20px;
+  }
+
+  .export-modal-description {
+    font-size: 13px;
+  }
+
+  .export-modal-actions {
+    flex-direction: column;
+  }
+
+  .export-modal-actions button {
+    width: 100%;
+  }
+}
