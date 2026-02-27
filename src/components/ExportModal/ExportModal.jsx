@@ -132,7 +132,7 @@ const ExportModal = ({
       title={null}
       footer={null}
       closable={status !== EXPORT_STATUS.PROCESSING}
-      onClose={onCancel}
+      onCancel={onCancel}
       maskClosable={false}
       centered
       width={500}

@@ -1,9 +1,9 @@
 /**
- * useExportFile Hook
- * Manages export file workflow with polling, retries, and persistence
+ * Export File Hook
+ * Manages file export workflow with polling, retry logic, and state persistence
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useReducer, useEffect, useRef, useCallback } from 'react'
 import {
   createExportJob,
   checkExportStatus,
@@ -12,80 +12,189 @@ import {
   EXPORT_STATUS
 } from '../utils/mockExportApi'
 
+// ============================================================================
 // Constants
-const MAX_RETRY_COUNT = 6
-const POLL_INTERVAL = 3000 // 3 seconds
-const STORAGE_KEY = 'export_jobs'
+// ============================================================================
 
-/**
- * Get stored export jobs from localStorage
- */
-const getStoredJobs = () => {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    return stored ? JSON.parse(stored) : {}
-  } catch (error) {
-    console.error('Failed to parse stored export jobs:', error)
-    return {}
-  }
+const CONFIG = {
+  MAX_RETRIES: 6,
+  POLL_INTERVAL: 3000,
+  STORAGE_KEY: 'export_jobs'
 }
 
-/**
- * Save export job to localStorage
- */
-const saveJobToStorage = (exportId, jobData) => {
-  try {
-    const jobs = getStoredJobs()
-    jobs[exportId] = {
-      ...jobData,
-      lastUpdated: Date.now()
+const INITIAL_STATE = {
+  isExporting: false,
+  exportId: null,
+  status: null,
+  progress: 0,
+  error: null,
+  retryCount: 0,
+  fileName: null,
+  isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true
+}
+
+// ============================================================================
+// Storage Utilities
+// ============================================================================
+
+const storage = {
+  get: () => {
+    try {
+      const data = localStorage.getItem(CONFIG.STORAGE_KEY)
+      return data ? JSON.parse(data) : {}
+    } catch {
+      return {}
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs))
-  } catch (error) {
-    console.error('Failed to save export job:', error)
+  },
+
+  set: (exportId, jobData) => {
+    try {
+      const jobs = storage.get()
+      jobs[exportId] = { ...jobData, lastUpdated: Date.now() }
+      localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(jobs))
+    } catch (error) {
+      console.error('Storage save failed:', error)
+    }
+  },
+
+  remove: (exportId) => {
+    try {
+      const jobs = storage.get()
+      delete jobs[exportId]
+      localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(jobs))
+    } catch (error) {
+      console.error('Storage remove failed:', error)
+    }
+  },
+
+  clear: () => {
+    try {
+      localStorage.removeItem(CONFIG.STORAGE_KEY)
+    } catch (error) {
+      console.error('Storage clear failed:', error)
+    }
   }
 }
+
+// ============================================================================
+// State Reducer
+// ============================================================================
+
+const actionTypes = {
+  RESET: 'RESET',
+  UPDATE: 'UPDATE',
+  START: 'START',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  RETRY: 'RETRY',
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE'
+}
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case actionTypes.RESET:
+      return { ...INITIAL_STATE, isOnline: state.isOnline }
+    
+    case actionTypes.UPDATE:
+      return { ...state, ...action.payload }
+    
+    case actionTypes.START:
+      return {
+        ...state,
+        isExporting: true,
+        exportId: action.payload.exportId,
+        status: EXPORT_STATUS.PROCESSING,
+        progress: 0,
+        error: null,
+        retryCount: 0
+      }
+    
+    case actionTypes.SUCCESS:
+      return {
+        ...state,
+        isExporting: false,
+        status: EXPORT_STATUS.SUCCESS,
+        progress: 100,
+        fileName: action.payload.fileName
+      }
+    
+    case actionTypes.FAILED:
+      return {
+        ...state,
+        isExporting: false,
+        status: EXPORT_STATUS.FAILED,
+        progress: 100,
+        error: action.payload.error
+      }
+    
+    case actionTypes.CANCELLED:
+      return {
+        ...state,
+        isExporting: false,
+        status: EXPORT_STATUS.CANCELLED,
+        error: 'Export cancelled'
+      }
+    
+    case actionTypes.RETRY:
+      return {
+        ...state,
+        retryCount: state.retryCount + 1,
+        error: action.payload?.error || state.error
+      }
+    
+    case actionTypes.ONLINE:
+      return { ...state, isOnline: true, error: null }
+    
+    case actionTypes.OFFLINE:
+      return { ...state, isOnline: false, error: 'Network offline' }
+    
+    default:
+      return state
+  }
+}
+
+// ============================================================================
+// File Download Utility
+// ============================================================================
 
 /**
- * Remove export job from localStorage
+ * Trigger browser file download
+ * @param {Blob} blob - File blob
+ * @param {string} fileName - Download file name
  */
-const removeJobFromStorage = (exportId) => {
-  try {
-    const jobs = getStoredJobs()
-    delete jobs[exportId]
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs))
-  } catch (error) {
-    console.error('Failed to remove export job:', error)
-  }
+const triggerDownload = (blob, fileName) => {
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = fileName
+  link.style.display = 'none'
+  
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  
+  URL.revokeObjectURL(url)
 }
 
-export const useExportFile = () => {
-  const [exportState, setExportState] = useState({
-    isExporting: false,
-    exportId: null,
-    status: null,
-    progress: 0,
-    error: null,
-    retryCount: 0,
-    fileName: null,
-    isOnline: navigator.onlineState !== undefined ? navigator.onLine : true
-  })
+// ============================================================================
+// Main Hook
+// ============================================================================
 
+/**
+ * Custom hook for managing file export workflow
+ * @returns {Object} Export state and control functions
+ */
+export const useExportFile = () => {
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
   const intervalRef = useRef(null)
   const mountedRef = useRef(true)
 
-  /**
-   * Update state safely (only if component is mounted)
-   */
-  const updateState = useCallback((updates) => {
-    if (mountedRef.current) {
-      setExportState(prev => ({ ...prev, ...updates }))
-    }
-  }, [])
+  // ==========================================================================
+  // Polling Control
+  // ==========================================================================
 
-  /**
-   * Clear polling interval
-   */
   const clearPolling = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
@@ -93,185 +202,179 @@ export const useExportFile = () => {
     }
   }, [])
 
-  /**
-   * Handle export failure
-   */
-  const handleExportFailure = useCallback((error, exportId) => {
+  const startPolling = useCallback((exportId, callback) => {
     clearPolling()
-    updateState({
-      isExporting: false,
-      status: EXPORT_STATUS.FAILED,
-      error: error || 'Export failed',
-      progress: 100
-    })
+    intervalRef.current = setInterval(() => callback(exportId), CONFIG.POLL_INTERVAL)
+  }, [clearPolling])
 
-    if (exportId) {
-      removeJobFromStorage(exportId)
-    }
-  }, [clearPolling, updateState])
+  // ==========================================================================
+  // Export Handlers
+  // ==========================================================================
 
   /**
-   * Handle export success and download file
+   * Handle export success - download file and cleanup
    */
-  const handleExportSuccess = useCallback(async (exportId, fileName) => {
+  const handleSuccess = useCallback(async (exportId, fileName) => {
+    clearPolling()
+
+    try {
+      const response = await downloadExportFile(exportId)
+      
+      if (!response.success) {
+        throw new Error('Download failed')
+      }
+
+      const { blob, fileName: downloadFileName } = response.data
+      
+      triggerDownload(blob, downloadFileName || fileName || 'export.xlsx')
+      
+      dispatch({
+        type: actionTypes.SUCCESS,
+        payload: { fileName: downloadFileName }
+      })
+
+      storage.remove(exportId)
+      return true
+    } catch (error) {
+      console.error('Download error:', error)
+      dispatch({
+        type: actionTypes.FAILED,
+        payload: { error: 'Download failed' }
+      })
+      storage.remove(exportId)
+      return false
+    }
+  }, [clearPolling])
+
+  /**
+   * Handle export failure - cleanup and update state
+   */
+  const handleFailure = useCallback((error, exportId) => {
+    clearPolling()
+    dispatch({
+      type: actionTypes.FAILED,
+      payload: { error: error || 'Export failed' }
+    })
+    if (exportId) storage.remove(exportId)
+  }, [clearPolling])
+
+  /**
+   * Handle timeout - cancel job and fail
+   */
+  const handleTimeout = useCallback(async (exportId) => {
     clearPolling()
     
     try {
-      updateState({
-        status: EXPORT_STATUS.SUCCESS,
-        progress: 100
-      })
-
-      // Download file
-      const response = await downloadExportFile(exportId)
-      
-      if (response.success) {
-        const { blob, fileName: downloadFileName } = response.data
-        
-        // Create download link
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = downloadFileName || fileName || 'export.xlsx'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
-
-        // Update state
-        updateState({
-          isExporting: false,
-          fileName: downloadFileName
-        })
-
-        // Clean up storage
-        removeJobFromStorage(exportId)
-
-        return true
-      } else {
-        throw new Error('Download failed')
-      }
+      await cancelExportJob(exportId)
     } catch (error) {
-      console.error('Download error:', error)
-      handleExportFailure('Failed to download file', exportId)
-      return false
+      console.error('Cancel on timeout failed:', error)
     }
-  }, [clearPolling, updateState, handleExportFailure])
+
+    handleFailure(`Timeout: exceeded ${CONFIG.MAX_RETRIES} retries`, exportId)
+  }, [clearPolling, handleFailure])
+
+  // ==========================================================================
+  // Status Polling
+  // ==========================================================================
 
   /**
-   * Poll export status
+   * Poll export status and handle state transitions
    */
-  const pollExportStatus = useCallback(async (exportId) => {
+  const pollStatus = useCallback(async (exportId) => {
+    if (!mountedRef.current) return
+
     try {
       const response = await checkExportStatus(exportId)
 
       if (!response.success) {
-        throw new Error(response.error || 'Failed to check status')
+        throw new Error(response.error || 'Status check failed')
       }
 
       const { status, progress, fileName } = response.data
 
-      // Update state
-      updateState({
-        status,
-        progress: progress || 0,
-        fileName: fileName || null
+      // Update UI state
+      dispatch({
+        type: actionTypes.UPDATE,
+        payload: { status, progress: progress || 0, fileName }
       })
 
-      // Save to storage
-      saveJobToStorage(exportId, {
+      // Persist to storage
+      storage.set(exportId, {
         exportId,
         status,
         progress,
         fileName,
-        retryCount: exportState.retryCount
+        retryCount: state.retryCount
       })
 
-      // Handle status
-      if (status === EXPORT_STATUS.SUCCESS) {
-        await handleExportSuccess(exportId, fileName)
-      } else if (status === EXPORT_STATUS.FAILED) {
-        handleExportFailure('Export processing failed', exportId)
-      } else if (status === EXPORT_STATUS.CANCELLED) {
-        handleExportFailure('Export was cancelled', exportId)
-      } else if (status === EXPORT_STATUS.PROCESSING) {
-        // Increment retry count
-        const newRetryCount = exportState.retryCount + 1
-        
-        updateState({
-          retryCount: newRetryCount
-        })
+      // Handle status transitions
+      switch (status) {
+        case EXPORT_STATUS.SUCCESS:
+          await handleSuccess(exportId, fileName)
+          break
 
-        // Check max retries
-        if (newRetryCount >= MAX_RETRY_COUNT) {
-          clearPolling()
+        case EXPORT_STATUS.FAILED:
+          handleFailure('Processing failed', exportId)
+          break
+
+        case EXPORT_STATUS.CANCELLED:
+          handleFailure('Export cancelled', exportId)
+          break
+
+        case EXPORT_STATUS.PROCESSING:
+          dispatch({ type: actionTypes.RETRY })
           
-          // Cancel the job
-          try {
-            await cancelExportJob(exportId)
-          } catch (cancelError) {
-            console.error('Failed to cancel job:', cancelError)
+          if (state.retryCount + 1 >= CONFIG.MAX_RETRIES) {
+            await handleTimeout(exportId)
           }
+          break
 
-          handleExportFailure(
-            `Export timeout: exceeded maximum retry attempts (${MAX_RETRY_COUNT})`,
-            exportId
-          )
-        }
+        default:
+          break
       }
     } catch (error) {
-      console.error('Polling error:', error)
+      console.error('Poll error:', error)
       
-      // Increment retry count on error
-      const newRetryCount = exportState.retryCount + 1
+      const newRetryCount = state.retryCount + 1
       
-      if (newRetryCount >= MAX_RETRY_COUNT) {
-        handleExportFailure(
-          `Network error: exceeded maximum retry attempts (${MAX_RETRY_COUNT})`,
-          exportId
-        )
+      if (newRetryCount >= CONFIG.MAX_RETRIES) {
+        handleFailure(`Network error: ${CONFIG.MAX_RETRIES} retries exceeded`, exportId)
       } else {
-        updateState({
-          retryCount: newRetryCount,
-          error: 'Connection error, retrying...'
+        dispatch({
+          type: actionTypes.RETRY,
+          payload: { error: 'Connection error, retrying...' }
         })
       }
     }
-  }, [exportState.retryCount, updateState, handleExportSuccess, handleExportFailure, clearPolling])
+  }, [state.retryCount, handleSuccess, handleFailure, handleTimeout])
+
+  // ==========================================================================
+  // Public API
+  // ==========================================================================
 
   /**
-   * Start export process
+   * Start new export job
+   * @param {Object} params - Export parameters
+   * @returns {Promise<string|null>} Export ID or null if failed
    */
   const startExport = useCallback(async (params = {}) => {
     try {
-      // Reset state
-      updateState({
-        isExporting: true,
-        exportId: null,
-        status: null,
-        progress: 0,
-        error: null,
-        retryCount: 0,
-        fileName: null
-      })
+      dispatch({ type: actionTypes.RESET })
 
-      // Create export job
       const response = await createExportJob(params)
 
       if (!response.success) {
-        throw new Error(response.error || 'Failed to create export job')
+        throw new Error(response.error || 'Job creation failed')
       }
 
       const { exportId } = response.data
 
-      // Update state
-      updateState({
-        exportId,
-        status: EXPORT_STATUS.PROCESSING
+      dispatch({
+        type: actionTypes.START,
+        payload: { exportId }
       })
 
-      // Save to storage
-      saveJobToStorage(exportId, {
+      storage.set(exportId, {
         exportId,
         status: EXPORT_STATUS.PROCESSING,
         progress: 0,
@@ -279,89 +382,61 @@ export const useExportFile = () => {
         startedAt: Date.now()
       })
 
-      // Start polling
-      clearPolling()
-      intervalRef.current = setInterval(() => {
-        pollExportStatus(exportId)
-      }, POLL_INTERVAL)
-
-      // Initial status check
-      await pollExportStatus(exportId)
+      startPolling(exportId, pollStatus)
+      await pollStatus(exportId)
 
       return exportId
     } catch (error) {
-      console.error('Export start error:', error)
-      handleExportFailure(error.message || 'Failed to start export', null)
+      console.error('Export start failed:', error)
+      handleFailure(error.message || 'Failed to start export', null)
       return null
     }
-  }, [updateState, clearPolling, pollExportStatus, handleExportFailure])
+  }, [pollStatus, startPolling, handleFailure])
 
   /**
-   * Cancel export
+   * Cancel active export
    */
   const cancelExport = useCallback(async () => {
-    if (exportState.exportId) {
-      try {
-        clearPolling()
-        await cancelExportJob(exportState.exportId)
-        
-        updateState({
-          isExporting: false,
-          status: EXPORT_STATUS.CANCELLED,
-          error: 'Export cancelled by user'
-        })
+    if (!state.exportId) return
 
-        removeJobFromStorage(exportState.exportId)
-      } catch (error) {
-        console.error('Cancel error:', error)
-        updateState({
-          error: 'Failed to cancel export'
-        })
-      }
-    }
-  }, [exportState.exportId, clearPolling, updateState])
-
-  /**
-   * Cleanup old export jobs from storage (on page reload)
-   * Remove all PROCESSING jobs since exportId is no longer valid after reload
-   */
-  const cleanupOldExports = useCallback(() => {
-    const jobs = getStoredJobs()
-    const activeJobs = Object.values(jobs).filter(
-      job => job.status === EXPORT_STATUS.PROCESSING
-    )
-
-    if (activeJobs.length > 0) {
-      console.log(`Cleaning up ${activeJobs.length} incomplete export(s) from previous session`)
+    try {
+      clearPolling()
+      await cancelExportJob(state.exportId)
       
-      // Remove all PROCESSING jobs
-      activeJobs.forEach(job => {
-        removeJobFromStorage(job.exportId)
+      dispatch({ type: actionTypes.CANCELLED })
+      storage.remove(state.exportId)
+    } catch (error) {
+      console.error('Cancel failed:', error)
+      dispatch({
+        type: actionTypes.UPDATE,
+        payload: { error: 'Failed to cancel' }
       })
     }
+  }, [state.exportId, clearPolling])
+
+  // ==========================================================================
+  // Effects
+  // ==========================================================================
+
+  // Cleanup old exports on mount
+  useEffect(() => {
+    storage.clear()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  /**
-   * Handle online/offline events
-   */
+  // Handle online/offline events
   useEffect(() => {
     const handleOnline = () => {
-      updateState({ isOnline: true, error: null })
+      dispatch({ type: actionTypes.ONLINE })
       
-      // Resume polling if there's an active export
-      if (exportState.exportId && exportState.status === EXPORT_STATUS.PROCESSING) {
-        clearPolling()
-        intervalRef.current = setInterval(() => {
-          pollExportStatus(exportState.exportId)
-        }, POLL_INTERVAL)
+      // Resume polling if export is active
+      if (state.exportId && state.status === EXPORT_STATUS.PROCESSING) {
+        startPolling(state.exportId, pollStatus)
       }
     }
 
     const handleOffline = () => {
-      updateState({
-        isOnline: false,
-        error: 'Network connection lost'
-      })
+      dispatch({ type: actionTypes.OFFLINE })
       clearPolling()
     }
 
@@ -372,26 +447,23 @@ export const useExportFile = () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
-  }, [exportState.exportId, exportState.status, updateState, clearPolling, pollExportStatus])
+  }, [state.exportId, state.status, clearPolling, startPolling, pollStatus])
 
-  /**
-   * Handle beforeunload event (browser close/refresh)
-   */
+  // Warn before leaving during active export
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (exportState.isExporting && exportState.status === EXPORT_STATUS.PROCESSING) {
-        // Save current state
-        if (exportState.exportId) {
-          saveJobToStorage(exportState.exportId, {
-            exportId: exportState.exportId,
-            status: exportState.status,
-            progress: exportState.progress,
-            retryCount: exportState.retryCount
+      if (state.isExporting && state.status === EXPORT_STATUS.PROCESSING) {
+        // Save state before leaving
+        if (state.exportId) {
+          storage.set(state.exportId, {
+            exportId: state.exportId,
+            status: state.status,
+            progress: state.progress,
+            retryCount: state.retryCount
           })
         }
 
-        // Show confirmation dialog
-        const message = 'Export is in progress. Are you sure you want to leave?'
+        const message = 'Export in progress. Leave anyway?'
         e.preventDefault()
         e.returnValue = message
         return message
@@ -399,23 +471,10 @@ export const useExportFile = () => {
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [state])
 
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [exportState])
-
-  /**
-   * Cleanup old exports on mount
-   */
-  useEffect(() => {
-    cleanupOldExports()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // Only run once on mount
-
-  /**
-   * Cleanup on unmount
-   */
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       mountedRef.current = false
@@ -423,8 +482,12 @@ export const useExportFile = () => {
     }
   }, [clearPolling])
 
+  // ==========================================================================
+  // Return API
+  // ==========================================================================
+
   return {
-    ...exportState,
+    ...state,
     startExport,
     cancelExport
   }
