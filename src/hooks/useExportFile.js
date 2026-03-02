@@ -190,6 +190,7 @@ export const useExportFile = () => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
   const intervalRef = useRef(null)
   const mountedRef = useRef(true)
+  const pollStatusRef = useRef(null)
 
   // ==========================================================================
   // Polling Control
@@ -202,9 +203,13 @@ export const useExportFile = () => {
     }
   }, [])
 
-  const startPolling = useCallback((exportId, callback) => {
+  const startPolling = useCallback((exportId) => {
     clearPolling()
-    intervalRef.current = setInterval(() => callback(exportId), CONFIG.POLL_INTERVAL)
+    intervalRef.current = setInterval(() => {
+      if (pollStatusRef.current) {
+        pollStatusRef.current(exportId)
+      }
+    }, CONFIG.POLL_INTERVAL)
   }, [clearPolling])
 
   // ==========================================================================
@@ -321,13 +326,19 @@ export const useExportFile = () => {
           handleFailure('Export cancelled', exportId)
           break
 
-        case EXPORT_STATUS.PROCESSING:
-          dispatch({ type: actionTypes.RETRY })
+        case EXPORT_STATUS.PROCESSING: {
+          const nextRetryCount = state.retryCount + 1
+
+          console.log('nextRetryCount = ', nextRetryCount);
           
-          if (state.retryCount + 1 >= CONFIG.MAX_RETRIES) {
+          
+          if (nextRetryCount >= CONFIG.MAX_RETRIES) {
             await handleTimeout(exportId)
+          } else {
+            dispatch({ type: actionTypes.RETRY })
           }
           break
+        }
 
         default:
           break
@@ -335,9 +346,10 @@ export const useExportFile = () => {
     } catch (error) {
       console.error('Poll error:', error)
       
-      const newRetryCount = state.retryCount + 1
+      const nextRetryCount = state.retryCount + 1
       
-      if (newRetryCount >= CONFIG.MAX_RETRIES) {
+      
+      if (nextRetryCount >= CONFIG.MAX_RETRIES) {
         handleFailure(`Network error: ${CONFIG.MAX_RETRIES} retries exceeded`, exportId)
       } else {
         dispatch({
@@ -347,6 +359,11 @@ export const useExportFile = () => {
       }
     }
   }, [state.retryCount, handleSuccess, handleFailure, handleTimeout])
+
+  // Store latest pollStatus in ref to avoid stale closure in setInterval
+  useEffect(() => {
+    pollStatusRef.current = pollStatus
+  }, [pollStatus])
 
   // ==========================================================================
   // Public API
@@ -382,8 +399,12 @@ export const useExportFile = () => {
         startedAt: Date.now()
       })
 
-      startPolling(exportId, pollStatus)
-      await pollStatus(exportId)
+      startPolling(exportId)
+      
+      // Call via ref to ensure we use the latest version with reset state
+      if (pollStatusRef.current) {
+        await pollStatusRef.current(exportId)
+      }
 
       return exportId
     } catch (error) {
@@ -391,7 +412,7 @@ export const useExportFile = () => {
       handleFailure(error.message || 'Failed to start export', null)
       return null
     }
-  }, [pollStatus, startPolling, handleFailure])
+  }, [startPolling, handleFailure])
 
   /**
    * Cancel active export
@@ -431,7 +452,7 @@ export const useExportFile = () => {
       
       // Resume polling if export is active
       if (state.exportId && state.status === EXPORT_STATUS.PROCESSING) {
-        startPolling(state.exportId, pollStatus)
+        startPolling(state.exportId)
       }
     }
 
@@ -447,7 +468,7 @@ export const useExportFile = () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
-  }, [state.exportId, state.status, clearPolling, startPolling, pollStatus])
+  }, [state.exportId, state.status, clearPolling, startPolling])
 
   // Warn before leaving during active export
   useEffect(() => {
