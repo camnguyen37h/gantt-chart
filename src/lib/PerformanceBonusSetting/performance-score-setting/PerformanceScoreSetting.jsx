@@ -45,9 +45,10 @@ const PerformanceScoreSetting = ({
         return
       }
       
-      const result = await saveConfiguration(roleId, validatedData)
-      if (result.success) {
-        // Optionally refresh score data after save
+      const responseData = await saveConfiguration(roleId, validatedData)
+      
+      // Refresh score data after save if successful (responseData will be null on error)
+      if (responseData) {
         fetchScoreForRole(roleId)
       }
     })

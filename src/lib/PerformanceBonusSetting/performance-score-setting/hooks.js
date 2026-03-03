@@ -6,7 +6,34 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { NotificationManager } from 'react-notifications'
 import { Request } from '../performanceBonusApiConfig'
-import { API_ENDPOINTS, PAGINATION, RESPONSE_STATUS, SCORE_LEVEL, MESSAGES } from './constants'
+import { API_ENDPOINTS, PAGINATION, RESPONSE_STATUS, MESSAGES } from './constants'
+import { isNAScore } from './helpers'
+
+/**
+ * Wrapper for API calls with consistent error handling
+ * @param {Function} apiCall - Async function to execute
+ * @param {Function} onSuccess - Success callback
+ * @param {Function} onError - Error callback
+ * @returns {Promise} Returns response data on success
+ */
+const executeApiCall = async (apiCall, onSuccess, onError) => {
+  try {
+    const response = await apiCall()
+    
+    if (response.status === RESPONSE_STATUS.SUCCESS) {
+      if (onSuccess) onSuccess(response)
+      return response.data
+    }
+    
+    const errorMessage = response.message || 'Operation failed'
+    if (onError) onError(errorMessage)
+    return null
+  } catch (error) {
+    const errorMessage = error.message || 'An unexpected error occurred'
+    if (onError) onError(errorMessage)
+    return null
+  }
+}
 
 /**
  * Hook for fetching paginated roles
@@ -25,33 +52,41 @@ export const useRolesPagination = () => {
     setLoading(true)
     setError(null)
 
-    try {
-      const response = await Request(
+    await executeApiCall(
+      () => Request(
         { url: API_ENDPOINTS.GET_ALL_ROLES, method: 'get' },
         { pageNum, pageSize: PAGINATION.DEFAULT_PAGE_SIZE }
-      )
-
-      if (response.status !== RESPONSE_STATUS.SUCCESS) {
-        throw new Error(response.message || MESSAGES.ERROR.FETCH_ROLES_FAILED)
+      ),
+      (response) => {
+        const rolesData = response.data?.roles || []
+        const totalCount = response.data?.total || 0
+        
+        setRoles(rolesData)
+        setPagination(previousPagination => ({ 
+          ...previousPagination, 
+          pageNum, 
+          total: totalCount 
+        }))
+      },
+      (errorMessage) => {
+        setError(errorMessage)
+        NotificationManager.error(errorMessage || MESSAGES.ERROR.FETCH_ROLES_FAILED)
+        setRoles([])
+        setPagination(previousPagination => ({ 
+          ...previousPagination, 
+          total: 0 
+        }))
       }
+    )
 
-      const rolesData = response.data?.roles || []
-      const totalCount = response.data?.total || 0
-
-      setRoles(rolesData)
-      setPagination(prev => ({ ...prev, pageNum, total: totalCount }))
-    } catch (err) {
-      setError(err.message)
-      NotificationManager.error(err.message)
-      setRoles([])
-      setPagination(prev => ({ ...prev, total: 0 }))
-    } finally {
-      setLoading(false)
-    }
+    setLoading(false)
   }, [pagination.pageNum])
 
   const handlePageChange = useCallback((page) => {
-    setPagination(prev => ({ ...prev, pageNum: page }))
+    setPagination(previousPagination => ({ 
+      ...previousPagination, 
+      pageNum: page 
+    }))
   }, [])
 
   useEffect(() => {
@@ -80,27 +115,29 @@ export const useScoreData = () => {
 
   /**
    * Normalize raw score data from API
+   * Ensures N/A score is always first if present
    */
   const normalizeScoreData = useCallback((rawData, roleId) => {
-    const list = Array.isArray(rawData) ? rawData : []
-    const mapped = list.map((item, idx) => ({
-      scoreId: item.scoreId || `${roleId}-${idx}-${Date.now()}`,
+    const rawScores = Array.isArray(rawData) ? rawData : []
+    
+    const normalizedScores = rawScores.map((item, index) => ({
+      scoreId: item.scoreId || `${roleId}-${index}-${Date.now()}`,
       level: item.level != null ? String(item.level) : item.score || '',
       baseScore: Number(item.baseScore != null ? item.baseScore : item.base_score || 0),
       status: !!item.status,
       description: item.description || '',
     }))
 
-    // Sort: N/A first, then others
-    const isNA = (r) => String(r.level || '').trim().toUpperCase() === SCORE_LEVEL.NA_VALUE
-    const naRecord = mapped.find(isNA)
-    const otherRecords = mapped.filter(r => !isNA(r))
+    // Sort: N/A score first, then all other scores
+    const naScore = normalizedScores.find(isNAScore)
+    const regularScores = normalizedScores.filter(record => !isNAScore(record))
 
-    return naRecord ? [naRecord, ...otherRecords] : otherRecords
+    return naScore ? [naScore, ...regularScores] : regularScores
   }, [])
 
   /**
    * Fetch score levels for a specific role
+   * Uses cache to avoid redundant API calls
    */
   const fetchScoreForRole = useCallback(async (roleId) => {
     // Skip if already fetched
@@ -108,38 +145,48 @@ export const useScoreData = () => {
       return
     }
 
-    setLoadingMap(prev => ({ ...prev, [roleId]: true }))
+    setLoadingMap(previousLoadingMap => ({ 
+      ...previousLoadingMap, 
+      [roleId]: true 
+    }))
 
-    try {
-      const response = await Request(
+    await executeApiCall(
+      () => Request(
         { url: API_ENDPOINTS.GET_SCORE_LEVEL_BY_ROLE, method: 'get' },
         { roleId }
-      )
-
-      if (response.status === RESPONSE_STATUS.SUCCESS) {
-        const normalized = normalizeScoreData(response.data, roleId)
-        setScoreData(prev => ({ ...prev, [roleId]: normalized }))
+      ),
+      (response) => {
+        const normalizedScores = normalizeScoreData(response.data, roleId)
+        setScoreData(previousScoreData => ({ 
+          ...previousScoreData, 
+          [roleId]: normalizedScores 
+        }))
         cacheRef.current.add(roleId)
-      } else {
-        throw new Error(response.message || MESSAGES.ERROR.FETCH_SCORE_FAILED)
+      },
+      (errorMessage) => {
+        console.error(`Failed to fetch score for role ${roleId}:`, errorMessage)
+        setScoreData(previousScoreData => ({ 
+          ...previousScoreData, 
+          [roleId]: [] 
+        }))
+        NotificationManager.error(errorMessage || MESSAGES.ERROR.FETCH_SCORE_FAILED)
       }
-    } catch (err) {
-      console.error(`Failed to fetch score for role ${roleId}:`, err)
-      setScoreData(prev => ({ ...prev, [roleId]: [] }))
-      NotificationManager.error(err.message)
-    } finally {
-      setLoadingMap(prev => ({ ...prev, [roleId]: false }))
-    }
+    )
+
+    setLoadingMap(previousLoadingMap => ({ 
+      ...previousLoadingMap, 
+      [roleId]: false 
+    }))
   }, [normalizeScoreData])
 
   /**
    * Clear score data for a role (e.g., when collapsing panel)
    */
   const clearScoreForRole = useCallback((roleId) => {
-    setScoreData(prev => {
-      const newData = { ...prev }
-      delete newData[roleId]
-      return newData
+    setScoreData(previousScoreData => {
+      const updatedScoreData = { ...previousScoreData }
+      delete updatedScoreData[roleId]
+      return updatedScoreData
     })
     cacheRef.current.delete(roleId)
   }, [])
@@ -168,14 +215,14 @@ export const useCollapseState = (onPanelOpen) => {
   const [activeKeys, setActiveKeys] = useState([])
 
   const handleCollapseChange = useCallback((keys) => {
-    const prevKeys = activeKeys
+    const previousActiveKeys = activeKeys
     setActiveKeys(keys)
 
-    // Detect which panel was opened
-    if (keys.length > prevKeys.length) {
-      const newKey = keys.find(k => !prevKeys.includes(k))
-      if (newKey && onPanelOpen) {
-        onPanelOpen(newKey)
+    // Detect which panel was newly opened
+    if (keys.length > previousActiveKeys.length) {
+      const newlyOpenedKey = keys.find(key => !previousActiveKeys.includes(key))
+      if (newlyOpenedKey && onPanelOpen) {
+        onPanelOpen(newlyOpenedKey)
       }
     }
   }, [activeKeys, onPanelOpen])
@@ -195,26 +242,30 @@ export const useSaveScoreConfiguration = () => {
   const [saveLoadingMap, setSaveLoadingMap] = useState({})
 
   const handleSave = useCallback(async (roleId, data) => {
-    setSaveLoadingMap(prev => ({ ...prev, [roleId]: true }))
+    setSaveLoadingMap(previousSaveLoadingMap => ({ 
+      ...previousSaveLoadingMap, 
+      [roleId]: true 
+    }))
 
-    try {
-      const response = await Request(
+    const responseData = await executeApiCall(
+      () => Request(
         { url: API_ENDPOINTS.SAVE_CRITERIA_BY_ROLE, method: 'post' },
         { roleId, ...data }
-      )
-
-      if (response.status === RESPONSE_STATUS.SUCCESS) {
+      ),
+      (response) => {
         NotificationManager.success(MESSAGES.SUCCESS.SAVE_SUCCESS)
-        return { success: true, data: response.data }
-      } else {
-        throw new Error(response.message || MESSAGES.ERROR.SAVE_FAILED)
+      },
+      (errorMessage) => {
+        NotificationManager.error(errorMessage || MESSAGES.ERROR.SAVE_FAILED)
       }
-    } catch (err) {
-      NotificationManager.error(err.message)
-      return { success: false, error: err.message }
-    } finally {
-      setSaveLoadingMap(prev => ({ ...prev, [roleId]: false }))
-    }
+    )
+
+    setSaveLoadingMap(previousSaveLoadingMap => ({ 
+      ...previousSaveLoadingMap, 
+      [roleId]: false 
+    }))
+
+    return responseData
   }, [])
 
   return {
