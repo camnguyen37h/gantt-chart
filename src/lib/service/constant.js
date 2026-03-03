@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js'
+
 export const ResponseStatusCode = {
   success: 200,
   expired: 401,

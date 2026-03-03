@@ -2,6 +2,7 @@ import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
 import { ResponseStatusCode } from '../../../service/constant'
 import Request from '../../../service/request'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import {NotificationManager} from "react-notifications";
 
 export const getIndustryDomain = createAsyncThunk(
   'get/getIndustryDomain',

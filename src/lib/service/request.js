@@ -1,9 +1,7 @@
-// import config from 'config'
 import { processResponse } from './encrypt'
 const axios = require('axios')
-import { URIProperty } from 'Utils/URIProperty'
-import { HttpStatus } from 'Constants/HttpStatus'
-import LoginActions from '@/actions/LoginActions'
+import { URIProperty } from '../utils/URIProperty'
+import { HttpStatus } from '../constants/HttpStatus'
 
 export const parseParams = params => {
   let options = ''
@@ -106,7 +104,7 @@ const Request = (api, data, message, customHeaders, cancel) => {
               return response.data.accessToken // resolve with the new token
             })
             .catch(error => {
-              LoginActions.signOut()
+              // LoginActions.signOut()
               return false
             })
         }
@@ -129,7 +127,7 @@ const Request = (api, data, message, customHeaders, cancel) => {
         error.response.status === HttpStatus.UNAUTHORIZED &&
         error.config.url !== '/refresh-token'
       ) {
-        LoginActions.signOut()
+        // LoginActions.signOut()
         return
       }
       return processResponse(error.response)

@@ -1,4 +1,4 @@
-import { ResponseStatusCode } from '@/service/constant'
+import { ResponseStatusCode } from '../../../service/constant'
 import { createSlice } from '@reduxjs/toolkit'
 import {
   API_TYPE,
@@ -13,7 +13,7 @@ import {
   getSummaryRevenuePlan,
   postBusinessPlanOtherRevenue,
   postSubmitBaselineRevenuePlan,
-} from '../asyncThunks/businessPlanRevenue'
+} from '../asyncThunks'
 
 const initialState = {
   dataSourceTableRevenue: undefined,

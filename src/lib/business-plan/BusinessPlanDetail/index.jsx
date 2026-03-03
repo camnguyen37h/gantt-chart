@@ -14,9 +14,7 @@ import {
   setIsSaveShowedDeliveryPlan,
   setValidation,
 } from '../redux'
-import BusinessPlanActivity from './BusinessPlanActivity'
 import BusinessPlanDelivery from './BusinessPlanDelivery'
-import BusinessPlanDocuments from './BusinessPlanDocuments'
 import BusinessPlanFormSection from './BusinessPlanFormSection'
 import BusinessPlanGeneralInformation from './BusinessPlanGeneralInformation'
 import { GeneralInformationTotalTemplate } from './BusinessPlanReport/constant'
@@ -25,6 +23,7 @@ import BusinessPlanStep from './BusinessPlanStep'
 import BusinessPlanVersion from './BusinessPlanVersion'
 import './style.css'
 import Loading from '../../../components/common/Loading/Loading'
+import {NotificationManager} from "react-notifications";
 
 const { Panel } = Collapse
 const { TabPane } = Tabs
