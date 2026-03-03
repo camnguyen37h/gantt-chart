@@ -1,8 +1,0 @@
-export const MEMBER_TYPE = {
-  AM: 'AM',
-  TEAM_LEAD: 'TEAM_LEAD',
-  PRESALE: 'PRESALE',
-  ADVISER: 'ADVISER',
-  PREPARATOR: 'PREPARATOR',
-  PM : "PM"
-}

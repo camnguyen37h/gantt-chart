@@ -8,7 +8,15 @@
     <title>Project Management System</title>
     <script>
       // Polyfill for process.env in browser
-      window.process = { env: { NODE_ENV: 'development' } };
+      window.process = {
+        env: {
+          NODE_ENV: 'development',
+          API: '',
+          API_MASTERDATA: '',
+          API_SALE: '',
+          baseURI: ''
+        }
+      };
     </script>
   </head>
   <body>

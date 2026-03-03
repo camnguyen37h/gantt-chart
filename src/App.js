@@ -8,8 +8,8 @@ import {
 import { Layout } from 'antd'
 import AppHeader from './components/Layout/AppHeader'
 import Sidebar from './components/Layout/Sidebar'
-import BusinessPlanDetailPage from './pages/BusinessPlanDetailPage'
 import './App.css'
+import PerformanceBonusSetting from './lib/PerformanceBonusSetting'
 
 const { Content } = Layout
 
@@ -30,10 +30,14 @@ const App = () => {
                 borderRadius: 4,
               }}>
               <Switch>
-                <Route exact path="/" render={() => <Redirect to="/" />} />
                 <Route
-                  path="/business-plan/:buId"
-                  component={BusinessPlanDetailPage}
+                  exact
+                  path="/"
+                  render={() => <Redirect to="/performance-bonus-setting" />}
+                />
+                <Route
+                  path="/performance-bonus-setting"
+                  component={PerformanceBonusSetting}
                 />
               </Switch>
             </Content>

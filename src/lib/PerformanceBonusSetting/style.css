@@ -1,0 +1,13 @@
+.performance-bonus-setting-label {
+  font-weight: bold;
+}
+
+.performance-bonus-setting-error,
+.performance-bonus-setting-required {
+  color: red;
+  font-size: 12px;
+}
+
+.performance-bonus-setting-error {
+  height: 24px;
+}
