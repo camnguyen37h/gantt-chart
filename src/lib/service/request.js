@@ -1,5 +1,5 @@
 import { processResponse } from './encrypt'
-const axios = require('axios')
+import axios from 'axios'
 import { URIProperty } from '../utils/URIProperty'
 import { HttpStatus } from '../constants/HttpStatus'
 
@@ -31,10 +31,10 @@ const Request = (api, data, message, customHeaders, cancel) => {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-cache',
     'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Origin': process.env.ORIGIN_HEADER,
+    'Access-Control-Allow-Origin': 'http://localhost:3000',
     'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token, Origin',
-    'author-id': `${JSON.parse(localStorage.getItem('user')).id}`,
+    'author-id': `${(JSON.parse(localStorage.getItem('user')) || { id: 1 }).id}`,
     ...(customHeaders || {}),
   }
 

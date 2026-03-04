@@ -9,9 +9,10 @@ export const ResponseStatusCode = {
 
 export const DateFormatType = 'yyyyMMddhhmmss'
 
-export const API = process.env.API
-export const API_GROUP = process.env.API_GROUP
-export const API_MASTERDATA = process.env.API_MASTERDATA
-export const API_SALE = process.env.API_SALE
-export const API_CRM = process.env.API_CRM
-export const API_SALE_SYNC = process.env.API_SALE_SYNC
+// Using direct paths for demo/mock API
+export const API = 'http://localhost:3000'
+export const API_GROUP = 'http://localhost:3000'
+export const API_MASTERDATA = 'http://localhost:3000'
+export const API_SALE = 'http://localhost:3000'
+export const API_CRM = 'http://localhost:3000'
+export const API_SALE_SYNC = 'http://localhost:3000'

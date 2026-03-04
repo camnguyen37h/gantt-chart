@@ -43,7 +43,9 @@ const BusinessPlanGeneralInformation = () => {
     endDate,
   } = useBusinessPlanDetails()
 
-  const { userName } = JSON.parse(localStorage.getItem('userPOA'))
+  // Mock user for demo - handle null localStorage
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const { userName } = userPOA
 
   const dispatch = useDispatch()
   const {

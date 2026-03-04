@@ -18,7 +18,9 @@ const ApprovalItem = ({
   onClickReject,
 }) => {
   const { specificPermissions } = useWorkflowApproval()
-  const { userName } = JSON.parse(localStorage.getItem('userPOA'))
+  // Mock user for demo
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const { userName } = userPOA
 
   const canApprove =
     approver.processStatus === 'TODO' &&

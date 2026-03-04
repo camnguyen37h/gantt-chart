@@ -1,0 +1,17 @@
+{
+    "httpStatus": 200,
+    "data": [
+        {
+            "groupName": "BU3",
+            "groupId": 220,
+            "groupSale": true
+        },
+        {
+            "groupName": "BJ3",
+            "groupId": 66,
+            "groupSale": false
+        }
+    ],
+    "messageId": "Success",
+    "errorMessage": ""
+}

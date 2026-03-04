@@ -15,7 +15,7 @@ import { cloneDeep, debounce } from 'lodash'
 import { NotificationManager } from 'react-notifications'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import uuid from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { useBusinessPlanDetails } from '../../hooks'
 import { getUserAndDepartmentCollaborator, setValidation } from '../../redux'
 import {
@@ -47,7 +47,9 @@ function CollaboratorBodyItem({
 }) {
   const { updateIsSaveShowed, status, listAM, listPreparator } =
     useBusinessPlanDetails()
-  const { userName } = JSON.parse(localStorage.getItem('userPOA'))
+  // Mock user for demo
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const { userName } = userPOA
 
   const isEditInput =
     (checkRolePermission(

@@ -1,0 +1,55 @@
+{
+    "httpStatus": 200,
+    "data": [
+        {
+            "id": 18,
+            "industry": "1.BFSI (Banking, Finance, Security, Insurance)"
+        },
+        {
+            "id": 30,
+            "industry": "2.Communication Media"
+        },
+        {
+            "id": 39,
+            "industry": "3.Public & Government"
+        },
+        {
+            "id": 47,
+            "industry": "4.Manufacturing and Natural Resources"
+        },
+        {
+            "id": 53,
+            "industry": "5.Retail"
+        },
+        {
+            "id": 59,
+            "industry": "6.Logistic"
+        },
+        {
+            "id": 65,
+            "industry": "7.Advetisement"
+        },
+        {
+            "id": 71,
+            "industry": "8.Information Technology"
+        },
+        {
+            "id": 303,
+            "industry": "9.Telecom Communication"
+        },
+        {
+            "id": 305,
+            "industry": "10.Healthcare & Medication"
+        },
+        {
+            "id": 307,
+            "industry": "11.Education"
+        },
+        {
+            "id": 309,
+            "industry": "12.Automotive"
+        }
+    ],
+    "messageId": "Success",
+    "errorMessage": ""
+}

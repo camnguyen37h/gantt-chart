@@ -30,7 +30,7 @@ const App = () => {
                 borderRadius: 4,
               }}>
               <Switch>
-                <Route exact path="/" render={() => <Redirect to="/" />} />
+                <Route exact path="/" render={() => <Redirect to="/business-plan/436" />} />
                 <Route
                   path="/business-plan/:buId"
                   component={BusinessPlanDetailPage}

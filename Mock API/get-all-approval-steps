@@ -1,0 +1,486 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "data": {
+            "9130": {
+                "stepName": "Draft",
+                "stateName": "Draft",
+                "stateOrder": 10,
+                "stateHidden": false,
+                "order": 1,
+                "map": {
+                    "None": []
+                }
+            },
+            "9131": {
+                "stepName": "BU/DU Lead Pending Approval",
+                "stateName": "Verification",
+                "stateOrder": 100,
+                "stateHidden": false,
+                "order": 1,
+                "map": {
+                    "CJP": [
+                        {
+                            "createdBy": "ttlam1",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:39.0",
+                            "updatedOn": "2026-02-12 10:43:48.0",
+                            "id": 5832,
+                            "taskKey": "BP-5832",
+                            "approvalStepId": 9131,
+                            "ldap": "nxcanh",
+                            "departmentName": "BJ3",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:43:48.0",
+                                    "updatedOn": "2026-02-12 10:43:48.0",
+                                    "id": 3959,
+                                    "approvalPersonId": 5832,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "nxcanh",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ],
+                    "G3": [
+                        {
+                            "createdBy": "ttlam1",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:39.0",
+                            "updatedOn": "2026-02-12 10:43:54.0",
+                            "id": 5831,
+                            "taskKey": "BP-5831",
+                            "approvalStepId": 9131,
+                            "ldap": "vttung3",
+                            "departmentName": "BU3",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:43:52.0",
+                                    "updatedOn": "2026-02-12 10:43:52.0",
+                                    "id": 3960,
+                                    "approvalPersonId": 5831,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "vttung3",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "9132": {
+                "stepName": "Approved",
+                "stateName": "Approved",
+                "stateOrder": 10000,
+                "stateHidden": false,
+                "order": 1,
+                "map": {
+                    "None": []
+                }
+            },
+            "9133": {
+                "stepName": "G Lead Pending Approval",
+                "stateName": "Verification",
+                "stateOrder": 100,
+                "stateHidden": false,
+                "order": 2,
+                "map": {
+                    "CJP": [
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:54.0",
+                            "updatedOn": "2026-02-12 10:43:57.0",
+                            "id": 5833,
+                            "taskKey": "BP-5833",
+                            "approvalStepId": 9133,
+                            "ldap": "ncchinh1",
+                            "departmentName": "CJP",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:43:57.0",
+                                    "updatedOn": "2026-02-12 10:43:57.0",
+                                    "id": 3961,
+                                    "approvalPersonId": 5833,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "ncchinh1",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        },
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:54.0",
+                            "updatedOn": "2026-02-12 10:44:01.0",
+                            "id": 5834,
+                            "taskKey": "BP-5834",
+                            "approvalStepId": 9133,
+                            "ldap": "ndtoi",
+                            "departmentName": "CJP",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:01.0",
+                                    "updatedOn": "2026-02-12 10:44:01.0",
+                                    "id": 3962,
+                                    "approvalPersonId": 5834,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "ndtoi",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ],
+                    "G3": [
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:54.0",
+                            "updatedOn": "2026-02-12 10:44:04.0",
+                            "id": 5835,
+                            "taskKey": "BP-5835",
+                            "approvalStepId": 9133,
+                            "ldap": "ltoanh",
+                            "departmentName": "G3",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:04.0",
+                                    "updatedOn": "2026-02-12 10:44:04.0",
+                                    "id": 3963,
+                                    "approvalPersonId": 5835,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "ltoanh",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        },
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:54.0",
+                            "updatedOn": "2026-02-12 10:44:25.0",
+                            "id": 5836,
+                            "taskKey": "BP-5836",
+                            "approvalStepId": 9133,
+                            "ldap": "ttlam1",
+                            "departmentName": "G3",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:06.0",
+                                    "updatedOn": "2026-02-12 10:44:06.0",
+                                    "id": 3964,
+                                    "approvalPersonId": 5836,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "nbtduy",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                },
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:08.0",
+                                    "updatedOn": "2026-02-12 10:44:08.0",
+                                    "id": 3965,
+                                    "approvalPersonId": 5836,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "nbtduy",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "APPROVED"
+                                },
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:11.0",
+                                    "updatedOn": "2026-02-12 10:44:11.0",
+                                    "id": 3966,
+                                    "approvalPersonId": 5836,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "nbtduy",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "APPROVED"
+                                },
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:22.0",
+                                    "updatedOn": "2026-02-12 10:44:22.0",
+                                    "id": 3967,
+                                    "approvalPersonId": 5836,
+                                    "ldap": "ttlam1",
+                                    "previousLdap": "nbtduy",
+                                    "stepAction": "REASSIGN",
+                                    "lastProcessStatus": "APPROVED"
+                                },
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:25.0",
+                                    "updatedOn": "2026-02-12 10:44:25.0",
+                                    "id": 3968,
+                                    "approvalPersonId": 5836,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "ttlam1",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        },
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:54.0",
+                            "updatedOn": "2026-02-12 10:44:27.0",
+                            "id": 5837,
+                            "taskKey": "BP-5837",
+                            "approvalStepId": 9133,
+                            "ldap": "nhanh16",
+                            "departmentName": "G3",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:27.0",
+                                    "updatedOn": "2026-02-12 10:44:27.0",
+                                    "id": 3969,
+                                    "approvalPersonId": 5837,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "nhanh16",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        },
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:43:54.0",
+                            "updatedOn": "2026-02-12 10:44:32.0",
+                            "id": 5838,
+                            "taskKey": "BP-5838",
+                            "approvalStepId": 9133,
+                            "ldap": "vttung3",
+                            "departmentName": "G3",
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:30.0",
+                                    "updatedOn": "2026-02-12 10:44:30.0",
+                                    "id": 3970,
+                                    "approvalPersonId": 5838,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "vttung3",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "9134": {
+                "stepName": "FC Pending Approval",
+                "stateName": "Peer Review",
+                "stateOrder": 1000,
+                "stateHidden": false,
+                "order": 1,
+                "map": {
+                    "None": [
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:44:32.0",
+                            "updatedOn": "2026-02-12 10:44:39.0",
+                            "id": 5839,
+                            "taskKey": "BP-5839",
+                            "approvalStepId": 9134,
+                            "ldap": "ttmy",
+                            "departmentName": null,
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:36.0",
+                                    "updatedOn": "2026-02-12 10:44:36.0",
+                                    "id": 3971,
+                                    "approvalPersonId": 5839,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "ttmy",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "9135": {
+                "stepName": "BOM Pending Approval",
+                "stateName": "Peer Review",
+                "stateOrder": 1000,
+                "stateHidden": false,
+                "order": 2,
+                "map": {
+                    "None": [
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:44:39.0",
+                            "updatedOn": "2026-02-12 10:44:42.0",
+                            "id": 5840,
+                            "taskKey": "BP-5840",
+                            "approvalStepId": 9135,
+                            "ldap": "htthoa",
+                            "departmentName": null,
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:42.0",
+                                    "updatedOn": "2026-02-12 10:44:42.0",
+                                    "id": 3972,
+                                    "approvalPersonId": 5840,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "htthoa",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        },
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:44:39.0",
+                            "updatedOn": "2026-02-12 10:44:45.0",
+                            "id": 5841,
+                            "taskKey": "BP-5841",
+                            "approvalStepId": 9135,
+                            "ldap": "nvbach",
+                            "departmentName": null,
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:45.0",
+                                    "updatedOn": "2026-02-12 10:44:45.0",
+                                    "id": 3973,
+                                    "approvalPersonId": 5841,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "nvbach",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        },
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:44:39.0",
+                            "updatedOn": "2026-02-12 10:44:50.0",
+                            "id": 5842,
+                            "taskKey": "BP-5842",
+                            "approvalStepId": 9135,
+                            "ldap": "mthuong",
+                            "departmentName": null,
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:47.0",
+                                    "updatedOn": "2026-02-12 10:44:47.0",
+                                    "id": 3974,
+                                    "approvalPersonId": 5842,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "mthuong",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "9136": {
+                "stepName": "CEO Pending Approval",
+                "stateName": "Peer Review",
+                "stateOrder": 1000,
+                "stateHidden": false,
+                "order": 3,
+                "map": {
+                    "None": [
+                        {
+                            "createdBy": "nbtduy",
+                            "updatedBy": "nbtduy",
+                            "createdOn": "2026-02-12 10:44:50.0",
+                            "updatedOn": "2026-02-12 10:44:54.0",
+                            "id": 5843,
+                            "taskKey": "BP-5843",
+                            "approvalStepId": 9136,
+                            "ldap": "dnbao",
+                            "departmentName": null,
+                            "processStatus": "APPROVED",
+                            "history": [
+                                {
+                                    "createdBy": "nbtduy",
+                                    "updatedBy": "nbtduy",
+                                    "createdOn": "2026-02-12 10:44:54.0",
+                                    "updatedOn": "2026-02-12 10:44:54.0",
+                                    "id": 3975,
+                                    "approvalPersonId": 5843,
+                                    "ldap": "nbtduy",
+                                    "previousLdap": "dnbao",
+                                    "stepAction": "APPROVED",
+                                    "lastProcessStatus": "TODO"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "workOrder": {
+            "CJP": [
+                {
+                    "duName": "BJ3"
+                }
+            ],
+            "G3": [
+                {
+                    "duName": "BU3"
+                }
+            ]
+        }
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

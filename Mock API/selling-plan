@@ -1,0 +1,10 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "revenues": []
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

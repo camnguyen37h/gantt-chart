@@ -7,8 +7,38 @@
     <meta name="description" content="Project Management Dashboard" />
     <title>Project Management System</title>
     <script>
-      // Polyfill for process.env in browser
-      window.process = { env: { NODE_ENV: 'development' } };
+      // Comprehensive polyfill for process.env in browser
+      (function() {
+        if (typeof window.process === 'undefined') {
+          window.process = {};
+        }
+        if (typeof window.process.env === 'undefined') {
+          window.process.env = {};
+        }
+        window.process.env.NODE_ENV = 'development';
+        window.process.version = 'v16.0.0';
+        window.process.versions = { node: '16.0.0' };
+        window.process.browser = true;
+      })();
+      
+      // Mock localStorage data for demo
+      if (!localStorage.getItem('userPOA')) {
+        localStorage.setItem('userPOA', JSON.stringify({
+          userName: 'Demo User',
+          userId: 1,
+          email: 'demo@example.com'
+        }));
+      }
+      if (!localStorage.getItem('user')) {
+        localStorage.setItem('user', JSON.stringify({
+          id: 1,
+          name: 'Demo User',
+          email: 'demo@example.com'
+        }));
+      }
+      if (!localStorage.getItem('permissions')) {
+        localStorage.setItem('permissions', JSON.stringify([]));
+      }
     </script>
   </head>
   <body>

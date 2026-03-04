@@ -1,0 +1,37 @@
+{
+    "httpStatus": 200,
+    "data": [
+        {
+            "settingId": 418,
+            "startDate": 1759338000000,
+            "endDate": 1759338000000,
+            "type": 15,
+            "value": "30",
+            "settingConfigKey": "MAX_BUSINESS_PLAN_KPI_PM",
+            "groupId": 0,
+            "on": true
+        },
+        {
+            "settingId": 419,
+            "startDate": 1759338000000,
+            "endDate": 1759338000000,
+            "type": 15,
+            "value": "3",
+            "settingConfigKey": "MAX_BUSINESS_PLAN_KPI_QA",
+            "groupId": 0,
+            "on": true
+        },
+        {
+            "settingId": 420,
+            "startDate": 1759338000000,
+            "endDate": 1759338000000,
+            "type": 15,
+            "value": "100",
+            "settingConfigKey": "MAX_BUSINESS_PLAN_KPI_TOTAL",
+            "groupId": 0,
+            "on": true
+        }
+    ],
+    "messageId": "Success",
+    "errorMessage": ""
+}

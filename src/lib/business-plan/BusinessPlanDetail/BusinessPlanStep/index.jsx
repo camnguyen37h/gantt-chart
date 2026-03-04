@@ -47,7 +47,9 @@ function BusinessPlanStep({ status, match, projectCode, startDate, endDate }) {
   const { approveRejectWO, getBusinessPlanWorkflow, listWorkOrder, listStep } =
     useBusinessPlanStep()
 
-  const { userName } = JSON.parse(localStorage.getItem('userPOA'))
+  // Mock user for demo
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const { userName } = userPOA
 
   const { getBusinessPlanDetail } = useBusinessPlanDetails()
 

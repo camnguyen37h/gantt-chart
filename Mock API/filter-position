@@ -1,0 +1,67 @@
+{
+    "httpStatus": 200,
+    "data": [
+        {
+            "id": 803,
+            "idStr": null,
+            "name": "SE02",
+            "value": "SE02"
+        },
+        {
+            "id": 804,
+            "idStr": null,
+            "name": "SE01",
+            "value": "SE01"
+        },
+        {
+            "id": 805,
+            "idStr": null,
+            "name": "TEST03",
+            "value": "TEST03"
+        },
+        {
+            "id": 806,
+            "idStr": null,
+            "name": "PM01",
+            "value": "PM01"
+        },
+        {
+            "id": 807,
+            "idStr": null,
+            "name": "SA01",
+            "value": "SA01"
+        },
+        {
+            "id": 808,
+            "idStr": null,
+            "name": "SE04",
+            "value": "SE04"
+        },
+        {
+            "id": 809,
+            "idStr": null,
+            "name": "TEST02",
+            "value": "TEST02"
+        },
+        {
+            "id": 810,
+            "idStr": null,
+            "name": "COMTOR02",
+            "value": "COMTOR02"
+        },
+        {
+            "id": 811,
+            "idStr": null,
+            "name": "SYE02",
+            "value": "SYE02"
+        },
+        {
+            "id": 812,
+            "idStr": null,
+            "name": "SYE01",
+            "value": "SYE01"
+        }
+    ],
+    "messageId": "Success",
+    "errorMessage": ""
+}

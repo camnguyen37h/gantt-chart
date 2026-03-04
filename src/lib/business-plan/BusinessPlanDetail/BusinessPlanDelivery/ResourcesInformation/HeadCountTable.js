@@ -1,48 +1,44 @@
 import {
-  useState,
-  useEffect,
-  useCallback,
-  forwardRef,
-  useImperativeHandle,
-  memo,
-  useMemo,
-} from 'react'
-import {
-  Table,
   Button,
-  InputNumber,
   Icon,
-  Select,
-  Popover,
-  Tooltip,
-  Spin,
-  Dropdown,
   Input,
-  Menu,
+  InputNumber,
+  Select,
+  Spin,
+  Table,
+  Tooltip
 } from 'antd'
-const { Option } = Select
-import {cloneDeep, debounce, set, uniqueId, isEqual} from 'lodash'
-import { useDispatch, useSelector } from 'react-redux'
+import Decimal from 'decimal.js'
+import { cloneDeep, debounce, isEqual, uniqueId } from 'lodash'
+import moment from 'moment'
 import {
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
+import { NotificationManager } from 'react-notifications'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+import { v4 as uuid } from 'uuid'
+import Request from '../../../..//service/request'
+import BUSINESS_PLAN_API from '../../../../service/api/businessPlan'
+import { ResponseStatusCode } from '../../../../service/constant'
+import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber'
+import {
+  addOrUpdateCreateResource,
+  addOrUpdateUpdateResource,
+  getEmployeePosition,
   getListResource,
+  removeCreateOrUpdateResourceInformation,
   setIsSaveShowedDeliveryPlan,
   setListIdToDeleteResourceInformation,
   setListResource,
-  addOrUpdateCreateResource,
-  addOrUpdateUpdateResource,
-  removeCreateOrUpdateResourceInformation,
-  getEmployeePosition,
 } from '../../../redux'
-import BUSINESS_PLAN_API from '../../../../service/api/businessPlan'
-import { ResponseStatusCode } from '../../../../service/constant'
-import Request from '../../../..//service/request'
-import { NotificationManager } from 'react-notifications'
-import Decimal from 'decimal.js'
-import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber'
 import { formatInputNumber, parseInputNumber } from '../../../utils'
-import styled from 'styled-components'
-import { formatterMMValues, parserMMValues } from '../utils'
-import uuid from 'uuid'
 import {
   DU_MEMBER_WARNING_MESSAGE,
   RESOURCE_REFERENCE_TYPE_ENUM,
@@ -53,7 +49,9 @@ import {
   REVIEWING_WARNING_MESSAGE,
   VALIDATE_REQUIRED_FIELDS_MESSAGE,
 } from '../constants'
-import moment from 'moment'
+import { formatterMMValues, parserMMValues } from '../utils'
+
+const { Option } = Select
 
 const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
@@ -975,12 +973,12 @@ const HeadCountTable = forwardRef((props, ref) => {
         expandedKeys.includes(partialRow.key)
       ) {
         await fetchResourceInforReferenceData(
-          newData[rowIndex].userId,
+          partialRow.userId,
           partialRow.key
         )
       }
     },
-    [updateRow]
+    [updateRow, data, expandedKeys, fetchResourceInforReferenceData]
   )
 
   const handleOGGrossSalaryInput = useCallback(

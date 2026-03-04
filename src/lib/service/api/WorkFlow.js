@@ -1,10 +1,12 @@
+import { API_SALE } from '../constant'
+
 const WORK_FLOW_API = {
   getSpecificPermission: {
-    url: process.env.API_SALE.concat(`/api/business-plan/get-filter-status`),
+    url: `${API_SALE}/api/business-plan/get-filter-status`,
     method: 'get',
   },
   getUserInWorkflow: {
-    url: process.env.API_SALE.concat(`/api/business-plan/get-filter-version`),
+    url: `${API_SALE}/api/business-plan/get-filter-version`,
     method: 'get',
   },
 }

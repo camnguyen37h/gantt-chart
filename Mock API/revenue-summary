@@ -1,0 +1,14 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "mmBill": 1,
+        "softwareProductionRevenues": 12000000,
+        "deduction": -7000000,
+        "onsiteFee": null,
+        "equipmentRevenue": null,
+        "otherRevenues": null,
+        "agencyExpenses": null
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

@@ -1,0 +1,15 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "mmEffort": 6,
+        "directLaborCost": 87600000,
+        "outsourcingCost": null,
+        "equipmentExpense": null,
+        "onsiteExpense": null,
+        "overtime": null,
+        "other": null,
+        "nonDeductibleInputVAT": null
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
