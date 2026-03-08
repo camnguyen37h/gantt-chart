@@ -1,0 +1,17 @@
+.workflow-permission .header-row th {
+  background-color: #ebf3ff;
+  border-right: 1px solid #e1e1e1;
+}
+.permission-granted {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.permission-granted-type-edit,
+.permission-granted-user-edit {
+  width: 50%;
+}
+.permission-granted-select {
+  width: 100%;
+}

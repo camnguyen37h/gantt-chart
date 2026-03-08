@@ -1,0 +1,27 @@
+.sub-menu {
+    padding: 0;
+    .menu-item {
+        display: block;
+        padding: 8px 0 8px 46px;
+        cursor: pointer;
+        .nav-link {
+            color: var(--secondary-dark, #283747);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-decoration: none;
+
+            &:hover {
+                color: #4a99fa;
+            }
+        }
+        &.active-menu {
+            background-color: #e5f4fe;
+
+            .nav-link {
+                color: #338bf8;
+                font-weight: 600;
+            }
+        }
+    }
+}

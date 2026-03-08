@@ -1,0 +1,98 @@
+.workflow-group-filter {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.workflow-group-select {
+  width: 200px;
+}
+
+.workflow-group-search {
+  width: 3%;
+}
+
+.workflow-group-left {
+  display: flex;
+  gap: 16px;
+}
+
+.workflow-group-table .workflow-group-add {
+  float: right;
+  margin: 8px 0;
+  position: relative;
+  z-index: 99;
+  color: #338bf8;
+  border: 1px solid #338bf8;
+}
+
+.workflow-group-table .ant-table-small>.ant-table-content>.ant-table-body>table>.ant-table-thead>tr>th {
+  background-color: #ebf3ff;
+  border-right: 1px solid #e1e1e1;
+}
+
+.workflow-group-table .ant-table-small>.ant-table-content>.ant-table-body {
+  margin: 0;
+}
+
+.workflow-group-edit .workflow-group-button {
+  background-color: transparent;
+  border: 0;
+}
+
+.workflow-group-modal .ant-modal-header .ant-modal-title {
+  font-size: 24px;
+}
+
+.workflow-group-modal .ant-modal-header .anticon-close {
+  font-size: 20px;
+}
+
+.workflow-group-name {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0 32px 0;
+}
+
+.workflow-modal-select,
+.workflow-group-name .workflow-modal-input {
+  width: 80%;
+}
+
+.workflow-modal-member {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.workflow-checkbox,
+.workflow-button-add {
+  width: 15%;
+}
+
+.modal-member-title {
+  font-size: 16px;
+  color: #434343;
+  margin-bottom: 8px;
+  font-weight: 500;
+  display: block;
+}
+
+.workflow-modal-member-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #edf7ff;
+  color: #1890ff;
+}
+
+.workflow-modal-member-item .workflow-member-button {
+  background-color: transparent;
+  border: 0;
+}
+
+.option-workflow-group span {
+  display: block;
+  width: 100%;
+}

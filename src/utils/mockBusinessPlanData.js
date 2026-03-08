@@ -8,234 +8,2086 @@
 
 // ==================== BUSINESS PLAN DETAIL ====================
 export const mockBusinessPlanDetail = {
-  httpStatus: 200,
-  data: {
-    id: 436,
-    projectCode: "GLBTM2500093",
-    status: "Approved",
-    version: 1,
-    startDate: 1770915600000,
-    endDate: 1784134800000,
-    warningMessage: [],
-    versions: [
+  "httpStatus": 200,
+  "data": {
+    "id": 436,
+    "projectCode": "GLBTM2500093",
+    "status": "Approved",
+    "version": 1,
+    "startDate": 1770915600000,
+    "endDate": 1784134800000,
+    "warningMessage": [],
+    "versions": [
       {
-        versionId: 436,
-        versionName: "Version 1",
-        status: "APPROVED",
-        statusName: "Approved"
+        "versionId": 436,
+        "versionName": "Version 1",
+        "status": "APPROVED",
+        "statusName": "Approved"
       },
       {
-        versionId: 437,
-        versionName: "Version 2",
-        status: "DRAFT",
-        statusName: "Draft"
+        "versionId": 437,
+        "versionName": "Version 2",
+        "status": "DRAFT",
+        "statusName": "Draft"
       }
     ],
-    generalInfo: {
-      listAM: [
+    "generalInfo": {
+      "listAM": [
         {
-          id: 11233,
-          businessPlanVersionId: 436,
-          memberType: "AM",
-          userId: 3744,
-          ldap: "ntmanh6",
-          departmentId: 40,
-          departmentName: "BU3",
-          startDate: 1770915600000,
-          endDate: 1784134800000,
-          isDefault: true
+          "id": 11233,
+          "businessPlanVersionId": 436,
+          "memberType": "AM",
+          "userId": 3744,
+          "ldap": "ntmanh6",
+          "departmentId": 40,
+          "departmentName": "BU3",
+          "startDate": 1770915600000,
+          "endDate": 1784134800000,
+          "isDefault": true
         }
       ],
-      listTeamLead: [
+      "listTeamLead": [
         {
-          id: 11247,
-          businessPlanVersionId: 436,
-          memberType: "TEAM_LEAD",
-          userId: 136,
-          ldap: "lcnguyen",
-          departmentId: 3,
-          departmentName: "DU1.3",
-          startDate: 1770915600000,
-          endDate: 1784134800000,
-          isDefault: false
+          "id": 11247,
+          "businessPlanVersionId": 436,
+          "memberType": "TEAM_LEAD",
+          "userId": 136,
+          "ldap": "lcnguyen",
+          "departmentId": 3,
+          "departmentName": "DU1.3",
+          "startDate": 1770915600000,
+          "endDate": 1784134800000,
+          "isDefault": false
         }
       ],
-      listPreSale: [],
-      listPreparator: [
+      "listPreSale": [],
+      "listPreparator": [
         {
-          id: 11246,
-          businessPlanVersionId: 436,
-          memberType: "PREPARATOR",
-          userId: 3,
-          ldap: "bhduc",
-          departmentId: 6,
-          departmentName: "DU1.6",
-          startDate: 1770915600000,
-          endDate: 1784134800000,
-          isDefault: false
+          "id": 11246,
+          "businessPlanVersionId": 436,
+          "memberType": "PREPARATOR",
+          "userId": 3,
+          "ldap": "bhduc",
+          "departmentId": 6,
+          "departmentName": "DU1.6",
+          "startDate": 1770915600000,
+          "endDate": 1784134800000,
+          "isDefault": false
         }
       ],
-      listAdviser: [],
-      listPM: [
+      "listAdviser": [],
+      "listPM": [
         {
-          id: 11232,
-          businessPlanVersionId: 436,
-          memberType: "PM",
-          userId: 3860,
-          ldap: "ttlam1",
-          departmentId: 2,
-          departmentName: "DJ2",
-          startDate: 1770915600000,
-          endDate: 1784134800000,
-          isDefault: true
+          "id": 11232,
+          "businessPlanVersionId": 436,
+          "memberType": "PM",
+          "userId": 3860,
+          "ldap": "ttlam1",
+          "departmentId": 2,
+          "departmentName": "DJ2",
+          "startDate": 1770915600000,
+          "endDate": 1784134800000,
+          "isDefault": true
         }
       ],
-      businessPlanName: "Myfirstmillion Onsite",
-      customerName: "MyFirstMillion",
-      startDate: 1770915600000,
-      endDate: 1784134800000,
-      orderType: "Commercial",
-      recurringNew: "New",
-      pm: null,
-      currency: 778,
-      exchangeRate: 1,
-      totalContractPrice: 12000000,
-      industry: 18,
-      customerMarket: "US",
-      cooperationPeriod: "Less than 12 months",
-      softwareDevelopmentFee: 12000000,
-      otherFees: 0,
-      planningStartDate: null,
-      planningEndDate: null,
-      businessPlanKpiDTO: {
-        id: 68,
-        businessPlanVersionId: 436,
-        kpiPm: 30,
-        kpiQa: 3,
-        kpiMember: 67
+      "businessPlanName": "Myfirstmillion Onsite",
+      "customerName": "MyFirstMillion",
+      "startDate": 1770915600000,
+      "endDate": 1784134800000,
+      "orderType": "Commercial",
+      "recurringNew": "New",
+      "pm": null,
+      "currency": 778,
+      "exchangeRate": 1,
+      "totalContractPrice": 12000000,
+      "industry": 18,
+      "customerMarket": "US",
+      "cooperationPeriod": "Less than 12 months",
+      "softwareDevelopmentFee": 12000000,
+      "otherFees": 0,
+      "planningStartDate": null,
+      "planningEndDate": null,
+      "businessPlanKpiDTO": {
+        "id": 68,
+        "businessPlanVersionId": 436,
+        "kpiPm": 30,
+        "kpiQa": 3,
+        "kpiMember": 67
       }
     },
-    columnLabels: [
+    "columnLabels": [
       {
-        id: null,
-        label: "Total",
-        index: 1,
-        columnKey: "TOTAL"
+        "id": null,
+        "label": "Total",
+        "index": 1,
+        "columnKey": "TOTAL"
       },
       {
-        id: 40,
-        label: "BU3",
-        index: 2,
-        columnKey: "SALE"
+        "id": 40,
+        "label": "BU3",
+        "index": 2,
+        "columnKey": "SALE"
       },
       {
-        id: null,
-        label: "Internal",
-        index: 3,
-        columnKey: "INTERNAL"
+        "id": null,
+        "label": "Internal",
+        "index": 3,
+        "columnKey": "INTERNAL"
       },
       {
-        id: 66,
-        label: "BJ3",
-        index: 4,
-        columnKey: "DELIVERY_UNIT_66"
+        "id": 66,
+        "label": "BJ3",
+        "index": 4,
+        "columnKey": "DELIVERY_UNIT_66"
       }
     ],
-    sectionList: [
+    "sectionList": [
       {
-        index: 1,
-        sectionTitle: "Unit price & MM Bill",
-        sectionKey: "MAN_MONTH",
-        rowLabels: [
+        "index": 1,
+        "sectionTitle": "Unit price & MM Bill",
+        "sectionKey": "MAN_MONTH",
+        "rowLabels": [
           {
-            label: "Unit price",
-            rowKey: "UNIT_PRICE",
-            cellList: [
+            "label": "Unit price",
+            "rowKey": "UNIT_PRICE",
+            "cellList": [
               {
-                value: 5000000,
-                columnKey: "TOTAL",
-                rowKey: "UNIT_PRICE",
-                normUnitPriceConfig: 77100163,
-                normUnitPriceFloor: 52343300.6607,
-                normUnitPriceCeiling: 101857025.3393,
-                normBusinessPlanConfig: null,
-                editable: false
+                "value": 5000000,
+                "columnKey": "TOTAL",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": 77100163,
+                "normUnitPriceFloor": 52343300.6607,
+                "normUnitPriceCeiling": 101857025.3393,
+                "normBusinessPlanConfig": null,
+                "editable": false
               },
               {
-                value: 5000000,
-                columnKey: "SALE",
-                rowKey: "UNIT_PRICE",
-                normUnitPriceConfig: 77100163,
-                normUnitPriceFloor: 52343300.6607,
-                normUnitPriceCeiling: 101857025.3393,
-                normBusinessPlanConfig: null,
-                editable: false
+                "value": 5000000,
+                "columnKey": "SALE",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": 77100163,
+                "normUnitPriceFloor": 52343300.6607,
+                "normUnitPriceCeiling": 101857025.3393,
+                "normBusinessPlanConfig": null,
+                "editable": false
               },
               {
-                value: null,
-                columnKey: "INTERNAL",
-                rowKey: "UNIT_PRICE",
-                normUnitPriceConfig: null,
-                normUnitPriceFloor: null,
-                normUnitPriceCeiling: null,
-                normBusinessPlanConfig: null,
-                editable: false
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
               },
               {
-                value: 5000000,
-                columnKey: "DELIVERY_UNIT_66",
-                rowKey: "UNIT_PRICE",
-                normUnitPriceConfig: null,
-                normUnitPriceFloor: null,
-                normUnitPriceCeiling: null,
-                normBusinessPlanConfig: null,
-                editable: false
+                "value": 5000000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
               }
             ]
           },
           {
-            label: "MM effort (MM)",
-            rowKey: "MM_PRODUCTION",
-            cellList: [
-              { value: 6, columnKey: "TOTAL", rowKey: "MM_PRODUCTION", editable: false },
-              { value: 1, columnKey: "SALE", rowKey: "MM_PRODUCTION", editable: false },
-              { value: null, columnKey: "INTERNAL", rowKey: "MM_PRODUCTION", editable: false },
-              { value: 6, columnKey: "DELIVERY_UNIT_66", rowKey: "MM_PRODUCTION", editable: false }
+            "label": "MM effort (MM)",
+            "rowKey": "MM_PRODUCTION",
+            "cellList": [
+              {
+                "value": 6,
+                "columnKey": "TOTAL",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1,
+                "columnKey": "SALE",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 6,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
             ]
           },
           {
-            label: "MM bill (MM)",
-            rowKey: "MM_BILL",
-            cellList: [
-              { value: 1, columnKey: "TOTAL", rowKey: "MM_BILL", editable: false },
-              { value: 1, columnKey: "SALE", rowKey: "MM_BILL", editable: false },
-              { value: null, columnKey: "INTERNAL", rowKey: "MM_BILL", editable: false },
-              { value: 1, columnKey: "DELIVERY_UNIT_66", rowKey: "MM_BILL", editable: false }
+            "label": "MM bill (MM)",
+            "rowKey": "MM_BILL",
+            "cellList": [
+              {
+                "value": 1,
+                "columnKey": "TOTAL",
+                "rowKey": "MM_BILL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1,
+                "columnKey": "SALE",
+                "rowKey": "MM_BILL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "MM_BILL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "MM_BILL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "241",
+            "rowKey": "MM_BILL_1",
+            "cellList": [
+              {
+                "value": 1,
+                "columnKey": "TOTAL",
+                "rowKey": "MM_BILL_1",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "MM_BILL_1",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "MM_BILL_1",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "MM_BILL_1",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
             ]
           }
         ]
       },
       {
-        index: 2,
-        sectionTitle: "Revenues",
-        sectionKey: "REVENUES",
-        rowLabels: [
+        "index": 2,
+        "sectionTitle": "Revenues",
+        "sectionKey": "REVENUES",
+        "rowLabels": [
           {
-            label: "Revenues",
-            rowKey: "REVENUES_TOTAL",
-            cellList: [
-              { value: 5000000, columnKey: "TOTAL", rowKey: "REVENUES_TOTAL", editable: false },
-              { value: 5000000, columnKey: "SALE", rowKey: "REVENUES_TOTAL", editable: false },
-              { value: -5000000, columnKey: "INTERNAL", rowKey: "REVENUES_TOTAL", editable: false },
-              { value: 5000000, columnKey: "DELIVERY_UNIT_66", rowKey: "REVENUES_TOTAL", editable: false }
+            "label": "Revenues",
+            "rowKey": "REVENUES_TOTAL",
+            "cellList": [
+              {
+                "value": 5000000,
+                "columnKey": "TOTAL",
+                "rowKey": "REVENUES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 5000000,
+                "columnKey": "SALE",
+                "rowKey": "REVENUES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -5000000,
+                "columnKey": "INTERNAL",
+                "rowKey": "REVENUES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 5000000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "REVENUES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Revenues from work delivered (VND)",
+            "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+            "cellList": [
+              {
+                "value": 12000000,
+                "columnKey": "TOTAL",
+                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 12000000,
+                "columnKey": "SALE",
+                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -5000000,
+                "columnKey": "INTERNAL",
+                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 5000000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Deduction",
+            "rowKey": "DEDUCTION",
+            "cellList": [
+              {
+                "value": -7000000,
+                "columnKey": "TOTAL",
+                "rowKey": "DEDUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -7000000,
+                "columnKey": "SALE",
+                "rowKey": "DEDUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "DEDUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DEDUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Onsite fee",
+            "rowKey": "ONSITE_FEE",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "ONSITE_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "ONSITE_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "ONSITE_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "ONSITE_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Revenues from Equipment, Internet, Server,...",
+            "rowKey": "EQUIPMENT_FEE",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "EQUIPMENT_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "EQUIPMENT_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "EQUIPMENT_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "EQUIPMENT_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Other revenues",
+            "rowKey": "OTHER_FEE",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "OTHER_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "OTHER_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "OTHER_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "OTHER_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 3,
+        "sectionTitle": "Cost of sales",
+        "sectionKey": "COST_PRICE",
+        "rowLabels": [
+          {
+            "label": "Cost of sales",
+            "rowKey": "COST_PRICE_TOTAL",
+            "cellList": [
+              {
+                "value": null,
+                "columnKey": "TOTAL",
+                "rowKey": "COST_PRICE_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 5000000,
+                "columnKey": "SALE",
+                "rowKey": "COST_PRICE_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -5000000,
+                "columnKey": "INTERNAL",
+                "rowKey": "COST_PRICE_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "COST_PRICE_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Cost of sales (Ratecard DU)",
+            "rowKey": "COST_OF_DU_SOLD",
+            "cellList": [
+              {
+                "value": null,
+                "columnKey": "TOTAL",
+                "rowKey": "COST_OF_DU_SOLD",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 5000000,
+                "columnKey": "SALE",
+                "rowKey": "COST_OF_DU_SOLD",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -5000000,
+                "columnKey": "INTERNAL",
+                "rowKey": "COST_OF_DU_SOLD",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "COST_OF_DU_SOLD",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 4,
+        "sectionTitle": "Selling expenses",
+        "sectionKey": "SELLING_EXPENSES",
+        "rowLabels": [
+          {
+            "label": "Selling expenses",
+            "rowKey": "SELLING_EXPENSES_TOTAL",
+            "cellList": [
+              {
+                "value": 240000,
+                "columnKey": "TOTAL",
+                "rowKey": "SELLING_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 240000,
+                "columnKey": "SALE",
+                "rowKey": "SELLING_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "SELLING_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "SELLING_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Incentives",
+            "rowKey": "INCENTIVES",
+            "cellList": [
+              {
+                "value": 240000,
+                "columnKey": "TOTAL",
+                "rowKey": "INCENTIVES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 240000,
+                "columnKey": "SALE",
+                "rowKey": "INCENTIVES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "INCENTIVES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "INCENTIVES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Agency expenses",
+            "rowKey": "AGENCY_EXPENSE",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "AGENCY_EXPENSE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "AGENCY_EXPENSE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "AGENCY_EXPENSE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "AGENCY_EXPENSE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 5,
+        "sectionTitle": "Delivery expenses",
+        "sectionKey": "DELIVERY_EXPENSES",
+        "rowLabels": [
+          {
+            "label": "Delivery expenses",
+            "rowKey": "DELIVERY_EXPENSES_TOTAL",
+            "cellList": [
+              {
+                "value": 88800000,
+                "columnKey": "TOTAL",
+                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 88800000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Direct labor cost",
+            "rowKey": "DIRECT_LABOR_COST",
+            "cellList": [
+              {
+                "value": 87600000,
+                "columnKey": "TOTAL",
+                "rowKey": "DIRECT_LABOR_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "DIRECT_LABOR_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "DIRECT_LABOR_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 87600000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DIRECT_LABOR_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Outsourcing cost",
+            "rowKey": "OUTSOURCING_COST",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "OUTSOURCING_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "OUTSOURCING_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "OUTSOURCING_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "OUTSOURCING_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Equipment, Internet, Server cost",
+            "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Onsite expenses (Onsite allowance, perdiem, travelling, accommodation, etc.)",
+            "rowKey": "ONSITE_DEVELOPMENT_COST",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Project bonus",
+            "rowKey": "PROJECT_BONUS",
+            "cellList": [
+              {
+                "value": 1200000,
+                "columnKey": "TOTAL",
+                "rowKey": "PROJECT_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "PROJECT_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "PROJECT_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1200000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "PROJECT_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Overtime",
+            "rowKey": "OVERTIME",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "OVERTIME",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "OVERTIME",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "OVERTIME",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "OVERTIME",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Non-deductible input VAT",
+            "rowKey": "NON_DEDUCTION_VAT",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "NON_DEDUCTION_VAT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "NON_DEDUCTION_VAT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "NON_DEDUCTION_VAT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "NON_DEDUCTION_VAT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Other expenses",
+            "rowKey": "OTHER_EXPENSES",
+            "cellList": [
+              {
+                "value": 0,
+                "columnKey": "TOTAL",
+                "rowKey": "OTHER_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "OTHER_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "OTHER_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "OTHER_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 6,
+        "sectionTitle": "Tax expenses",
+        "sectionKey": "TAX",
+        "rowLabels": [
+          {
+            "label": "Tax expenses",
+            "rowKey": "TAX_TOTAL",
+            "cellList": [
+              {
+                "value": 1000000,
+                "columnKey": "TOTAL",
+                "rowKey": "TAX_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1000000,
+                "columnKey": "SALE",
+                "rowKey": "TAX_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "TAX_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1000000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "TAX_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "CIT and VAT (if any) (%)",
+            "rowKey": "PIC_CIT",
+            "cellList": [
+              {
+                "value": 20,
+                "columnKey": "TOTAL",
+                "rowKey": "PIC_CIT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "PIC_CIT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "PIC_CIT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "PIC_CIT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 7,
+        "sectionTitle": "Margin",
+        "sectionKey": "MARGIN",
+        "rowLabels": [
+          {
+            "label": "Direct Margin",
+            "rowKey": "DIRECT_MARGIN",
+            "cellList": [
+              {
+                "value": -85040000,
+                "columnKey": "TOTAL",
+                "rowKey": "DIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -1240000,
+                "columnKey": "SALE",
+                "rowKey": "DIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "DIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -84800000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Direct Margin before Incentives and Project bonus",
+            "rowKey": "DIRECT_MARGIN_BONUS",
+            "cellList": [
+              {
+                "value": -83600000,
+                "columnKey": "TOTAL",
+                "rowKey": "DIRECT_MARGIN_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -1000000,
+                "columnKey": "SALE",
+                "rowKey": "DIRECT_MARGIN_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "DIRECT_MARGIN_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -83600000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DIRECT_MARGIN_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Allocation of pool and unbillable",
+            "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+            "cellList": [
+              {
+                "value": 15458823.529,
+                "columnKey": "TOTAL",
+                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 15458823.529,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Indirect margin",
+            "rowKey": "INDIRECT_MARGIN",
+            "cellList": [
+              {
+                "value": -100498823.529,
+                "columnKey": "TOTAL",
+                "rowKey": "INDIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -1240000,
+                "columnKey": "SALE",
+                "rowKey": "INDIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "INDIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -100258823.529,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "INDIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Direct margin %",
+            "rowKey": "DIRECT_MARGIN_RATE",
+            "cellList": [
+              {
+                "value": -1700.8,
+                "columnKey": "TOTAL",
+                "rowKey": "DIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -24.8,
+                "columnKey": "SALE",
+                "rowKey": "DIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "DIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -1696,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Direct Margin before Incentives and Project bonus %",
+            "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+            "cellList": [
+              {
+                "value": -1672,
+                "columnKey": "TOTAL",
+                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 66.888,
+                "editable": false
+              },
+              {
+                "value": -20,
+                "columnKey": "SALE",
+                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 66.888,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -1672,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 66.888,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Indirect margin %",
+            "rowKey": "INDIRECT_MARGIN_RATE",
+            "cellList": [
+              {
+                "value": -2009.976,
+                "columnKey": "TOTAL",
+                "rowKey": "INDIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -24.8,
+                "columnKey": "SALE",
+                "rowKey": "INDIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "INTERNAL",
+                "rowKey": "INDIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -2005.176,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "INDIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "index": 8,
+        "sectionTitle": "Reference",
+        "sectionKey": "REFERENCE",
+        "rowLabels": [
+          {
+            "label": "Average delivery expenses",
+            "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+            "cellList": [
+              {
+                "value": 14800000,
+                "columnKey": "TOTAL",
+                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 5000000,
+                "columnKey": "SALE",
+                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 14800000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Average direct labor cost/MM",
+            "rowKey": "SALARY_AVERAGE_EXPENSES",
+            "cellList": [
+              {
+                "value": 14600000,
+                "columnKey": "TOTAL",
+                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 0,
+                "columnKey": "SALE",
+                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 14600000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Billable rate (%)",
+            "rowKey": "BILLABLE_RATE",
+            "cellList": [
+              {
+                "value": 16.667,
+                "columnKey": "TOTAL",
+                "rowKey": "BILLABLE_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 0,
+                "editable": false
+              },
+              {
+                "value": 100,
+                "columnKey": "SALE",
+                "rowKey": "BILLABLE_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 0,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "BILLABLE_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 16.667,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "BILLABLE_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 0,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Productivity",
+            "rowKey": "PRODUCTIVITY",
+            "cellList": [
+              {
+                "value": 2000000,
+                "columnKey": "TOTAL",
+                "rowKey": "PRODUCTIVITY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "PRODUCTIVITY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "PRODUCTIVITY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 833333.333,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "PRODUCTIVITY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Efficiency",
+            "rowKey": "EFFICIENCY",
+            "cellList": [
+              {
+                "value": -14173333.333,
+                "columnKey": "TOTAL",
+                "rowKey": "EFFICIENCY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "EFFICIENCY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "EFFICIENCY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": -14133333.333,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "EFFICIENCY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Incentives rate (%)",
+            "rowKey": "INCENTIVES_RATE",
+            "cellList": [
+              {
+                "value": null,
+                "columnKey": "TOTAL",
+                "rowKey": "INCENTIVES_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 2,
+                "columnKey": "SALE",
+                "rowKey": "INCENTIVES_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "INCENTIVES_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "INCENTIVES_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              }
+            ]
+          },
+          {
+            "label": "Project bonus/MM",
+            "rowKey": "PRODUCTION_MM_BONUS",
+            "cellList": [
+              {
+                "value": null,
+                "columnKey": "TOTAL",
+                "rowKey": "PRODUCTION_MM_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "PRODUCTION_MM_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "PRODUCTION_MM_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 1200000,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "PRODUCTION_MM_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              }
+            ]
+          },
+          {
+            "label": "Billable rate norm (%)",
+            "rowKey": "BILL_RATE_NORM",
+            "cellList": [
+              {
+                "value": null,
+                "columnKey": "TOTAL",
+                "rowKey": "BILL_RATE_NORM",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "SALE",
+                "rowKey": "BILL_RATE_NORM",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": null,
+                "columnKey": "INTERNAL",
+                "rowKey": "BILL_RATE_NORM",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 85,
+                "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "BILL_RATE_NORM",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true
+              }
             ]
           }
         ]
       }
     ]
   },
-  messageId: "Success",
-  errorMessage: ""
+  "messageId": "Success",
+  "errorMessage": ""
 };
 
 // ==================== PRODUCTION REVENUE ====================
@@ -538,6 +2390,63 @@ export const mockApprovalSteps = {
           ],
           G3: [
             { id: 5831, taskKey: "BP-5831", approvalStepId: 9131, ldap: "vttung3", departmentName: "BU3", processStatus: "APPROVED" }
+          ]
+        }
+      },
+      "9133": {
+        stepName: "G Lead Pending Approval",
+        stateName: "Verification",
+        stateOrder: 100,
+        stateHidden: false,
+        order: 2,
+        map: {
+          CJP: [
+            { id: 5833, taskKey: "BP-5833", approvalStepId: 9133, ldap: "ncchinh1", departmentName: "CJP", processStatus: "APPROVED" },
+            { id: 5834, taskKey: "BP-5834", approvalStepId: 9133, ldap: "ndtoi", departmentName: "CJP", processStatus: "APPROVED" }
+          ],
+          G3: [
+            { id: 5835, taskKey: "BP-5835", approvalStepId: 9133, ldap: "ltoanh", departmentName: "G3", processStatus: "APPROVED" },
+            { id: 5836, taskKey: "BP-5836", approvalStepId: 9133, ldap: "ttlam1", departmentName: "G3", processStatus: "APPROVED" },
+            { id: 5837, taskKey: "BP-5837", approvalStepId: 9133, ldap: "nhanh16", departmentName: "G3", processStatus: "APPROVED" },
+            { id: 5838, taskKey: "BP-5838", approvalStepId: 9133, ldap: "vttung3", departmentName: "G3", processStatus: "APPROVED" }
+          ]
+        }
+      },
+      "9134": {
+        stepName: "FC Pending Approval",
+        stateName: "Peer Review",
+        stateOrder: 1000,
+        stateHidden: false,
+        order: 1,
+        map: {
+          None: [
+            { id: 5839, taskKey: "BP-5839", approvalStepId: 9134, ldap: "ttmy", departmentName: null, processStatus: "APPROVED" }
+          ]
+        }
+      },
+      "9135": {
+        stepName: "BOM Pending Approval",
+        stateName: "Peer Review",
+        stateOrder: 1000,
+        stateHidden: false,
+        order: 2,
+        map: {
+          None: [
+            { id: 5840, taskKey: "BP-5840", approvalStepId: 9135, ldap: "htthoa", departmentName: null, processStatus: "APPROVED" },
+            { id: 5841, taskKey: "BP-5841", approvalStepId: 9135, ldap: "nvbach", departmentName: null, processStatus: "APPROVED" },
+            { id: 5842, taskKey: "BP-5842", approvalStepId: 9135, ldap: "mthuong", departmentName: null, processStatus: "APPROVED" }
+          ]
+        }
+      },
+      "9136": {
+        stepName: "CEO Pending Approval",
+        stateName: "Peer Review",
+        stateOrder: 1000,
+        stateHidden: false,
+        order: 3,
+        map: {
+          None: [
+            { id: 5843, taskKey: "BP-5843", approvalStepId: 9136, ldap: "dnbao", departmentName: null, processStatus: "APPROVED" }
           ]
         }
       },

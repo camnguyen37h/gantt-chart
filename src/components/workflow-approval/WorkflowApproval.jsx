@@ -28,17 +28,7 @@ const StyleSteps = styled(Steps)`
     }
   }
 
-  .ant-steps-item-tail {
-    margin-left: 12px;
-  }
-  .ant-steps-item-icon {
-    margin-left: 0;
-  }
   .ant-steps-item-content {
-    margin-left: 0;
-    text-align: left;
-    margin-top: 0;
-
     .ant-steps-item-title {
       font-size: 14px;
       line-height: 24px;

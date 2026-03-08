@@ -1,0 +1,35 @@
+button.ant-btn.unit-price-norm-add,
+button.ant-btn.direct-margin-norm-add,
+button.unit-price-modal-button,
+button.direct-margin-norm-modal-button {
+    float: right;
+    background-color: #DAE8FC;
+    z-index: 99;
+    margin-bottom: 16px;
+}
+
+button.ant-btn.unit-price-norm-add:hover {
+    border-color: #fff;
+}
+
+button.ant-btn.unit-price-norm-edit,
+button.ant-btn.billable-rate-norm-edit,
+button.ant-btn.direct-margin-norm-edit {
+    background-color: #DAE8FC;
+}
+
+button.ant-btn.billable-rate-norm-save {
+    background-color: #E2E2E2;
+}
+
+button.ant-btn.billable-rate-norm-save.editable {
+    background-color: #DAE8FC;
+}
+
+button.ant-btn.unit-price-norm-delete {
+    background-color: #f8cecc;
+}
+
+.input-number-modal-setting input.ant-input-number-input {
+    text-align: center;
+}

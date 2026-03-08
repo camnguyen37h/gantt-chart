@@ -1,0 +1,32 @@
+.ant-btn.filter-button {
+    background-color: #eeeeee;
+    color: #000000a6;
+    border-color: #eeeeee;
+
+    &.filter-button-active {
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+        color: #ffffff;
+
+        .filter-indicator {
+            background-color: #84abdb;
+            border: 1px solid #84abdb;
+        }
+    }
+
+    &:hover {
+        .filter-indicator {
+            border: 1px solid #ffffff;
+        }
+    }
+
+
+    .filter-indicator {
+        background-color: transparent;
+        border: 1px solid #1e1e1e;
+        display: inline-block;
+        padding: 1px 5px;
+        margin-right: 8px;
+        border-radius: 4px;
+    }
+}
