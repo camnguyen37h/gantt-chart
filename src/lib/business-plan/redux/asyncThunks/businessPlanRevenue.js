@@ -1,13 +1,12 @@
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../../service/constant'
-import Request from '../../../service/request'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { NotificationManager } from 'react-notifications'
 
 export const getBusinessPlanOtherRevenue = createAsyncThunk(
   'get/getBusinessPlanOtherRevenue',
   async param => {
-    const result = await Request(BUSINESS_PLAN_API.getOtherRevenue, param)
+    const result = await BusinessPlanAPI.getOtherRevenue(param)
     if (result.status === ResponseStatusCode.success) {
       return { data: result.data, errorMessage: result.errorMessage }
     } else {
@@ -19,7 +18,7 @@ export const getBusinessPlanOtherRevenue = createAsyncThunk(
 export const postBusinessPlanOtherRevenue = createAsyncThunk(
   'post/postBusinessPlanOtherRevenue',
   async ({ params, apiType }) => {
-    const result = await Request(BUSINESS_PLAN_API.updateOtherRevenue, params)
+    const result = await BusinessPlanAPI.updateOtherRevenue(params)
     if (result.status === ResponseStatusCode.success) {
       return {
         data: result.data,
@@ -36,7 +35,7 @@ export const postBusinessPlanOtherRevenue = createAsyncThunk(
 export const getBusinessPlanSellingExpenses = createAsyncThunk(
   'get/getBusinessPlanSellingExpenses',
   async param => {
-    const result = await Request(BUSINESS_PLAN_API.getSellingPlan, param)
+    const result = await BusinessPlanAPI.getSellingPlan(param)
     if (result.status === ResponseStatusCode.success) {
       return { data: result.data, errorMessage: result.errorMessage }
     } else {
@@ -48,10 +47,7 @@ export const getBusinessPlanSellingExpenses = createAsyncThunk(
 export const postSubmitBaselineRevenuePlan = createAsyncThunk(
   'post/postSubmitBaselineRevenuePlan',
   async param => {
-    const result = await Request(
-      BUSINESS_PLAN_API.submitBaselineRevenuePlan,
-      param
-    )
+    const result = await BusinessPlanAPI.submitBaselineRevenuePlan(param)
     if (result.status === ResponseStatusCode.success) {
       return { data: result.data, errorMessage: result.errorMessage }
     } else {
@@ -63,7 +59,7 @@ export const postSubmitBaselineRevenuePlan = createAsyncThunk(
 export const getPositionRevenuePlan = createAsyncThunk(
   'get/getPositionRevenuePlan',
   async param => {
-    const result = await Request(BUSINESS_PLAN_API.getPositionRevenuePlan, {
+    const result = await BusinessPlanAPI.getPositionRevenuePlan({
       name: param.text,
       mvv: param.projectCode,
     })
@@ -86,10 +82,7 @@ export const getPositionRevenuePlan = createAsyncThunk(
 export const getListDUByVersionRevenue = createAsyncThunk(
   'get/getListDUByVersionRevenue',
   async data => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getListDUByVersionRevenue,
-      data
-    )
+    const result = await BusinessPlanAPI.getListDUByVersionRevenue(data)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -101,7 +94,7 @@ export const getListDUByVersionRevenue = createAsyncThunk(
 export const getSummaryRevenuePlan = createAsyncThunk(
   'get/getSummaryRevenuePlan',
   async data => {
-    const result = await Request(BUSINESS_PLAN_API.getSummaryRevenuePlan, data)
+    const result = await BusinessPlanAPI.getSummaryRevenuePlan(data)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

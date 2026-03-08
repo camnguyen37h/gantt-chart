@@ -1,16 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import Request from '../../../service/request'
 import { ResponseStatusCode } from '../../../service/constant'
 import { NotificationManager } from 'react-notifications'
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 
 export const getResourcesInformationDeliveryPlan = createAsyncThunk(
   'get/getResourcesInformationDeliveryPlan',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getResourcesInformationDeliveryPlan,
-      params
-    )
+    const result = await BusinessPlanAPI.getResourcesInformationDeliveryPlan(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -22,7 +18,7 @@ export const getResourcesInformationDeliveryPlan = createAsyncThunk(
 export const getListResourceType = createAsyncThunk(
   'get/getListResourceType',
   async () => {
-    const result = await Request(BUSINESS_PLAN_API.getListResourceType)
+    const result = await BusinessPlanAPI.getListResourceType()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -34,7 +30,7 @@ export const getListResourceType = createAsyncThunk(
 export const getListResource = createAsyncThunk(
   'get/getListResource',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getListResource, params)
+    const result = await BusinessPlanAPI.getListResource(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -44,7 +40,7 @@ export const getListResource = createAsyncThunk(
 )
 
 export const getLocation = createAsyncThunk('get/getLocation', async params => {
-  const result = await Request(BUSINESS_PLAN_API.getLocation, params)
+  const result = await BusinessPlanAPI.getLocation(params)
   if (result.status === ResponseStatusCode.success) {
     return result.data
   } else {
@@ -55,7 +51,7 @@ export const getLocation = createAsyncThunk('get/getLocation', async params => {
 export const getEmployeeType = createAsyncThunk(
   'get/getEmployeeType',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getEmployeeType, params)
+    const result = await BusinessPlanAPI.getEmployeeType(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -67,7 +63,7 @@ export const getEmployeeType = createAsyncThunk(
 export const getEmployeePosition = createAsyncThunk(
   'get/getEmployeePosition',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getEmployeePosition, params)
+    const result = await BusinessPlanAPI.getEmployeePosition(params)
     if (result.status === ResponseStatusCode.success) {
       return {
         data: result.data,
@@ -83,7 +79,7 @@ export const getEmployeePosition = createAsyncThunk(
 export const getEmployeeRole = createAsyncThunk(
   'get/getEmployeeRole',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getEmployeeRole, params)
+    const result = await BusinessPlanAPI.getEmployeeRole(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -95,10 +91,7 @@ export const getEmployeeRole = createAsyncThunk(
 export const getOtherExpensesTable = createAsyncThunk(
   'get/getOtherExpensesTable',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getOtherExpensesTable,
-      params
-    )
+    const result = await BusinessPlanAPI.getOtherExpensesTable(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -110,7 +103,7 @@ export const getOtherExpensesTable = createAsyncThunk(
 export const saveDeliveryPlan = createAsyncThunk(
   'post/saveDeliveryPlan',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.saveDeliveryPlan, params)
+    const result = await BusinessPlanAPI.saveDeliveryPlan(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data)
     } else if (result.status !== ResponseStatusCode.forceExpired) {
@@ -123,10 +116,7 @@ export const saveDeliveryPlan = createAsyncThunk(
 export const getResourcesInformationReference = createAsyncThunk(
   'get/getResourcesInformationReference',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getResourcesInformationReference,
-      params
-    )
+    const result = await BusinessPlanAPI.getResourcesInformationReference(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -138,10 +128,7 @@ export const getResourcesInformationReference = createAsyncThunk(
 export const getListDUByVersionDelivery = createAsyncThunk(
   'get/getListDUByVersionDelivery',
   async data => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getListDUByVersionDelivery,
-      data
-    )
+    const result = await BusinessPlanAPI.getListDUByVersionDelivery(data)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -153,10 +140,7 @@ export const getListDUByVersionDelivery = createAsyncThunk(
 export const getSummaryDeliveryPlan = createAsyncThunk(
   'get/getSummaryDeliveryPlan',
   async businessPlanVersionId => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getSummaryDeliveryPlan,
-      businessPlanVersionId
-    )
+    const result = await BusinessPlanAPI.getSummaryDeliveryPlan(businessPlanVersionId)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -168,10 +152,7 @@ export const getSummaryDeliveryPlan = createAsyncThunk(
 export const getLocationExchangeRate = createAsyncThunk(
   'get/getLocationExchangeRate',
   async data => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getLocationExchangeRate,
-      data
-    )
+    const result = await BusinessPlanAPI.getLocationExchangeRate(data)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

@@ -1,8 +1,7 @@
 import * as redux from '../redux'
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback } from 'react'
-import BUSINESS_PLAN_API from '../../service/api/businessPlan'
-import Request from '../../service/request'
+import * as BusinessPlanAPI from '../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../service/constant'
 import { NotificationManager } from 'react-notifications'
 
@@ -34,7 +33,7 @@ const useBusinessPlanForm = () => {
   )
 
   const getMMBillService = async params => {
-    const result = await Request(BUSINESS_PLAN_API.getMMBillService, params)
+    const result = await BusinessPlanAPI.getMMBillService(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data.crmMasterDataMappings
     } else {

@@ -7,7 +7,7 @@
     <meta name="description" content="Project Management Dashboard" />
     <title>Project Management System</title>
     <script>
-      // Comprehensive polyfill for process.env in browser
+      // ==================== PROCESS POLYFILL ====================
       (function() {
         if (typeof window.process === 'undefined') {
           window.process = {};
@@ -21,24 +21,233 @@
         window.process.browser = true;
       })();
       
-      // Mock localStorage data for demo
-      if (!localStorage.getItem('userPOA')) {
-        localStorage.setItem('userPOA', JSON.stringify({
-          userName: 'Demo User',
-          userId: 1,
-          email: 'demo@example.com'
-        }));
-      }
-      if (!localStorage.getItem('user')) {
-        localStorage.setItem('user', JSON.stringify({
-          id: 1,
-          name: 'Demo User',
-          email: 'demo@example.com'
-        }));
-      }
-      if (!localStorage.getItem('permissions')) {
-        localStorage.setItem('permissions', JSON.stringify([]));
-      }
+      // ==================== MOCK STORAGE INITIALIZATION ====================
+      (function initializeMockData() {
+        // Mock User Data
+        const mockUser = {
+          id: 3860,
+          userId: 3860,
+          ldap: 'ttlam1',
+          userName: 'Lam. Tran Tung',
+          fullName: 'Lam. Tran Tung',
+          email: 'ttlam1@cmcglobal.vn',
+          firstName: 'Tung',
+          lastName: 'Lam',
+          departmentId: 2,
+          departmentName: 'DJ2',
+          departmentCode: 'DJ2',
+          position: 'SE02',
+          positionId: 803,
+          role: 'PM',
+          roles: ['USER', 'PM', 'BUSINESS_PLAN_ADMIN'],
+          isActive: true,
+          location: 'Vietnam',
+          employeeType: 'In-house',
+          grossSalary: 5000000
+        };
+        
+        // Mock User POA (Power of Attorney)
+        const mockUserPOA = {
+          userName: mockUser.userName,
+          userId: mockUser.userId,
+          ldap: mockUser.ldap,
+          email: mockUser.email,
+          departmentId: mockUser.departmentId,
+          departmentName: mockUser.departmentName,
+          roles: mockUser.roles
+        };
+        
+        // Mock Permissions - Full Business Plan Module Permissions
+        const mockPermissions = [
+          // Business Plan List
+          'BUSINESS_PLAN_VIEW',
+          'BUSINESS_PLAN_LIST_VIEW',
+          'BUSINESS_PLAN_FILTER',
+          'BUSINESS_PLAN_SEARCH',
+          
+          // Business Plan Detail
+          'BUSINESS_PLAN_DETAIL_VIEW',
+          'BUSINESS_PLAN_EDIT',
+          'BUSINESS_PLAN_CREATE',
+          'BUSINESS_PLAN_DELETE',
+          'BUSINESS_PLAN_SAVE_DRAFT',
+          'BUSINESS_PLAN_SUBMIT',
+          'BUSINESS_PLAN_VERSION_CREATE',
+          
+          // Revenue Plan
+          'REVENUE_PLAN_VIEW',
+          'REVENUE_PLAN_EDIT',
+          'REVENUE_PLAN_PRODUCTION_EDIT',
+          'REVENUE_PLAN_OTHER_EDIT',
+          'REVENUE_PLAN_SELLING_EDIT',
+          'REVENUE_PLAN_SUMMARY_VIEW',
+          'REVENUE_PLAN_BASELINE_SUBMIT',
+          
+          // Delivery Plan
+          'DELIVERY_PLAN_VIEW',
+          'DELIVERY_PLAN_EDIT',
+          'DELIVERY_PLAN_RESOURCE_ADD',
+          'DELIVERY_PLAN_RESOURCE_EDIT',
+          'DELIVERY_PLAN_RESOURCE_DELETE',
+          'DELIVERY_PLAN_EXPENSE_EDIT',
+          'DELIVERY_PLAN_SUMMARY_VIEW',
+          'DELIVERY_PLAN_SAVE',
+          
+          // Documents
+          'BUSINESS_PLAN_DOCUMENT_VIEW',
+          'BUSINESS_PLAN_DOCUMENT_UPLOAD',
+          'BUSINESS_PLAN_DOCUMENT_DELETE',
+          'BUSINESS_PLAN_DOCUMENT_DOWNLOAD',
+          
+          // Workflow & Approval
+          'BUSINESS_PLAN_WORKFLOW_VIEW',
+          'BUSINESS_PLAN_APPROVE',
+          'BUSINESS_PLAN_REJECT',
+          'BUSINESS_PLAN_REASSIGN',
+          
+          // Comments
+          'BUSINESS_PLAN_COMMENT_VIEW',
+          'BUSINESS_PLAN_COMMENT_ADD',
+          
+          // History
+          'BUSINESS_PLAN_HISTORY_VIEW',
+          
+          // Export
+          'BUSINESS_PLAN_EXPORT',
+          
+          // Admin
+          'BUSINESS_PLAN_ADMIN',
+          'BUSINESS_PLAN_SETTINGS_VIEW',
+          'BUSINESS_PLAN_SETTINGS_EDIT'
+        ];
+        
+        // Mock Tokens
+        const mockAccessToken = 'mock_access_token_' + Date.now();
+        const mockRefreshToken = 'mock_refresh_token_' + Date.now();
+        
+        // Mock API Base URLs
+        const mockApiConfig = {
+          API_SALE: 'http://localhost:3001/api/sale',
+          API_CRM: 'http://localhost:3001/api/crm',
+          API_DELIVERY: 'http://localhost:3001/api/delivery'
+        };
+        
+        // ==================== SET LOCALSTORAGE ====================
+        if (!localStorage.getItem('user')) {
+          localStorage.setItem('user', JSON.stringify(mockUser));
+          console.log('✅ Mock user initialized:', mockUser.ldap);
+        }
+        
+        if (!localStorage.getItem('userPOA')) {
+          localStorage.setItem('userPOA', JSON.stringify(mockUserPOA));
+          console.log('✅ Mock userPOA initialized');
+        }
+        
+        if (!localStorage.getItem('permissions')) {
+          localStorage.setItem('permissions', JSON.stringify(mockPermissions));
+          console.log('✅ Mock permissions initialized:', mockPermissions.length, 'permissions');
+        }
+        
+        if (!localStorage.getItem('access_token')) {
+          localStorage.setItem('access_token', mockAccessToken);
+          console.log('✅ Mock access token initialized');
+        }
+        
+        if (!localStorage.getItem('refresh_token')) {
+          localStorage.setItem('refresh_token', mockRefreshToken);
+          console.log('✅ Mock refresh token initialized');
+        }
+        
+        if (!localStorage.getItem('api_config')) {
+          localStorage.setItem('api_config', JSON.stringify(mockApiConfig));
+          console.log('✅ Mock API config initialized');
+        }
+        
+        // ==================== SET SESSIONSTORAGE ====================
+        if (!sessionStorage.getItem('sessionUser')) {
+          sessionStorage.setItem('sessionUser', JSON.stringify(mockUser));
+          console.log('✅ Mock session user initialized');
+        }
+        
+        // ==================== MOCK PERMISSION CHECKER ====================
+        window.hasPermission = function(permission) {
+          try {
+            const perms = JSON.parse(localStorage.getItem('permissions') || '[]');
+            const hasIt = perms.includes(permission);
+            console.log('🔐 Permission check:', permission, hasIt ? '✅' : '❌');
+            return hasIt;
+          } catch (e) {
+            console.error('❌ Permission check failed:', e);
+            return true; // Default allow in mock mode
+          }
+        };
+        
+        window.hasAnyPermission = function(permissions) {
+          try {
+            const perms = JSON.parse(localStorage.getItem('permissions') || '[]');
+            return permissions.some(p => perms.includes(p));
+          } catch (e) {
+            return true; // Default allow in mock mode
+          }
+        };
+        
+        window.hasAllPermissions = function(permissions) {
+          try {
+            const perms = JSON.parse(localStorage.getItem('permissions') || '[]');
+            return permissions.every(p => perms.includes(p));
+          } catch (e) {
+            return true; // Default allow in mock mode
+          }
+        };
+        
+        // ==================== MOCK AUTH FUNCTIONS ====================
+        window.mockAuth = {
+          getCurrentUser: function() {
+            try {
+              return JSON.parse(localStorage.getItem('user'));
+            } catch (e) {
+              return null;
+            }
+          },
+          
+          getAccessToken: function() {
+            return localStorage.getItem('access_token');
+          },
+          
+          getRefreshToken: function() {
+            return localStorage.getItem('refresh_token');
+          },
+          
+          isAuthenticated: function() {
+            return !!localStorage.getItem('access_token');
+          },
+          
+          logout: function() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            sessionStorage.clear();
+            console.log('✅ Mock logout completed');
+          },
+          
+          refreshToken: async function() {
+            const newToken = 'mock_access_token_' + Date.now();
+            localStorage.setItem('access_token', newToken);
+            console.log('✅ Mock token refreshed');
+            return newToken;
+          }
+        };
+        
+        console.log('');
+        console.log('========================================');
+        console.log('🎭 MOCK SYSTEM INITIALIZED');
+        console.log('========================================');
+        console.log('User:', mockUser.ldap, '-', mockUser.fullName);
+        console.log('Department:', mockUser.departmentName);
+        console.log('Permissions:', mockPermissions.length);
+        console.log('Mode: Standalone Mock');
+        console.log('========================================');
+        console.log('');
+      })();
     </script>
   </head>
   <body>

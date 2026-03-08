@@ -1,13 +1,12 @@
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../../service/constant'
-import Request from '../../../service/request'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {NotificationManager} from "react-notifications";
 
 export const getIndustryDomain = createAsyncThunk(
   'get/getIndustryDomain',
   async _ => {
-    const result = await Request(BUSINESS_PLAN_API.getIndustryDomain)
+    const result = await BusinessPlanAPI.getIndustryDomain()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -19,7 +18,7 @@ export const getIndustryDomain = createAsyncThunk(
 export const getIndustryCurrency = createAsyncThunk(
   'get/getIndustryCurrency',
   async _ => {
-    const result = await Request(BUSINESS_PLAN_API.getIndustryCurrency)
+    const result = await BusinessPlanAPI.getIndustryCurrency()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -31,10 +30,7 @@ export const getIndustryCurrency = createAsyncThunk(
 export const getUserAndDepartmentCollaborator = createAsyncThunk(
   'get/getUserAndDepartmentCollaborator',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getUserAndDepartmentCollaborator,
-      params
-    )
+    const result = await BusinessPlanAPI.getUserAndDepartmentCollaborator(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -46,10 +42,7 @@ export const getUserAndDepartmentCollaborator = createAsyncThunk(
 export const getBusinessPlanSettingMaxKPI = createAsyncThunk(
   'get/getBusinessPlanSettingMaxKPI',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getBusinessPlanSettingMaxKPI,
-      params
-    )
+    const result = await BusinessPlanAPI.getBusinessPlanSettingMaxKPI(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -59,6 +52,6 @@ export const getBusinessPlanSettingMaxKPI = createAsyncThunk(
 )
 
 export const getIndustryCurrencySymbol = () =>
-  Request(BUSINESS_PLAN_API.getIndustryCurrency)
+  BusinessPlanAPI.getIndustryCurrency()
 
-export const getAllIndustry = () => Request(BUSINESS_PLAN_API.getIndustryDomain)
+export const getAllIndustry = () => BusinessPlanAPI.getIndustryDomain()

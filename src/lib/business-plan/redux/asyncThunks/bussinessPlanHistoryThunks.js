@@ -1,5 +1,4 @@
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
-import Request from '../../../service/request'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { ResponseStatusCode } from '../../../service/constant'
 import { NotificationManager } from 'react-notifications'
@@ -10,14 +9,12 @@ export const getHistoryDeliveryPlan = createAsyncThunk(
     { businessPlanVersionId, deliveryUnit, pageNum, pageSize, isSale },
     { rejectWithValue }
   ) => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getHistoryDeliveryPlan(
-        businessPlanVersionId,
-        deliveryUnit,
-        pageNum,
-        pageSize,
-        isSale
-      )
+    const result = await BusinessPlanAPI.getHistoryDeliveryPlan(
+      businessPlanVersionId,
+      deliveryUnit,
+      pageNum,
+      pageSize,
+      isSale
     )
     if (result.status === ResponseStatusCode.success) {
       return {
@@ -36,14 +33,12 @@ export const getHistoryRevenuePlan = createAsyncThunk(
     { businessPlanVersionId, deliveryUnit, pageNum, pageSize, isSale },
     { rejectWithValue }
   ) => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getHistoryRevenuePlan(
-        businessPlanVersionId,
-        deliveryUnit,
-        pageNum,
-        pageSize,
-        isSale
-      )
+    const result = await BusinessPlanAPI.getHistoryRevenuePlan(
+      businessPlanVersionId,
+      deliveryUnit,
+      pageNum,
+      pageSize,
+      isSale
     )
     if (result.status === ResponseStatusCode.success) {
       return {

@@ -1,13 +1,12 @@
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../../service/constant'
-import Request from '../../../service/request'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { NotificationManager } from 'react-notifications'
 
 const getBusinessPlanListStatus = createAsyncThunk(
   'get/getBusinessPlanListStatus',
   async _ => {
-    const result = await Request(BUSINESS_PLAN_API.getStatus)
+    const result = await BusinessPlanAPI.getStatus()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -19,7 +18,7 @@ const getBusinessPlanListStatus = createAsyncThunk(
 const getBusinessPlanListVersion = createAsyncThunk(
   'get/getBusinessPlanListVersion',
   async _ => {
-    const result = await Request(BUSINESS_PLAN_API.getVersion)
+    const result = await BusinessPlanAPI.getVersion()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -31,7 +30,7 @@ const getBusinessPlanListVersion = createAsyncThunk(
 const getBusinessPlanListCustomerName = createAsyncThunk(
   'get/getBusinessPlanListCustomerName',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getCustomerName, {
+    const result = await BusinessPlanAPI.getCustomerName({
       params: {
         search: params.search,
       },
@@ -48,7 +47,7 @@ const getBusinessPlanListCustomerName = createAsyncThunk(
 const getBusinessPlanListPlanName = createAsyncThunk(
   'get/getBusinessPlanListPlanName',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getBusinessPlanName, {
+    const result = await BusinessPlanAPI.getBusinessPlanName({
       params: {
         search: params.search,
       },
@@ -64,7 +63,7 @@ const getBusinessPlanListPlanName = createAsyncThunk(
 const getBusinessPlanListProjectCode = createAsyncThunk(
   'get/getBusinessPlanListProjectCode',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getProjectCode, {
+    const result = await BusinessPlanAPI.getProjectCode({
       params: {
         search: params.search,
       },
@@ -80,7 +79,7 @@ const getBusinessPlanListProjectCode = createAsyncThunk(
 const getBusinessPlanListApprovalStep = createAsyncThunk(
   'get/getBusinessPlanListApprovalStep',
   async _ => {
-    const result = await Request(BUSINESS_PLAN_API.getApprovalStep)
+    const result = await BusinessPlanAPI.getApprovalStep()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -92,10 +91,7 @@ const getBusinessPlanListApprovalStep = createAsyncThunk(
 const postListBusinessPlanList = createAsyncThunk(
   'post/postListBusinessPlanList',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.postListBusinessPlanList,
-      params
-    )
+    const result = await BusinessPlanAPI.postListBusinessPlanList(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -107,7 +103,7 @@ const postListBusinessPlanList = createAsyncThunk(
 const getBusinessPlanListDU = createAsyncThunk(
   'get/getBusinessPlanListDU',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getListDU, params)
+    const result = await BusinessPlanAPI.getListDU(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -119,7 +115,7 @@ const getBusinessPlanListDU = createAsyncThunk(
 const getBusinessPlanListBU = createAsyncThunk(
   'get/getBusinessPlanListBU',
   async params => {
-    const result = await Request(BUSINESS_PLAN_API.getListBU, params)
+    const result = await BusinessPlanAPI.getListBU(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

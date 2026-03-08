@@ -1,8 +1,7 @@
-import BUSINESS_PLAN_API from '../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../businessPlanApiConfig'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ResponseStatusCode } from '../../service/constant'
-import Request from '../../service/request'
 import { fetchBusinessPlanWorkflow } from '../redux'
 import { NotificationManager } from 'react-notifications'
 
@@ -13,7 +12,7 @@ const useBusinessPlanStep = () => {
   )
 
   const approveRejectWO = async params => {
-    const result = await Request(BUSINESS_PLAN_API.approveRejectWO, params)
+    const result = await BusinessPlanAPI.approveRejectWO(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data.message)
       return result.data

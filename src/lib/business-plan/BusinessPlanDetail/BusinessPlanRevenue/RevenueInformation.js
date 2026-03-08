@@ -1,8 +1,7 @@
 import { SourceConstants } from '../../../constants/ActivityKeyConstants'
 import { DateFormat } from '../../../constants/DateFormat'
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../../service/constant'
-import Request from '../../../service/request'
 import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { Col, Radio, Row, Table } from 'antd'
 import { isEqual } from 'lodash'
@@ -223,7 +222,7 @@ const RevenueInformation = ({
   const fetchProductionRevenuePlan = async (start, pageSize, param) => {
     setLoadingTable(true)
     try {
-      const result = await Request(BUSINESS_PLAN_API.getProductionRevenue, {
+      const result = await BusinessPlanAPI.getProductionRevenue({
         status: status,
         mvv: projectCode,
         duId: param.deliveryUnitDataRevenue.groupId,

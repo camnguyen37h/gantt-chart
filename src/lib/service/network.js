@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { NotificationManager } from 'react-notifications'
-import { URIProperty } from '../utils/URIProperty'
 import { HttpStatus } from '../../../constants/HttpStatus'
 import LoginActions from '@/actions/LoginActions'
 import { parseParams } from './request'
@@ -27,58 +26,32 @@ const createAxiosInstance = (customHeaders = {}) => {
 
 const attachRequestInterceptor = instance => {
   instance.interceptors.request.use(request => {
-    const skipAuth = [URIProperty.loginDashboard(), URIProperty.getNewToken()]
-    if (!skipAuth.includes(request.url)) {
-      request.headers.Authorization = `Bearer ${localStorage.getItem(
-        'access_token'
-      )}`
+    // Add Authorization header from localStorage
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      request.headers.Authorization = `Bearer ${token}`
     }
     return request
   })
 }
 
-const attachResponseInterceptor = (instance, isExtra = false) => {
+const attachResponseInterceptor = (instance) => {
   instance.interceptors.response.use(
     async response => processResponse(response),
     async error => {
-      const { response, config } = error
+      const { response } = error
 
-      if (
-        response.status === HttpStatus.UNAUTHORIZED &&
-        config.url !== '/refresh-token'
-      ) {
-        if (!isExtra) {
-          if (!window.refreshTokenPromise) {
-            window.refreshTokenPromise = axios
-              .post(URIProperty.getNewToken(), {
-                accessToken: localStorage.getItem('access_token'),
-                refreshToken: localStorage.getItem('refreshToken'),
-              })
-              .then(res => {
-                window.refreshTokenPromise = null
-                localStorage.setItem('access_token', res.data.accessToken)
-                localStorage.setItem('refreshToken', res.data.refreshToken)
-                return res.data.accessToken
-              })
-              .catch(() => {
-                LoginActions.signOut()
-                return false
-              })
-          }
-
-          return window.refreshTokenPromise.then(token => {
-            if (!token) return
-            const retryInstance = createAxiosInstance()
-            attachRequestInterceptor(retryInstance)
-            return retryInstance.request(config)
-          })
-        } else {
-          LoginActions.signOut()
-          return
-        }
+      // Mock mode: Skip refresh token logic - always authenticated
+      // Mock API handles auth via localStorage token (set in index.html)
+      // No need to call refresh token API in standalone mock mode
+      
+      if (response && response.status === HttpStatus.UNAUTHORIZED) {
+        console.warn('⚠️ Mock Auth: Unauthorized detected, logging out...')
+        LoginActions.signOut()
+        return
       }
 
-      const data = response.data || {}
+      const data = response?.data || {}
       NotificationManager.error(
         typeof data === 'string'
           ? data
@@ -103,12 +76,9 @@ const Network = ({
   headers,
 }) => {
   const instance = createAxiosInstance(customHeaders)
-  const extraInstance = createAxiosInstance(customHeaders)
 
   attachRequestInterceptor(instance)
-  attachRequestInterceptor(extraInstance)
-  attachResponseInterceptor(instance, false)
-  attachResponseInterceptor(extraInstance, true)
+  attachResponseInterceptor(instance)
 
   const params = data
 
@@ -133,6 +103,12 @@ const Network = ({
     case 'delete':
       return instance.delete(url, {
         params,
+        headers: headers,
+      })
+    default:
+      return instance.get(url, {
+        params: { params },
+        paramsSerializer: parseParams,
         headers: headers,
       })
   }

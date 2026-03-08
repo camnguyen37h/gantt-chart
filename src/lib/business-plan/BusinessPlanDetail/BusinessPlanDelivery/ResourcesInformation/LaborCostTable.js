@@ -1,8 +1,7 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
 import { Icon, Table, Tooltip } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import Request from '../../../../service/request';
-import BUSINESS_PLAN_API from '../../../../service/api/businessPlan';
+import * as BusinessPlanAPI from '../../../businessPlanApiConfig';
 import { ResponseStatusCode } from '../../../../service/constant';
 import { NotificationManager } from 'react-notifications';
 import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber';
@@ -66,7 +65,7 @@ const LaborCostTable = ({ mainColumns }) => {
     if (loadingTable || !hasMore) return;
     setLoadingTable(true);
 
-    const result = await Request(BUSINESS_PLAN_API.getResourcesInformationDeliveryPlan, {
+    const result = await BusinessPlanAPI.getResourcesInformationDeliveryPlan({
       ...resourceInfoTableParams,
       pageNum: pageNum,
       pageSize: PAGE_SIZE,

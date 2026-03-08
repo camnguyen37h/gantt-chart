@@ -1,16 +1,12 @@
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { NotificationManager } from 'react-notifications'
 import { ResponseStatusCode } from '../../../service/constant'
-import Request from '../../../service/request'
 
 export const fetchBusinessPlanWorkflow = createAsyncThunk(
   'get/fetchBusinessPlanWorkflow',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getBusinessPlanWorkflow,
-      params
-    )
+    const result = await BusinessPlanAPI.getBusinessPlanWorkflow(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

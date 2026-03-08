@@ -17,7 +17,7 @@ export const businessCommentsSlice = createSlice({
 
     builder.addCase(getBusinessPlanDetailComment.fulfilled, (state, action) => {
       state.loading = false
-      state.listComments = action.payload
+      state.listComments = action.payload || []
     })
 
     builder.addCase(getBusinessPlanDetailComment.rejected, (state, action) => {
@@ -30,7 +30,7 @@ export const businessCommentsSlice = createSlice({
 
     builder.addCase(getBusinessPlanHistory.fulfilled, (state, action) => {
       state.loadingHistory = false
-      state.listHistory = action.payload
+      state.listHistory = action.payload || []
     })
 
     builder.addCase(getBusinessPlanHistory.rejected, (state, action) => {

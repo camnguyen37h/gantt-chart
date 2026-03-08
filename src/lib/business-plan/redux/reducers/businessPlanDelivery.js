@@ -544,31 +544,32 @@ const businessPlanDeliverySlice = createSlice({
     builder.addCase(getSummaryDeliveryPlan.fulfilled, (state, action) => {
       state.loadingSummaryDeliveryPlan = false
 
+      const payload = action.payload || {}
       state.summaryDeliveryPlan['mmEffort'] =
-        action.payload['mmEffort'] !== null ? action.payload['mmEffort'] : ''
+        payload['mmEffort'] !== null ? payload['mmEffort'] : ''
       state.summaryDeliveryPlan['directLaborCost'] =
-        action.payload['directLaborCost'] !== null
-          ? action.payload['directLaborCost']
+        payload['directLaborCost'] !== null
+          ? payload['directLaborCost']
           : ''
       state.summaryDeliveryPlan['outsourcingCost'] =
-        action.payload['outsourcingCost'] !== null
-          ? action.payload['outsourcingCost']
+        payload['outsourcingCost'] !== null
+          ? payload['outsourcingCost']
           : ''
       state.summaryDeliveryPlan['equipmentExpense'] =
-        action.payload['equipmentExpense'] !== null
-          ? action.payload['equipmentExpense']
+        payload['equipmentExpense'] !== null
+          ? payload['equipmentExpense']
           : ''
       state.summaryDeliveryPlan['onsiteExpense'] =
-        action.payload['onsiteExpense'] !== null
-          ? action.payload['onsiteExpense']
+        payload['onsiteExpense'] !== null
+          ? payload['onsiteExpense']
           : ''
       state.summaryDeliveryPlan['overtime'] =
-        action.payload['overtime'] !== null ? action.payload['overtime'] : ''
+        payload['overtime'] !== null ? payload['overtime'] : ''
       state.summaryDeliveryPlan['other'] =
-        action.payload['other'] !== null ? action.payload['other'] : ''
+        payload['other'] !== null ? payload['other'] : ''
       state.summaryDeliveryPlan['nonDeductibleInputVAT'] =
-        action.payload['nonDeductibleInputVAT'] !== null
-          ? action.payload['nonDeductibleInputVAT']
+        payload['nonDeductibleInputVAT'] !== null
+          ? payload['nonDeductibleInputVAT']
           : ''
     })
 

@@ -1,6 +1,5 @@
 import { processResponse } from './encrypt'
 import axios from 'axios'
-import { URIProperty } from '../utils/URIProperty'
 import { HttpStatus } from '../constants/HttpStatus'
 
 export const parseParams = params => {
@@ -46,37 +45,12 @@ const Request = (api, data, message, customHeaders, cancel) => {
     // withCredentials: true,
   })
 
-  const extraInstance = axios.create({
-    headers,
-    timeout,
-    // withCredentials: true,
-  })
-
   instance.interceptors.request.use(request => {
-    if (
-      ![URIProperty.loginDashboard(), URIProperty.getNewToken()].includes(
-        request.url
-      )
-    ) {
-      request.headers.Authorization = `Bearer ${localStorage.getItem(
-        'access_token'
-      )}`
+    // Add Authorization header from localStorage
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      request.headers.Authorization = `Bearer ${token}`
     }
-
-    return { ...request }
-  })
-
-  extraInstance.interceptors.request.use(request => {
-    if (
-      ![URIProperty.loginDashboard(), URIProperty.getNewToken()].includes(
-        request.url
-      )
-    ) {
-      request.headers.Authorization = `Bearer ${localStorage.getItem(
-        'access_token'
-      )}`
-    }
-
     return { ...request }
   })
 
@@ -85,51 +59,16 @@ const Request = (api, data, message, customHeaders, cancel) => {
       return processResponse(response)
     },
     async error => {
-      if (
-        error.response.status === HttpStatus.UNAUTHORIZED &&
-        error.config.url !== '/refresh-token'
-      ) {
-        if (!window.refreshTokenPromise) {
-          // check for an existing in-progress request
-          // if nothing is in-progress, start a new refresh token request
-          window.refreshTokenPromise = axios
-            .post(URIProperty.getNewToken(), {
-              accessToken: localStorage.getItem('access_token'),
-              refreshToken: localStorage.getItem('refreshToken'),
-            })
-            .then(response => {
-              window.refreshTokenPromise = null // clear state
-              localStorage.setItem('access_token', response.data.accessToken)
-              localStorage.setItem('refreshToken', response.data.refreshToken)
-              return response.data.accessToken // resolve with the new token
-            })
-            .catch(error => {
-              // LoginActions.signOut()
-              return false
-            })
-        }
-
-        return window.refreshTokenPromise.then(token => {
-          if (!token) return
-          return extraInstance.request(error.config)
-        })
+      // Mock mode: Skip refresh token logic - always authenticated
+      // Mock API handles auth via localStorage token (set in index.html)
+      // If UNAUTHORIZED in mock mode, just logout (shouldn't happen with mock API)
+      
+      if (error.response?.status === HttpStatus.UNAUTHORIZED) {
+        console.warn('⚠️ Mock Auth: Unauthorized detected in request.js')
+        // In mock mode, this shouldn't happen since mock API always returns 200
+        // But if it does, just process the response without retry
       }
-      return processResponse(error.response)
-    }
-  )
-
-  extraInstance.interceptors.response.use(
-    async response => {
-      return processResponse(response)
-    },
-    error => {
-      if (
-        error.response.status === HttpStatus.UNAUTHORIZED &&
-        error.config.url !== '/refresh-token'
-      ) {
-        // LoginActions.signOut()
-        return
-      }
+      
       return processResponse(error.response)
     }
   )

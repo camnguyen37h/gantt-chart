@@ -426,7 +426,7 @@ const businessPlanRevenueSlice = createSlice({
     })
 
     builder.addCase(getPositionRevenuePlan.fulfilled, (state, { payload }) => {
-      const { data, errorMessage, httpStatus } = payload
+      const { data, errorMessage, httpStatus } = payload || {}
       if (httpStatus === ResponseStatusCode.success) {
         state.dataFilterPosition = data
       }
@@ -445,27 +445,28 @@ const businessPlanRevenueSlice = createSlice({
     builder.addCase(getSummaryRevenuePlan.fulfilled, (state, action) => {
       state.summaryRevenuePlan.loading = false
 
+      const payload = action.payload || {}
       state.summaryRevenuePlan['mmBill'] =
-        action.payload['mmBill'] !== null ? action.payload['mmBill'] : ''
+        payload['mmBill'] !== null ? payload['mmBill'] : ''
       state.summaryRevenuePlan['softwareProductionRevenues'] =
-        action.payload['softwareProductionRevenues'] !== null
-          ? action.payload['softwareProductionRevenues']
+        payload['softwareProductionRevenues'] !== null
+          ? payload['softwareProductionRevenues']
           : ''
       state.summaryRevenuePlan['deduction'] =
-        action.payload['deduction'] !== null ? action.payload['deduction'] : ''
+        payload['deduction'] !== null ? payload['deduction'] : ''
       state.summaryRevenuePlan['onsiteFee'] =
-        action.payload['onsiteFee'] !== null ? action.payload['onsiteFee'] : ''
+        payload['onsiteFee'] !== null ? payload['onsiteFee'] : ''
       state.summaryRevenuePlan['equipmentRevenue'] =
-        action.payload['equipmentRevenue'] !== null
-          ? action.payload['equipmentRevenue']
+        payload['equipmentRevenue'] !== null
+          ? payload['equipmentRevenue']
           : ''
       state.summaryRevenuePlan['otherRevenues'] =
-        action.payload['otherRevenues'] !== null
-          ? action.payload['otherRevenues']
+        payload['otherRevenues'] !== null
+          ? payload['otherRevenues']
           : ''
       state.summaryRevenuePlan['agencyExpenses'] =
-        action.payload['agencyExpenses'] !== null
-          ? action.payload['agencyExpenses']
+        payload['agencyExpenses'] !== null
+          ? payload['agencyExpenses']
           : ''
     })
 
@@ -474,7 +475,8 @@ const businessPlanRevenueSlice = createSlice({
     })
 
     builder.addCase(getListDUByVersionRevenue.fulfilled, (state, action) => {
-      const filteredItems = action.payload
+      const payload = action.payload || []
+      const filteredItems = payload
         .filter(item => item.groupId !== null)
         .map(item => ({
           ...item,

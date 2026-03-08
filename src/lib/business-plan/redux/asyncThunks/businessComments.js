@@ -1,16 +1,12 @@
-import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../../service/constant'
-import Request from '../../../service/request'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {NotificationManager} from "react-notifications";
 
 export const getBusinessPlanDetailComment = createAsyncThunk(
   'get/getBusinessPlanDetailComment',
   async id => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getBusinessPlanDetailComments,
-      id
-    )
+    const result = await BusinessPlanAPI.getBusinessPlanDetailComments(id)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -22,10 +18,7 @@ export const getBusinessPlanDetailComment = createAsyncThunk(
 export const postBusinessPlanComment = createAsyncThunk(
   'post/postBusinessPlanComment',
   async params => {
-    const result = await Request(
-      BUSINESS_PLAN_API.postBusinessPlanDetailComment,
-      params
-    )
+    const result = await BusinessPlanAPI.postBusinessPlanDetailComment(params)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -37,7 +30,7 @@ export const postBusinessPlanComment = createAsyncThunk(
 export const getBusinessPlanHistory = createAsyncThunk(
   'get/getBusinessPlanHistory',
   async id => {
-    const result = await Request(BUSINESS_PLAN_API.getHistory(id))
+    const result = await BusinessPlanAPI.getHistory(id)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

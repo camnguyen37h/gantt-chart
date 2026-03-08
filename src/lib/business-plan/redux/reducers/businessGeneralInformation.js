@@ -90,11 +90,11 @@ export const businessGeneralInformationSlice = createSlice({
     })
 
     builder.addCase(getIndustryDomain.fulfilled, (state, action) => {
-      state.listDomain = action.payload
+      state.listDomain = action.payload || []
     })
 
     builder.addCase(getIndustryCurrency.fulfilled, (state, action) => {
-      state.listCurrency = action.payload
+      state.listCurrency = action.payload || []
     })
 
     builder.addCase(getBusinessPlanSettingMaxKPI.fulfilled, (state, { payload }) => {
@@ -117,7 +117,7 @@ export const businessGeneralInformationSlice = createSlice({
     builder.addCase(
       getUserAndDepartmentCollaborator.fulfilled,
       (state, action) => {
-        state.listUsername = action.payload
+        state.listUsername = action.payload || []
       }
     )
   },

@@ -150,7 +150,7 @@ export const formatMoneyUnit = (number = '') => {
   const roundedNumber = Math.round(newValue * 100) / 100
 
   try {
-    const fraction = roundedNumber % 1 == 0 ? 0 : 2
+    const fraction = roundedNumber % 1 === 0 ? 0 : 2
     const formatedNumber = Intl.NumberFormat('en-US', {
       minimumFractionDigits: fraction,
       maximumFractionDigits: fraction,

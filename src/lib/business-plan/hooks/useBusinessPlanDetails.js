@@ -1,9 +1,8 @@
-import BUSINESS_PLAN_API from '../../service/api/businessPlan'
+import * as BusinessPlanAPI from '../businessPlanApiConfig'
 import { useCallback } from 'react'
 import { NotificationManager } from 'react-notifications'
 import { useDispatch, useSelector } from 'react-redux'
 import { ResponseStatusCode } from '../../service/constant'
-import Request from '../../service/request'
 import * as redux from '../redux'
 import { getRowConfig } from '../constants'
 import moment from 'moment'
@@ -111,7 +110,7 @@ const useBusinessPlanDetails = () => {
     const isValid = handleValidateDraft()
     if (!isValid) return false
 
-    const result = await Request(BUSINESS_PLAN_API.saveDraft, params)
+    const result = await BusinessPlanAPI.saveDraft(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data)
       updateIsSaveShowed(false)
@@ -126,7 +125,7 @@ const useBusinessPlanDetails = () => {
     const isValid = handleValidate()
 
     if (!isValid) return
-    const result = await Request(BUSINESS_PLAN_API.submit, params)
+    const result = await BusinessPlanAPI.submit(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data)
       updateIsSaveShowed(false)
@@ -138,7 +137,7 @@ const useBusinessPlanDetails = () => {
   }
 
   const createNewVersion = async id => {
-    const result = await Request(BUSINESS_PLAN_API.createNewVersion(id))
+    const result = await BusinessPlanAPI.createNewVersion(id)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success('Create successfully')
       return result.data
