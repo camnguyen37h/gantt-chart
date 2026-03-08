@@ -5,7 +5,10 @@ import {
   businessGeneralInformationReducer,
   businessPlanRevenueReducer,
   businessPlanDeliveryReducer,
+  businessCommentsReducer,
+  bussinessPlanHistoryReducer,
 } from '../lib/business-plan/redux'
+import workflowApprovalReducer from '../components/workflow-approval/redux/reducer'
 
 const store = configureStore({
   reducer: {
@@ -14,7 +17,10 @@ const store = configureStore({
     businessGeneralInformation: businessGeneralInformationReducer,
     businessPlanRevenue: businessPlanRevenueReducer,
     businessPlanDelivery: businessPlanDeliveryReducer,
+    businessComments: businessCommentsReducer,
+    bussinessPlanHistory: bussinessPlanHistoryReducer,
     businessDocuments: () => ({ listDocuments: [] }),
+    workflowApproval: workflowApprovalReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

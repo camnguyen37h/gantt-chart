@@ -17,29 +17,29 @@ const bussinessPlanHistorySlice = createSlice({
   extraReducers: builder => {
     builder.addCase(getHistoryDeliveryPlan.pending, state => {
       state.loading = true
-    }),
-      builder.addCase(
-        getHistoryDeliveryPlan.fulfilled,
-        (state, { payload }) => {
-          state.data = payload.data && payload.data.body.userActionHistoryDtoList || []
-          state.totalPage = payload.data.total || 0
-          state.loading = false
-        }
-      ),
-      builder.addCase(getHistoryDeliveryPlan.rejected, state => {
+    })
+    builder.addCase(
+      getHistoryDeliveryPlan.fulfilled,
+      (state, { payload }) => {
+        state.data = (payload.data && payload.data.body && payload.data.body.userActionHistoryDtoList) || []
+        state.totalPage = (payload.data && payload.data.total) || 0
         state.loading = false
-      }),
-      builder.addCase(getHistoryRevenuePlan.pending, state => {
-        state.loading = true
-      }),
-      builder.addCase(getHistoryRevenuePlan.fulfilled, (state, { payload }) => {
-        state.data = payload.data && payload.data.body.userActionHistoryDtoList || []
-        state.totalPage = payload.data.total || 0
-        state.loading = false
-      }),
-      builder.addCase(getHistoryRevenuePlan.rejected, state => {
-        state.loading = false
-      })
+      }
+    )
+    builder.addCase(getHistoryDeliveryPlan.rejected, state => {
+      state.loading = false
+    })
+    builder.addCase(getHistoryRevenuePlan.pending, state => {
+      state.loading = true
+    })
+    builder.addCase(getHistoryRevenuePlan.fulfilled, (state, { payload }) => {
+      state.data = (payload.data && payload.data.body && payload.data.body.userActionHistoryDtoList) || []
+      state.totalPage = (payload.data && payload.data.total) || 0
+      state.loading = false
+    })
+    builder.addCase(getHistoryRevenuePlan.rejected, state => {
+      state.loading = false
+    })
   },
 })
 

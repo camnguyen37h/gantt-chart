@@ -17,9 +17,37 @@ import * as mockApi from '../../utils/mockBusinessPlanApi';
 const USE_MOCK_API = true;
 
 /**
+ * Normalize response structure
+ * Mock API returns {httpStatus, data, ...} but async thunks expect {status, data, ...}
+ * This wrapper ensures consistent response structure
+ */
+const normalizeResponse = async (apiCall) => {
+  const result = await apiCall;
+  if (result && result.httpStatus !== undefined && result.status === undefined) {
+    return { ...result, status: result.httpStatus };
+  }
+  return result;
+};
+
+/**
+ * Create API wrapper that normalizes responses
+ */
+const createApiWrapper = (mockApi) => {
+  const wrapper = {};
+  for (const key in mockApi) {
+    if (typeof mockApi[key] === 'function') {
+      wrapper[key] = async (...args) => normalizeResponse(mockApi[key](...args));
+    } else {
+      wrapper[key] = mockApi[key];
+    }
+  }
+  return wrapper;
+};
+
+/**
  * API instance - switches between mock and real based on configuration
  */
-const api = USE_MOCK_API ? mockApi : null; // Replace null with realApi when available
+const api = USE_MOCK_API ? createApiWrapper(mockApi) : null; // Replace null with realApi when available
 
 // ==================== EXPORT ALL API FUNCTIONS ====================
 

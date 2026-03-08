@@ -1,13 +1,12 @@
-import { WORK_FLOW_API } from '../../../lib/service/api/WorkFlow'
 import { ResponseStatusCode } from '../../../lib/service/constant'
-import Request from '../../../lib/service/request'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { NotificationManager } from 'react-notifications'
+import * as BusinessPlanAPI from '../../../lib/business-plan/businessPlanApiConfig'
 
 export const fetchSpecificPermission = createAsyncThunk(
   'get/fetchSpecificPermission',
   async () => {
-    const result = await Request(WORK_FLOW_API.getSpecificPermission)
+    const result = await BusinessPlanAPI.getStatus()
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -19,7 +18,7 @@ export const fetchSpecificPermission = createAsyncThunk(
 export const fetchUserWorkflow = createAsyncThunk(
   'get/fetchUserWorkflow',
   async params => {
-    const result = await Request(WORK_FLOW_API.getUserInWorkflow, params)
+    const result = await BusinessPlanAPI.getVersion(params)
 
     if (result.status === ResponseStatusCode.success) {
       return result.data
