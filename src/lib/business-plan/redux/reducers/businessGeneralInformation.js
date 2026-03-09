@@ -12,6 +12,8 @@ export const businessGeneralInformationSlice = createSlice({
   name: 'businessGeneralInformation',
   initialState: {
     listGeneralInformation: {},
+    generalInfos: [],
+    selectedMvvCode: null,
     listDomain: [],
     listCurrency: [],
     listUsername: [],
@@ -58,6 +60,25 @@ export const businessGeneralInformationSlice = createSlice({
         [key]: value
       }
     },
+    setSelectedMvvCode: (state, action) => {
+      state.selectedMvvCode = action.payload
+      // Update listGeneralInformation based on selected MVV
+      const selectedInfo = state.generalInfos.find(info => info.projectCode === action.payload)
+      if (selectedInfo) {
+        state.listGeneralInformation = selectedInfo
+        state.listAM = selectedInfo.listAM || []
+        state.listAdviser = selectedInfo.listAdviser || []
+        state.listPreSale = selectedInfo.listPreSale || []
+        state.listPreparator = selectedInfo.listPreparator || []
+        state.listTeamLead = selectedInfo.listTeamLead || []
+        state.listPM = selectedInfo.listPM || []
+        state.industryDomain = selectedInfo.industry
+        state.industryCurrency = selectedInfo.currency
+        state.businessPlanKpiDTO = selectedInfo.businessPlanKpiDTO
+        state.planningStartDate = selectedInfo.planningStartDate
+        state.planningEndDate = selectedInfo.planningEndDate
+      }
+    },
   },
   extraReducers: builder => {
     builder.addCase(getBusinessPlanDetail.pending, (state, action) => {
@@ -71,18 +92,33 @@ export const businessGeneralInformationSlice = createSlice({
       if (!data) {
         return
       }
-      state.listGeneralInformation = data.generalInfo
-      state.listAM = data.generalInfo.listAM
-      state.listAdviser = data.generalInfo.listAdviser
-      state.listPreSale = data.generalInfo.listPreSale
-      state.listPreparator = data.generalInfo.listPreparator
-      state.listTeamLead = data.generalInfo.listTeamLead
-      state.listPM = data.generalInfo.listPM
-      state.industryDomain = data.generalInfo.industry
-      state.industryCurrency = data.generalInfo.currency
-      state.businessPlanKpiDTO = data.generalInfo.businessPlanKpiDTO
-      state.planningStartDate = data.generalInfo.planningStartDate
-      state.planningEndDate = data.generalInfo.planningEndDate
+
+      // Store all generalInfos
+      state.generalInfos = data.generalInfos || []
+
+      // Set selected MVV to match the business plan id (from URL)
+      // Priority: data.projectCode from API response (already matched in mock)
+      state.selectedMvvCode = data.projectCode
+
+      // Get the selected general info (matching projectCode)
+      const selectedInfo = state.generalInfos.find(
+        info => info.projectCode === state.selectedMvvCode
+      ) || state.generalInfos[0]
+
+      if (selectedInfo) {
+        state.listGeneralInformation = selectedInfo
+        state.listAM = selectedInfo.listAM || []
+        state.listAdviser = selectedInfo.listAdviser || []
+        state.listPreSale = selectedInfo.listPreSale || []
+        state.listPreparator = selectedInfo.listPreparator || []
+        state.listTeamLead = selectedInfo.listTeamLead || []
+        state.listPM = selectedInfo.listPM || []
+        state.industryDomain = selectedInfo.industry
+        state.industryCurrency = selectedInfo.currency
+        state.businessPlanKpiDTO = selectedInfo.businessPlanKpiDTO
+        state.planningStartDate = selectedInfo.planningStartDate
+        state.planningEndDate = selectedInfo.planningEndDate
+      }
     })
 
     builder.addCase(getBusinessPlanDetail.rejected, (state, action) => {
@@ -129,7 +165,8 @@ export const {
   handleDeleteItemCollaborator,
   handleChangeInputValueCollaborator,
   handleChangeDateGeneralInfo,
-  setKpiBonusData
+  setKpiBonusData,
+  setSelectedMvvCode
 } = businessGeneralInformationSlice.actions
 
 export default businessGeneralInformationSlice.reducer

@@ -31,90 +31,182 @@ export const mockBusinessPlanDetail = {
         "statusName": "Draft"
       }
     ],
-    "generalInfo": {
-      "listAM": [
-        {
-          "id": 11233,
+    "generalInfos": [
+      {
+        "listAM": [
+          {
+            "id": 11233,
+            "businessPlanVersionId": 436,
+            "memberType": "AM",
+            "userId": 3744,
+            "ldap": "ntmanh6",
+            "departmentId": 40,
+            "departmentName": "BU3",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [
+          {
+            "id": 11247,
+            "businessPlanVersionId": 436,
+            "memberType": "TEAM_LEAD",
+            "userId": 136,
+            "ldap": "lcnguyen",
+            "departmentId": 3,
+            "departmentName": "DU1.3",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 11246,
+            "businessPlanVersionId": 436,
+            "memberType": "PREPARATOR",
+            "userId": 3,
+            "ldap": "bhduc",
+            "departmentId": 6,
+            "departmentName": "DU1.6",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": 11232,
+            "businessPlanVersionId": 436,
+            "memberType": "PM",
+            "userId": 3860,
+            "ldap": "ttlam1",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "Myfirstmillion Onsite",
+        "customerName": "MyFirstMillion",
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "orderType": "Commercial",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 12000000,
+        "industry": 18,
+        "customerMarket": "US",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 12000000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 68,
           "businessPlanVersionId": 436,
-          "memberType": "AM",
-          "userId": 3744,
-          "ldap": "ntmanh6",
-          "departmentId": 40,
-          "departmentName": "BU3",
-          "startDate": 1770915600000,
-          "endDate": 1784134800000,
-          "isDefault": true
-        }
-      ],
-      "listTeamLead": [
-        {
-          "id": 11247,
-          "businessPlanVersionId": 436,
-          "memberType": "TEAM_LEAD",
-          "userId": 136,
-          "ldap": "lcnguyen",
-          "departmentId": 3,
-          "departmentName": "DU1.3",
-          "startDate": 1770915600000,
-          "endDate": 1784134800000,
-          "isDefault": false
-        }
-      ],
-      "listPreSale": [],
-      "listPreparator": [
-        {
-          "id": 11246,
-          "businessPlanVersionId": 436,
-          "memberType": "PREPARATOR",
-          "userId": 3,
-          "ldap": "bhduc",
-          "departmentId": 6,
-          "departmentName": "DU1.6",
-          "startDate": 1770915600000,
-          "endDate": 1784134800000,
-          "isDefault": false
-        }
-      ],
-      "listAdviser": [],
-      "listPM": [
-        {
-          "id": 11232,
-          "businessPlanVersionId": 436,
-          "memberType": "PM",
-          "userId": 3860,
-          "ldap": "ttlam1",
-          "departmentId": 2,
-          "departmentName": "DJ2",
-          "startDate": 1770915600000,
-          "endDate": 1784134800000,
-          "isDefault": true
-        }
-      ],
-      "businessPlanName": "Myfirstmillion Onsite",
-      "customerName": "MyFirstMillion",
-      "startDate": 1770915600000,
-      "endDate": 1784134800000,
-      "orderType": "Commercial",
-      "recurringNew": "New",
-      "pm": null,
-      "currency": 778,
-      "exchangeRate": 1,
-      "totalContractPrice": 12000000,
-      "industry": 18,
-      "customerMarket": "US",
-      "cooperationPeriod": "Less than 12 months",
-      "softwareDevelopmentFee": 12000000,
-      "otherFees": 0,
-      "planningStartDate": null,
-      "planningEndDate": null,
-      "businessPlanKpiDTO": {
-        "id": 68,
-        "businessPlanVersionId": 436,
-        "kpiPm": 30,
-        "kpiQa": 3,
-        "kpiMember": 67
+          "kpiPm": 30,
+          "kpiQa": 3,
+          "kpiMember": 67
+        },
+        "projectCode": "GLBTM2500093",
+        "mvvLocationType": "Onsite",
+        "id": 436
+      },
+      {
+        "listAM": [
+          {
+            "id": 11234,
+            "businessPlanVersionId": 437,
+            "memberType": "AM",
+            "userId": 624,
+            "ldap": "hmy",
+            "departmentId": 169,
+            "departmentName": "BKR1",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [
+          {
+            "id": 11248,
+            "businessPlanVersionId": 437,
+            "memberType": "TEAM_LEAD",
+            "userId": 10561,
+            "ldap": "ltlinh7",
+            "departmentId": 107,
+            "departmentName": "DU3.21",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 11249,
+            "businessPlanVersionId": 437,
+            "memberType": "PREPARATOR",
+            "userId": 3,
+            "ldap": "bhduc",
+            "departmentId": 6,
+            "departmentName": "DU1.6",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": 11235,
+            "businessPlanVersionId": 437,
+            "memberType": "PM",
+            "userId": 6,
+            "ldap": "bmthin",
+            "departmentId": 203,
+            "departmentName": "HNO",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "GLBOD2500047 Offshore",
+        "customerName": "MyFirstMillion",
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 8000000,
+        "industry": 18,
+        "customerMarket": "Korea",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 8000000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 69,
+          "businessPlanVersionId": 437,
+          "kpiPm": 25,
+          "kpiQa": 2,
+          "kpiMember": 50
+        },
+        "projectCode": "GLBOD2500047",
+        "mvvLocationType": "Offshore",
+        "id": 437
       }
-    },
+    ],
     "columnLabels": [
       {
         "id": null,
@@ -126,7 +218,7 @@ export const mockBusinessPlanDetail = {
         "id": 40,
         "label": "BU3",
         "index": 2,
-        "columnKey": "SALE"
+        "columnKey": "SALE_40"
       },
       {
         "id": null,
@@ -136,9 +228,24 @@ export const mockBusinessPlanDetail = {
       },
       {
         "id": 66,
-        "label": "BJ3",
+        "label": "DU1.3",
         "index": 4,
-        "columnKey": "DELIVERY_UNIT_66"
+        "columnKey": "DELIVERY_UNIT_66",
+        "mvvLocationType": "Onsite"
+      },
+      {
+        "id": 39,
+        "label": "DU3.2",
+        "index": 5,
+        "columnKey": "DELIVERY_UNIT_39",
+        "mvvLocationType": "Offshore"
+      },
+      {
+        "id": 1,
+        "label": "DU2.1",
+        "index": 6,
+        "columnKey": "DELIVERY_UNIT_1",
+        "mvvLocationType": "Onsite"
       }
     ],
     "sectionList": [
@@ -163,7 +270,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 5000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": 77100163,
                 "normUnitPriceFloor": 52343300.6607,
@@ -184,6 +291,26 @@ export const mockBusinessPlanDetail = {
               {
                 "value": 5000000,
                 "columnKey": "DELIVERY_UNIT_66",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 3800000,
+                "columnKey": "DELIVERY_UNIT_39",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 6200000,
+                "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -209,7 +336,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 1,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -236,6 +363,26 @@ export const mockBusinessPlanDetail = {
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": false
+              },
+              {
+                "value": 3,
+                "columnKey": "DELIVERY_UNIT_39",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
+              },
+              {
+                "value": 4,
+                "columnKey": "DELIVERY_UNIT_1",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false
               }
             ]
           },
@@ -255,7 +402,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 1,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -301,7 +448,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -354,7 +501,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 5000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -400,7 +547,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 12000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -446,7 +593,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -7000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -492,7 +639,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -538,7 +685,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -584,7 +731,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -637,7 +784,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 5000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -683,7 +830,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 5000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -736,7 +883,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 240000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -782,7 +929,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 240000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -828,7 +975,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -881,7 +1028,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -927,7 +1074,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -973,7 +1120,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1019,7 +1166,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1065,7 +1212,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1111,7 +1258,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1157,7 +1304,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1203,7 +1350,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1249,7 +1396,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1302,7 +1449,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 1000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1348,7 +1495,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1401,7 +1548,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -1240000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1447,7 +1594,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -1000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1493,7 +1640,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1539,7 +1686,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -1240000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1585,7 +1732,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -24.8,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1631,7 +1778,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -20,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1677,7 +1824,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": -24.8,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1730,7 +1877,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 5000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1776,7 +1923,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1822,7 +1969,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 100,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1868,7 +2015,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1914,7 +2061,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1960,7 +2107,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": 2,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2006,7 +2153,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2052,7 +2199,7 @@ export const mockBusinessPlanDetail = {
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_40",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2089,6 +2236,17 @@ export const mockBusinessPlanDetail = {
   "messageId": "Success",
   "errorMessage": ""
 };
+
+// Create business plan detail for id=437 (GLBOD2500047 as root)
+export const mockBusinessPlanDetail437 = JSON.parse(JSON.stringify({
+  ...mockBusinessPlanDetail,
+  data: {
+    ...mockBusinessPlanDetail.data,
+    id: 437,
+    projectCode: "GLBOD2500047",
+    status: "Draft"
+  }
+}));
 
 // ==================== PRODUCTION REVENUE ====================
 export const mockProductionRevenue = {
@@ -2619,7 +2777,8 @@ export const mockUserAndDepartment = {
 
 // ==================== IN-MEMORY STORAGE ====================
 let businessPlanStore = {
-  436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data))
+  436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data)),
+  437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data))
 };
 
 // Future use for delivery and revenue plan storage
@@ -2656,3 +2815,5 @@ export const resetMockData = () => {
   deliveryPlanStore = {};
   revenuePlanStore = {};
 };
+
+

@@ -169,22 +169,23 @@ const ApprovalList = ({
 
         return (
           <div className="grid-list">
-            {Object.keys(listDU).map(gKey => {
+            {Object.keys(listDU).map((gKey, gKeyIndex) => {
               const isDU = step.map[gKey]
                 ? step.map[gKey][0].departmentName !== gKey
                 : false
               if (isDU) {
-                return listDU[gKey].map(wo => {
+                return listDU[gKey].map((wo, woIndex) => {
                   return (
                     step.map[gKey] &&
                     step.map[gKey].length > 0 && (
-                      <div className="grid-group">
+                      <div key={`grid-group-${gKeyIndex}-${woIndex}`} className="grid-group">
                         {step.map[gKey]
                           .filter(
                             approver => approver.departmentName === wo.duName
                           )
                           .map(approver => (
                             <ApprovalItem
+                              key={approver.ldap || approver.userId || `approver-${approver.stepName}`}
                               approver={approver}
                               enableActions={enableActions}
                               onClickAssign={approver =>
@@ -220,9 +221,10 @@ const ApprovalList = ({
               return (
                 step.map[gKey] &&
                 step.map[gKey].length > 0 && (
-                  <div className="grid-group">
+                  <div key={`grid-group-${gKeyIndex}`} className="grid-group">
                     {step.map[gKey].map(approver => (
                       <ApprovalItem
+                        key={approver.ldap || approver.userId || `approver-${approver.stepName}`}
                         approver={approver}
                         enableActions={enableActions}
                         onClickAssign={approver =>

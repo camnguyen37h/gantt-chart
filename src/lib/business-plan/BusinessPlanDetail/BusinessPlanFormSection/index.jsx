@@ -355,7 +355,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
   )
 }
 
-function BusinessPlanFormSection({ handleChangeTab }) {
+function BusinessPlanFormSection({ handleChangeTab, viewOption = 'TOTAL' }) {
   const {
     businessPlanItems,
     columns,
@@ -386,6 +386,48 @@ function BusinessPlanFormSection({ handleChangeTab }) {
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
   const [selectedCompareId, setSelectedCompareId] = useState()
+
+  // Filter columns based on view option (passed from parent)
+  const filteredColumns = useMemo(() => {
+    if (!columns) return []
+    
+    switch(viewOption) {
+      case 'TOTAL':
+        return columns // Show all columns
+      
+      case 'OB':
+        // Show TOTAL, INTERNAL and SALE_X columns (OB = Outcome Business / Sale groups)
+        return columns.filter(col => 
+          col.columnKey === 'TOTAL' || 
+          col.columnKey === 'INTERNAL' ||
+          col.columnKey.startsWith('SALE_')
+        )
+      
+      case 'ONSITE':
+        // Show TOTAL, INTERNAL and Onsite delivery units
+        return columns.filter(col => 
+          col.columnKey === 'TOTAL' || 
+          col.columnKey === 'INTERNAL' ||
+          (col.columnKey.startsWith('DELIVERY_UNIT_') && col.mvvLocationType === 'Onsite')
+        )
+      
+      case 'OFFSHORE':
+        // Show TOTAL, INTERNAL and Offshore delivery units
+        return columns.filter(col => 
+          col.columnKey === 'TOTAL' || 
+          col.columnKey === 'INTERNAL' ||
+          (col.columnKey.startsWith('DELIVERY_UNIT_') && col.mvvLocationType === 'Offshore')
+        )
+      
+      default:
+        return columns
+    }
+  }, [columns, viewOption])
+
+  // Create a Set of visible columnKeys for fast lookup when filtering data cells
+  const visibleColumnKeys = useMemo(() => {
+    return new Set(filteredColumns.map(col => col.columnKey))
+  }, [filteredColumns])
 
   const isDraft = status === statusBusinessPlanDetail.draft
   const isApproved = status === statusBusinessPlanDetail.approved
@@ -968,7 +1010,7 @@ function BusinessPlanFormSection({ handleChangeTab }) {
               </th>
               {sectionRowData
                 ? sectionRowData.data
-                    .filter(item => item.columnKey !== 'TOTAL')
+                    .filter(item => item.columnKey !== 'TOTAL' && visibleColumnKeys.has(item.columnKey))
                     .map(item => {
                       const compareValue = compareSectionRowData
                         ? compareSectionRowData.data.find(
@@ -1183,7 +1225,7 @@ function BusinessPlanFormSection({ handleChangeTab }) {
                     </div>
                   </th>
                   {rowItems.data
-                    .filter(item => item.columnKey !== 'TOTAL')
+                    .filter(item => item.columnKey !== 'TOTAL' && visibleColumnKeys.has(item.columnKey))
                     .map(item => {
                       const compareItem = compareRowItems
                         ? compareRowItems.find(
@@ -1267,6 +1309,9 @@ function BusinessPlanFormSection({ handleChangeTab }) {
     })
   }
 
+  console.log('listVersions = ', listVersions);
+  
+
   return (
     <Fragment>
       <div className="flex-items-center justify-space-between mb-3">
@@ -1290,7 +1335,7 @@ function BusinessPlanFormSection({ handleChangeTab }) {
           <colgroup>
             <col style={{ width: 'var(--title-size)' }} />
             <col style={{ width: 'var(--column-width)' }} />
-            {columns.slice(1).map(item => (
+            {filteredColumns.slice(1).map(item => (
               <col
                 key={item.columnKey}
                 style={{ width: 'var(--column-width)' }}
@@ -1406,7 +1451,7 @@ function BusinessPlanFormSection({ handleChangeTab }) {
                   Total
                 </div>
               </th>
-              {columns.slice(1).map(item => (
+              {filteredColumns.slice(1).map(item => (
                 <th
                   style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                   key={item.index}>

@@ -1,6 +1,7 @@
 export * from './businessDetails'
 export * from './businessPlanRevenue'
 export * from './businessPlanDelivery'
+export * from './businessGeneralInformation'
 export { default as businessDetailsReducer } from './businessDetails'
 export { default as businessApprovalReducer } from './businessApproval'
 export { default as businessGeneralInformationReducer } from './businessGeneralInformation'

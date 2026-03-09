@@ -147,20 +147,22 @@ const WorkflowApproval = ({
               })}
             </StyleSteps>
           </StyledGrid>
-          <StyledGrid className={!hideApproverList ? '' : 'd-none'}>
+          <StyledGrid className={hideApproverList ? 'd-none' : ''}>
             <StyledWOList className={'grid-list grid-list-wo'}>
               {!isEmptyListDu
                 ? Object.values(listDU)
                     .flat()
-                    .map(item => (
-                      <Fragment>
-                        <div className="wo-item grid-item" key={item.duName}>
-                          {item.duName}
-                        </div>
+                    .map((item, index) => (
+                      <Fragment key={item.duName || `du-${index}`}>
+                        <div className="wo-item grid-item">{item.duName}</div>
                         {item.length > 0 &&
                           new Array(item.length)
                             .fill('')
-                            .map(_ => <div style={{ height: 29 }}></div>)}
+                            .map((_, idx) => (
+                              <div
+                                key={`spacer-${index}-${idx}`}
+                                style={{ height: 29 }}></div>
+                            ))}
                       </Fragment>
                     ))
                 : customLeft

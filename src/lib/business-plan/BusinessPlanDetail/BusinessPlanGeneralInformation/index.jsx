@@ -12,6 +12,7 @@ import {
   getIndustryCurrency,
   getIndustryDomain,
   setValidation,
+  setSelectedMvvCode,
 } from '../../redux'
 import {
   handleChangeDateGeneralInfo,
@@ -50,6 +51,8 @@ const BusinessPlanGeneralInformation = () => {
   const dispatch = useDispatch()
   const {
     listGeneralInformation,
+    generalInfos,
+    selectedMvvCode,
     listDomain,
     listCurrency,
     loadingCollaborator,
@@ -154,6 +157,11 @@ const BusinessPlanGeneralInformation = () => {
     )
     updateIsSaveShowed(true)
   }
+
+  const handleMvvChange = (value) => {
+    dispatch(setSelectedMvvCode(value))
+  }
+
   const collaboratorData = [
     {
       dataTable: listAM,
@@ -341,6 +349,28 @@ const BusinessPlanGeneralInformation = () => {
 
   return (
     <div className="business-general-information">
+      {/* MVV Selection Dropdown */}
+      {generalInfos && generalInfos.length > 1 && (
+        <div style={{ marginBottom: 16, padding: '12px 16px', background: '#fafafa', borderRadius: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ fontWeight: 500, fontSize: 14, minWidth: 50 }}>MVV:</span>
+            <Select
+              value={selectedMvvCode}
+              onChange={handleMvvChange}
+              style={{ width: 200 }}
+              placeholder="Select MVV">
+              {generalInfos.map((info) => (
+                <Option key={info.projectCode} value={info.projectCode}>
+                  {info.projectCode}
+                </Option>
+              ))}
+            </Select>
+            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
+              Showing data for {selectedMvvCode}
+            </span>
+          </div>
+        </div>
+      )}
       <Form>
         <div className="business-information-top">
           <div className="business-information-top-left">

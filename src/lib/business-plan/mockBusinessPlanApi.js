@@ -5,6 +5,7 @@
 
 import {
   mockBusinessPlanDetail,
+  mockBusinessPlanDetail437,
   mockProductionRevenue,
   mockOtherRevenue,
   mockSellingPlan,
@@ -16,7 +17,7 @@ import {
   mockCurrencies,
   mockIndustries,
   mockApprovalSteps,
-} from './mockBusinessPlanData';
+} from '../../utils/mockBusinessPlanData';
 
 // Simulate network delay
 const NETWORK_DELAY_MS = 500;
@@ -25,7 +26,8 @@ const delay = (ms = NETWORK_DELAY_MS) =>
 
 // In-memory storage for business plans
 const businessPlansStore = new Map([
-  [436, JSON.parse(JSON.stringify(mockBusinessPlanDetail))]
+  [436, JSON.parse(JSON.stringify(mockBusinessPlanDetail))],
+  [437, JSON.parse(JSON.stringify(mockBusinessPlanDetail437))]
 ]);
 
 // In-memory storage for production revenue
@@ -59,7 +61,9 @@ let businessPlanIdCounter = 1000;
 export const getBusinessPlanDetail = async (businessPlanId) => {
   await delay();
   
-  const businessPlan = businessPlansStore.get(businessPlanId);
+  // Convert to number to match Map keys
+  const id = Number(businessPlanId);
+  const businessPlan = businessPlansStore.get(id);
   
   if (!businessPlan) {
     throw new Error(`Business Plan with ID ${businessPlanId} not found`);

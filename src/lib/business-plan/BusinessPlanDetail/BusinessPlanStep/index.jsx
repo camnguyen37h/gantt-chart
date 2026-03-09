@@ -7,9 +7,10 @@ import { withRouter } from 'react-router-dom'
 import { STATUS_COLOR_DETAIL } from '../../constants'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../../hooks'
 import { statusBusinessPlanDetail } from '../constant'
+import styled from 'styled-components'
 
 import WorkflowApproval from '../../../../components/workflow-approval/WorkflowApproval'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   getBusinessPlanDetailComment,
   postBusinessPlanComment,
@@ -36,8 +37,51 @@ const CommentForm = Form.create()(
   })
 )
 
+// Wrapper for smooth collapse animation
+const VersionRowWrapper = styled.div`
+  display: grid;
+  grid-template-rows: ${props => props.isVisible ? '1fr' : '0fr'};
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  
+  /* Use CSS order for sorting */
+  order: ${props => props.isActive ? -1 : 0};
+`;
+
+// Styled component for version row with connector
+const VersionRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  position: relative;
+  min-height: 0;
+  
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: ${props => props.isVisible ? 1 : 0};
+
+  ${props => props.isActive ? `
+    cursor: pointer;
+    padding-left: 0;
+  ` : `
+    padding-left: 72px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 44px;
+      top: 0;
+      width: 20px;
+      height: calc(50% + 2px);
+      border-left: 2px solid #d9d9d9;
+      border-bottom: 2px solid #d9d9d9;
+      border-bottom-left-radius: 4px;
+    }
+  `}
+`;
+
 function BusinessPlanStep({ status, match, projectCode, startDate, endDate }) {
-  const [showed, setShowed] = useState(true)
   const [showVersions, setShowVersions] = useState(true)
   const commentRef = useRef()
   const [rejectModalVisible, setRejectModalVisible] = useState(false)
@@ -45,17 +89,15 @@ function BusinessPlanStep({ status, match, projectCode, startDate, endDate }) {
   const [rejectLoading, setRejectLoading] = useState(false)
   const dispatch = useDispatch()
 
-  // Mock versions data - will be replaced with real data later
-  const mockVersions = [
-    {
-      id: 437,
-      projectCode: 'GLBOD2500047',
-      status: 'Draft',
-      startDate: 1735664400000, // 01/01/2025
-      endDate: 1735750800000, // 01/01/2027
-      checked: false
-    }
-  ]
+  // Get generalInfos from Redux
+  const { generalInfos = [] } = useSelector(
+    state => state.businessGeneralInformation
+  )
+  const { listVersions = [] } = useSelector(
+    state => state.businessPlanDetails
+  )
+
+  const businessPlanId = match.params.buId
 
   const { approveRejectWO, getBusinessPlanWorkflow, listWorkOrder, listStep } =
     useBusinessPlanStep()
@@ -65,8 +107,6 @@ function BusinessPlanStep({ status, match, projectCode, startDate, endDate }) {
   const { userName } = userPOA
 
   const { getBusinessPlanDetail } = useBusinessPlanDetails()
-
-  const businessPlanId = match.params.buId
 
   const handleAssign = async params => {
     const { ldap, departmentName, stepName, taskKey } = params || {}
@@ -153,99 +193,84 @@ function BusinessPlanStep({ status, match, projectCode, startDate, endDate }) {
 
   return (
     <div style={{ padding: '12px 16px' }}>
-      <div
-        style={{ cursor: 'pointer' }}
-        className="flex-items-center gap-8"
-        onClick={() => setShowVersions(!showVersions)}>
-        <Icon
-          type="right"
-          style={{ fontSize: 12, color: 'rgba(0,0,0,0.85)' }}
-          rotate={!showVersions ? 0 : 90}
-        />
-        <h5 className="font-weight-600 mb-0" style={{ fontSize: 18, marginBottom: 0 }}>
-          {projectCode}
-        </h5>
-        <Tag {...STATUS_COLOR_DETAIL[status && status.toUpperCase()]}>
-          {status}
-        </Tag>
-        <div>{`From ${
-          (startDate &&
-            moment(startDate).format(DateFormat.DATE_FORWARD_SLASH)) ||
-          ''
-        } to ${
-          (endDate && moment(endDate).format(DateFormat.DATE_FORWARD_SLASH)) ||
-          ''
-        }`}</div>
-      </div>
-
-      {/* Versions List */}
-      {showVersions && mockVersions.length > 0 && (
-        <div style={{ marginLeft: 0, marginTop: 4 }}>
-          {mockVersions.map((version, index) => (
-            <div
-              key={version.id}
-              className="flex-items-center gap-8"
-              style={{ 
-                paddingLeft: 72,
-                paddingTop: 8,
-                paddingBottom: 8,
-                position: 'relative'
-              }}>
-              {/* L-shaped connector */}
-              <div style={{
-                position: 'absolute',
-                left: 44,
-                top: 0,
-                width: 20,
-                height: 'calc(50% + 2px)',
-                borderLeft: '2px solid #d9d9d9',
-                borderBottom: '2px solid #d9d9d9',
-                borderBottomLeftRadius: 4
-              }} />
-              
-              <span style={{ fontSize: 16, fontWeight: 400, color: 'rgba(0,0,0,0.85)' }}>
-                {version.projectCode}
-              </span>
-              
-              <Tag {...STATUS_COLOR_DETAIL[version.status && version.status.toUpperCase()]}>
-                {version.status}
-              </Tag>
-              
-              <span style={{ fontSize: 14, color: 'rgba(0,0,0,0.65)' }}>
-                {`From ${
-                  (version.startDate &&
-                    moment(version.startDate).format(DateFormat.DATE_FORWARD_SLASH)) ||
+      {/* Versions List - Order controlled by CSS order property in VersionRowWrapper */}
+      {generalInfos.length > 0 && (
+        <div style={{ marginLeft: 0, marginTop: 4, display: 'flex', flexDirection: 'column' }}>
+          {generalInfos.map((info) => {
+            const isActive = info.id === Number(businessPlanId)
+            const isVisible = isActive || showVersions
+            
+            // Find matching version to get status
+            const matchingVersion = listVersions?.find(v => v.versionId === info.id)
+            const versionStatus = matchingVersion?.statusName || 'Draft'
+            
+            return (
+              <VersionRowWrapper
+                key={info.id}
+                isActive={isActive}
+                isVisible={isVisible}>
+                <VersionRow
+                  isActive={isActive}
+                  isVisible={isVisible}
+                  onClick={isActive ? () => setShowVersions(!showVersions) : undefined}>
+                  {isActive && (
+                    <Icon
+                      type="right"
+                      style={{ fontSize: 12, color: 'rgba(0,0,0,0.85)', transition: 'transform 0.3s' }}
+                      rotate={!showVersions ? 0 : 90}
+                    />
+                  )}
+                  
+                  {isActive ? (
+                    <h5 className="font-weight-600 mb-0" style={{ fontSize: 18, marginBottom: 0 }}>
+                      {info.projectCode}
+                    </h5>
+                  ) : (
+                    <span style={{ fontSize: 16, fontWeight: 400, color: 'rgba(0,0,0,0.85)' }}>
+                      {info.projectCode}
+                    </span>
+                  )}
+                
+                <Tag {...STATUS_COLOR_DETAIL[versionStatus && versionStatus.toUpperCase()]}>
+                  {versionStatus}
+                </Tag>
+                
+                {info.mvvLocationType && (
+                  <span style={{ 
+                    fontSize: 13, 
+                    fontWeight: 500, 
+                    color: '#1890ff',
+                    padding: '2px 8px',
+                    background: '#e6f7ff',
+                    borderRadius: 2,
+                    border: '1px solid #91d5ff'
+                  }}>
+                    {info.mvvLocationType}
+                  </span>
+                )}
+                
+                <div style={{ fontSize: 14, color: 'rgba(0,0,0,0.65)' }}>{`From ${
+                  (info.startDate &&
+                    moment(info.startDate).format(DateFormat.DATE_FORWARD_SLASH)) ||
                   ''
                 } to ${
-                  (version.endDate && 
-                    moment(version.endDate).format(DateFormat.DATE_FORWARD_SLASH)) ||
+                  (info.endDate && 
+                    moment(info.endDate).format(DateFormat.DATE_FORWARD_SLASH)) ||
                   ''
-                }`}
-              </span>
-            </div>
-          ))}
+                }`}</div>
+              </VersionRow>
+            </VersionRowWrapper>
+          )})
+          }
         </div>
       )}
       
-      {/* Workflow Section - separate toggle */}
-      <div
-        style={{ cursor: 'pointer', marginTop: 16 }}
-        className="flex-items-center gap-8"
-        onClick={() => setShowed(!showed)}>
-        <Icon
-          type="right"
-          style={{ fontSize: 12, color: 'rgba(0,0,0,0.85)' }}
-          rotate={!showed ? 0 : 90}
-        />
-        <span style={{ fontSize: 14, fontWeight: 500 }}>Workflow Approval</span>
-      </div>
-
-      {showed && listStep.length > 0 && (
+      {listStep.length > 0 && (
         <WorkflowApproval
           listStep={listStep}
           listDU={listWorkOrder}
           enableActions={enableActions}
-          hideApproverList={false}
+          hideApproverList={!showVersions}
           onReject={handleReject}
           onApprove={handleApprove}
           onAssign={handleAssign}

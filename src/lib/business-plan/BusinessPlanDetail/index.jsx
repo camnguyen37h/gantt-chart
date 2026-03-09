@@ -21,6 +21,7 @@ import { GeneralInformationTotalTemplate } from './BusinessPlanReport/constant'
 import BusinessPlanRevenue from './BusinessPlanRevenue'
 import BusinessPlanStep from './BusinessPlanStep'
 import BusinessPlanVersion from './BusinessPlanVersion'
+import BusinessPlanViewOptions from './BusinessPlanViewOptions'
 import './style.css'
 import Loading from '../../../components/common/Loading/Loading'
 import {NotificationManager} from "react-notifications";
@@ -102,7 +103,7 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const { loadingCollaborator } = useSelector(
+  const { loadingCollaborator, generalInfos } = useSelector(
     state => state.businessGeneralInformation
   )
 
@@ -125,6 +126,31 @@ function BusinessPlanDetail({ match, history }) {
   } = useSelector(state => state.businessPlanDelivery)
 
   const [activeTab, setActiveTab] = useState('1')
+  const [viewOption, setViewOption] = useState('TOTAL')
+
+  // Auto-select view option based on current MVV's locationType
+  useEffect(() => {
+    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+      const currentMVV = generalInfos.find(info => info.id === Number(match.params.buId))
+      
+      if (currentMVV && currentMVV.mvvLocationType) {
+        const locationType = currentMVV.mvvLocationType
+        if (locationType === 'Onsite') {
+          setViewOption('ONSITE')
+        } else if (locationType === 'Offshore') {
+          setViewOption('OFFSHORE')
+        }
+      }
+    }
+  }, [generalInfos, match.params.buId])
+
+  // Auto-switch view when changing tabs (Revenue/Delivery can't show Total/OB)
+  useEffect(() => {
+    if (activeTab !== '1' && (viewOption === 'TOTAL' || viewOption === 'OB')) {
+      // Switch to ONSITE as default for Revenue/Delivery tabs
+      setViewOption('ONSITE')
+    }
+  }, [activeTab, viewOption])
 
   useEffect(() => {
     ;(async () => {
@@ -347,6 +373,11 @@ function BusinessPlanDetail({ match, history }) {
           </Panel>
           <Panel key="2" header="Business Plan" style={customPanelStyle}>
             <div className="business-plan-section">
+              <BusinessPlanViewOptions 
+                value={viewOption}
+                onChange={(e) => setViewOption(e.target.value)}
+                activeTab={activeTab}
+              />
               <Tabs
                 activeKey={activeTab}
                 animated={false}
@@ -370,7 +401,10 @@ function BusinessPlanDetail({ match, history }) {
                   }
                   key="1"
                   disabled={isSaveShowedDeliveryPlan || isEditingRevenuePlan}>
-                  <BusinessPlanFormSection handleChangeTab={handleChangeTab} />
+                  <BusinessPlanFormSection 
+                    handleChangeTab={handleChangeTab}
+                    viewOption={viewOption}
+                  />
                 </TabPane>
                 {listDuRevenue && listDuRevenue.length > 0 && (
                   <TabPane

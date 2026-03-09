@@ -6,6 +6,7 @@ import {
   getSpecificPermission,
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
+import { setSelectedMvvCode } from './businessGeneralInformation'
 
 const initialState = {
   isSaveShowed: false,
@@ -29,6 +30,7 @@ const initialState = {
   activePanel: '',
   deliveryUnitDataDelivery: {},
   deliveryUnitDataRevenue: {},
+  generalInfos: [],
 }
 const businessDetailsSlice = createSlice({
   name: 'businessDetails',
@@ -181,6 +183,8 @@ const businessDetailsSlice = createSlice({
       const { data, errorMessage } = payload || {}
 
       if (!data) return
+
+      // Process sectionList and columnLabels
       const mmBill = data.sectionList.reduce((res, section) => {
         if (!res)
           return section.rowLabels.find(item => item.rowKey === 'MM_BILL')
@@ -254,6 +258,15 @@ const businessDetailsSlice = createSlice({
       state.businessPlanItems = formattedData
       state.originalBusinessPlanItems = originalBusinessPlanItems
       state.columns = data.columnLabels
+
+      // Store generalInfos for MVV switching
+      state.generalInfos = data.generalInfos || []
+
+      // Get the selected general info based on projectCode
+      const selectedGeneralInfo = data.generalInfos && data.generalInfos.length > 0
+        ? data.generalInfos.find(info => info.projectCode === data.projectCode) || data.generalInfos[0]
+        : null
+
       state.projectCode = data.projectCode
       state.version = data.version
       state.status = data.status
@@ -261,10 +274,10 @@ const businessDetailsSlice = createSlice({
       state.versionId = data.id
       state.startDate = data.startDate
       state.endDate = data.endDate
-      state.exchangeRate = data.generalInfo.exchangeRate
-      state.totalContractPrice = data.generalInfo.totalContractPrice
-      state.softwareDevelopmentFee = data.generalInfo.softwareDevelopmentFee
-      state.otherFees = data.generalInfo.otherFees
+      state.exchangeRate = selectedGeneralInfo ? selectedGeneralInfo.exchangeRate : null
+      state.totalContractPrice = selectedGeneralInfo ? selectedGeneralInfo.totalContractPrice : null
+      state.softwareDevelopmentFee = selectedGeneralInfo ? selectedGeneralInfo.softwareDevelopmentFee : null
+      state.otherFees = selectedGeneralInfo ? selectedGeneralInfo.otherFees : null
       state.warningMessage = data.warningMessage
       state.errorMessage = errorMessage
     })
@@ -292,6 +305,21 @@ const businessDetailsSlice = createSlice({
         state.compareBusinessPlanItems = formattedData
       }
     )
+
+    // Listen to MVV selection change from businessGeneralInformation
+    builder.addCase(setSelectedMvvCode, (state, action) => {
+      const selectedMvvCode = action.payload
+      const selectedGeneralInfo = state.generalInfos.find(
+        info => info.projectCode === selectedMvvCode
+      )
+      
+      if (selectedGeneralInfo) {
+        state.exchangeRate = selectedGeneralInfo.exchangeRate
+        state.totalContractPrice = selectedGeneralInfo.totalContractPrice
+        state.softwareDevelopmentFee = selectedGeneralInfo.softwareDevelopmentFee
+        state.otherFees = selectedGeneralInfo.otherFees
+      }
+    })
   },
 })
 
