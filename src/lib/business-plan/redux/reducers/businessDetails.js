@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import cloneDeep from 'lodash/cloneDeep'
 import {
   getBusinessPlanDetail,
+  getBusinessPlanDetailByViewMode,
   getCompareBusinessPlanDetail,
   getSpecificPermission,
 } from '../asyncThunks'
@@ -179,7 +180,40 @@ const businessDetailsSlice = createSlice({
     },
   },
   extraReducers: builder => {
+    // Listen to General Information API to get metadata (versions, dates, etc.)
     builder.addCase(getBusinessPlanDetail.fulfilled, (state, { payload }) => {
+      const { data } = payload || {}
+
+      if (!data) return
+
+      // Store metadata from General Information API
+      state.listVersions = data.versions || []
+      state.projectCode = data.projectCode
+      state.version = data.version
+      state.status = data.status
+      state.versionId = data.id
+      state.startDate = data.startDate
+      state.endDate = data.endDate
+      state.warningMessage = data.warningMessage
+      
+      // Store generalInfos for MVV switching
+      state.generalInfos = data.generalInfos || []
+
+      // Get the selected general info based on projectCode and update contract prices
+      const selectedGeneralInfo = data.generalInfos && data.generalInfos.length > 0
+        ? data.generalInfos.find(info => info.projectCode === data.projectCode) || data.generalInfos[0]
+        : null
+
+      if (selectedGeneralInfo) {
+        state.exchangeRate = selectedGeneralInfo.exchangeRate
+        state.totalContractPrice = selectedGeneralInfo.totalContractPrice
+        state.softwareDevelopmentFee = selectedGeneralInfo.softwareDevelopmentFee
+        state.otherFees = selectedGeneralInfo.otherFees
+      }
+    })
+
+    // Listen to Business Plan Detail By View Mode API to get table data
+    builder.addCase(getBusinessPlanDetailByViewMode.fulfilled, (state, { payload }) => {
       const { data, errorMessage } = payload || {}
 
       if (!data) return
@@ -259,25 +293,13 @@ const businessDetailsSlice = createSlice({
       state.originalBusinessPlanItems = originalBusinessPlanItems
       state.columns = data.columnLabels
 
-      // Store generalInfos for MVV switching
-      state.generalInfos = data.generalInfos || []
-
-      // Get the selected general info based on projectCode
-      const selectedGeneralInfo = data.generalInfos && data.generalInfos.length > 0
-        ? data.generalInfos.find(info => info.projectCode === data.projectCode) || data.generalInfos[0]
-        : null
-
+      // Update other fields from Business Plan Detail
       state.projectCode = data.projectCode
       state.version = data.version
       state.status = data.status
-      state.listVersions = data.versions
-      state.versionId = data.id
+      state.versionId = data.versionId
       state.startDate = data.startDate
       state.endDate = data.endDate
-      state.exchangeRate = selectedGeneralInfo ? selectedGeneralInfo.exchangeRate : null
-      state.totalContractPrice = selectedGeneralInfo ? selectedGeneralInfo.totalContractPrice : null
-      state.softwareDevelopmentFee = selectedGeneralInfo ? selectedGeneralInfo.softwareDevelopmentFee : null
-      state.otherFees = selectedGeneralInfo ? selectedGeneralInfo.otherFees : null
       state.warningMessage = data.warningMessage
       state.errorMessage = errorMessage
     })

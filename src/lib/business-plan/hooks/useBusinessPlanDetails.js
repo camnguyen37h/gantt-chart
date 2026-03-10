@@ -99,6 +99,23 @@ const useBusinessPlanDetails = () => {
     [dispatch]
   )
 
+  const getBusinessPlanDetailByViewMode = useCallback(
+    ({ id, viewMode }) => {
+      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, viewMode }))
+    },
+    [dispatch]
+  )
+
+  const loadBusinessPlanFullData = useCallback(
+    async (id, viewMode = 'TOTAL') => {
+      // First, load General Information (generalInfos, versions, metadata)
+      await dispatch(redux.getBusinessPlanDetail(id))
+      // Then, load Business Plan table data (sectionList, columnLabels)
+      await dispatch(redux.getBusinessPlanDetailByViewMode({ id, viewMode }))
+    },
+    [dispatch]
+  )
+
   const updateIsSaveShowed = useCallback(
     value => {
       return dispatch(redux.setIsSaveShowed(value))
@@ -366,6 +383,8 @@ const useBusinessPlanDetails = () => {
     saveDraft,
     submit,
     getBusinessPlanDetail,
+    getBusinessPlanDetailByViewMode,
+    loadBusinessPlanFullData,
     setContractPriceData,
     handleValidate,
     projectCode,

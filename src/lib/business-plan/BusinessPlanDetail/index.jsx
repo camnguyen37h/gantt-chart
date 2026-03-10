@@ -1,6 +1,6 @@
 import { Button, Collapse, Divider, Popconfirm, Tabs, Tooltip } from 'antd'
 import cloneDeep from 'lodash/cloneDeep'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../hooks'
@@ -21,7 +21,7 @@ import { GeneralInformationTotalTemplate } from './BusinessPlanReport/constant'
 import BusinessPlanRevenue from './BusinessPlanRevenue'
 import BusinessPlanStep from './BusinessPlanStep'
 import BusinessPlanVersion from './BusinessPlanVersion'
-import BusinessPlanViewOptions from './BusinessPlanViewOptions'
+import BusinessPlanTabWrapper from './BusinessPlanTabWrapper'
 import './style.css'
 import Loading from '../../../components/common/Loading/Loading'
 import {NotificationManager} from "react-notifications";
@@ -83,6 +83,8 @@ function BusinessPlanDetail({ match, history }) {
     saveDraft,
     submit,
     getBusinessPlanDetail,
+    getBusinessPlanDetailByViewMode,
+    loadBusinessPlanFullData,
     projectCode,
     status,
     originalBusinessPlanItems,
@@ -126,44 +128,95 @@ function BusinessPlanDetail({ match, history }) {
   } = useSelector(state => state.businessPlanDelivery)
 
   const [activeTab, setActiveTab] = useState('1')
-  const [viewOption, setViewOption] = useState('TOTAL')
+  const [viewOption, setViewOption] = useState(null) // Always string: 'Total', 'OB', 'Onsite', 'Offshore'
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
 
-  // Auto-select view option based on current MVV's locationType
+  // Get buId (MVV ID) from generalInfos by locationType (for Revenue/Delivery tabs)
+  // Returns the buId of the MVV with matching locationType (Onsite=436, Offshore=437)
+  const getMVVIdByLocationType = useCallback((locationType) => {
+    if (!generalInfos || generalInfos.length === 0) return null
+    
+    const mvv = generalInfos.find(info => info.mvvLocationType === locationType)
+    return mvv ? mvv.id : null
+  }, [generalInfos])
+
+  // Get current MVV buId based on viewOption and activeTab
+  // This should be used by Revenue/Delivery components to load data for specific MVV
+  const currentMVVId = useMemo(() => {
+    if (activeTab === '1') return null // Business Plan uses match.params.buId
+    if (!viewOption) return null
+    
+    return getMVVIdByLocationType(viewOption)
+  }, [activeTab, viewOption, getMVVIdByLocationType])
+
+  // Debug: Log current MVV ID when it changes (can be removed in production)
   useEffect(() => {
-    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+    if (currentMVVId !== null && activeTab !== '1') {
+      console.log(`[${activeTab === '2' ? 'Revenue' : 'Delivery'} Plan] Selected ${viewOption} - MVV ID (buId): ${currentMVVId}`)
+    }
+  }, [currentMVVId, activeTab, viewOption])
+
+  // Load General Information first on mount
+  useEffect(() => {
+    ;(async () => {
+      if (match.params.buId && isInitialLoad) {
+        // Only load General Information first to get mvvLocationType
+        const res = await getBusinessPlanDetail(match.params.buId)
+        if (res.type.includes('fulfilled')) {
+          await getBusinessPlanWorkflow({
+            referenceId: match.params.buId,
+            mvv: res.payload ? res.payload.data.projectCode : null,
+          })
+        }
+        setIsInitialLoad(false)
+      }
+    })()
+  }, [match.params.buId])
+
+  // Auto-select view option based on current MVV's locationType after generalInfos loads
+  useEffect(() => {
+    if (!isInitialLoad && generalInfos && generalInfos.length > 0 && match.params.buId && !viewOption) {
       const currentMVV = generalInfos.find(info => info.id === Number(match.params.buId))
       
       if (currentMVV && currentMVV.mvvLocationType) {
         const locationType = currentMVV.mvvLocationType
         if (locationType === 'Onsite') {
-          setViewOption('ONSITE')
+          setViewOption('Onsite')
         } else if (locationType === 'Offshore') {
-          setViewOption('OFFSHORE')
+          setViewOption('Offshore')
         }
+      } else {
+        // Fallback to Onsite if no mvvLocationType found
+        setViewOption('Onsite')
       }
     }
-  }, [generalInfos, match.params.buId])
+  }, [isInitialLoad, generalInfos, match.params.buId, viewOption])
 
-  // Auto-switch view when changing tabs (Revenue/Delivery can't show Total/OB)
+  // Load Business Plan table data once viewOption is determined
   useEffect(() => {
-    if (activeTab !== '1' && (viewOption === 'TOTAL' || viewOption === 'OB')) {
-      // Switch to ONSITE as default for Revenue/Delivery tabs
-      setViewOption('ONSITE')
-    }
-  }, [activeTab, viewOption])
-
-  useEffect(() => {
-    ;(async () => {
-      if (match.params.buId) {
-        const res = await getBusinessPlanDetail(match.params.buId)
-        if (res.type.includes('fulfilled'))
-          await getBusinessPlanWorkflow({
-            referenceId: match.params.buId,
-            mvv: res.payload ? res.payload.projectCode : null,
-          })
+    if (match.params.buId && viewOption) {
+      if (activeTab === '1') {
+        // Business Plan: pass string value (Total/OB/Onsite/Offshore)
+        getBusinessPlanDetailByViewMode({ id: match.params.buId, viewMode: viewOption })
       }
-    })()
-  }, [match.params.buId])
+      // Revenue/Delivery tabs: API would use currentGroupId if needed
+    }
+  }, [viewOption, match.params.buId, activeTab, getBusinessPlanDetailByViewMode])
+
+  // Auto-switch view when changing tabs
+  useEffect(() => {
+    if (viewOption === null) return
+
+    // When switching from Business Plan (Total/OB) to Revenue/Delivery tabs
+    // Auto-switch to Onsite (using buId to find current MVV's locationType)
+    if ((activeTab === '2' || activeTab === '3') && (viewOption === 'Total' || viewOption === 'OB')) {
+      // Find current MVV's locationType from match.params.buId
+      const currentMVV = generalInfos?.find(info => info.id === Number(match.params.buId))
+      const defaultLocationType = currentMVV?.mvvLocationType || 'Onsite'
+      setViewOption(defaultLocationType)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab])
 
   const customPanelStyle = {
     border: 0,
@@ -183,7 +236,7 @@ function BusinessPlanDetail({ match, history }) {
     const isSubmit = await submit(params)
 
     if (isSubmit) {
-      await getBusinessPlanDetail(match.params.buId)
+      await loadBusinessPlanFullData(match.params.buId, viewOption)
       await getBusinessPlanWorkflow({
         referenceId: match.params.buId,
         mvv: projectCode,
@@ -295,7 +348,7 @@ function BusinessPlanDetail({ match, history }) {
   const handleConfirmCancel = async () => {
     setVisible(false)
     updateIsSaveShowed(false)
-    await getBusinessPlanDetail(match.params.buId)
+    await loadBusinessPlanFullData(match.params.buId, viewOption)
   }
 
   const handleDenyCancel = () => {
@@ -304,7 +357,7 @@ function BusinessPlanDetail({ match, history }) {
 
   const handleChangeTab = activeKey => {
     if (activeKey === '1') {
-      getBusinessPlanDetail(match.params.buId)
+      loadBusinessPlanFullData(match.params.buId, viewOption)
     }
     setActiveTab(activeKey)
     dispatch(
@@ -373,90 +426,98 @@ function BusinessPlanDetail({ match, history }) {
           </Panel>
           <Panel key="2" header="Business Plan" style={customPanelStyle}>
             <div className="business-plan-section">
-              <BusinessPlanViewOptions 
-                value={viewOption}
-                onChange={(e) => setViewOption(e.target.value)}
-                activeTab={activeTab}
-              />
               <Tabs
-                activeKey={activeTab}
-                animated={false}
-                destroyInactiveTabPane={false}
-                className="business-plan-section-tab"
-                onChange={handleChangeTab}>
-                <TabPane
-                  tab={
-                    isSaveShowedDeliveryPlan || isEditingRevenuePlan ? (
-                      <Tooltip
-                        title={`You should save ${
-                          isSaveShowedDeliveryPlan
-                            ? 'Delivery Plan'
-                            : 'Revenue Plan'
-                        } before viewing other tabs`}>
-                        <span>Business Plan</span>
-                      </Tooltip>
-                    ) : (
-                      <span>Business Plan</span>
-                    )
-                  }
-                  key="1"
-                  disabled={isSaveShowedDeliveryPlan || isEditingRevenuePlan}>
-                  <BusinessPlanFormSection 
-                    handleChangeTab={handleChangeTab}
-                    viewOption={viewOption}
-                  />
-                </TabPane>
-                {listDuRevenue && listDuRevenue.length > 0 && (
-                  <TabPane
+                  activeKey={activeTab}
+                  animated={false}
+                  destroyInactiveTabPane={false}
+                  className="business-plan-section-tab"
+                  onChange={handleChangeTab}>
+                <BusinessPlanTabWrapper
+                    value={viewOption}
+                    onChange={e => setViewOption(e.target.value)}
+                    activeTab={activeTab}
                     tab={
-                      isSaveShowedDeliveryPlan || isSaveShowed ? (
-                        <Tooltip
-                          title={`You should save ${
-                            isSaveShowed ? 'Business Plan' : 'Delivery Plan'
-                          } before viewing other tabs`}>
-                          <span>Revenue Plan</span>
-                        </Tooltip>
+                      isSaveShowedDeliveryPlan || isEditingRevenuePlan ? (
+                          <Tooltip
+                              title={`You should save ${
+                                  isSaveShowedDeliveryPlan
+                                      ? 'Delivery Plan'
+                                      : 'Revenue Plan'
+                              } before viewing other tabs`}>
+                            <span>Business Plan</span>
+                          </Tooltip>
                       ) : (
-                        <span>Revenue Plan</span>
+                          <span>Business Plan</span>
                       )
                     }
-                    key="2"
-                    disabled={isSaveShowedDeliveryPlan || isSaveShowed}>
-                    <BusinessPlanRevenue
-                      businessVersion={match.params.buId}
-                      projectCode={projectCode}
-                      status={status}
-                      dataDu={listDuRevenue}
+                    key="1"
+                    disabled={isSaveShowedDeliveryPlan || isEditingRevenuePlan}>
+                  {viewOption && (
+                    <BusinessPlanFormSection 
+                      handleChangeTab={handleChangeTab} 
+                      viewOption={viewOption} 
                     />
-                  </TabPane>
+                  )}
+                </BusinessPlanTabWrapper>
+                {listDuRevenue && listDuRevenue.length > 0 && (
+                    <BusinessPlanTabWrapper
+                        value={viewOption}
+                        onChange={e => setViewOption(e.target.value)}
+                        activeTab={activeTab}
+                        tab={
+                          isSaveShowedDeliveryPlan || isSaveShowed ? (
+                              <Tooltip
+                                  title={`You should save ${
+                                      isSaveShowed ? 'Business Plan' : 'Delivery Plan'
+                                  } before viewing other tabs`}>
+                                <span>Revenue Plan</span>
+                              </Tooltip>
+                          ) : (
+                              <span>Revenue Plan</span>
+                          )
+                        }
+                        key="2"
+                        disabled={isSaveShowedDeliveryPlan || isSaveShowed}>
+                      <BusinessPlanRevenue
+                          businessVersion={match.params.buId}
+                          projectCode={projectCode}
+                          status={status}
+                          dataDu={listDuRevenue}
+                          selectedMVVId={currentMVVId}
+                      />
+                    </BusinessPlanTabWrapper>
                 )}
 
                 {listDUDelivery && listDUDelivery.length > 0 && (
-                  <TabPane
-                    tab={
-                      isEditingRevenuePlan || isSaveShowed ? (
-                        <Tooltip
-                          title={`You should save ${
-                            isEditingRevenuePlan
-                              ? 'Revenue Plan'
-                              : 'Business Plan'
-                          } before viewing other tabs`}>
-                          <span>Delivery Plan</span>
-                        </Tooltip>
-                      ) : (
-                        <span>Delivery Plan</span>
-                      )
-                    }
-                    key="3"
-                    disabled={isEditingRevenuePlan || isSaveShowed}>
-                    <BusinessPlanDelivery
-                      ref={businessPlanDeliveryRef}
-                      buId={match.params.buId}
-                      mvv={projectCode}
-                      status={status}
-                      dataDu={listDUDelivery}
-                    />
-                  </TabPane>
+                    <BusinessPlanTabWrapper
+                        value={viewOption}
+                        onChange={e => setViewOption(e.target.value)}
+                        activeTab={activeTab}
+                        tab={
+                          isEditingRevenuePlan || isSaveShowed ? (
+                              <Tooltip
+                                  title={`You should save ${
+                                      isEditingRevenuePlan
+                                          ? 'Revenue Plan'
+                                          : 'Business Plan'
+                                  } before viewing other tabs`}>
+                                <span>Delivery Plan</span>
+                              </Tooltip>
+                          ) : (
+                              <span>Delivery Plan</span>
+                          )
+                        }
+                        key="3"
+                        disabled={isEditingRevenuePlan || isSaveShowed}>
+                      <BusinessPlanDelivery
+                          ref={businessPlanDeliveryRef}
+                          buId={match.params.buId}
+                          mvv={projectCode}
+                          status={status}
+                          dataDu={listDUDelivery}
+                          selectedMVVId={currentMVVId}
+                      />
+                    </BusinessPlanTabWrapper>
                 )}
               </Tabs>
             </div>

@@ -2452,8 +2452,14 @@ export const mockOtherExpensesTable = {
 export const mockDepartmentsByVersion = {
   httpStatus: 200,
   data: [
-    { groupName: "BU3", groupId: 220, groupSale: true },
-    { groupName: "BJ3", groupId: 66, groupSale: false }
+    // Revenue departments (groupSale: true)
+    { groupName: "BU3", groupId: 220, groupSale: true, locationType: "Onsite" },
+    { groupName: "BU5", groupId: 40, groupSale: true, locationType: "Offshore" },
+    
+    // Delivery departments (groupSale: false)
+    { groupName: "BJ3", groupId: 66, groupSale: false, locationType: "Offshore" },
+    { groupName: "DJ2", groupId: 39, groupSale: false, locationType: "Offshore" },
+    { groupName: "DU1", groupId: 1, groupSale: false, locationType: "Onsite" }
   ],
   messageId: "Success",
   errorMessage: ""

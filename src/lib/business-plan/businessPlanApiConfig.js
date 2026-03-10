@@ -6,7 +6,7 @@
  * All 55+ endpoints are now available
  */
 
-import * as mockApi from '../../utils/mockBusinessPlanApi';
+import * as mockApi from './mockBusinessPlanApi';
 // Uncomment this when real API is ready
 // import * as realApi from './realBusinessPlanApi';
 
@@ -62,6 +62,7 @@ export const postListBusinessPlanList = api.postListBusinessPlanList;
 
 // ========== Business Plan Detail ==========
 export const getBusinessPlanDetail = api.getBusinessPlanDetail;
+export const getBusinessPlanDetailByViewMode = api.getBusinessPlanDetailByViewMode;
 export const saveDraft = api.saveDraft;
 export const saveBusinessPlan = api.saveDraft; // Alias
 export const submit = api.submit;
@@ -88,8 +89,8 @@ export const getAllIndustries = api.getIndustryDomain; // Alias
 export const getIndustryCurrency = api.getIndustryCurrency;
 export const getAllCurrencies = api.getIndustryCurrency; // Alias
 export const getUserAndDepartmentCollaborator = api.getUserAndDepartmentCollaborator;
-export const getMMBillService = api.getMMBillService;
-export const getMMBills = api.getMMBillService; // Alias
+export const getMMBillService = api.getMMBills;
+export const getMMBills = api.getMMBills; // Alias
 export const getBusinessPlanSettingMaxKPI = api.getBusinessPlanSettingMaxKPI;
 export const getHistory = api.getHistory;
 

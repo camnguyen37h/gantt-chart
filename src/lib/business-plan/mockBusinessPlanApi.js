@@ -10,9 +10,9 @@ import {
   mockOtherRevenue,
   mockSellingPlan,
   mockRevenueSummary,
-  mockMMBills,
+  mockMMBillsService,
   mockDeliveryPlanSummary,
-  mockDepartments,
+  mockDepartmentsByVersion,
   mockPositions,
   mockCurrencies,
   mockIndustries,
@@ -56,7 +56,7 @@ let businessPlanIdCounter = 1000;
 /**
  * Get Business Plan Detail
  * @param {number} businessPlanId - Business Plan ID
- * @returns {Promise<Object>} Business plan detail
+ * @returns {Promise<Object>} Business plan detail with generalInfos
  */
 export const getBusinessPlanDetail = async (businessPlanId) => {
   await delay();
@@ -69,7 +69,50 @@ export const getBusinessPlanDetail = async (businessPlanId) => {
     throw new Error(`Business Plan with ID ${businessPlanId} not found`);
   }
   
+  // businessPlan has structure: { httpStatus: 200, data: {...} }
+  // Return the whole structure for API wrapper to normalize
   return JSON.parse(JSON.stringify(businessPlan));
+};
+
+/**
+ * Get Business Plan Detail By View Mode
+ * @param {number} businessPlanId - Business Plan ID
+ * @param {string} viewMode - View mode (TOTAL, OB, ONSITE, OFFSHORE)
+ * @returns {Promise<Object>} Business plan detail with sectionList and columnLabels only
+ */
+export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewMode = 'TOTAL') => {
+  await delay();
+  
+  // Convert to number to match Map keys
+  const id = Number(businessPlanId);
+  const businessPlan = businessPlansStore.get(id);
+  
+  if (!businessPlan) {
+    throw new Error(`Business Plan with ID ${businessPlanId} not found`);
+  }
+  
+  // businessPlan has structure: { httpStatus: 200, data: {...} }
+  // Extract the data object
+  const planData = businessPlan.data || businessPlan;
+  
+  // Return only Business Plan table data (sectionList + columnLabels)
+  // No generalInfos - those are fetched separately via getBusinessPlanDetail
+  const result = {
+    httpStatus: 200,
+    data: {
+      sectionList: planData.sectionList,
+      columnLabels: planData.columnLabels,
+      projectCode: planData.projectCode,
+      status: planData.status,
+      version: planData.version,
+      versionId: planData.id,
+      startDate: planData.startDate,
+      endDate: planData.endDate,
+      warningMessage: planData.warningMessage,
+    }
+  };
+  
+  return JSON.parse(JSON.stringify(result));
 };
 
 /**
@@ -276,7 +319,7 @@ const recalculateRevenueSummary = async (businessPlanId) => {
 export const getMMBills = async (businessPlanId) => {
   await delay();
   
-  return JSON.parse(JSON.stringify(mockMMBills));
+  return JSON.parse(JSON.stringify(mockMMBillsService));
 };
 
 /**
@@ -375,7 +418,7 @@ export const exportBusinessPlan = async (businessPlanId, format = 'excel') => {
 export const getDepartmentsByBPVersion = async (businessPlanVersionId) => {
   await delay(300);
   
-  return JSON.parse(JSON.stringify(mockDepartments));
+  return JSON.parse(JSON.stringify(mockDepartmentsByVersion));
 };
 
 /**
@@ -476,9 +519,50 @@ export const getUserActionHistory = async (businessPlanId) => {
   ];
 };
 
+/**
+ * Get List DU By Version Revenue
+ * @param {Object} params - { businessPlanVersionId, type }
+ * @returns {Promise<Object>} List of delivery units for revenue
+ */
+export const getListDUByVersionRevenue = async (params) => {
+  await delay(300);
+  
+  const { businessPlanVersionId, type } = params || {};
+  // Filter for revenue departments (groupSale = true)
+  const revenueDepartments = mockDepartmentsByVersion.data.filter(dept => dept.groupSale);
+  
+  return {
+    httpStatus: 200,
+    data: revenueDepartments,
+    messageId: "Success",
+    errorMessage: ""
+  };
+};
+
+/**
+ * Get List DU By Version Delivery
+ * @param {Object} params - { businessPlanVersionId, type }
+ * @returns {Promise<Object>} List of delivery units for delivery
+ */
+export const getListDUByVersionDelivery = async (params) => {
+  await delay(300);
+  
+  const { businessPlanVersionId, type } = params || {};
+  // Filter for delivery departments (groupSale = false)
+  const deliveryDepartments = mockDepartmentsByVersion.data.filter(dept => !dept.groupSale);
+  
+  return {
+    httpStatus: 200,
+    data: deliveryDepartments,
+    messageId: "Success",
+    errorMessage: ""
+  };
+};
+
 // Export all mock API functions as default
 const mockBusinessPlanApi = {
   getBusinessPlanDetail,
+  getBusinessPlanDetailByViewMode,
   getProductionRevenue,
   saveProductionRevenue,
   getOtherRevenue,
@@ -491,6 +575,8 @@ const mockBusinessPlanApi = {
   saveBusinessPlan,
   exportBusinessPlan,
   getDepartmentsByBPVersion,
+  getListDUByVersionRevenue,
+  getListDUByVersionDelivery,
   getAllPositions,
   getAllCurrencies,
   getAllIndustries,

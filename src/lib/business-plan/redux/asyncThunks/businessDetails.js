@@ -18,6 +18,21 @@ export const getBusinessPlanDetail = createAsyncThunk(
   }
 )
 
+export const getBusinessPlanDetailByViewMode = createAsyncThunk(
+  'get/getBusinessPlanDetailByViewMode',
+  async ({ id, viewMode }) => {
+    const result = await BusinessPlanAPI.getBusinessPlanDetailByViewMode(id, viewMode)
+    if (result.status === ResponseStatusCode.success) {
+      return { data: result.data, errorMessage: result.errorMessage }
+    } else {
+      if (result.status === ResponseStatusCode.forbidden) {
+        window.location.href = '/error/access-deny'
+      }
+      return NotificationManager.error(result.message)
+    }
+  }
+)
+
 export const getCompareBusinessPlanDetail = createAsyncThunk(
   'get/getCompareBusinessPlanDetail',
   async id => {

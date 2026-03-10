@@ -355,7 +355,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
   )
 }
 
-function BusinessPlanFormSection({ handleChangeTab, viewOption = 'TOTAL' }) {
+function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
   const {
     businessPlanItems,
     columns,
@@ -392,7 +392,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'TOTAL' }) {
     if (!columns) return []
     
     switch(viewOption) {
-      case 'TOTAL':
+      case 'Total':
         return columns // Show all columns
       
       case 'OB':
@@ -403,7 +403,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'TOTAL' }) {
           col.columnKey.startsWith('SALE_')
         )
       
-      case 'ONSITE':
+      case 'Onsite':
         // Show TOTAL, INTERNAL and Onsite delivery units
         return columns.filter(col => 
           col.columnKey === 'TOTAL' || 
@@ -411,7 +411,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'TOTAL' }) {
           (col.columnKey.startsWith('DELIVERY_UNIT_') && col.mvvLocationType === 'Onsite')
         )
       
-      case 'OFFSHORE':
+      case 'Offshore':
         // Show TOTAL, INTERNAL and Offshore delivery units
         return columns.filter(col => 
           col.columnKey === 'TOTAL' || 
