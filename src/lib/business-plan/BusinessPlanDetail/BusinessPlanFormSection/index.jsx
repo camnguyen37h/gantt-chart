@@ -355,7 +355,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
   )
 }
 
-function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
+function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
   const {
     businessPlanItems,
     columns,
@@ -381,7 +381,10 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
   } = useBusinessPlanDetails()
 
   // Mock user for demo
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+    userName: 'Demo User',
+    userId: 1,
+  }
   const { userName } = userPOA
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
@@ -390,39 +393,44 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
   // Filter columns based on view option (passed from parent)
   const filteredColumns = useMemo(() => {
     if (!columns) return []
-    
-    switch(viewOption) {
+
+    switch (viewMode) {
       case 'Total':
         return columns // Show all columns
-      
+
       case 'OB':
         // Show TOTAL, INTERNAL and SALE_X columns (OB = Outcome Business / Sale groups)
-        return columns.filter(col => 
-          col.columnKey === 'TOTAL' || 
-          col.columnKey === 'INTERNAL' ||
-          col.columnKey.startsWith('SALE_')
+        return columns.filter(
+          col =>
+            col.columnKey === 'TOTAL' ||
+            col.columnKey === 'INTERNAL' ||
+            col.columnKey.startsWith('SALE_')
         )
-      
+
       case 'Onsite':
         // Show TOTAL, INTERNAL and Onsite delivery units
-        return columns.filter(col => 
-          col.columnKey === 'TOTAL' || 
-          col.columnKey === 'INTERNAL' ||
-          (col.columnKey.startsWith('DELIVERY_UNIT_') && col.mvvLocationType === 'Onsite')
+        return columns.filter(
+          col =>
+            col.columnKey === 'TOTAL' ||
+            col.columnKey === 'INTERNAL' ||
+            (col.columnKey.startsWith('DELIVERY_UNIT_') &&
+              col.mvvLocationType === 'Onsite')
         )
-      
+
       case 'Offshore':
         // Show TOTAL, INTERNAL and Offshore delivery units
-        return columns.filter(col => 
-          col.columnKey === 'TOTAL' || 
-          col.columnKey === 'INTERNAL' ||
-          (col.columnKey.startsWith('DELIVERY_UNIT_') && col.mvvLocationType === 'Offshore')
+        return columns.filter(
+          col =>
+            col.columnKey === 'TOTAL' ||
+            col.columnKey === 'INTERNAL' ||
+            (col.columnKey.startsWith('DELIVERY_UNIT_') &&
+              col.mvvLocationType === 'Offshore')
         )
-      
+
       default:
         return columns
     }
-  }, [columns, viewOption])
+  }, [columns, viewMode])
 
   // Create a Set of visible columnKeys for fast lookup when filtering data cells
   const visibleColumnKeys = useMemo(() => {
@@ -1010,7 +1018,11 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
               </th>
               {sectionRowData
                 ? sectionRowData.data
-                    .filter(item => item.columnKey !== 'TOTAL' && visibleColumnKeys.has(item.columnKey))
+                    .filter(
+                      item =>
+                        item.columnKey !== 'TOTAL' &&
+                        visibleColumnKeys.has(item.columnKey)
+                    )
                     .map(item => {
                       const compareValue = compareSectionRowData
                         ? compareSectionRowData.data.find(
@@ -1225,7 +1237,11 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
                     </div>
                   </th>
                   {rowItems.data
-                    .filter(item => item.columnKey !== 'TOTAL' && visibleColumnKeys.has(item.columnKey))
+                    .filter(
+                      item =>
+                        item.columnKey !== 'TOTAL' &&
+                        visibleColumnKeys.has(item.columnKey)
+                    )
                     .map(item => {
                       const compareItem = compareRowItems
                         ? compareRowItems.find(
@@ -1308,9 +1324,6 @@ function BusinessPlanFormSection({ handleChangeTab, viewOption = 'Total' }) {
       )
     })
   }
-
-  console.log('listVersions = ', listVersions);
-  
 
   return (
     <Fragment>

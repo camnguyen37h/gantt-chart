@@ -978,7 +978,7 @@ const HeadCountTable = forwardRef((props, ref) => {
         )
       }
     },
-    [updateRow, data, expandedKeys, fetchResourceInforReferenceData]
+    [updateRow]
   )
 
   const handleOGGrossSalaryInput = useCallback(

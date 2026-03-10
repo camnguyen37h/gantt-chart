@@ -13,10 +13,15 @@ export const STATUS_COLOR = {
 }
 
 export const STATUS_COLOR_DETAIL = {
-  VERIFICATION: { color: '#1890FF', backgroundColor: '#CDEDFF' },
-  APPROVED: { color: '#4CAF50', backgroundColor: '#D9F7BE' },
-  DRAFT: { color: '#101C2D', backgroundColor: '#D9D9D9' },
-  'PEER REVIEW': { color: '#FA8C16', backgroundColor: '#FFF1B8' },
+  VERIFICATION: { backgroundColor: 'blue' },
+  APPROVED: { backgroundColor: 'green' },
+  DRAFT: {},
+  'PEER REVIEW': { backgroundColor: 'orange' },
+}
+
+export const STATUS_COLOR_PROJECT_TYPE = {
+  Onsite: { backgroundColor: 'green' },
+  Offshore: { backgroundColor: 'blue' },
 }
 
 export const STATUS_COLOR_ICON = {

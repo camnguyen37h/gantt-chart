@@ -45,7 +45,10 @@ const BusinessPlanGeneralInformation = () => {
   } = useBusinessPlanDetails()
 
   // Mock user for demo - handle null localStorage
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+    userName: 'Demo User',
+    userId: 1,
+  }
   const { userName } = userPOA
 
   const dispatch = useDispatch()
@@ -158,7 +161,7 @@ const BusinessPlanGeneralInformation = () => {
     updateIsSaveShowed(true)
   }
 
-  const handleMvvChange = (value) => {
+  const handleMvvChange = value => {
     dispatch(setSelectedMvvCode(value))
   }
 
@@ -256,10 +259,12 @@ const BusinessPlanGeneralInformation = () => {
   }
 
   const onChangeKpiBonusInput = (value, key) => {
-    dispatch(setKpiBonusData({
-      key,
-      value
-    }))
+    dispatch(
+      setKpiBonusData({
+        key,
+        value,
+      })
+    )
     const validation = {
       [key]: false,
     }
@@ -339,38 +344,40 @@ const BusinessPlanGeneralInformation = () => {
       : []),
   ]
 
-  const renderTooltipKpiBonus = (KpiSetting) => {
-    return <div>
-      <div>{`Maximum % Bonus for QA is ${KpiSetting.MAX_BUSINESS_PLAN_KPI_QA}%`}</div>
-      <div>{`Maximum % Bonus for PM is ${KpiSetting.MAX_BUSINESS_PLAN_KPI_PM}%`}</div>
-      <div>{`Total % Bonus must be ${KpiSetting.MAX_BUSINESS_PLAN_KPI_TOTAL}%`}</div>
-    </div>
+  const renderTooltipKpiBonus = KpiSetting => {
+    return (
+      <div>
+        <div>{`Maximum % Bonus for QA is ${KpiSetting.MAX_BUSINESS_PLAN_KPI_QA}%`}</div>
+        <div>{`Maximum % Bonus for PM is ${KpiSetting.MAX_BUSINESS_PLAN_KPI_PM}%`}</div>
+        <div>{`Total % Bonus must be ${KpiSetting.MAX_BUSINESS_PLAN_KPI_TOTAL}%`}</div>
+      </div>
+    )
   }
 
   return (
     <div className="business-general-information">
-      {/* MVV Selection Dropdown */}
-      {generalInfos && generalInfos.length > 1 && (
-        <div style={{ marginBottom: 16, padding: '12px 16px', background: '#fafafa', borderRadius: 4 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontWeight: 500, fontSize: 14, minWidth: 50 }}>MVV:</span>
-            <Select
-              value={selectedMvvCode}
-              onChange={handleMvvChange}
-              style={{ width: 200 }}
-              placeholder="Select MVV">
-              {generalInfos.map((info) => (
-                <Option key={info.projectCode} value={info.projectCode}>
-                  {info.projectCode}
-                </Option>
-              ))}
-            </Select>
-            <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>
-              Showing data for {selectedMvvCode}
-            </span>
-          </div>
+      {generalInfos && generalInfos.length > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            marginBottom: 16,
+          }}>
+          <Select
+            value={selectedMvvCode}
+            onChange={handleMvvChange}
+            style={{ width: 200 }}
+            placeholder="Select MVV">
+            {generalInfos.map(info => (
+              <Option key={info.projectCode} value={info.projectCode}>
+                {info.projectCode}
+              </Option>
+            ))}
+          </Select>
         </div>
       )}
+
       <Form>
         <div className="business-information-top">
           <div className="business-information-top-left">
@@ -553,9 +560,18 @@ const BusinessPlanGeneralInformation = () => {
                 <span className="text-danger" style={{ fontSize: 16 }}>
                   *
                 </span>
-                {businessPlanSettingMaxKpiSetting && <Tooltip title={renderTooltipKpiBonus(businessPlanSettingMaxKpiSetting)}>
-                  <Icon type="question-circle" style={{ cursor: 'pointer' }} className="ml-10" />
-                </Tooltip>}
+                {businessPlanSettingMaxKpiSetting && (
+                  <Tooltip
+                    title={renderTooltipKpiBonus(
+                      businessPlanSettingMaxKpiSetting
+                    )}>
+                    <Icon
+                      type="question-circle"
+                      style={{ cursor: 'pointer' }}
+                      className="ml-10"
+                    />
+                  </Tooltip>
+                )}
               </span>
             }
           />
