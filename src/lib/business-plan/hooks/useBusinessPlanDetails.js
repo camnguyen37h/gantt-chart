@@ -11,6 +11,7 @@ import { DateFormat } from '../../constants/DateFormat'
 const useBusinessPlanDetails = () => {
   const dispatch = useDispatch()
   const {
+    loadingBusinessPlan,
     isSaveShowed,
     exchangeRate,
     totalContractPrice,
@@ -100,18 +101,8 @@ const useBusinessPlanDetails = () => {
   )
 
   const getBusinessPlanDetailByViewMode = useCallback(
-    ({ id, viewMode }) => {
-      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, viewMode }))
-    },
-    [dispatch]
-  )
-
-  const loadBusinessPlanFullData = useCallback(
-    async (id, viewMode = 'TOTAL') => {
-      // First, load General Information (generalInfos, versions, metadata)
-      await dispatch(redux.getBusinessPlanDetail(id))
-      // Then, load Business Plan table data (sectionList, columnLabels)
-      await dispatch(redux.getBusinessPlanDetailByViewMode({ id, viewMode }))
+    (id, params) => {
+      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, params }))
     },
     [dispatch]
   )
@@ -376,6 +367,7 @@ const useBusinessPlanDetails = () => {
   )
 
   return {
+    loadingBusinessPlan,
     isSaveShowed,
     exchangeRate,
     totalContractPrice,
@@ -384,7 +376,6 @@ const useBusinessPlanDetails = () => {
     submit,
     getBusinessPlanDetail,
     getBusinessPlanDetailByViewMode,
-    loadBusinessPlanFullData,
     setContractPriceData,
     handleValidate,
     projectCode,

@@ -45,9 +45,9 @@ function BusinessPlanVersion({
   const [nextId, setNextId] = useState()
   const {
     status,
-    listVersions,
-    versionId,
     saveDraft,
+    versionId,
+    listVersions,
     generalInformationParams,
     originalBusinessPlanItems,
     columns: columnLabels,
@@ -58,7 +58,10 @@ function BusinessPlanVersion({
   const { listAM } = useSelector(state => state.businessGeneralInformation)
 
   // Mock user for demo
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+    userName: 'Demo User',
+    userId: 1,
+  }
   const { userName } = userPOA
 
   const isAMSubmit =

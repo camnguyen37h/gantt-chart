@@ -13,8 +13,8 @@ export const businessGeneralInformationSlice = createSlice({
   initialState: {
     listGeneralInformation: {},
     generalInfos: [],
+    mvvLocationTypeIdMap: {},
     selectedMvvCode: null,
-    mvvLocationTypeIdMap: {}, // Map: { 'Onsite': id, 'Offshore': id }
     listDomain: [],
     listCurrency: [],
     listUsername: [],
@@ -62,10 +62,12 @@ export const businessGeneralInformationSlice = createSlice({
       }
     },
     setSelectedMvvCode: (state, { payload }) => {
-      const { selectedMvvCode } = payload || {}
+      state.selectedMvvCode = payload || {}
+
       const selectedInfo = state.generalInfos.find(
-        info => info.projectCode === selectedMvvCode
+        info => info.projectCode === payload
       )
+
       if (selectedInfo) {
         state.listGeneralInformation = selectedInfo
         state.listAM = selectedInfo.listAM || []
@@ -81,6 +83,7 @@ export const businessGeneralInformationSlice = createSlice({
         state.planningEndDate = selectedInfo.planningEndDate
       }
     },
+
     setMvvLocationTypeIdMap: (state, { payload }) => {
       state.mvvLocationTypeIdMap = payload
     },
@@ -98,18 +101,13 @@ export const businessGeneralInformationSlice = createSlice({
         return
       }
 
-      state.generalInfos = data.generalInfos || []
-
-      // Build mvvLocationTypeIdMap from generalInfos
-      const idMap = {}
-      if (state.generalInfos && state.generalInfos.length > 0) {
-        state.generalInfos.forEach(info => {
-          if (info.mvvLocationType && info.id) {
-            idMap[info.mvvLocationType] = info.id
-          }
-        })
-      }
-      state.mvvLocationTypeIdMap = idMap
+      state.generalInfos = data.generalInfos.filter(item => !!item.id) || []
+      state.selectedMvvCode = data.projectCode
+      state.mvvLocationTypeIdMap = (state.generalInfos || []).reduce(
+        (map, { mvvLocationType, id }) =>
+          mvvLocationType && id ? { ...map, [mvvLocationType]: id } : map,
+        {}
+      )
 
       const selectedInfo =
         state.generalInfos.find(
@@ -137,11 +135,11 @@ export const businessGeneralInformationSlice = createSlice({
     })
 
     builder.addCase(getIndustryDomain.fulfilled, (state, action) => {
-      state.listDomain = action.payload || []
+      state.listDomain = action.payload
     })
 
     builder.addCase(getIndustryCurrency.fulfilled, (state, action) => {
-      state.listCurrency = action.payload || []
+      state.listCurrency = action.payload
     })
 
     builder.addCase(
@@ -159,7 +157,7 @@ export const businessGeneralInformationSlice = createSlice({
     builder.addCase(
       getUserAndDepartmentCollaborator.fulfilled,
       (state, action) => {
-        state.listUsername = action.payload || []
+        state.listUsername = action.payload
       }
     )
   },

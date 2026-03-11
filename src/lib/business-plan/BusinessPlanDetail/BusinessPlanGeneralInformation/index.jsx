@@ -12,12 +12,12 @@ import {
   getIndustryCurrency,
   getIndustryDomain,
   setValidation,
-  setSelectedMvvCode,
 } from '../../redux'
 import {
   handleChangeDateGeneralInfo,
   handleChangeInputValueCollaborator,
   setKpiBonusData,
+  setSelectedMvvCode,
 } from '../../redux/reducers/businessGeneralInformation'
 import { CollaboratorSVG, industrySVG } from '../SVGIcon'
 import CollaboratorBodyItem from './CollaboratorBodyItem'
@@ -161,9 +161,7 @@ const BusinessPlanGeneralInformation = () => {
     updateIsSaveShowed(true)
   }
 
-  const handleMvvChange = value => {
-    dispatch(setSelectedMvvCode(value))
-  }
+  const handleMvvChange = value => dispatch(setSelectedMvvCode(value))
 
   const collaboratorData = [
     {

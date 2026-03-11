@@ -21,247 +21,7 @@ import {
 } from '../../utils'
 import { statusBusinessPlanDetail } from '../constant'
 import Decimal from 'decimal.js'
-
-const StyledWrapper = styled.div`
-  --title-size: 270px;
-  --border-x-row: 6px;
-  --column-width: 165px;
-  max-height: 700px;
-  overflow: auto;
-
-  .ant-input-number-input {
-    text-align: center;
-  }
-
-  table {
-    white-space: nowrap;
-    margin: 0;
-    border: none;
-    // border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed;
-    width: max-content;
-
-    .red {
-      color: var(--error-red);
-    }
-
-    .green {
-      color: var(--success-green);
-    }
-
-    thead {
-      th {
-        padding: 0;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        font-weight: 500;
-        text-align: center;
-        background: #fff;
-        vertical-align: bottom;
-
-        /* &:not(:last-child) div {
-          border-right: 1px solid #e1e1e1;
-        } */
-
-        &:first-child {
-          left: 0;
-          z-index: 2;
-        }
-        &:nth-child(2) {
-          left: var(--title-size);
-          z-index: 2;
-        }
-      }
-
-      .item-label {
-        padding: 6px 8px;
-        border-top: 1px solid #e1e1e1;
-        background: var(--light-blue);
-        width: 100%;
-      }
-    }
-
-    tbody {
-      .bg-light-blue {
-        td,
-        th {
-          background-color: var(--light-blue);
-        }
-
-        th:first-child {
-          &:before {
-            background-color: var(--light-blue);
-          }
-        }
-        td:last-child {
-          &:before {
-            background-color: var(--light-blue);
-          }
-        }
-      }
-
-      .margin {
-        th:first-child {
-          padding: 0 0 0 40px;
-          border: none;
-          &:before {
-            content: '';
-            position: absolute;
-            width: 1px;
-            background: #e1e1e1;
-            height: 100%;
-            display: block;
-            top: 0;
-            left: 15px;
-          }
-
-          &:after {
-            position: absolute;
-            display: block;
-            width: calc(100% - 40px);
-            height: 1px;
-            background-color: #e1e1e1;
-            bottom: 0;
-            content: '';
-          }
-
-          .flag {
-            position: absolute;
-            top: 15px;
-            left: 4px;
-          }
-        }
-      }
-
-      tr:not(.margin) + .margin {
-        border-top: 10px solid #fafbfc;
-
-        th:first-child {
-          &:before {
-            height: calc(100% - 30px);
-            top: 30px;
-          }
-        }
-
-        td,
-        th {
-          padding-top: 10px;
-        }
-      }
-
-      tr:has(+ .total-section),
-      tr:has(+ .margin):not(.margin) {
-        td,
-        th {
-          border-bottom-color: #ffffff;
-
-          &:after {
-            content: none !important;
-          }
-        }
-      }
-      .total-section {
-        td,
-        th {
-          padding-top: 10px;
-          border-bottom-color: #ffffff;
-        }
-      }
-
-      .total-section-no-space {
-        td,
-        th {
-          padding-top: 4px;
-        }
-      }
-
-      tr:first-child {
-        border-top: 10px solid #fafbfc;
-        &.bg-light-blue {
-          td,
-          th {
-            border-bottom-color: var(--light-blue);
-          }
-        }
-      }
-
-      .group-divider {
-        border-top: 10px solid #fafbfc;
-      }
-
-      td {
-        background-color: #ffffff;
-        padding: 4px;
-        text-align: center;
-        border-bottom: 1px solid #e1e1e1;
-        vertical-align: top;
-
-        &:last-child {
-          position: relative;
-          &:before {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 6px;
-            height: 1px;
-            bottom: -1px;
-            right: 0;
-            background-color: #ffffff;
-          }
-        }
-      }
-
-      th {
-        position: sticky;
-        z-index: 1;
-        font-weight: normal;
-        padding: 4px;
-        text-wrap: pretty;
-        border-bottom: 1px solid #e1e1e1;
-        background-color: #ffffff;
-        vertical-align: top;
-
-        &:first-child {
-          left: 0;
-          padding-left: 20px;
-          &:before {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 6px;
-            height: 1px;
-            left: 0;
-            bottom: -1px;
-            background-color: #ffffff;
-          }
-        }
-        &:nth-child(2) {
-          left: var(--title-size);
-          text-align: center;
-          border-right: 1px solid #e1e1e1;
-        }
-
-        .title {
-          font-size: 16px;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          text-wrap: nowrap;
-        }
-
-        .total {
-          text-align: center;
-          background-color: #acd1ff;
-          border-radius: 4px;
-          line-height: 25px;
-          height: 25px;
-        }
-      }
-    }
-  }
-`
+import { StyledWrapper } from './index.styled'
 
 const CompareText = ({ value }) => {
   if (value === 0 || value === null) return null
@@ -388,53 +148,6 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
   const { getFormula, isSpecialSectionFormula } = useFormula()
   const [selectedCompareId, setSelectedCompareId] = useState()
 
-  // Filter columns based on view option (passed from parent)
-  const filteredColumns = useMemo(() => {
-    if (!columns) return []
-
-    switch (viewMode) {
-      case 'Total':
-        return columns // Show all columns
-
-      case 'OB':
-        // Show TOTAL, INTERNAL and SALE_X columns (OB = Outcome Business / Sale groups)
-        return columns.filter(
-          col =>
-            col.columnKey === 'TOTAL' ||
-            col.columnKey === 'INTERNAL' ||
-            col.columnKey.startsWith('SALE_')
-        )
-
-      case 'Onsite':
-        // Show TOTAL, INTERNAL and Onsite delivery units
-        return columns.filter(
-          col =>
-            col.columnKey === 'TOTAL' ||
-            col.columnKey === 'INTERNAL' ||
-            (col.columnKey.startsWith('DELIVERY_UNIT_') &&
-              col.mvvLocationType === 'Onsite')
-        )
-
-      case 'Offshore':
-        // Show TOTAL, INTERNAL and Offshore delivery units
-        return columns.filter(
-          col =>
-            col.columnKey === 'TOTAL' ||
-            col.columnKey === 'INTERNAL' ||
-            (col.columnKey.startsWith('DELIVERY_UNIT_') &&
-              col.mvvLocationType === 'Offshore')
-        )
-
-      default:
-        return columns
-    }
-  }, [columns, viewMode])
-
-  // Create a Set of visible columnKeys for fast lookup when filtering data cells
-  const visibleColumnKeys = useMemo(() => {
-    return new Set(filteredColumns.map(col => col.columnKey))
-  }, [filteredColumns])
-
   const isDraft = status === statusBusinessPlanDetail.draft
   const isApproved = status === statusBusinessPlanDetail.approved
   const isFin = checkRolePermission(
@@ -455,13 +168,22 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     setSelectedCompareId(versionId)
   }, [versionId])
 
+  useEffect(() => {
+    if (viewMode && selectedCompareId) {
+      onChangeCompareSelect(selectedCompareId)
+    }
+  }, [viewMode])
+
   const onChangeCompareSelect = compareVersionId => {
     setSelectedCompareId(compareVersionId)
     if (compareVersionId === versionId) {
       clearCompareBusinessPlan()
       return
     }
-    getCompareBusinessPlanDetail(compareVersionId)
+
+    getCompareBusinessPlanDetail(compareVersionId, {
+      view: viewMode,
+    })
   }
 
   const [activePanel, setActivePanel] = useState(
@@ -1015,18 +737,10 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                 </div>
               </th>
               {sectionRowData
-                ? filteredColumns.slice(1).map(col => {
-                    // Find cell matching this column
-                    const item = sectionRowData.data.find(
-                      cell => cell.columnKey === col.columnKey
-                    )
-                    
-                    // If no cell data for this column, render empty cell
-                    if (!item) {
-                      return <td key={col.columnKey}></td>
-                    }
-                    
-                    const compareValue = compareSectionRowData
+                ? sectionRowData.data
+                    .filter(item => item.columnKey !== 'TOTAL')
+                    .map(item => {
+                      const compareValue = compareSectionRowData
                         ? compareSectionRowData.data.find(
                             compareItem =>
                               compareItem.columnKey === item.columnKey
@@ -1037,23 +751,6 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                           ).value
                         : null
 
-                      {
-                        /* if (isApproved || (!isDraft && isOtherRole)) {
-                        const resCompare = getResultCompare(
-                          item.value,
-                          compareValue,
-                          isCompare
-                        )
-                        return (
-                          <td key={item.columnKey}>
-                            <div className="d-flex flex-column 2">
-                              <div>{formatNumber(item.value)}</div>
-                              <CompareText value={resCompare} />
-                            </div>
-                          </td>
-                        )
-                      } */
-                      }
                       const sectionRowDataItemValue =
                         getFormula({
                           item,
@@ -1238,18 +935,10 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                       <CompareText value={resCompare} />
                     </div>
                   </th>
-                  {filteredColumns.slice(1).map(col => {
-                    // Find cell matching this column
-                    const item = rowItems.data.find(
-                      cell => cell.columnKey === col.columnKey
-                    )
-                    
-                    // If no cell data for this column, render empty cell
-                    if (!item) {
-                      return <td key={col.columnKey}></td>
-                    }
-                    
-                    const compareItem = compareRowItems
+                  {rowItems.data
+                    .filter(item => item.columnKey !== 'TOTAL')
+                    .map(item => {
+                      const compareItem = compareRowItems
                         ? compareRowItems.find(
                             compareItem =>
                               compareItem.columnKey === item.columnKey
@@ -1258,26 +947,6 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                       const compareValue = compareItem
                         ? compareItem.value
                         : null
-
-                      {
-                        /* if (
-                        !((isFin || (isOtherRole && isDraft)) && !isApproved)
-                      ) {
-                        const resCompare = getResultCompare(
-                          item.value,
-                          compareValue,
-                          isCompare
-                        )
-                        return (
-                          <td key={item.columnKey}>
-                            <div className="d-flex flex-column 5">
-                              <div>{formatNumber(item.value, percent)}</div>
-                              <CompareText value={resCompare} />
-                            </div>
-                          </td>
-                        )
-                      } */
-                      }
 
                       const valueFormula = getFormula({
                         item,
@@ -1354,7 +1023,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
           <colgroup>
             <col style={{ width: 'var(--title-size)' }} />
             <col style={{ width: 'var(--column-width)' }} />
-            {filteredColumns.slice(1).map(item => (
+            {columns.slice(1).map(item => (
               <col
                 key={item.columnKey}
                 style={{ width: 'var(--column-width)' }}
@@ -1366,17 +1035,15 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               <th
                 style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                 key={'header-info'}>
-                <div>
-                  {!isApproved && (
-                    <>
-                      <div className="text-left text-wrap">Unit price</div>
-                      <div className="text-left text-wrap">Billable rate</div>
-                      <div className="text-left text-wrap">
-                        Direct margin before incentives and project bonus rate
-                      </div>
-                    </>
-                  )}
-                </div>
+                {!isApproved && (
+                  <div className="business-plan-normal">
+                    <div className="text-left text-wrap">Unit price</div>
+                    <div className="text-left text-wrap">Billable rate</div>
+                    <div className="text-left text-wrap">
+                      Direct margin before incentives and project bonus rate
+                    </div>
+                  </div>
+                )}
                 <div
                   className="item-label"
                   style={{ borderRight: '1px solid #e1e1e1' }}>
@@ -1386,7 +1053,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               <th
                 style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                 key={'compare-norm'}>
-                <div>
+                <Fragment>
                   {!isApproved && (
                     <div
                       className="text-center text-wrap h-21"
@@ -1459,18 +1126,18 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                       </Tooltip>
                     </div>
                   )}
-                </div>
+                </Fragment>
                 <div
                   className="item-label"
                   style={{ borderRight: '1px solid #e1e1e1' }}>
                   Total
                 </div>
               </th>
-              {filteredColumns.slice(1).map(item => (
+              {columns.slice(1).map(item => (
                 <th
                   style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                   key={item.index}>
-                  <div>
+                  <Fragment>
                     {!isApproved && (
                       <div
                         className="text-center text-wrap h-21"
@@ -1581,7 +1248,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
 
                     {!isApproved && (
                       <div
-                        className={`text-center text-wrap pb-24 h-42`}
+                        className="text-center text-wrap pb-24 h-42"
                         style={{
                           color: !findPercentageByColumnKey(
                             directMarginArray,
@@ -1631,7 +1298,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                         </Tooltip>
                       </div>
                     )}
-                  </div>
+                  </Fragment>
                   <div
                     className="item-label"
                     style={{ borderRight: '1px solid #e1e1e1' }}>

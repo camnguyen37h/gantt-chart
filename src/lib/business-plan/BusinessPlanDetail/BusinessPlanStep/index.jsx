@@ -36,7 +36,7 @@ const CommentForm = Form.create()(
   })
 )
 
-function BusinessPlanStep({ match, projectCode, status, startDate, endDate }) {
+function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   const [showVersions, setShowVersions] = useState(true)
   const commentRef = useRef()
   const [rejectModalVisible, setRejectModalVisible] = useState(false)
@@ -134,9 +134,11 @@ function BusinessPlanStep({ match, projectCode, status, startDate, endDate }) {
     }
   }
 
-  const enableActions =
-    status !== statusBusinessPlanDetail.draft &&
-    status !== statusBusinessPlanDetail.approved
+  const enableActions = generalInfos.every(
+    item =>
+      !item ||
+      !(Object.values(statusBusinessPlanDetail) || []).includes(item.status)
+  )
 
   const onClickReject = person => {
     setRejectPerson(person)
@@ -153,23 +155,16 @@ function BusinessPlanStep({ match, projectCode, status, startDate, endDate }) {
             display: 'flex',
             flexDirection: 'column',
           }}>
-          {generalInfos.map(info => {
-            const isActive = info.id === Number(businessPlanId)
-            const isVisible = isActive || showVersions
+          {generalInfos.map((info, index) => {
             const versionStatus = info.status || 'Draft'
 
             return (
               <VersionRowWrapper
                 key={info.id}
-                isActive={isActive}
-                isVisible={isVisible}>
+                className="business-version-tree">
                 <VersionRow
-                  isActive={isActive}
-                  isVisible={isVisible}
-                  onClick={
-                    isActive ? () => setShowVersions(!showVersions) : undefined
-                  }>
-                  {isActive && (
+                  onClick={() => index === 0 && setShowVersions(!showVersions)}>
+                  {index === 0 && (
                     <Icon
                       type="right"
                       style={{
@@ -187,11 +182,13 @@ function BusinessPlanStep({ match, projectCode, status, startDate, endDate }) {
                     {info.projectCode}
                   </h5>
 
-                  <Tag>{info.versionName}</Tag>
+                  {info.versionName && <Tag>{info.versionName}</Tag>}
 
-                  <Tag {...STATUS_COLOR_DETAIL[versionStatus.toUpperCase()]}>
-                    {versionStatus}
-                  </Tag>
+                  {versionStatus && (
+                    <Tag {...STATUS_COLOR_DETAIL[versionStatus.toUpperCase()]}>
+                      {versionStatus}
+                    </Tag>
+                  )}
 
                   {info.mvvLocationType && (
                     <Tag {...STATUS_COLOR_PROJECT_TYPE[info.mvvLocationType]}>

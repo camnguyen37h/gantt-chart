@@ -63,8 +63,8 @@ const useBusinessPlanForm = () => {
   )
 
   const getCompareBusinessPlanDetail = useCallback(
-    id => {
-      dispatch(redux.getCompareBusinessPlanDetail(id))
+    (id, params) => {
+      dispatch(redux.getCompareBusinessPlanDetail({ id, params }))
     },
     [dispatch]
   )

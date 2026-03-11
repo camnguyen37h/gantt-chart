@@ -6,7 +6,9 @@ import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 export const getResourcesInformationDeliveryPlan = createAsyncThunk(
   'get/getResourcesInformationDeliveryPlan',
   async params => {
-    const result = await BusinessPlanAPI.getResourcesInformationDeliveryPlan(params)
+    const result = await BusinessPlanAPI.getResourcesInformationDeliveryPlan(
+      params
+    )
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -116,7 +118,9 @@ export const saveDeliveryPlan = createAsyncThunk(
 export const getResourcesInformationReference = createAsyncThunk(
   'get/getResourcesInformationReference',
   async params => {
-    const result = await BusinessPlanAPI.getResourcesInformationReference(params)
+    const result = await BusinessPlanAPI.getResourcesInformationReference(
+      params
+    )
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -140,7 +144,9 @@ export const getListDUByVersionDelivery = createAsyncThunk(
 export const getSummaryDeliveryPlan = createAsyncThunk(
   'get/getSummaryDeliveryPlan',
   async businessPlanVersionId => {
-    const result = await BusinessPlanAPI.getSummaryDeliveryPlan(businessPlanVersionId)
+    const result = await BusinessPlanAPI.getSummaryDeliveryPlan(
+      businessPlanVersionId
+    )
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
@@ -152,7 +158,10 @@ export const getSummaryDeliveryPlan = createAsyncThunk(
 export const getLocationExchangeRate = createAsyncThunk(
   'get/getLocationExchangeRate',
   async data => {
-    const result = await BusinessPlanAPI.getLocationExchangeRate(data)
+    const result = await Request(
+      BUSINESS_PLAN_API.getLocationExchangeRate,
+      data
+    )
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

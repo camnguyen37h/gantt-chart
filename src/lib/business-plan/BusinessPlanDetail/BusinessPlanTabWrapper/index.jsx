@@ -4,18 +4,18 @@ import styled from 'styled-components'
 const { TabPane } = Tabs
 
 const ViewOptionsWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 16px;
-    background: #fafafa;
-    margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  background: #fafafa;
+  margin-bottom: 16px;
 
-    .label {
-        font-weight: 500;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.85);
-    }
+  .label {
+    font-weight: 500;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.85);
+  }
 `
 
 const StyledRadioGroup = styled(Radio.Group)`
@@ -45,34 +45,34 @@ const VIEW_OPTIONS = [
 ]
 
 const BusinessPlanTabWrapper = ({
-    children,
-    value,
-    onChange,
-    activeTab = '1',
-    tab,
-    ...rest
+  children,
+  value = 'TOTAL',
+  onChange,
+  activeTab = '1',
+  tab,
+  ...rest
 }) => {
-    // Filter options based on active tab
-    const visibleOptions = VIEW_OPTIONS.filter(option => {
-        if (activeTab === '1') return true // Business Plan - show all
-        return !option.businessPlanOnly // Revenue/Delivery - hide Total/OB
-    })
+  const visibleOptions = VIEW_OPTIONS.filter(option => {
+    if (activeTab === '1') return true
 
-    return (
-        <TabPane tab={tab} {...rest}>
-            <ViewOptionsWrapper>
-                <StyledRadioGroup value={value} onChange={onChange} buttonStyle="solid">
-                    {visibleOptions.map(option => (
-                        <Radio.Button key={option.value} value={option.value}>
-                            {option.label}
-                        </Radio.Button>
-                    ))}
-                </StyledRadioGroup>
-            </ViewOptionsWrapper>
+    return !option.businessPlanOnly
+  })
 
-            {children}
-        </TabPane>
-    )
+  return (
+    <TabPane tab={tab} {...rest}>
+      <ViewOptionsWrapper>
+        <StyledRadioGroup value={value} onChange={onChange} buttonStyle="solid">
+          {visibleOptions.map(option => (
+            <Radio.Button key={option.value} value={option.value}>
+              {option.label}
+            </Radio.Button>
+          ))}
+        </StyledRadioGroup>
+      </ViewOptionsWrapper>
+
+      {children}
+    </TabPane>
+  )
 }
 
 export default BusinessPlanTabWrapper

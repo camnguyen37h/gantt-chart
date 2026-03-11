@@ -18,10 +18,28 @@ export const getBusinessPlanDetail = createAsyncThunk(
   }
 )
 
+export const getCompareBusinessPlanDetail = createAsyncThunk(
+  'get/getCompareBusinessPlanDetail',
+  async ({ id, params }) => {
+    const result = await BusinessPlanAPI.getBusinessPlanDetailByViewMode(
+      id,
+      params
+    )
+    if (result.status === ResponseStatusCode.success) {
+      return result.data
+    } else {
+      return NotificationManager.error(result.message)
+    }
+  }
+)
+
 export const getBusinessPlanDetailByViewMode = createAsyncThunk(
   'get/getBusinessPlanDetailByViewMode',
   async ({ id, viewMode }) => {
-    const result = await BusinessPlanAPI.getBusinessPlanDetailByViewMode(id, viewMode)
+    const result = await BusinessPlanAPI.getBusinessPlanDetailByViewMode(
+      id,
+      viewMode
+    )
     if (result.status === ResponseStatusCode.success) {
       return { data: result.data, errorMessage: result.errorMessage }
     } else {
@@ -33,17 +51,5 @@ export const getBusinessPlanDetailByViewMode = createAsyncThunk(
   }
 )
 
-export const getCompareBusinessPlanDetail = createAsyncThunk(
-  'get/getCompareBusinessPlanDetail',
-  async id => {
-    const result = await BusinessPlanAPI.getBusinessPlanDetail(id)
-    if (result.status === ResponseStatusCode.success) {
-      return result.data
-    } else {
-      return NotificationManager.error(result.message)
-    }
-  }
-)
-
 export const getBusinessPlanDetailVersion = id =>
-  BusinessPlanAPI.getBusinessPlanDetail(id)
+  Request(BUSINESS_PLAN_API.getBusinessPlanDetail(id))

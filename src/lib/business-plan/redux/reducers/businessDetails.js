@@ -31,7 +31,7 @@ const initialState = {
   activePanel: '',
   deliveryUnitDataDelivery: {},
   deliveryUnitDataRevenue: {},
-  generalInfos: [],
+  loadingBusinessPlan: false,
 }
 const businessDetailsSlice = createSlice({
   name: 'businessDetails',
@@ -180,13 +180,11 @@ const businessDetailsSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    // Listen to General Information API to get metadata (versions, dates, etc.)
     builder.addCase(getBusinessPlanDetail.fulfilled, (state, { payload }) => {
       const { data } = payload || {}
 
       if (!data) return
 
-      // Store metadata from General Information API
       state.listVersions = data.versions || []
       state.projectCode = data.projectCode
       state.version = data.version
@@ -196,10 +194,8 @@ const businessDetailsSlice = createSlice({
       state.endDate = data.endDate
       state.warningMessage = data.warningMessage
 
-      // Store generalInfos for MVV switching
       state.generalInfos = data.generalInfos || []
 
-      // Get the selected general info based on projectCode and update contract prices
       const selectedGeneralInfo =
         data.generalInfos && data.generalInfos.length > 0
           ? data.generalInfos.find(
@@ -216,9 +212,14 @@ const businessDetailsSlice = createSlice({
       }
     })
 
+    builder.addCase(getBusinessPlanDetailByViewMode.pending, state => {
+      state.loadingBusinessPlan = true
+    })
+
     builder.addCase(
       getBusinessPlanDetailByViewMode.fulfilled,
       (state, { payload }) => {
+        state.loadingBusinessPlan = false
         const { data, errorMessage } = payload || {}
 
         if (!data) return
@@ -243,7 +244,7 @@ const businessDetailsSlice = createSlice({
 
         const originalBusinessPlanItems = cloneDeep(data.sectionList || [])
 
-        const formattedData = (data.sectionList || []).reduce(
+        state.businessPlanItems = (data.sectionList || []).reduce(
           (res, cur, index) => {
             const cloneRowLabels = cloneDeep(cur.rowLabels)
             cloneRowLabels.sort((a, b) => {
@@ -291,8 +292,6 @@ const businessDetailsSlice = createSlice({
           },
           {}
         )
-
-        state.businessPlanItems = formattedData
         state.originalBusinessPlanItems = originalBusinessPlanItems
         state.columns = data.columnLabels
 
@@ -305,27 +304,32 @@ const businessDetailsSlice = createSlice({
       }
     )
 
+    builder.addCase(getBusinessPlanDetailByViewMode.rejected, state => {
+      state.loadingBusinessPlan = false
+    })
+
     builder.addCase(
       getCompareBusinessPlanDetail.fulfilled,
       (state, { payload }) => {
-        const formattedData = (payload.sectionList || []).reduce((res, cur) => {
-          res[cur.sectionKey] = {
-            title: cur.sectionTitle,
-            data: cur.rowLabels.reduce((rowRes, rowCur) => {
-              rowRes[rowCur.rowKey] = {
-                title: rowCur.label,
-                data: rowCur.cellList.map(item => ({
-                  ...item,
-                  sectionKey: cur.sectionKey,
-                })),
-              }
-              return rowRes
-            }, {}),
-          }
-          return res
-        }, {})
-
-        state.compareBusinessPlanItems = formattedData
+        state.compareBusinessPlanItems = (payload.sectionList || []).reduce(
+          (res, cur) => {
+            res[cur.sectionKey] = {
+              title: cur.sectionTitle,
+              data: cur.rowLabels.reduce((rowRes, rowCur) => {
+                rowRes[rowCur.rowKey] = {
+                  title: rowCur.label,
+                  data: rowCur.cellList.map(item => ({
+                    ...item,
+                    sectionKey: cur.sectionKey,
+                  })),
+                }
+                return rowRes
+              }, {}),
+            }
+            return res
+          },
+          {}
+        )
       }
     )
   },

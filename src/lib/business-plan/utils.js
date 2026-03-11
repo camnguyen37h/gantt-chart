@@ -5,16 +5,16 @@ export const formatNumber = (value, percent) => {
   return value === null || value === undefined
     ? null
     : value === 0
-    ? '-'
-    : value < 0
-    ? `(${new Decimal(parseFloat(-value))
-        .toFixed(3)
-        .replace(/\.+0*$/, '')
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
-    : `${new Decimal(parseFloat(value))
-        .toFixed(3)
-        .replace(/\.+0*$/, '')
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+      ? '-'
+      : value < 0
+        ? `(${new Decimal(parseFloat(-value))
+            .toFixed(3)
+            .replace(/\.+0*$/, '')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
+        : `${new Decimal(parseFloat(value))
+            .toFixed(3)
+            .replace(/\.+0*$/, '')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
       ${percent ? '%' : ''}`
 }
 
@@ -103,4 +103,11 @@ export const parseInputNumber = value => {
   const cleaned = value.replace(/[-,]/g, '')
   const res = cleaned.match(/^(\d{1,15})(\.(\d{0,2})?)?/)
   return res ? `${res[1]}${res[2] || ''}` : ''
+}
+
+const getProjectCodeByViewMode = (viewMode, arrayMap) => {
+  if (arrayMap && arrayMap[viewMode]) {
+    return arrayMap[viewMode]
+  }
+  return viewMode
 }
