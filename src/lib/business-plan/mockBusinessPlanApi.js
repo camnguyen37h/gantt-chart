@@ -17,6 +17,7 @@ import {
   mockCurrencies,
   mockIndustries,
   mockApprovalSteps,
+  getBusinessPlanDataByViewMode,
 } from '../../utils/mockBusinessPlanData';
 
 // Simulate network delay
@@ -77,10 +78,10 @@ export const getBusinessPlanDetail = async (businessPlanId) => {
 /**
  * Get Business Plan Detail By View Mode
  * @param {number} businessPlanId - Business Plan ID
- * @param {string} viewMode - View mode (TOTAL, OB, ONSITE, OFFSHORE)
- * @returns {Promise<Object>} Business plan detail with sectionList and columnLabels only
+ * @param {string} viewMode - View mode ('Total', 'OB', 'Onsite', 'Offshore')
+ * @returns {Promise<Object>} Business plan detail with columnLabels and sectionList based on view mode
  */
-export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewMode = 'TOTAL') => {
+export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewMode = 'Total') => {
   await delay();
   
   // Convert to number to match Map keys
@@ -91,17 +92,21 @@ export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewMode =
     throw new Error(`Business Plan with ID ${businessPlanId} not found`);
   }
   
+  // Get view mode specific mock data from Mock API/Business plan folder
+  const viewModeData = getBusinessPlanDataByViewMode(viewMode);
+  
   // businessPlan has structure: { httpStatus: 200, data: {...} }
-  // Extract the data object
+  // Extract the base data object
   const planData = businessPlan.data || businessPlan;
   
-  // Return only Business Plan table data (sectionList + columnLabels)
-  // No generalInfos - those are fetched separately via getBusinessPlanDetail
+  // Merge base data with view mode specific columnLabels and sectionList
   const result = {
     httpStatus: 200,
     data: {
-      sectionList: planData.sectionList,
-      columnLabels: planData.columnLabels,
+      // Use columnLabels and sectionList from view mode specific mock data
+      sectionList: viewModeData.data.sectionList,
+      columnLabels: viewModeData.data.columnLabels,
+      // Keep other metadata from the base business plan
       projectCode: planData.projectCode,
       status: planData.status,
       version: planData.version,

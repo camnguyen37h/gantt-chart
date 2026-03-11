@@ -195,114 +195,115 @@ const businessDetailsSlice = createSlice({
       state.startDate = data.startDate
       state.endDate = data.endDate
       state.warningMessage = data.warningMessage
-      
+
       // Store generalInfos for MVV switching
       state.generalInfos = data.generalInfos || []
 
       // Get the selected general info based on projectCode and update contract prices
-      const selectedGeneralInfo = data.generalInfos && data.generalInfos.length > 0
-        ? data.generalInfos.find(info => info.projectCode === data.projectCode) || data.generalInfos[0]
-        : null
+      const selectedGeneralInfo =
+        data.generalInfos && data.generalInfos.length > 0
+          ? data.generalInfos.find(
+              info => info.projectCode === data.projectCode
+            ) || data.generalInfos[0]
+          : null
 
       if (selectedGeneralInfo) {
         state.exchangeRate = selectedGeneralInfo.exchangeRate
         state.totalContractPrice = selectedGeneralInfo.totalContractPrice
-        state.softwareDevelopmentFee = selectedGeneralInfo.softwareDevelopmentFee
+        state.softwareDevelopmentFee =
+          selectedGeneralInfo.softwareDevelopmentFee
         state.otherFees = selectedGeneralInfo.otherFees
       }
     })
 
-    // Listen to Business Plan Detail By View Mode API to get table data
-    builder.addCase(getBusinessPlanDetailByViewMode.fulfilled, (state, { payload }) => {
-      const { data, errorMessage } = payload || {}
+    builder.addCase(
+      getBusinessPlanDetailByViewMode.fulfilled,
+      (state, { payload }) => {
+        const { data, errorMessage } = payload || {}
 
-      if (!data) return
+        if (!data) return
+        const mmBill = data.sectionList.reduce((res, section) => {
+          if (!res)
+            return section.rowLabels.find(item => item.rowKey === 'MM_BILL')
+          return res
+        }, null)
 
-      // Process sectionList and columnLabels
-      const mmBill = data.sectionList.reduce((res, section) => {
-        if (!res)
-          return section.rowLabels.find(item => item.rowKey === 'MM_BILL')
-        return res
-      }, null)
-
-      let mmBillService = cloneDeep(mmBill)
-      mmBillService = {
-        ...mmBillService,
-        label: '',
-        rowKey: 'MM_BILL_1',
-        cellList: mmBillService.cellList.map(item => ({
-          ...item,
-          value: null,
+        let mmBillService = cloneDeep(mmBill)
+        mmBillService = {
+          ...mmBillService,
+          label: '',
           rowKey: 'MM_BILL_1',
-          editable: sectionConfig.MAN_MONTH.newRowEditable(item.columnKey),
-        })),
-      }
+          cellList: mmBillService.cellList.map(item => ({
+            ...item,
+            value: null,
+            rowKey: 'MM_BILL_1',
+            editable: sectionConfig.MAN_MONTH.newRowEditable(item.columnKey),
+          })),
+        }
 
-      const originalBusinessPlanItems = cloneDeep(data.sectionList || [])
+        const originalBusinessPlanItems = cloneDeep(data.sectionList || [])
 
-      const formattedData = (data.sectionList || []).reduce(
-        (res, cur, index) => {
-          const cloneRowLabels = cloneDeep(cur.rowLabels)
-          cloneRowLabels.sort((a, b) => {
-            if (
-              a.rowKey.match(
-                /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
-              )
-            ) {
+        const formattedData = (data.sectionList || []).reduce(
+          (res, cur, index) => {
+            const cloneRowLabels = cloneDeep(cur.rowLabels)
+            cloneRowLabels.sort((a, b) => {
               if (
-                !b.rowKey.match(
+                a.rowKey.match(
                   /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
                 )
-              )
-                return 1
-              else {
-                return (
-                  parseInt(a.rowKey.match(/\d+/)[0]) -
-                  parseInt(b.rowKey.match(/\d+/)[0])
+              ) {
+                if (
+                  !b.rowKey.match(
+                    /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
+                  )
                 )
+                  return 1
+                else {
+                  return (
+                    parseInt(a.rowKey.match(/\d+/)[0]) -
+                    parseInt(b.rowKey.match(/\d+/)[0])
+                  )
+                }
               }
+            })
+
+            if (
+              cur.sectionKey === 'MAN_MONTH' &&
+              !cloneRowLabels.some(item => item.rowKey === 'MM_BILL_1')
+            ) {
+              cloneRowLabels.push(mmBillService)
+              originalBusinessPlanItems[index].rowLabels = cloneRowLabels
             }
-          })
+            res[cur.sectionKey] = {
+              title: cur.sectionTitle,
+              data: cloneRowLabels.reduce((rowRes, rowCur) => {
+                rowRes[rowCur.rowKey] = {
+                  title: rowCur.label,
+                  data: rowCur.cellList.map(item => ({
+                    ...item,
+                    sectionKey: cur.sectionKey,
+                  })),
+                }
+                return rowRes
+              }, {}),
+            }
+            return res
+          },
+          {}
+        )
 
-          if (
-            cur.sectionKey === 'MAN_MONTH' &&
-            !cloneRowLabels.some(item => item.rowKey === 'MM_BILL_1')
-          ) {
-            cloneRowLabels.push(mmBillService)
-            originalBusinessPlanItems[index].rowLabels = cloneRowLabels
-          }
-          res[cur.sectionKey] = {
-            title: cur.sectionTitle,
-            data: cloneRowLabels.reduce((rowRes, rowCur) => {
-              rowRes[rowCur.rowKey] = {
-                title: rowCur.label,
-                data: rowCur.cellList.map(item => ({
-                  ...item,
-                  sectionKey: cur.sectionKey,
-                })),
-              }
-              return rowRes
-            }, {}),
-          }
-          return res
-        },
-        {}
-      )
+        state.businessPlanItems = formattedData
+        state.originalBusinessPlanItems = originalBusinessPlanItems
+        state.columns = data.columnLabels
 
-      state.businessPlanItems = formattedData
-      state.originalBusinessPlanItems = originalBusinessPlanItems
-      state.columns = data.columnLabels
+        state.projectCode = data.projectCode
+        state.version = data.version
+        state.status = data.status
 
-      // Update other fields from Business Plan Detail
-      state.projectCode = data.projectCode
-      state.version = data.version
-      state.status = data.status
-      state.versionId = data.versionId
-      state.startDate = data.startDate
-      state.endDate = data.endDate
-      state.warningMessage = data.warningMessage
-      state.errorMessage = errorMessage
-    })
+        state.warningMessage = data.warningMessage
+        state.errorMessage = errorMessage
+      }
+    )
 
     builder.addCase(
       getCompareBusinessPlanDetail.fulfilled,
@@ -327,21 +328,6 @@ const businessDetailsSlice = createSlice({
         state.compareBusinessPlanItems = formattedData
       }
     )
-
-    // Listen to MVV selection change from businessGeneralInformation
-    builder.addCase(setSelectedMvvCode, (state, action) => {
-      const selectedMvvCode = action.payload
-      const selectedGeneralInfo = state.generalInfos.find(
-        info => info.projectCode === selectedMvvCode
-      )
-      
-      if (selectedGeneralInfo) {
-        state.exchangeRate = selectedGeneralInfo.exchangeRate
-        state.totalContractPrice = selectedGeneralInfo.totalContractPrice
-        state.softwareDevelopmentFee = selectedGeneralInfo.softwareDevelopmentFee
-        state.otherFees = selectedGeneralInfo.otherFees
-      }
-    })
   },
 })
 

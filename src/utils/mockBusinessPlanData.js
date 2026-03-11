@@ -2,7 +2,7 @@
  * ========================================
  * MOCK BUSINESS PLAN DATA - COMPREHENSIVE
  * ========================================
- * This file contains all mock data loaded from Mock API folder
+ * This file contains all mock data for Business Plan module
  * Last updated: 2024
  */
 
@@ -2820,6 +2820,71 @@ export const resetMockData = () => {
   };
   deliveryPlanStore = {};
   revenuePlanStore = {};
+};
+
+// ==================== VIEW MODE FILTERING ====================
+/**
+ * Filter columns and cells by view mode
+ * @param {object} data - The full business plan data
+ * @param {string} viewMode - 'Total' | 'OB' | 'Onsite' | 'Offshore'
+ * @returns {object} Filtered data with appropriate columns and cells
+ */
+const filterDataByViewMode = (data, viewMode) => {
+  if (!data || !viewMode) return data;
+  
+  // Define column keys for each view mode as Sets for fast lookup
+  const columnKeysByViewMode = {
+    'Total': new Set(['TOTAL', 'INTERNAL', 'SALE_40', 'DELIVERY_UNIT_66', 'DELIVERY_UNIT_39', 'DELIVERY_UNIT_1']),
+    'OB': new Set(['TOTAL', 'INTERNAL', 'SALE_40']),
+    'Onsite': new Set(['TOTAL', 'INTERNAL', 'DELIVERY_UNIT_1', 'DELIVERY_UNIT_66']),
+    'Offshore': new Set(['TOTAL', 'INTERNAL', 'DELIVERY_UNIT_39'])
+  };
+  
+  const allowedColumnKeys = columnKeysByViewMode[viewMode] || columnKeysByViewMode['Total'];
+  
+  // Filter columnLabels while maintaining original order
+  const filteredColumnLabels = data.columnLabels
+    .filter(col => allowedColumnKeys.has(col.columnKey))
+    .map((col, idx) => ({ ...col, index: idx + 1 })); // Re-index
+  
+  // Filter cells in sectionList
+  const filteredSectionList = data.sectionList.map(section => ({
+    ...section,
+    rowLabels: section.rowLabels.map(row => ({
+      ...row,
+      cellList: row.cellList.filter(cell => allowedColumnKeys.has(cell.columnKey))
+    }))
+  }));
+  
+  return {
+    ...data,
+    columnLabels: filteredColumnLabels,
+    sectionList: filteredSectionList
+  };
+};
+
+/**
+ * Get Business Plan data by view mode
+ * Returns filtered mock data based on view mode
+ * @param {string} viewMode - 'Total' | 'OB' | 'Onsite' | 'Offshore'
+ * @returns {object} Mock data for the specified view mode
+ */
+export const getBusinessPlanDataByViewMode = (viewMode = 'Total') => {
+  // Use mockBusinessPlanDetail as the base data source
+  const baseData = JSON.parse(JSON.stringify(mockBusinessPlanDetail));
+  
+  // For Total view, return all data
+  if (viewMode === 'Total') {
+    return baseData;
+  }
+  
+  // For other views, filter the data
+  const filteredData = filterDataByViewMode(baseData.data, viewMode);
+  
+  return {
+    httpStatus: 200,
+    data: filteredData
+  };
 };
 
 

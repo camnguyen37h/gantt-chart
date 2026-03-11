@@ -14,6 +14,7 @@ export const businessGeneralInformationSlice = createSlice({
     listGeneralInformation: {},
     generalInfos: [],
     selectedMvvCode: null,
+    mvvLocationTypeIdMap: {}, // Map: { 'Onsite': id, 'Offshore': id }
     listDomain: [],
     listCurrency: [],
     listUsername: [],
@@ -29,7 +30,7 @@ export const businessGeneralInformationSlice = createSlice({
     businessPlanKpiDTO: null,
     planningStartDate: undefined,
     planningEndDate: undefined,
-    businessPlanSettingMaxKpiSetting: null
+    businessPlanSettingMaxKpiSetting: null,
   },
   reducers: {
     setDataTableCollaborator: (state, action) => {
@@ -57,13 +58,14 @@ export const businessGeneralInformationSlice = createSlice({
       const { key, value } = payload
       state.businessPlanKpiDTO = {
         ...state.businessPlanKpiDTO,
-        [key]: value
+        [key]: value,
       }
     },
-    setSelectedMvvCode: (state, action) => {
-      state.selectedMvvCode = action.payload
-      // Update listGeneralInformation based on selected MVV
-      const selectedInfo = state.generalInfos.find(info => info.projectCode === action.payload)
+    setSelectedMvvCode: (state, { payload }) => {
+      const { selectedMvvCode } = payload || {}
+      const selectedInfo = state.generalInfos.find(
+        info => info.projectCode === selectedMvvCode
+      )
       if (selectedInfo) {
         state.listGeneralInformation = selectedInfo
         state.listAM = selectedInfo.listAM || []
@@ -79,31 +81,40 @@ export const businessGeneralInformationSlice = createSlice({
         state.planningEndDate = selectedInfo.planningEndDate
       }
     },
+    setMvvLocationTypeIdMap: (state, { payload }) => {
+      state.mvvLocationTypeIdMap = payload
+    },
   },
   extraReducers: builder => {
     builder.addCase(getBusinessPlanDetail.pending, (state, action) => {
       state.loadingCollaborator = true
     })
 
-    builder.addCase(getBusinessPlanDetail.fulfilled, (state, action) => {
+    builder.addCase(getBusinessPlanDetail.fulfilled, (state, { payload }) => {
       state.loadingCollaborator = false
-      const { data } = action.payload || {}
+      const { data } = payload || {}
 
       if (!data) {
         return
       }
 
-      // Store all generalInfos
       state.generalInfos = data.generalInfos || []
 
-      // Set selected MVV to match the business plan id (from URL)
-      // Priority: data.projectCode from API response (already matched in mock)
-      state.selectedMvvCode = data.projectCode
+      // Build mvvLocationTypeIdMap from generalInfos
+      const idMap = {}
+      if (state.generalInfos && state.generalInfos.length > 0) {
+        state.generalInfos.forEach(info => {
+          if (info.mvvLocationType && info.id) {
+            idMap[info.mvvLocationType] = info.id
+          }
+        })
+      }
+      state.mvvLocationTypeIdMap = idMap
 
-      // Get the selected general info (matching projectCode)
-      const selectedInfo = state.generalInfos.find(
-        info => info.projectCode === state.selectedMvvCode
-      ) || state.generalInfos[0]
+      const selectedInfo =
+        state.generalInfos.find(
+          info => info.projectCode === state.selectedMvvCode
+        ) || state.generalInfos[0]
 
       if (selectedInfo) {
         state.listGeneralInformation = selectedInfo
@@ -133,22 +144,17 @@ export const businessGeneralInformationSlice = createSlice({
       state.listCurrency = action.payload || []
     })
 
-    builder.addCase(getBusinessPlanSettingMaxKPI.fulfilled, (state, { payload }) => {
-      state.businessPlanSettingMaxKpiSetting = payload
-        ? payload.reduce(
-          (
-            acc,
-            {
-              settingConfigKey,
-              value
-            }
-          ) => {
-            acc[settingConfigKey] = value;
-            return acc;
-          }, {}
-        )
-        : null
-    })
+    builder.addCase(
+      getBusinessPlanSettingMaxKPI.fulfilled,
+      (state, { payload }) => {
+        state.businessPlanSettingMaxKpiSetting = payload
+          ? payload.reduce((acc, { settingConfigKey, value }) => {
+              acc[settingConfigKey] = value
+              return acc
+            }, {})
+          : null
+      }
+    )
 
     builder.addCase(
       getUserAndDepartmentCollaborator.fulfilled,
@@ -166,7 +172,8 @@ export const {
   handleChangeInputValueCollaborator,
   handleChangeDateGeneralInfo,
   setKpiBonusData,
-  setSelectedMvvCode
+  setSelectedMvvCode,
+  setMvvLocationTypeIdMap,
 } = businessGeneralInformationSlice.actions
 
 export default businessGeneralInformationSlice.reducer

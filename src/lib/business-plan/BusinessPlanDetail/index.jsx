@@ -106,7 +106,7 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const { loadingCollaborator, generalInfos } = useSelector(
+  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap } = useSelector(
     state => state.businessGeneralInformation
   )
 
@@ -160,6 +160,30 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
   }, [generalInfos, match.params.buId])
+
+  // Log mvvLocationTypeIdMap for debugging
+  useEffect(() => {
+    if (mvvLocationTypeIdMap && Object.keys(mvvLocationTypeIdMap).length > 0) {
+      console.log('='.repeat(80))
+      console.log('🗺️ [Redux] MVV Location Type ID Mapping:')
+      console.log('📊 Current viewMode:', viewMode)
+      console.log('🔗 Mapping:', mvvLocationTypeIdMap)
+      console.log('   Example: When viewMode = "Onsite", use ID:', mvvLocationTypeIdMap['Onsite'])
+      console.log('   Example: When viewMode = "Offshore", use ID:', mvvLocationTypeIdMap['Offshore'])
+      console.log('='.repeat(80))
+    }
+  }, [mvvLocationTypeIdMap, viewMode])
+
+  // Helper function: Get MVV ID for API calls
+  // Returns: 
+  //   - Number (MVV ID) if viewMode has mapping (Onsite/Offshore)
+  //   - String if no mapping (Total/OB)
+  const getMvvIdForApi = () => {
+    if (mvvLocationTypeIdMap && mvvLocationTypeIdMap[viewMode]) {
+      return mvvLocationTypeIdMap[viewMode]
+    }
+    return viewMode
+  }
 
   const customPanelStyle = {
     border: 0,
@@ -309,9 +333,16 @@ function BusinessPlanDetail({ match, history }) {
 
   useEffect(() => {
     if (match.params.buId && viewMode && activeCollapse.includes('2')) {
+      // When you need to send MVV ID to API instead of string:
+      // const apiValue = getMvvIdForApi()
+      // This returns:
+      //   - Number (123) if viewMode = 'Onsite' and mapping exists
+      //   - Number (456) if viewMode = 'Offshore' and mapping exists
+      //   - String ('Total' or 'OB') if no mapping
+      
       getBusinessPlanDetailByViewMode({
         id: match.params.buId,
-        viewMode: viewMode,
+        viewMode: viewMode, // Change to getMvvIdForApi() if API expects ID
       })
     }
   }, [

@@ -52,13 +52,14 @@ const StyledWrapper = styled.div`
 
     thead {
       th {
-        padding: 6px 0 6px 8px;
+        padding: 0;
         position: sticky;
         top: 0;
         z-index: 1;
         font-weight: 500;
         text-align: center;
-        height: 70 !important;
+        background: #fff;
+        vertical-align: bottom;
 
         /* &:not(:last-child) div {
           border-right: 1px solid #e1e1e1;
@@ -75,13 +76,10 @@ const StyledWrapper = styled.div`
       }
 
       .item-label {
-        position: absolute;
-        bottom: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
+        padding: 6px 8px;
         border-top: 1px solid #e1e1e1;
         background: var(--light-blue);
+        width: 100%;
       }
     }
 
@@ -1017,14 +1015,18 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                 </div>
               </th>
               {sectionRowData
-                ? sectionRowData.data
-                    .filter(
-                      item =>
-                        item.columnKey !== 'TOTAL' &&
-                        visibleColumnKeys.has(item.columnKey)
+                ? filteredColumns.slice(1).map(col => {
+                    // Find cell matching this column
+                    const item = sectionRowData.data.find(
+                      cell => cell.columnKey === col.columnKey
                     )
-                    .map(item => {
-                      const compareValue = compareSectionRowData
+                    
+                    // If no cell data for this column, render empty cell
+                    if (!item) {
+                      return <td key={col.columnKey}></td>
+                    }
+                    
+                    const compareValue = compareSectionRowData
                         ? compareSectionRowData.data.find(
                             compareItem =>
                               compareItem.columnKey === item.columnKey
@@ -1236,14 +1238,18 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                       <CompareText value={resCompare} />
                     </div>
                   </th>
-                  {rowItems.data
-                    .filter(
-                      item =>
-                        item.columnKey !== 'TOTAL' &&
-                        visibleColumnKeys.has(item.columnKey)
+                  {filteredColumns.slice(1).map(col => {
+                    // Find cell matching this column
+                    const item = rowItems.data.find(
+                      cell => cell.columnKey === col.columnKey
                     )
-                    .map(item => {
-                      const compareItem = compareRowItems
+                    
+                    // If no cell data for this column, render empty cell
+                    if (!item) {
+                      return <td key={col.columnKey}></td>
+                    }
+                    
+                    const compareItem = compareRowItems
                         ? compareRowItems.find(
                             compareItem =>
                               compareItem.columnKey === item.columnKey
@@ -1360,18 +1366,17 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               <th
                 style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                 key={'header-info'}>
-                {!isApproved && (
-                  <div
-                    style={{
-                      marginBottom: 24,
-                    }}>
-                    <div className="text-left text-wrap">Unit price</div>
-                    <div className="text-left text-wrap">Billable rate</div>
-                    <div className="text-left text-wrap">
-                      Direct margin before incentives and project bonus rate
-                    </div>
-                  </div>
-                )}
+                <div>
+                  {!isApproved && (
+                    <>
+                      <div className="text-left text-wrap">Unit price</div>
+                      <div className="text-left text-wrap">Billable rate</div>
+                      <div className="text-left text-wrap">
+                        Direct margin before incentives and project bonus rate
+                      </div>
+                    </>
+                  )}
+                </div>
                 <div
                   className="item-label"
                   style={{ borderRight: '1px solid #e1e1e1' }}>
@@ -1381,10 +1386,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               <th
                 style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                 key={'compare-norm'}>
-                <div
-                  style={{
-                    marginBottom: 24,
-                  }}>
+                <div>
                   {!isApproved && (
                     <div
                       className="text-center text-wrap h-21"
@@ -1468,10 +1470,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                 <th
                   style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
                   key={item.index}>
-                  <div
-                    style={{
-                      marginBottom: 24,
-                    }}>
+                  <div>
                     {!isApproved && (
                       <div
                         className="text-center text-wrap h-21"

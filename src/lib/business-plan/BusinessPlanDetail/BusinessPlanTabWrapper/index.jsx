@@ -38,10 +38,10 @@ const StyledRadioGroup = styled(Radio.Group)`
 `
 
 const VIEW_OPTIONS = [
-    { label: 'Total', value: 'Total', businessPlanOnly: true },
-    { label: 'OB', value: 'OB', businessPlanOnly: true },
-    { label: 'Onsite', value: 'Onsite', businessPlanOnly: false },
-    { label: 'Offshore', value: 'Offshore', businessPlanOnly: false },
+  { label: 'Total', value: 'Total', businessPlanOnly: true },
+  { label: 'OB', value: 'OB', businessPlanOnly: true },
+  { label: 'Onsite', value: 'Onsite', businessPlanOnly: false },
+  { label: 'Offshore', value: 'Offshore', businessPlanOnly: false },
 ]
 
 const BusinessPlanTabWrapper = ({
