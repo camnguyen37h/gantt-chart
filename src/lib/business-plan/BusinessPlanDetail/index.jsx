@@ -316,9 +316,7 @@ function BusinessPlanDetail({ match, history }) {
 
   useEffect(() => {
     if (match.params.buId && viewMode && activeCollapse.includes('2')) {
-      getBusinessPlanDetailByViewMode(match.params.buId, {
-        view: viewMode,
-      })
+      getBusinessPlanDetailByViewMode(match.params.buId, viewMode)
     }
   }, [
     viewMode,

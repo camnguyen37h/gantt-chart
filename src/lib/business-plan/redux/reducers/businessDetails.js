@@ -23,6 +23,7 @@ const initialState = {
   status: null,
   originalBusinessPlanItems: [],
   compareBusinessPlanItems: null,
+  compareColumnLabels: null,
   listVersions: [],
   startDate: '',
   endDate: '',
@@ -168,9 +169,8 @@ const businessDetailsSlice = createSlice({
     },
 
     clearCompareBusinessPlan: (state, { payload }) => {
-      if (state.compareBusinessPlanItems) {
-        state.compareBusinessPlanItems = null
-      }
+      state.compareBusinessPlanItems = null
+      state.compareColumnLabels = null
     },
 
     setActiveBusinessPlanPanel: (state, { payload }) => {
@@ -311,6 +311,7 @@ const businessDetailsSlice = createSlice({
     builder.addCase(
       getCompareBusinessPlanDetail.fulfilled,
       (state, { payload }) => {
+        state.compareColumnLabels = payload.columnLabels || null
         state.compareBusinessPlanItems = (payload.sectionList || []).reduce(
           (res, cur) => {
             res[cur.sectionKey] = {

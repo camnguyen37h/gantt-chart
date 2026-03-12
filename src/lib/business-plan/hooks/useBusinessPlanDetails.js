@@ -45,6 +45,8 @@ const useBusinessPlanDetails = () => {
     businessPlanSettingMaxKpiSetting,
     planningStartDate,
     planningEndDate,
+    selectedMvvCode,
+    mvvLocationTypeIdMap,
   } = useSelector(state => state.businessGeneralInformation)
   const { listDocuments } = useSelector(state => state.businessDocuments)
   const changeDataWithoutId = data => {
@@ -101,8 +103,8 @@ const useBusinessPlanDetails = () => {
   )
 
   const getBusinessPlanDetailByViewMode = useCallback(
-    (id, params) => {
-      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, params }))
+    (id, viewMode) => {
+      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, viewMode }))
     },
     [dispatch]
   )
@@ -398,6 +400,8 @@ const useBusinessPlanDetails = () => {
     otherFees,
     warningMessage,
     errorMessage,
+    selectedMvvCode,
+    mvvLocationTypeIdMap,
   }
 }
 

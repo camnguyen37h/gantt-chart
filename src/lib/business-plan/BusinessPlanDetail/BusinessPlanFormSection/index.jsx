@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
+﻿import React, { Fragment, useEffect, useState } from 'react'
 import {
   useBusinessPlanDetails,
   useBusinessPlanForm,
@@ -22,6 +21,18 @@ import {
 import { statusBusinessPlanDetail } from '../constant'
 import Decimal from 'decimal.js'
 import { StyledWrapper } from './index.styled'
+import {
+  getCellValue,
+  getCellFloor,
+  getCellCeiling,
+  getCellNormConfig,
+  getCellPercentage,
+  findCellIn,
+  resolveValue,
+  getResultCompare,
+  makeCellKey,
+  getMergedColumns,
+} from './helpers'
 
 const CompareText = ({ value }) => {
   if (value === 0 || value === null) return null
@@ -39,28 +50,25 @@ const BusinessPlanInput = ({ item, suffix }) => {
     useBusinessPlanDetails()
 
   const rowConfig = getRowConfig()[item.rowKey] || {}
-
   const hasSuffix = typeof suffix !== 'undefined' && suffix !== ''
 
   const onChange = value => {
     updateIsSaveShowed(true)
 
     if (value === null || value === '') {
-      setBusinessPlanItem({
-        item: { ...item, value: null },
-      })
+      setBusinessPlanItem({ item: { ...item, value: null } })
     } else {
-      const formattedValue = Decimal(value)
+      const raw = Decimal(value)
         .toString()
         .replace(/[^0-9.]/g, '')
 
+      const intPart = raw.split('.')[0]
+      const decPart = raw.split('.')[1]
+      const intLimit = hasSuffix ? 3 : 13
+
       if (
-        (formattedValue &&
-          formattedValue.split('.')[0] &&
-          formattedValue.split('.')[0].length > (hasSuffix ? 3 : 13)) ||
-        (formattedValue &&
-          formattedValue.split('.')[1] &&
-          formattedValue.split('.')[1].length > 2)
+        (intPart && intPart.length > intLimit) ||
+        (decPart && decPart.length > 2)
       ) {
         return
       }
@@ -68,25 +76,28 @@ const BusinessPlanInput = ({ item, suffix }) => {
       setBusinessPlanItem({
         item: {
           ...item,
-          value: rowConfig.negative
-            ? -parseFloat(formattedValue)
-            : parseFloat(formattedValue),
+          value: rowConfig.negative ? -parseFloat(raw) : parseFloat(raw),
         },
       })
     }
-    if (validation[`${item.rowKey}-label`]) {
-      setValidation({ [`${item.rowKey}-label`]: false })
+
+    if (validation[item.rowKey + '-label']) {
+      setValidation({ [item.rowKey + '-label']: false })
     }
-    if (validation[`${item.rowKey}-${item.columnKey}`]) {
-      setValidation({ [`${item.rowKey}-${item.columnKey}`]: false })
+    if (validation[item.rowKey + '-' + item.columnKey]) {
+      setValidation({ [item.rowKey + '-' + item.columnKey]: false })
     }
   }
+
+  const pattern = hasSuffix
+    ? /^(\d{1,3}\.\d{0,2}|\d{1,3})/
+    : /^(\d{1,13}\.\d{0,2}|\d{1,13})/
 
   return (
     <InputNumber
       step={1}
       className={
-        validation[`${item.rowKey}-${item.columnKey}`] ? 'input-error' : ''
+        validation[item.rowKey + '-' + item.columnKey] ? 'input-error' : ''
       }
       value={item.value < 0 ? -item.value : item.value}
       size="small"
@@ -95,21 +106,289 @@ const BusinessPlanInput = ({ item, suffix }) => {
         if (value === null) return value
         if (value === '-') return null
         if (value === '') return value
-        const res = value
-          .toString()
-          .match(
-            hasSuffix
-              ? /^(\d{1,3}\.\d{0,2}|\d{1,3})/
-              : /^(\d{1,13}\.\d{0,2}|\d{1,13})/
-          )
-
-        if (rowConfig.negative)
+        var res = value.toString().match(pattern)
+        if (rowConfig.negative) {
           return res
             ? '(' + res[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + suffix + ')'
             : ''
+        }
         return res ? res[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + suffix : ''
       }}
     />
+  )
+}
+
+const TooltipIcon = ({ tooltip }) => {
+  if (tooltip === undefined) return null
+  return (
+    <Tooltip overlayClassName="full-tooltip" title={tooltip}>
+      <Icon
+        type="question-circle"
+        style={{ color: '#8a8a8a', fontSize: 14, cursor: 'pointer' }}
+      />
+    </Tooltip>
+  )
+}
+
+const ServiceControl = ({
+  sectionKey,
+  row,
+  rowKey,
+  readonly,
+  mmBillService,
+  businessPlanItems,
+  validation,
+  setValidation,
+  updateIsSaveShowed,
+  updateBusinessPlanRow,
+}) => {
+  const isManMonth = sectionKey === 'MAN_MONTH'
+
+  const resolveMMBillTitle = () => {
+    var childIndex = -1
+    var parentIndex = mmBillService.findIndex(function(parent) {
+      if (parent.id.toString() === row.title.toString()) return true
+      childIndex = parent.data.findIndex(function(item) {
+        return item.id.toString() === row.title.toString()
+      })
+      return childIndex > -1
+    })
+    var str = parentIndex > -1 ? mmBillService[parentIndex].name : ''
+    if (childIndex > -1) {
+      str = str + ' / ' + mmBillService[parentIndex].data[childIndex].name
+    }
+    return str
+  }
+
+  if (readonly) {
+    return (
+      <Fragment>
+        {isManMonth ? resolveMMBillTitle() : row.title}{' '}
+      </Fragment>
+    )
+  }
+
+  var options = mmBillService.map(function(item) {
+    var children = item.data
+      ? item.data
+          .filter(function(child) {
+            var usedTitles = Object.keys(businessPlanItems.MAN_MONTH.data)
+              .filter(function(k) {
+                return k !== rowKey && k.match(/MM_BILL_\d+/)
+              })
+              .map(function(k) {
+                return businessPlanItems.MAN_MONTH.data[k].title.toString()
+              })
+            return !usedTitles.includes(child.id.toString())
+          })
+          .map(function(child) {
+            return { label: child.name, value: child.id }
+          })
+      : []
+    return { label: item.name, value: item.id, children: children }
+  })
+
+  var childIndex = -1
+  var parentIndex = mmBillService.findIndex(function(parent) {
+    if (parent.id.toString() === row.title.toString()) return true
+    childIndex = parent.data.findIndex(function(item) {
+      return item.id.toString() === row.title.toString()
+    })
+    return childIndex > -1
+  })
+  var selectedValue =
+    parentIndex > -1 && childIndex > -1
+      ? [
+          mmBillService[parentIndex].id,
+          mmBillService[parentIndex].data[childIndex].id,
+        ]
+      : []
+
+  var labelKey = rowKey + '-label'
+  var hasError = !!validation[labelKey]
+
+  var onChangeCascader = function(value) {
+    var cloneRow = cloneDeep(row)
+    cloneRow.title = value[1] || ''
+    if (validation[labelKey]) setValidation({ [labelKey]: false })
+    updateIsSaveShowed(true)
+    updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
+  }
+
+  var onChangeInput = function(value) {
+    var cloneRow = cloneDeep(row)
+    cloneRow.title = value
+    if (validation[labelKey]) setValidation({ [labelKey]: false })
+    updateIsSaveShowed(true)
+    updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
+  }
+
+  return (
+    <Fragment>
+      <div className="flex-items-center gap-8" id={rowKey}>
+        {isManMonth ? (
+          <Cascader
+            displayRender={function(label) {
+              return (
+                <Tooltip
+                  overlayClassName="full-tooltip"
+                  title={label.join(' / ')}
+                  placement="topLeft">
+                  {label.join(' / ')}
+                </Tooltip>
+              )
+            }}
+            className={hasError ? 'input-error' : ''}
+            value={selectedValue}
+            size="small"
+            getPopupContainer={function() {
+              return document.querySelector('#business-plan-form')
+            }}
+            style={{ width: '100%' }}
+            options={options}
+            onChange={onChangeCascader}
+          />
+        ) : (
+          <Input
+            className={hasError ? 'input-error' : ''}
+            value={row.title}
+            size="small"
+            onChange={function(e) {
+              onChangeInput(e.target.value)
+            }}
+          />
+        )}
+      </div>
+      {hasError && (
+        <div style={{ color: 'var(--error-red)' }}>
+          Please input required fields
+        </div>
+      )}
+    </Fragment>
+  )
+}
+
+const MetricHeaderRow = ({
+  label,
+  rowKey,
+  totalValue,
+  normConfig,
+  normFloor,
+  normCeiling,
+  normPercentage,
+  isPercent,
+  tooltipLabel,
+  dataArray,
+  mergedColumns,
+}) => {
+  var useFloorCeiling = normFloor !== undefined && normFloor !== null
+
+  var buildNormProps = function(value, floor, ceiling, percentage) {
+    return useFloorCeiling
+      ? { value: value, rowKey: rowKey, normFloor: floor, normCeiling: ceiling }
+      : { value: value, rowKey: rowKey, normPercentage: percentage }
+  }
+
+  var totalColor = !normConfig
+    ? '#525559'
+    : renderColorCompareNorm(
+        buildNormProps(totalValue, normFloor, normCeiling, normPercentage)
+      )
+
+  var totalTooltip =
+    '(Total) ' +
+    tooltipLabel +
+    ' norm = ' +
+    (normConfig ? formatNumber(normConfig) : '') +
+    (isPercent ? ' %' : '')
+
+  return (
+    <tr>
+      <th style={{ backgroundColor: '#fff' }}>
+        <div className="text-left text-wrap">{label}</div>
+      </th>
+      <th style={{ backgroundColor: '#fff' }}>
+        <div
+          className="text-center text-wrap"
+          style={{ color: totalColor, fontWeight: 500 }}>
+          <Tooltip title={totalTooltip}>
+            {formatNumber(totalValue, isPercent)}
+          </Tooltip>
+        </div>
+      </th>
+      {(mergedColumns || []).slice(1).map(function(col) {
+        var colKey =
+          'metric-' + rowKey + '-' + col.index + (col.isCompareOnly ? '-cmp' : '')
+        if (col.isCompareOnly) {
+          return <th key={colKey} style={{ backgroundColor: '#fff' }} />
+        }
+
+        var colValue      = getCellValue(dataArray, col.columnKey)
+        var colFloor      = getCellFloor(dataArray, col.columnKey)
+        var colCeiling    = getCellCeiling(dataArray, col.columnKey)
+        var colNormConfig = getCellNormConfig(dataArray, col.columnKey)
+        var colPercentage = getCellPercentage(dataArray, col.columnKey)
+        var colNorm       = useFloorCeiling ? colNormConfig : colPercentage
+
+        var colColor = !colNorm
+          ? '#525559'
+          : renderColorCompareNorm(
+              buildNormProps(colValue, colFloor, colCeiling, colPercentage)
+            )
+
+        var colTooltip =
+          col.columnKey === 'INTERNAL'
+            ? null
+            : '(' +
+              col.label +
+              ') ' +
+              tooltipLabel +
+              ' norm = ' +
+              (colNorm ? formatNumber(colNorm) : '') +
+              (isPercent ? ' %' : '')
+
+        return (
+          <th key={colKey} style={{ backgroundColor: '#fff' }}>
+            <div
+              className="text-center text-wrap"
+              style={{ color: colColor, fontWeight: 500 }}>
+              <Tooltip title={colTooltip}>
+                {formatNumber(colValue, isPercent)}
+              </Tooltip>
+            </div>
+          </th>
+        )
+      })}
+    </tr>
+  )
+}
+
+const ColumnHeaderRow = ({ mergedColumns, isApproved }) => {
+  var bg = isApproved ? 'unset' : '#fff'
+  return (
+    <tr>
+      <th style={{ backgroundColor: bg }}>
+        <div className="item-label" style={{ borderRight: '1px solid #e1e1e1' }}>
+          Items
+        </div>
+      </th>
+      <th style={{ backgroundColor: bg }}>
+        <div className="item-label" style={{ borderRight: '1px solid #e1e1e1' }}>
+          Total
+        </div>
+      </th>
+      {mergedColumns.slice(1).map(function(col) {
+        return (
+          <th key={makeCellKey(col)} style={{ backgroundColor: bg }}>
+            <div
+              className="item-label"
+              style={{ borderRight: '1px solid #e1e1e1' }}>
+              <div>{col.label}</div>
+            </div>
+          </th>
+        )
+      })}
+    </tr>
   )
 }
 
@@ -120,11 +399,10 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     getMMBillService,
     addBusinessPlanRow,
     updateBusinessPlanRow,
-    deleteBusinessPlanRow,
     getCompareBusinessPlanDetail,
     compareBusinessPlanItems,
+    compareColumnLabels,
     clearCompareBusinessPlan,
-    setBusinessPlanItem,
   } = useBusinessPlanForm()
 
   const {
@@ -136,865 +414,551 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     setValidation,
     listAM,
     listPreparator,
+    selectedMvvCode,
+    mvvLocationTypeIdMap,
   } = useBusinessPlanDetails()
 
-  // Mock user for demo
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+  const { getFormula, isSpecialSectionFormula } = useFormula()
+
+  var userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
     userName: 'Demo User',
     userId: 1,
   }
-  const { userName } = userPOA
+  var userName = userPOA.userName
 
-  const { getFormula, isSpecialSectionFormula } = useFormula()
-  const [selectedCompareId, setSelectedCompareId] = useState()
+  var isDraft    = status === statusBusinessPlanDetail.draft
+  var isApproved = status === statusBusinessPlanDetail.approved
 
-  const isDraft = status === statusBusinessPlanDetail.draft
-  const isApproved = status === statusBusinessPlanDetail.approved
-  const isFin = checkRolePermission(
+  var canEditByViewMode =
+    selectedMvvCode && mvvLocationTypeIdMap
+      ? selectedMvvCode === mvvLocationTypeIdMap[viewMode]
+      : false
+
+  var isFin = checkRolePermission(
     SourceConstants.BUSINESS_PLAN_DETAIL,
     ActivityKeyConstants.EDIT_BUSINESS_PLAN_ALL
   )
 
-  const isOtherRole =
+  var isOtherRole =
     checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_BUSINESS_PLAN
     ) ||
-    listAM.some(p => p.ldap === userName) ||
-    listPreparator.some(p => p.ldap === userName)
+    listAM.some(function(p) { return p.ldap === userName }) ||
+    listPreparator.some(function(p) { return p.ldap === userName })
 
-  useEffect(() => {
+  var canEdit =
+    canEditByViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
+
+  const [selectedCompareId, setSelectedCompareId] = useState()
+  const [activePanel, setActivePanel] = useState(
+    Object.keys(sectionConfig).filter(function(key) {
+      return sectionConfig[key] && sectionConfig[key].collapsible
+    })
+  )
+  const [mmBillService, setMMBillService] = useState([])
+
+  useEffect(function() {
     clearCompareBusinessPlan()
     setSelectedCompareId(versionId)
-  }, [versionId])
+  }, [versionId]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
+  useEffect(function() {
     if (viewMode && selectedCompareId) {
-      onChangeCompareSelect(selectedCompareId)
+      loadCompareVersion(selectedCompareId)
     }
-  }, [viewMode])
+  }, [viewMode]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onChangeCompareSelect = compareVersionId => {
+  useEffect(function() {
+    getMMBillService().then(function(res) {
+      setMMBillService(res || [])
+    })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(function() {
+    var manMonth = businessPlanItems.MAN_MONTH
+    if (!mmBillService.length || !manMonth || !manMonth.data) return
+
+    var allServiceIds = mmBillService.reduce(function(acc, item) {
+      if (item.data && item.data.length > 0) {
+        return acc.concat(item.data.map(function(c) { return c.id }))
+      }
+      return acc.concat([item.id])
+    }, [])
+
+    var allServiceKeys = Object.keys(manMonth.data).filter(function(k) {
+      return k.match(/MM_BILL_\d+/)
+    })
+
+    var usedIds = allServiceKeys
+      .filter(function(k) { return manMonth.data[k].title })
+      .map(function(k) { return +manMonth.data[k].title })
+
+    var availableIds = allServiceIds.filter(function(id) {
+      return !usedIds.includes(id)
+    })
+
+    allServiceKeys
+      .filter(function(k) { return !manMonth.data[k].title })
+      .forEach(function(k, i) {
+        var row = cloneDeep(manMonth.data[k])
+        updateBusinessPlanRow({
+          sectionKey: 'MAN_MONTH',
+          rowKey: k,
+          row: { ...row, title: availableIds[i] },
+        })
+      })
+  }, [mmBillService, businessPlanItems]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (Object.keys(businessPlanItems).length === 0) return null
+
+  function loadCompareVersion(compareVersionId) {
     setSelectedCompareId(compareVersionId)
     if (compareVersionId === versionId) {
       clearCompareBusinessPlan()
       return
     }
-
-    getCompareBusinessPlanDetail(compareVersionId, {
-      view: viewMode,
-    })
+    getCompareBusinessPlanDetail(compareVersionId, { view: viewMode })
   }
 
-  const [activePanel, setActivePanel] = useState(
-    Object.keys(sectionConfig).filter(
-      item => sectionConfig[item] && sectionConfig[item].collapsible
-    )
-  )
-  const [mmBillSerice, setMMBillService] = useState([])
-
-  useEffect(() => {
-    getMMBillService().then(res => {
-      setMMBillService(res || [])
-    })
-  }, [])
-
-  useEffect(() => {
-    if (
-      mmBillSerice.length > 0 &&
-      businessPlanItems.MAN_MONTH &&
-      businessPlanItems &&
-      businessPlanItems.MAN_MONTH.data
-    ) {
-      let serviceConfig = mmBillSerice.reduce((res, item) => {
-        if (item.data && item.data.length > 0) {
-          return [...res, ...item.data.map(child => child.id)]
-        }
-        return [...res, item.id]
-      }, [])
-      const allServices = Object.keys(businessPlanItems.MAN_MONTH.data).filter(
-        item => item.match(/MM_BILL_\d+/)
-      )
-      const exclude = allServices
-        .filter(key => businessPlanItems.MAN_MONTH.data[key].title)
-        .map(key => +businessPlanItems.MAN_MONTH.data[key].title)
-      serviceConfig = serviceConfig.filter(item => {
-        return !exclude.includes(item)
-      })
-      allServices
-        .filter(key => !businessPlanItems.MAN_MONTH.data[key].title)
-        .forEach((key, index) => {
-          const row = cloneDeep(businessPlanItems.MAN_MONTH.data[key])
-          updateBusinessPlanRow({
-            sectionKey: 'MAN_MONTH',
-            rowKey: key,
-            row: { ...row, title: serviceConfig[index] },
-          })
-        })
+  function toggleCollapse(key) {
+    if (activePanel.includes(key)) {
+      setActivePanel(activePanel.filter(function(k) { return k !== key }))
+    } else {
+      setActivePanel(activePanel.concat([key]))
     }
-  }, [mmBillSerice, businessPlanItems])
-
-  if (Object.keys(businessPlanItems).length === 0) return null
-
-  const toggleCollapse = key => {
-    if (activePanel.includes(key))
-      setActivePanel(activePanel.filter(item => item !== key))
-    else setActivePanel([...activePanel, key])
   }
 
-  const addRow = ({ sectionKey, rowKey }) => {
-    const regex = `${rowKey}_\\d+`
-    const serviceKeys = Object.keys(businessPlanItems[sectionKey].data).filter(
-      item => item.match(new RegExp(regex))
-    )
-    const clone = cloneDeep(
-      Object.values(businessPlanItems[sectionKey].data)[0]
-    )
+  function addRow(sectionKey, newRowKey) {
+    var regex       = newRowKey + '_\\d+'
+    var sectionData = businessPlanItems[sectionKey].data
+    var serviceKeys = Object.keys(sectionData).filter(function(k) {
+      return k.match(new RegExp(regex))
+    })
+    var clone = cloneDeep(Object.values(sectionData)[0])
 
-    const newRowKey =
+    var generatedKey =
       serviceKeys.length > 0
-        ? `${rowKey}_${
-            +serviceKeys[serviceKeys.length - 1].match(/\d+/)[0] + 1
-          }`
-        : `${rowKey}_1`
+        ? newRowKey +
+          '_' +
+          (+serviceKeys[serviceKeys.length - 1].match(/\d+/)[0] + 1)
+        : newRowKey + '_1'
 
-    const newServiceItems = clone.data.map(item => ({
-      ...item,
-      value: null,
-      rowKey: newRowKey,
-      editable:
-        sectionConfig[sectionKey] &&
-        sectionConfig[sectionKey].newRowEditable &&
-        sectionConfig[sectionKey].newRowEditable(item.columnKey),
-    }))
+    var newItems = clone.data.map(function(item) {
+      return {
+        ...item,
+        value: null,
+        rowKey: generatedKey,
+        editable:
+          sectionConfig[sectionKey] &&
+          sectionConfig[sectionKey].newRowEditable &&
+          sectionConfig[sectionKey].newRowEditable(item.columnKey),
+      }
+    })
 
-    const row = {
-      title: '',
-      data: newServiceItems,
-      new: true,
-    }
-
-    addBusinessPlanRow({ sectionKey, rowKey: newRowKey, row })
+    addBusinessPlanRow({
+      sectionKey,
+      rowKey: generatedKey,
+      row: { title: '', data: newItems, new: true },
+    })
     updateIsSaveShowed(true)
   }
 
-  const renderServiceControl = ({ sectionKey, row, rowKey, readonly }) => {
-    const isManMonth = sectionKey === 'MAN_MONTH'
-    if (readonly)
-      return (
-        <Fragment>
-          {isManMonth ? renderMMBillServiceTitle({ row }) : row.title}{' '}
-        </Fragment>
-      )
-
-    const options = mmBillSerice.map(item => ({
-      label: item.name,
-      value: item.id,
-      children: item.data
-        ? item.data
-            .filter(item => {
-              const values = Object.keys(businessPlanItems.MAN_MONTH.data)
-                .filter(key => key !== rowKey && key.match(/MM_BILL_\d+/))
-                .map(key =>
-                  businessPlanItems.MAN_MONTH.data[key].title.toString()
-                )
-              return !values.includes(item.id.toString())
-            })
-            .map(item => ({ label: item.name, value: item.id }))
-        : [],
-    }))
-
-    const onChange = (value, options) => {
-      const cloneRow = cloneDeep(row)
-
-      cloneRow.title = value[1] || ''
-      if (validation[`${rowKey}-label`]) {
-        setValidation({ [`${rowKey}-label`]: false })
-      }
-      updateIsSaveShowed(true)
-      updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
-    }
-
-    const onChangeInput = value => {
-      const cloneRow = cloneDeep(row)
-
-      cloneRow.title = value
-      if (validation[`${rowKey}-label`]) {
-        setValidation({ [`${rowKey}-label`]: false })
-      }
-      updateIsSaveShowed(true)
-      updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
-    }
-
-    let childIndex = -1
-    const parentIndex = mmBillSerice.findIndex(parent => {
-      if (parent.id.toString() === row.title.toString()) {
-        return true
-      }
-      childIndex = parent.data.findIndex(item => {
-        return item.id.toString() === row.title.toString()
-      })
-      return childIndex > -1
+  function getCellDisplayValue(item, sectionKey, rowKey, isService) {
+    if (!item) return null
+    var formula = getFormula({
+      item,
+      columnKey: item.columnKey,
+      sectionKey,
+      rowKey,
+      isService,
     })
-
-    const selectedValue =
-      parentIndex > -1 && childIndex > -1
-        ? [
-            mmBillSerice[parentIndex].id,
-            mmBillSerice[parentIndex].data[childIndex].id,
-          ]
-        : []
-
-    return (
-      <Fragment>
-        <div className="flex-items-center gap-8" id={rowKey}>
-          {isManMonth ? (
-            <Cascader
-              displayRender={label => (
-                <Tooltip
-                  overlayClassName="full-tooltip"
-                  title={label.join(' / ')}
-                  placement="topLeft">
-                  {label.join(' / ')}
-                </Tooltip>
-              )}
-              className={validation[`${rowKey}-label`] ? 'input-error' : ''}
-              value={selectedValue}
-              size="small"
-              getPopupContainer={() =>
-                document.querySelector(`#business-plan-form`)
-              }
-              style={{ width: '100%' }}
-              options={options}
-              onChange={onChange}
-            />
-          ) : (
-            <Input
-              className={validation[`${rowKey}-label`] ? 'input-error' : ''}
-              value={row.title}
-              size="small"
-              onChange={e => {
-                onChangeInput(e.target.value)
-              }}
-            />
-          )}
-          {/* <Icon
-            type="minus-circle"
-            onClick={() => {
-              updateIsSaveShowed(true)
-              deleteBusinessPlanRow({ sectionKey, rowKey })
-            }}
-          /> */}
-        </div>
-        {validation[`${rowKey}-label`] && (
-          <div style={{ color: 'var(--error-red)' }}>
-            Please input required fields
-          </div>
-        )}
-      </Fragment>
-    )
+    return resolveValue(item, formula, isSpecialSectionFormula)
   }
-  const renderMMBillServiceTitle = ({ row }) => {
-    let childIndex = -1
-    const parentIndex = mmBillSerice.findIndex(parent => {
-      if (parent.id.toString() === row.title.toString()) {
-        return true
-      }
-      childIndex = parent.data.findIndex(item => {
-        return item.id.toString() === row.title.toString()
-      })
-      return childIndex > -1
+
+  function getSectionTotalValue(sectionTotalItem, sectionKey) {
+    if (!sectionTotalItem) return null
+    var formula = getFormula({
+      item: sectionTotalItem,
+      columnKey: 'TOTAL',
+      sectionKey: sectionKey,
+      rowKey: sectionTotalItem.rowKey,
     })
-
-    let str = parentIndex > -1 ? mmBillSerice[parentIndex].name : ''
-    str =
-      childIndex > -1
-        ? str + ' / ' + mmBillSerice[parentIndex].data[childIndex].name
-        : str
-    return str
+    return resolveValue(sectionTotalItem, formula, isSpecialSectionFormula)
   }
 
-  const getResultCompare = (current, compare, isCompare) => {
-    if (!isCompare) return null
-    if (!current && !compare) {
-      return null
+  function renderSectionTitle(title) {
+    var tabMap = {
+      'Unit price & MM Bill': '2',
+      'Revenues': '2',
+      'Delivery expenses': '3',
     }
-
-    if (!compare) {
-      return parseFloat(current.toFixed(2))
-    }
-
-    if (!current) {
-      return -parseFloat(compare.toFixed(2))
-    }
-
-    return parseFloat(current.toFixed(2)) - parseFloat(compare.toFixed(2))
-  }
-
-  const findValue = (sectionKey, rowKey, columnKey) => {
-    const section = businessPlanItems[sectionKey]
-    if (section) {
-      const row = section.data[rowKey]
-      if (row) {
-        const item = row.data.find(d => d.columnKey === columnKey)
-        return item ? item.value : null
-      }
-    }
-    return null
-  }
-
-  const findPercentage = (sectionKey, rowKey, columnKey) => {
-    const section = businessPlanItems[sectionKey]
-    if (section) {
-      const row = section.data[rowKey]
-      if (row) {
-        const item = row.data.find(d => d.columnKey === columnKey)
-        return item ? item.normBusinessPlanConfig : null
-      }
-    }
-    return null
-  }
-
-  const findFloor = (sectionKey, rowKey, columnKey) => {
-    const section = businessPlanItems[sectionKey]
-    if (section) {
-      const row = section.data[rowKey]
-      if (row) {
-        const item = row.data.find(d => d.columnKey === columnKey)
-        return item ? item.normUnitPriceFloor : null
-      }
-    }
-    return null
-  }
-
-  const findCeiling = (sectionKey, rowKey, columnKey) => {
-    const section = businessPlanItems[sectionKey]
-    if (section) {
-      const row = section.data[rowKey]
-      if (row) {
-        const item = row.data.find(d => d.columnKey === columnKey)
-        return item ? item.normUnitPriceCeiling : null
-      }
-    }
-    return null
-  }
-
-  const findNormConfig = (sectionKey, rowKey, columnKey) => {
-    const section = businessPlanItems[sectionKey]
-    if (section) {
-      const row = section.data[rowKey]
-      if (row) {
-        const item = row.data.find(d => d.columnKey === columnKey)
-        return item ? item.normUnitPriceConfig : null
-      }
-    }
-    return null
-  }
-
-  const findDataArray = (sectionKey, rowKey) => {
-    const section = businessPlanItems[sectionKey]
-    if (section) {
-      const row = section.data[rowKey]
-      if (row) {
-        return row.data
-      }
-    }
-    return null
-  }
-
-  const unitPriceTotalValue = findValue('MAN_MONTH', 'UNIT_PRICE', 'TOTAL')
-  const unitPriceFloor = findFloor('MAN_MONTH', 'UNIT_PRICE', 'TOTAL')
-  const unitPriceCeiling = findCeiling('MAN_MONTH', 'UNIT_PRICE', 'TOTAL')
-  const unitPriceNormConfig = findNormConfig('MAN_MONTH', 'UNIT_PRICE', 'TOTAL')
-  const directMarginTotalValue = findValue(
-    'MARGIN',
-    'DIRECT_MARGIN_BONUS_RATE',
-    'TOTAL'
-  )
-  const directMarginPercentage = findPercentage(
-    'MARGIN',
-    'DIRECT_MARGIN_BONUS_RATE',
-    'TOTAL'
-  )
-
-  const billableRateTotalValue = findValue(
-    'REFERENCE',
-    'BILLABLE_RATE',
-    'TOTAL'
-  )
-  const billableRatePercentage = findPercentage(
-    'REFERENCE',
-    'BILLABLE_RATE',
-    'TOTAL'
-  )
-
-  const unitPriceArray = findDataArray('MAN_MONTH', 'UNIT_PRICE')
-  const directMarginArray = findDataArray('MARGIN', 'DIRECT_MARGIN_BONUS_RATE')
-  const billableRateArray = findDataArray('REFERENCE', 'BILLABLE_RATE')
-
-  const findValueByColumnKey = (data, columnKey) => {
-    const item = data.find(d => d.columnKey === columnKey)
-    return item ? item.value : null
-  }
-
-  const findFloorByColumnKey = (data, columnKey) => {
-    const item = data.find(d => d.columnKey === columnKey)
-    return item ? item.normUnitPriceFloor : null
-  }
-
-  const findCeilingByColumnKey = (data, columnKey) => {
-    const item = data.find(d => d.columnKey === columnKey)
-    return item ? item.normUnitPriceCeiling : null
-  }
-
-  const findNormConfigByColumnKey = (data, columnKey) => {
-    const item = data.find(d => d.columnKey === columnKey)
-    return item ? item.normUnitPriceConfig : null
-  }
-
-  const findPercentageByColumnKey = (data, columnKey) => {
-    const item = data.find(d => d.columnKey === columnKey)
-    return item ? item.normBusinessPlanConfig : null
-  }
-
-  const renderHyperLinkTitle = title => {
-    if (title === 'Unit price & MM Bill') {
+    if (tabMap[title]) {
       return (
         <a
-          href="#"
-          onClick={() => handleChangeTab('2')}
+          href="#section"
+          onClick={function(e) {
+            e.preventDefault()
+            handleChangeTab(tabMap[title])
+          }}
           style={{ textDecoration: 'underline' }}>
-          Unit price & MM Bill
-        </a>
-      )
-    }
-    if (title === 'Revenues') {
-      return (
-        <a
-          href="#"
-          onClick={() => handleChangeTab('2')}
-          style={{ textDecoration: 'underline' }}>
-          Revenues
-        </a>
-      )
-    }
-    if (title === 'Delivery expenses') {
-      return (
-        <a
-          href="#"
-          onClick={() => handleChangeTab('3')}
-          style={{ textDecoration: 'underline' }}>
-          Delivery expenses
+          {title}
         </a>
       )
     }
     return title
   }
 
-  const renderTable = () => {
-    const sections = Object.keys(businessPlanItems)
+  var mergedColumns = getMergedColumns(columns, compareColumnLabels, compareBusinessPlanItems)
+  var isCompare     = !!compareBusinessPlanItems
 
-    return sections.map(section => {
-      const rows = Object.keys(businessPlanItems[section].data)
-      const sectionItem = businessPlanItems[section]
-      const isMarginSection = section === 'MARGIN'
-      const sectionRowData = sectionItem.data[`${section}_TOTAL`]
+  var unitPriceCell      = findCellIn(businessPlanItems, 'MAN_MONTH', 'UNIT_PRICE', 'TOTAL')
+  var billableRateCell   = findCellIn(businessPlanItems, 'REFERENCE', 'BILLABLE_RATE', 'TOTAL')
+  var directMarginCell   = findCellIn(businessPlanItems, 'MARGIN', 'DIRECT_MARGIN_BONUS_RATE', 'TOTAL')
 
-      const sectionTotalItem = sectionRowData
-        ? sectionRowData.data.find(item => item.columnKey === 'TOTAL')
+  var unitPriceArray =
+    businessPlanItems.MAN_MONTH &&
+    businessPlanItems.MAN_MONTH.data.UNIT_PRICE
+      ? businessPlanItems.MAN_MONTH.data.UNIT_PRICE.data
+      : null
+
+  var billableRateArray =
+    businessPlanItems.REFERENCE &&
+    businessPlanItems.REFERENCE.data.BILLABLE_RATE
+      ? businessPlanItems.REFERENCE.data.BILLABLE_RATE.data
+      : null
+
+  var directMarginArray =
+    businessPlanItems.MARGIN &&
+    businessPlanItems.MARGIN.data.DIRECT_MARGIN_BONUS_RATE
+      ? businessPlanItems.MARGIN.data.DIRECT_MARGIN_BONUS_RATE.data
+      : null
+
+  function renderTableBody() {
+    return Object.keys(businessPlanItems).map(function(sectionKey) {
+      var sectionItem     = businessPlanItems[sectionKey]
+      var config          = sectionConfig[sectionKey] || {}
+      var isMarginSection = sectionKey === 'MARGIN'
+      var collapsible     = !!config.collapsible
+      var isExpanded      = !collapsible || activePanel.includes(sectionKey)
+
+      var sectionTotalRowData   = sectionItem.data[sectionKey + '_TOTAL']
+      var sectionTotalCell      = sectionTotalRowData
+        ? sectionTotalRowData.data.find(function(d) { return d.columnKey === 'TOTAL' })
         : null
+      var sectionTotalValue     = getSectionTotalValue(sectionTotalCell, sectionKey)
+      var sectionTitleTooltip   = (getRowConfig()[sectionKey + '_TOTAL'] || {}).tooltip
 
-      const config = sectionConfig[section] || {}
-      const { tooltip } = getRowConfig()[`${section}_TOTAL`] || {}
-
-      let sectionTotalItemValue = sectionTotalItem
-        ? sectionTotalItem.value
+      var compareSection         = compareBusinessPlanItems && compareBusinessPlanItems[sectionKey]
+        ? compareBusinessPlanItems[sectionKey].data : null
+      var compareSectionTotalRow = compareSection ? compareSection[sectionKey + '_TOTAL'] : null
+      var compareSectionTotalCell = compareSectionTotalRow
+        ? compareSectionTotalRow.data.find(function(d) { return d.columnKey === 'TOTAL' })
         : null
+      var compareSectionTotalValue = compareSectionTotalCell
+        ? compareSectionTotalCell.value : null
 
-      sectionTotalItemValue = sectionTotalItem
-        ? getFormula({
-            item: sectionTotalItem,
-            columnKey: 'TOTAL',
-            sectionKey: section,
-            rowKey: sectionTotalItem.rowKey,
-          }) !== undefined &&
-          isSpecialSectionFormula(sectionTotalItem.sectionKey)
-          ? getFormula({
-              item: sectionTotalItem,
-              columnKey: 'TOTAL',
-              sectionKey: section,
-              rowKey: sectionTotalItem.rowKey,
-            })
-          : sectionTotalItem.value
-        : null
+      var resCompareSectionTotal = getResultCompare(
+        sectionTotalValue, compareSectionTotalValue, isCompare
+      )
 
-      const collapsible = config && config.collapsible
-      const activeSection = !collapsible || activePanel.includes(section)
+      var sectionHeaderRow = config.hiddenTitle ? null : (
+        <tr
+          key={sectionKey + '-header'}
+          className={
+            'total-section ' +
+            (config.rowClass || '') +
+            ' ' +
+            (config.titleRowClass || '')
+          }>
+          <th
+            style={{ cursor: collapsible ? 'pointer' : '' }}
+            onClick={function() { if (collapsible) toggleCollapse(sectionKey) }}>
+            <div className="title flex-items-center justify-space-between">
+              <div>
+                {collapsible && (
+                  <Icon
+                    type="right"
+                    style={{
+                      fontSize: 11,
+                      color: 'rgba(0,0,0,0.85)',
+                      marginRight: 10,
+                    }}
+                    rotate={activePanel.includes(sectionKey) ? 90 : 0}
+                  />
+                )}
+                {renderSectionTitle(sectionItem.title)}
+                {config.canAdd && canEdit && (
+                  <Icon
+                    onClick={function(e) {
+                      e.stopPropagation()
+                      addRow(sectionKey, config.newRowKey)
+                    }}
+                    type="plus-circle"
+                    style={{
+                      color: 'var(--primary-blue)',
+                      fontSize: 16,
+                      marginLeft: 10,
+                      cursor: 'pointer',
+                    }}
+                  />
+                )}
+              </div>
+              <TooltipIcon tooltip={sectionTitleTooltip} />
+            </div>
+          </th>
 
-      const isCompare = compareBusinessPlanItems
+          <th>
+            <div className="d-flex flex-column">
+              {sectionTotalCell && (
+                <Fragment>
+                  <div className="total">{formatNumber(sectionTotalValue)}</div>
+                  <CompareText value={resCompareSectionTotal} />
+                </Fragment>
+              )}
+            </div>
+          </th>
 
-      const compareRows =
-        compareBusinessPlanItems && compareBusinessPlanItems[section]
-          ? compareBusinessPlanItems[section].data
-          : null
-      const compareSectionRowData = compareRows
-        ? compareRows[`${section}_TOTAL`]
-        : null
-
-      const compareSectionTotalItem = compareSectionRowData
-        ? compareSectionRowData.data.find(item => item.columnKey === 'TOTAL')
-        : null
-
-      const compareSectionTotalItemValue = compareSectionTotalItem
-        ? compareSectionTotalItem.value
-        : null
-
-      const resCompareTotalItem = compareSectionTotalItemValue
-        ? getResultCompare(
-            sectionTotalItemValue,
-            compareSectionTotalItemValue,
-            isCompare
-          )
-        : null
-
-      return (
-        <Fragment key={section}>
-          {!config.hiddenTitle && (
-            <tr
-              className={
-                'total-section ' +
-                (config.rowClass || '') +
-                ' ' +
-                (config.titleRowClass || '')
-              }>
-              <th
-                style={{
-                  cursor: collapsible ? 'pointer' : '',
-                }}
-                onClick={
-                  collapsible ? () => toggleCollapse(section) : () => {}
-                }>
-                <div className="title flex-items-center justify-space-between">
-                  <div>
-                    {collapsible && (
-                      <Icon
-                        type="right"
-                        style={{
-                          fontSize: 11,
-                          color: 'rgba(0,0,0,0.85)',
-                          marginRight: 10,
-                        }}
-                        rotate={activePanel.includes(section) ? 90 : 0}
-                      />
-                    )}
-                    {renderHyperLinkTitle(sectionItem.title)}
-                    {config &&
-                      config.canAdd &&
-                      ((isOtherRole && isDraft) || isFin) &&
-                      !isApproved && (
-                        <Icon
-                          onClick={e => {
-                            e.stopPropagation()
-                            addRow({
-                              sectionKey: section,
-                              rowKey: config.newRowKey,
-                            })
-                          }}
-                          type="plus-circle"
-                          style={{
-                            color: 'var(--primary-blue)',
-                            fontSize: 16,
-                            marginLeft: 10,
-                            cursor: 'pointer',
-                          }}
-                        />
-                      )}
-                  </div>
-                  {tooltip !== undefined && (
-                    <Tooltip overlayClassName="full-tooltip" title={tooltip}>
-                      <Icon
-                        type="question-circle"
-                        style={{
-                          color: '#8a8a8a',
-                          fontSize: 14,
-                          cursor: 'pointer',
-                        }}
-                      />
-                    </Tooltip>
-                  )}
-                </div>
-              </th>
-              <th>
-                <div className="d-flex flex-column 1">
-                  {sectionTotalItem && (
-                    <Fragment>
-                      <div className="total">
-                        {formatNumber(sectionTotalItemValue)}
-                      </div>
-                      <CompareText value={resCompareTotalItem} />
-                    </Fragment>
-                  )}
-                </div>
-              </th>
-              {sectionRowData
-                ? sectionRowData.data
-                    .filter(item => item.columnKey !== 'TOTAL')
-                    .map(item => {
-                      const compareValue = compareSectionRowData
-                        ? compareSectionRowData.data.find(
-                            compareItem =>
-                              compareItem.columnKey === item.columnKey
-                          ) &&
-                          compareSectionRowData.data.find(
-                            compareItem =>
-                              compareItem.columnKey === item.columnKey
-                          ).value
-                        : null
-
-                      const sectionRowDataItemValue =
-                        getFormula({
-                          item,
-                          columnKey: item.columnKey,
-                          sectionKey: section,
-                          rowKey: item.rowKey,
-                        }) !== undefined &&
-                        isSpecialSectionFormula(item.sectionKey)
-                          ? getFormula({
-                              item,
-                              columnKey: item.columnKey,
-                              sectionKey: section,
-                              rowKey: item.rowKey,
-                            })
-                          : item.value
-                      const resCompare = getResultCompare(
-                        sectionRowDataItemValue,
-                        compareValue,
-                        isCompare
-                      )
-                      return (
-                        <td key={item.columnKey}>
-                          <div className="d-flex flex-column 3">
-                            {item.editable &&
-                            ((isDraft && isOtherRole) ||
-                              (isFin && !isApproved)) ? (
-                              <BusinessPlanInput item={item} />
-                            ) : (
-                              formatNumber(sectionRowDataItemValue)
-                            )}
-                            <CompareText value={resCompare} />
-                          </div>
-                        </td>
-                      )
-                    })
-                : sectionItem.data[rows[0]].data
-                    .slice(1)
-                    .map((_, index) => <td key={`${section}-${index}`}></td>)}
-            </tr>
-          )}
-          {rows
-            .filter(item => item !== `${section}_TOTAL`)
-            .map((row, index) => {
-              const rowItems = sectionItem.data[row]
-              const totalItem = rowItems.data.find(
-                item => item.columnKey === 'TOTAL'
-              )
-
-              const regex = `${config.newRowKey || section}_\\d+`
-              const isService = row.match(new RegExp(regex))
-              const { percent, tooltip, canEditInternal } =
-                getRowConfig()[
-                  isService ? `${config.newRowKey}_SERVICE` : row
-                ] || {}
-
-              const totalItemValue =
-                getFormula({
-                  item: totalItem,
-                  columnKey: 'TOTAL',
-                  sectionKey: section,
-                  rowKey: row,
-                  isService,
-                }) !== undefined &&
-                isSpecialSectionFormula(totalItem.sectionKey)
-                  ? getFormula({
-                      item: totalItem,
-                      columnKey: 'TOTAL',
-                      sectionKey: section,
-                      rowKey: row,
-                      isService,
-                    })
-                  : totalItem.value
-
-              const formattedValue = formatNumber(totalItemValue, percent)
-
-              const compareRowItems =
-                compareRows && compareRows[row] ? compareRows[row].data : null
-              const compareTotalItemValue = compareRowItems
-                ? compareRowItems.find(item => item.columnKey === 'TOTAL').value
-                : null
-
-              const resCompare = getResultCompare(
-                totalItemValue,
-                compareTotalItemValue,
-                isCompare
-              )
-              return (
-                <tr
-                  key={row}
-                  className={
-                    (isMarginSection ? 'margin' : '') +
-                    ' ' +
-                    (config.rowClass || '')
+          {mergedColumns
+            .filter(function(c) { return c.columnKey !== 'TOTAL' })
+            .map(function(mergedCol) {
+              var currentCell = null
+              if (!mergedCol.isCompareOnly && sectionTotalRowData) {
+                for (var i = 0; i < sectionTotalRowData.data.length; i++) {
+                  if (sectionTotalRowData.data[i].columnKey === mergedCol.currentColumnKey) {
+                    currentCell = sectionTotalRowData.data[i]
+                    break
                   }
-                  style={{
-                    display: activeSection ? 'table-row' : 'none',
-                  }}>
-                  <th key={'row-child-1'}>
-                    {isMarginSection && index === 0 && (
-                      <img
-                        src="/img/flag.png"
-                        className="flag"
-                        width={23}></img>
-                    )}
-                    {isMarginSection ? (
-                      <div className="flex-items-center justify-space-between pr-1">
-                        {rowItems.title}
-                        {tooltip !== undefined && (
-                          <Tooltip
-                            overlayClassName="full-tooltip"
-                            title={tooltip}>
-                            <Icon
-                              type="question-circle"
-                              style={{
-                                color: '#8a8a8a',
-                                fontSize: 14,
-                                cursor: 'pointer',
-                              }}
-                            />
-                          </Tooltip>
-                        )}
-                      </div>
+                }
+              }
+
+              var compareCellValue = null
+              if (!mergedCol.isCurrentOnly && compareSectionTotalRow) {
+                for (var j = 0; j < compareSectionTotalRow.data.length; j++) {
+                  if (compareSectionTotalRow.data[j].columnKey === mergedCol.compareColumnKey) {
+                    compareCellValue = compareSectionTotalRow.data[j].value
+                    break
+                  }
+                }
+              }
+
+              var displayValue
+              if (mergedCol.isCompareOnly) {
+                displayValue = compareCellValue
+              } else if (currentCell) {
+                var f = getFormula({
+                  item: currentCell,
+                  columnKey: currentCell.columnKey,
+                  sectionKey: sectionKey,
+                  rowKey: currentCell.rowKey,
+                })
+                displayValue = resolveValue(currentCell, f, isSpecialSectionFormula)
+              } else {
+                displayValue = null
+              }
+
+              var compareForDiff = mergedCol.isCompareOnly ? null : compareCellValue
+              var resCompare = getResultCompare(displayValue, compareForDiff, isCompare)
+
+              return (
+                <td key={makeCellKey(mergedCol)}>
+                  <div className="d-flex flex-column">
+                    {currentCell &&
+                    !mergedCol.isCompareOnly &&
+                    currentCell.editable &&
+                    canEdit ? (
+                      <BusinessPlanInput item={currentCell} />
                     ) : (
-                      <div className="flex-items-center justify-space-between">
-                        <div>
-                          {isService
-                            ? renderServiceControl({
-                                row: rowItems,
-                                sectionKey: section,
-                                rowKey: row,
-                                readonly: true,
-                              })
-                            : rowItems.title}
-                          {getRowConfig()[row] &&
-                            getRowConfig()[row].canAdd &&
-                            isDraft &&
-                            isOtherRole && (
-                              <Icon
-                                onClick={() =>
-                                  addRow({
-                                    sectionKey: section,
-                                    rowKey: config.newRowKey,
-                                  })
-                                }
-                                type="plus-circle"
-                                style={{
-                                  color: 'var(--primary-blue)',
-                                  fontSize: 16,
-                                  marginLeft: 4,
-                                  cursor: 'pointer',
-                                }}
-                              />
-                            )}
-                        </div>
-                        {tooltip !== undefined && (
-                          <Tooltip
-                            overlayClassName="full-tooltip"
-                            title={tooltip}>
-                            <Icon
-                              type="question-circle"
-                              style={{
-                                color: '#8a8a8a',
-                                fontSize: 14,
-                                cursor: 'pointer',
-                              }}
-                            />
-                          </Tooltip>
-                        )}
-                      </div>
+                      formatNumber(displayValue)
                     )}
-                  </th>
-                  <th key={'row-child-2'}>
-                    <div className="d-flex flex-column 4">
-                      {totalItem.editable &&
-                      ((isDraft && isOtherRole) || (isFin && !isApproved)) ? (
-                        <BusinessPlanInput
-                          item={totalItem}
-                          suffix={percent ? '%' : ''}></BusinessPlanInput>
-                      ) : (
-                        <div className="total">{formattedValue}</div>
-                      )}
-                      <CompareText value={resCompare} />
-                    </div>
-                  </th>
-                  {rowItems.data
-                    .filter(item => item.columnKey !== 'TOTAL')
-                    .map(item => {
-                      const compareItem = compareRowItems
-                        ? compareRowItems.find(
-                            compareItem =>
-                              compareItem.columnKey === item.columnKey
-                          )
-                        : null
-                      const compareValue = compareItem
-                        ? compareItem.value
-                        : null
-
-                      const valueFormula = getFormula({
-                        item,
-                        columnKey: item.columnKey,
-                        sectionKey: section,
-                        rowKey: row,
-                        isService,
-                      })
-
-                      const value =
-                        valueFormula !== undefined &&
-                        isSpecialSectionFormula(item.sectionKey)
-                          ? valueFormula
-                          : item.value
-                      const formattedValue = formatNumber(value, percent)
-                      const resCompare = getResultCompare(
-                        value,
-                        compareValue,
-                        isCompare
-                      )
-
-                      const extraPermission =
-                        canEditInternal === undefined ||
-                        (canEditInternal && item.columnKey === 'INTERNAL') ||
-                        item.columnKey !== 'INTERNAL'
-
-                      return (
-                        <td key={item.columnKey}>
-                          <div className="d-flex flex-column 6">
-                            {item.editable &&
-                            extraPermission &&
-                            ((isDraft && isOtherRole) ||
-                              (isFin && !isApproved)) ? (
-                              <BusinessPlanInput
-                                item={item}
-                                suffix={percent ? '%' : ''}
-                              />
-                            ) : (
-                              formattedValue
-                            )}
-                            <CompareText value={resCompare} />
-                          </div>
-                        </td>
-                      )
-                    })}
-                </tr>
+                    <CompareText value={resCompare} />
+                  </div>
+                </td>
               )
             })}
+        </tr>
+      )
+
+      var dataRows = Object.keys(sectionItem.data)
+        .filter(function(rowKey) { return rowKey !== sectionKey + '_TOTAL' })
+        .map(function(rowKey, index) {
+          var rowData   = sectionItem.data[rowKey]
+          var totalItem = rowData.data.find(function(d) { return d.columnKey === 'TOTAL' })
+
+          var newRowKeyRegex = (config.newRowKey || sectionKey) + '_\\d+'
+          var isService      = !!rowKey.match(new RegExp(newRowKeyRegex))
+          var rowConfigKey   = isService ? config.newRowKey + '_SERVICE' : rowKey
+          var rowCfg         = getRowConfig()[rowConfigKey] || {}
+          var percent        = rowCfg.percent
+          var rowTooltip     = rowCfg.tooltip
+          var canEditInternal = rowCfg.canEditInternal
+
+          var totalItemValue = getCellDisplayValue(totalItem, sectionKey, rowKey, isService)
+
+          var compareRowData    = compareSection && compareSection[rowKey]
+            ? compareSection[rowKey].data : null
+          var compareTotalItem  = compareRowData
+            ? compareRowData.find(function(d) { return d.columnKey === 'TOTAL' })
+            : null
+          var compareTotalValue = compareTotalItem ? compareTotalItem.value : null
+
+          var resCompareTotalRow = getResultCompare(
+            totalItemValue, compareTotalValue, isCompare
+          )
+
+          return (
+            <tr
+              key={rowKey}
+              className={
+                (isMarginSection ? 'margin' : '') + ' ' + (config.rowClass || '')
+              }
+              style={{ display: isExpanded ? 'table-row' : 'none' }}>
+
+              <th>
+                {isMarginSection && index === 0 && (
+                  <img src="/img/flag.png" className="flag" width={23} alt="" />
+                )}
+                {isMarginSection ? (
+                  <div className="flex-items-center justify-space-between pr-1">
+                    {rowData.title}
+                    <TooltipIcon tooltip={rowTooltip} />
+                  </div>
+                ) : (
+                  <div className="flex-items-center justify-space-between">
+                    <div>
+                      {isService ? (
+                        <ServiceControl
+                          sectionKey={sectionKey}
+                          row={rowData}
+                          rowKey={rowKey}
+                          readonly={true}
+                          mmBillService={mmBillService}
+                          businessPlanItems={businessPlanItems}
+                          validation={validation}
+                          setValidation={setValidation}
+                          updateIsSaveShowed={updateIsSaveShowed}
+                          updateBusinessPlanRow={updateBusinessPlanRow}
+                        />
+                      ) : (
+                        rowData.title
+                      )}
+                      {getRowConfig()[rowKey] &&
+                        getRowConfig()[rowKey].canAdd &&
+                        isDraft &&
+                        isOtherRole &&
+                        canEditByViewMode && (
+                          <Icon
+                            onClick={function() {
+                              addRow(sectionKey, config.newRowKey)
+                            }}
+                            type="plus-circle"
+                            style={{
+                              color: 'var(--primary-blue)',
+                              fontSize: 16,
+                              marginLeft: 4,
+                              cursor: 'pointer',
+                            }}
+                          />
+                        )}
+                    </div>
+                    <TooltipIcon tooltip={rowTooltip} />
+                  </div>
+                )}
+              </th>
+
+              <th>
+                <div className="d-flex flex-column">
+                  {totalItem.editable && canEdit ? (
+                    <BusinessPlanInput
+                      item={totalItem}
+                      suffix={percent ? '%' : ''}
+                    />
+                  ) : (
+                    <div className="total">{formatNumber(totalItemValue, percent)}</div>
+                  )}
+                  <CompareText value={resCompareTotalRow} />
+                </div>
+              </th>
+
+              {mergedColumns
+                .filter(function(c) { return c.columnKey !== 'TOTAL' })
+                .map(function(mergedCol) {
+                  var currentItem = null
+                  if (!mergedCol.isCompareOnly) {
+                    for (var ri = 0; ri < rowData.data.length; ri++) {
+                      if (rowData.data[ri].columnKey === mergedCol.currentColumnKey) {
+                        currentItem = rowData.data[ri]
+                        break
+                      }
+                    }
+                  }
+
+                  var compareItem = null
+                  if (!mergedCol.isCurrentOnly && compareRowData) {
+                    for (var ci = 0; ci < compareRowData.length; ci++) {
+                      if (compareRowData[ci].columnKey === mergedCol.compareColumnKey) {
+                        compareItem = compareRowData[ci]
+                        break
+                      }
+                    }
+                  }
+
+                  var compareValue = compareItem ? compareItem.value : null
+                  var cellFormula  = currentItem
+                    ? getFormula({
+                        item: currentItem,
+                        columnKey: currentItem.columnKey,
+                        sectionKey,
+                        rowKey,
+                        isService,
+                      })
+                    : undefined
+                  var cellValue
+                  if (mergedCol.isCompareOnly) {
+                    cellValue = compareValue
+                  } else if (currentItem) {
+                    cellValue = resolveValue(currentItem, cellFormula, isSpecialSectionFormula)
+                  } else {
+                    cellValue = null
+                  }
+
+                  var compareForDiff  = mergedCol.isCompareOnly ? null : compareValue
+                  var resCompareCell  = getResultCompare(cellValue, compareForDiff, isCompare)
+
+                  var internalAllowed =
+                    !currentItem ||
+                    canEditInternal === undefined ||
+                    (canEditInternal && currentItem.columnKey === 'INTERNAL') ||
+                    currentItem.columnKey !== 'INTERNAL'
+
+                  return (
+                    <td key={makeCellKey(mergedCol)}>
+                      <div className="d-flex flex-column">
+                        {currentItem &&
+                        !mergedCol.isCompareOnly &&
+                        currentItem.editable &&
+                        internalAllowed &&
+                        canEdit ? (
+                          <BusinessPlanInput
+                            item={currentItem}
+                            suffix={percent ? '%' : ''}
+                          />
+                        ) : (
+                          formatNumber(cellValue, percent)
+                        )}
+                        <CompareText value={resCompareCell} />
+                      </div>
+                    </td>
+                  )
+                })}
+            </tr>
+          )
+        })
+
+      return (
+        <Fragment key={sectionKey}>
+          {sectionHeaderRow}
+          {dataRows}
         </Fragment>
       )
     })
@@ -1008,307 +972,90 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
           <div>Compared Version:</div>
           <Select
             value={selectedCompareId}
-            onChange={onChangeCompareSelect}
+            onChange={loadCompareVersion}
             style={{ width: '140px' }}>
-            {listVersions.map(item => (
-              <Select.Option value={item.versionId} key={item.versionId}>
-                <Icon component={SwapSVG} /> {item.versionName}
-              </Select.Option>
-            ))}
+            {listVersions.map(function(item) {
+              return (
+                <Select.Option value={item.versionId} key={item.versionId}>
+                  <Icon component={SwapSVG} /> {item.versionName}
+                </Select.Option>
+              )
+            })}
           </Select>
         </div>
       </div>
+
       <StyledWrapper>
         <table id="business-plan-form" style={{ position: 'relative' }}>
           <colgroup>
             <col style={{ width: 'var(--title-size)' }} />
             <col style={{ width: 'var(--column-width)' }} />
-            {columns.slice(1).map(item => (
-              <col
-                key={item.columnKey}
-                style={{ width: 'var(--column-width)' }}
-              />
-            ))}
+            {mergedColumns.slice(1).map(function(col) {
+              return (
+                <col
+                  key={makeCellKey(col)}
+                  style={{ width: 'var(--column-width)' }}
+                />
+              )
+            })}
           </colgroup>
+
           <thead>
-            <tr>
-              <th
-                style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
-                key={'header-info'}>
-                {!isApproved && (
-                  <div className="business-plan-normal">
-                    <div className="text-left text-wrap">Unit price</div>
-                    <div className="text-left text-wrap">Billable rate</div>
-                    <div className="text-left text-wrap">
-                      Direct margin before incentives and project bonus rate
-                    </div>
-                  </div>
-                )}
-                <div
-                  className="item-label"
-                  style={{ borderRight: '1px solid #e1e1e1' }}>
-                  Items
-                </div>
-              </th>
-              <th
-                style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
-                key={'compare-norm'}>
-                <Fragment>
-                  {!isApproved && (
-                    <div
-                      className="text-center text-wrap h-21"
-                      style={{
-                        color: !unitPriceNormConfig
-                          ? '#525559'
-                          : renderColorCompareNorm({
-                              value: unitPriceTotalValue,
-                              rowKey: 'UNIT_PRICE',
-                              normFloor: unitPriceFloor,
-                              normCeiling: unitPriceCeiling,
-                            }),
-                        fontWeight: 500,
-                      }}>
-                      <Tooltip
-                        title={`(Total) Unit price norm = ${
-                          unitPriceNormConfig
-                            ? formatNumber(unitPriceNormConfig)
-                            : ''
-                        }`}>
-                        {formatNumber(unitPriceTotalValue, false)}
-                      </Tooltip>
-                    </div>
-                  )}
-
-                  {!isApproved && (
-                    <div
-                      className="text-center text-wrap h-21"
-                      style={{
-                        color: !billableRatePercentage
-                          ? '#525559'
-                          : renderColorCompareNorm({
-                              value: billableRateTotalValue,
-                              rowKey: 'BILLABLE_RATE',
-                              normPercentage: billableRatePercentage,
-                            }),
-                        fontWeight: 500,
-                      }}>
-                      <Tooltip
-                        title={`(Total) Billable rate norm = ${
-                          billableRatePercentage
-                            ? formatNumber(billableRatePercentage)
-                            : ''
-                        } %`}>
-                        {formatNumber(billableRateTotalValue, true)}
-                      </Tooltip>
-                    </div>
-                  )}
-
-                  {!isApproved && (
-                    <div
-                      className="text-center text-wrap pb-24 h-42"
-                      style={{
-                        color: !directMarginPercentage
-                          ? '#525559'
-                          : renderColorCompareNorm({
-                              value: directMarginTotalValue,
-                              rowKey: 'DIRECT_MARGIN_BONUS_RATE',
-                              normPercentage: directMarginPercentage,
-                            }),
-                        fontWeight: 500,
-                      }}>
-                      <Tooltip
-                        title={`(Total) Direct margin before incentives and project bonus rate norm = ${
-                          directMarginPercentage
-                            ? formatNumber(directMarginPercentage)
-                            : ''
-                        } %`}>
-                        {formatNumber(directMarginTotalValue, true)}
-                      </Tooltip>
-                    </div>
-                  )}
-                </Fragment>
-                <div
-                  className="item-label"
-                  style={{ borderRight: '1px solid #e1e1e1' }}>
-                  Total
-                </div>
-              </th>
-              {columns.slice(1).map(item => (
-                <th
-                  style={{ backgroundColor: !isApproved ? '#fff' : 'unset' }}
-                  key={item.index}>
-                  <Fragment>
-                    {!isApproved && (
-                      <div
-                        className="text-center text-wrap h-21"
-                        style={{
-                          color: !findNormConfigByColumnKey(
-                            unitPriceArray,
-                            item.columnKey
-                          )
-                            ? '#525559'
-                            : renderColorCompareNorm({
-                                value: findValueByColumnKey(
-                                  unitPriceArray,
-                                  item.columnKey
-                                ),
-                                rowKey: 'UNIT_PRICE',
-                                normFloor: findFloorByColumnKey(
-                                  unitPriceArray,
-                                  item.columnKey
-                                ),
-                                normCeiling: findCeilingByColumnKey(
-                                  unitPriceArray,
-                                  item.columnKey
-                                ),
-                              }),
-                          fontWeight: 500,
-                        }}>
-                        <Tooltip
-                          title={
-                            item.columnKey === 'INTERNAL'
-                              ? null
-                              : `${'(' + item.label + ')'} Unit price norm = ${
-                                  findNormConfigByColumnKey(
-                                    unitPriceArray,
-                                    item.columnKey
-                                  )
-                                    ? formatNumber(
-                                        findNormConfigByColumnKey(
-                                          unitPriceArray,
-                                          item.columnKey
-                                        )
-                                      )
-                                    : ''
-                                }`
-                          }>
-                          {formatNumber(
-                            findValueByColumnKey(
-                              unitPriceArray,
-                              item.columnKey
-                            ),
-                            false
-                          )}
-                        </Tooltip>
-                      </div>
-                    )}
-
-                    {!isApproved && (
-                      <div
-                        className="text-center text-wrap h-21"
-                        style={{
-                          color: !findPercentageByColumnKey(
-                            billableRateArray,
-                            item.columnKey
-                          )
-                            ? '#525559'
-                            : renderColorCompareNorm({
-                                value: findValueByColumnKey(
-                                  billableRateArray,
-                                  item.columnKey
-                                ),
-                                rowKey: 'BILLABLE_RATE',
-                                normPercentage: findPercentageByColumnKey(
-                                  billableRateArray,
-                                  item.columnKey
-                                ),
-                              }),
-                          fontWeight: 500,
-                        }}>
-                        <Tooltip
-                          title={
-                            item.columnKey === 'INTERNAL'
-                              ? null
-                              : `${
-                                  '(' + item.label + ')'
-                                } Billable rate norm = ${
-                                  findPercentageByColumnKey(
-                                    billableRateArray,
-                                    item.columnKey
-                                  )
-                                    ? formatNumber(
-                                        findPercentageByColumnKey(
-                                          billableRateArray,
-                                          item.columnKey
-                                        )
-                                      )
-                                    : ''
-                                } %`
-                          }>
-                          {formatNumber(
-                            findValueByColumnKey(
-                              billableRateArray,
-                              item.columnKey
-                            ),
-                            true
-                          )}
-                        </Tooltip>
-                      </div>
-                    )}
-
-                    {!isApproved && (
-                      <div
-                        className="text-center text-wrap pb-24 h-42"
-                        style={{
-                          color: !findPercentageByColumnKey(
-                            directMarginArray,
-                            item.columnKey
-                          )
-                            ? '#525559'
-                            : renderColorCompareNorm({
-                                value: findValueByColumnKey(
-                                  directMarginArray,
-                                  item.columnKey
-                                ),
-                                rowKey: 'DIRECT_MARGIN_BONUS_RATE',
-                                normPercentage: findPercentageByColumnKey(
-                                  directMarginArray,
-                                  item.columnKey
-                                ),
-                              }),
-                          fontWeight: 500,
-                        }}>
-                        <Tooltip
-                          title={
-                            item.columnKey === 'INTERNAL'
-                              ? null
-                              : `${
-                                  '(' + item.label + ')'
-                                } Direct margin before incentives and project bonus rate norm = ${
-                                  findPercentageByColumnKey(
-                                    directMarginArray,
-                                    item.columnKey
-                                  )
-                                    ? formatNumber(
-                                        findPercentageByColumnKey(
-                                          directMarginArray,
-                                          item.columnKey
-                                        )
-                                      )
-                                    : ''
-                                } %`
-                          }>
-                          {formatNumber(
-                            findValueByColumnKey(
-                              directMarginArray,
-                              item.columnKey
-                            ),
-                            true
-                          )}
-                        </Tooltip>
-                      </div>
-                    )}
-                  </Fragment>
-                  <div
-                    className="item-label"
-                    style={{ borderRight: '1px solid #e1e1e1' }}>
-                    <div>{item.label}</div>
-                  </div>
-                </th>
-              ))}
-            </tr>
+            {!isApproved && (
+              <Fragment>
+                <MetricHeaderRow
+                  label="Unit price"
+                  rowKey="UNIT_PRICE"
+                  totalValue={unitPriceCell ? unitPriceCell.value : null}
+                  normConfig={unitPriceCell ? unitPriceCell.normUnitPriceConfig : null}
+                  normFloor={unitPriceCell ? unitPriceCell.normUnitPriceFloor : null}
+                  normCeiling={unitPriceCell ? unitPriceCell.normUnitPriceCeiling : null}
+                  normPercentage={null}
+                  isPercent={false}
+                  tooltipLabel="Unit price"
+                  dataArray={unitPriceArray}
+                  mergedColumns={mergedColumns}
+                />
+                <MetricHeaderRow
+                  label="Billable rate"
+                  rowKey="BILLABLE_RATE"
+                  totalValue={billableRateCell ? billableRateCell.value : null}
+                  normConfig={billableRateCell ? billableRateCell.normBusinessPlanConfig : null}
+                  normFloor={null}
+                  normCeiling={null}
+                  normPercentage={billableRateCell ? billableRateCell.normBusinessPlanConfig : null}
+                  isPercent={true}
+                  tooltipLabel="Billable rate"
+                  dataArray={billableRateArray}
+                  mergedColumns={mergedColumns}
+                />
+                <MetricHeaderRow
+                  label="Direct margin before incentives and project bonus rate"
+                  rowKey="DIRECT_MARGIN_BONUS_RATE"
+                  totalValue={directMarginCell ? directMarginCell.value : null}
+                  normConfig={directMarginCell ? directMarginCell.normBusinessPlanConfig : null}
+                  normFloor={null}
+                  normCeiling={null}
+                  normPercentage={directMarginCell ? directMarginCell.normBusinessPlanConfig : null}
+                  isPercent={true}
+                  tooltipLabel="Direct margin before incentives and project bonus rate"
+                  dataArray={directMarginArray}
+                  mergedColumns={mergedColumns}
+                />
+              </Fragment>
+            )}
+            {!isApproved && (
+              <tr style={{ height: '16px' }}>
+                <td
+                  colSpan={mergedColumns.length + 1}
+                  style={{ padding: 0, border: 'none' }}
+                />
+              </tr>
+            )}
+            <ColumnHeaderRow mergedColumns={mergedColumns} isApproved={isApproved} />
           </thead>
-          <tbody>{renderTable()}</tbody>
+
+          <tbody>{renderTableBody()}</tbody>
         </table>
       </StyledWrapper>
     </Fragment>

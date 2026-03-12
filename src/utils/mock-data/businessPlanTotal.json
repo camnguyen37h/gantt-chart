@@ -1,0 +1,3090 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "id": 381,
+        "projectCode": "GLBOD2500020",
+        "status": "Approved",
+        "version": 1,
+        "startDate": 1751302800000,
+        "endDate": 1816966800000,
+        "userRoles": null,
+        "warningMessage": null,
+        "versions": [
+            {
+                "versionId": 381,
+                "versionName": "Version 1",
+                "status": "APPROVED",
+                "statusName": "Approved"
+            },
+            {
+                "versionId": 402,
+                "versionName": "Version 2",
+                "status": "APPROVED",
+                "statusName": "Approved"
+            },
+            {
+                "versionId": 405,
+                "versionName": "Version 3",
+                "status": "APPROVED",
+                "statusName": "Approved"
+            },
+            {
+                "versionId": 406,
+                "versionName": "Version 4",
+                "status": "DRAFT",
+                "statusName": "Draft"
+            }
+        ],
+        "generalInfos": null,
+        "columnLabels": [
+            {
+                "id": null,
+                "label": "Total",
+                "index": 1,
+                "columnKey": "TOTAL"
+            },
+            {
+                "id": 40,
+                "label": "BU3",
+                "index": 2,
+                "columnKey": "SALE_40"
+            },
+            {
+                "id": 169,
+                "label": "BKR1",
+                "index": 3,
+                "columnKey": "SALE_169"
+            },
+            {
+                "id": null,
+                "label": "Internal",
+                "index": 4,
+                "columnKey": "INTERNAL"
+            },
+            {
+                "id": 1,
+                "label": "DU3.1",
+                "index": 5,
+                "columnKey": "DELIVERY_UNIT_1"
+            },
+            {
+                "id": 39,
+                "label": "DU1.12",
+                "index": 6,
+                "columnKey": "DELIVERY_UNIT_39"
+            }
+        ],
+        "sectionList": [
+            {
+                "index": 1,
+                "sectionTitle": "Unit price & MM Bill",
+                "sectionKey": "MAN_MONTH",
+                "rowLabels": [
+                    {
+                        "label": "Unit price",
+                        "rowKey": "UNIT_PRICE",
+                        "cellList": [
+                            {
+                                "value": 25100000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "UNIT_PRICE",
+                                "normUnitPriceConfig": 77100163,
+                                "normUnitPriceFloor": 52343300.6607,
+                                "normUnitPriceCeiling": 101857025.3393,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 25000000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "UNIT_PRICE",
+                                "normUnitPriceConfig": 77100163,
+                                "normUnitPriceFloor": 52343300.6607,
+                                "normUnitPriceCeiling": 101857025.3393,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 100000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "UNIT_PRICE",
+                                "normUnitPriceConfig": 77100163,
+                                "normUnitPriceFloor": 52343300.6607,
+                                "normUnitPriceCeiling": 101857025.3393,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "UNIT_PRICE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "UNIT_PRICE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "UNIT_PRICE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "MM effort (MM)",
+                        "rowKey": "MM_PRODUCTION",
+                        "cellList": [
+                            {
+                                "value": 2.46,
+                                "columnKey": "TOTAL",
+                                "rowKey": "MM_PRODUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 60.55,
+                                "columnKey": "SALE_40",
+                                "rowKey": "MM_PRODUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "SALE_169",
+                                "rowKey": "MM_PRODUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "MM_PRODUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "MM_PRODUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 2.46,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "MM_PRODUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "MM bill (MM)",
+                        "rowKey": "MM_BILL",
+                        "cellList": [
+                            {
+                                "value": 142.55,
+                                "columnKey": "TOTAL",
+                                "rowKey": "MM_BILL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 60.55,
+                                "columnKey": "SALE_40",
+                                "rowKey": "MM_BILL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "SALE_169",
+                                "rowKey": "MM_BILL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "MM_BILL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "MM_BILL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "MM_BILL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "237",
+                        "rowKey": "MM_BILL_1",
+                        "cellList": [
+                            {
+                                "value": 142.55,
+                                "columnKey": "TOTAL",
+                                "rowKey": "MM_BILL_1",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "MM_BILL_1",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "MM_BILL_1",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "MM_BILL_1",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "MM_BILL_1",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "MM_BILL_1",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 2,
+                "sectionTitle": "Revenues",
+                "sectionKey": "REVENUES",
+                "rowLabels": [
+                    {
+                        "label": "Revenues",
+                        "rowKey": "REVENUES_TOTAL",
+                        "cellList": [
+                            {
+                                "value": 1521950000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "REVENUES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1513750000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "REVENUES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 8200000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "REVENUES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -484400082,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "REVENUES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "REVENUES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "REVENUES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Revenues from work delivered (VND)",
+                        "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                        "cellList": [
+                            {
+                                "value": 550000000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 500000000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 50000000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -484400082,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Deduction",
+                        "rowKey": "DEDUCTION",
+                        "cellList": [
+                            {
+                                "value": 971950000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DEDUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1013750000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DEDUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -41800000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DEDUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DEDUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DEDUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DEDUCTION",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Onsite fee",
+                        "rowKey": "ONSITE_FEE",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "ONSITE_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "ONSITE_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "ONSITE_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "ONSITE_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "ONSITE_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "ONSITE_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Revenues from Equipment, Internet, Server,...",
+                        "rowKey": "EQUIPMENT_FEE",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "EQUIPMENT_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "EQUIPMENT_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "EQUIPMENT_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "EQUIPMENT_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "EQUIPMENT_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "EQUIPMENT_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Other revenues",
+                        "rowKey": "OTHER_FEE",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "OTHER_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "OTHER_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "OTHER_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "OTHER_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "OTHER_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "OTHER_FEE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 3,
+                "sectionTitle": "Cost of sales",
+                "sectionKey": "COST_PRICE",
+                "rowLabels": [
+                    {
+                        "label": "Cost of sales",
+                        "rowKey": "COST_PRICE_TOTAL",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "COST_PRICE_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 484400000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "COST_PRICE_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "SALE_169",
+                                "rowKey": "COST_PRICE_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -484400082,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "COST_PRICE_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "COST_PRICE_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "COST_PRICE_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Cost of sales (Ratecard DU)",
+                        "rowKey": "COST_OF_DU_SOLD",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "COST_OF_DU_SOLD",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 484400000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "COST_OF_DU_SOLD",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 82,
+                                "columnKey": "SALE_169",
+                                "rowKey": "COST_OF_DU_SOLD",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -484400082,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "COST_OF_DU_SOLD",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "COST_OF_DU_SOLD",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "COST_OF_DU_SOLD",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 4,
+                "sectionTitle": "Selling expenses",
+                "sectionKey": "SELLING_EXPENSES",
+                "rowLabels": [
+                    {
+                        "label": "Selling expenses",
+                        "rowKey": "SELLING_EXPENSES_TOTAL",
+                        "cellList": [
+                            {
+                                "value": 11000000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "SELLING_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 10000000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "SELLING_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1000000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "SELLING_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "SELLING_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "SELLING_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "SELLING_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Incentives",
+                        "rowKey": "INCENTIVES",
+                        "cellList": [
+                            {
+                                "value": 11000000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "INCENTIVES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 10000000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "INCENTIVES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1000000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "INCENTIVES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "INCENTIVES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "INCENTIVES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "INCENTIVES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Agency expenses",
+                        "rowKey": "AGENCY_EXPENSE",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "AGENCY_EXPENSE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "AGENCY_EXPENSE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "AGENCY_EXPENSE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "AGENCY_EXPENSE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "AGENCY_EXPENSE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "AGENCY_EXPENSE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 5,
+                "sectionTitle": "Delivery expenses",
+                "sectionKey": "DELIVERY_EXPENSES",
+                "rowLabels": [
+                    {
+                        "label": "Delivery expenses",
+                        "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                        "cellList": [
+                            {
+                                "value": 171060000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 98400000,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Direct labor cost",
+                        "rowKey": "DIRECT_LABOR_COST",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DIRECT_LABOR_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DIRECT_LABOR_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DIRECT_LABOR_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DIRECT_LABOR_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DIRECT_LABOR_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DIRECT_LABOR_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Outsourcing cost",
+                        "rowKey": "OUTSOURCING_COST",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "OUTSOURCING_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "OUTSOURCING_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "OUTSOURCING_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "OUTSOURCING_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "OUTSOURCING_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "OUTSOURCING_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Equipment, Internet, Server cost",
+                        "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Onsite expenses (Onsite allowance, perdiem, travelling, accommodation, etc.)",
+                        "rowKey": "ONSITE_DEVELOPMENT_COST",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Project bonus",
+                        "rowKey": "PROJECT_BONUS",
+                        "cellList": [
+                            {
+                                "value": 171060000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "PROJECT_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "PROJECT_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "PROJECT_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "PROJECT_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "PROJECT_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 98400000,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "PROJECT_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Overtime",
+                        "rowKey": "OVERTIME",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "OVERTIME",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "OVERTIME",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "OVERTIME",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "OVERTIME",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "OVERTIME",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "OVERTIME",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Non-deductible input VAT",
+                        "rowKey": "NON_DEDUCTION_VAT",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "NON_DEDUCTION_VAT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "NON_DEDUCTION_VAT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "NON_DEDUCTION_VAT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "NON_DEDUCTION_VAT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "NON_DEDUCTION_VAT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "NON_DEDUCTION_VAT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Other expenses",
+                        "rowKey": "OTHER_EXPENSES",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "OTHER_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "OTHER_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "OTHER_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "OTHER_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "OTHER_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "OTHER_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 6,
+                "sectionTitle": "Tax expenses",
+                "sectionKey": "TAX",
+                "rowLabels": [
+                    {
+                        "label": "Tax expenses",
+                        "rowKey": "TAX_TOTAL",
+                        "cellList": [
+                            {
+                                "value": 304390000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "TAX_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 302750000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "TAX_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1640000,
+                                "columnKey": "SALE_169",
+                                "rowKey": "TAX_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "TAX_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "TAX_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 16.4,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "TAX_TOTAL",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "CIT and VAT (if any) (%)",
+                        "rowKey": "PIC_CIT",
+                        "cellList": [
+                            {
+                                "value": 40,
+                                "columnKey": "TOTAL",
+                                "rowKey": "PIC_CIT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "PIC_CIT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "PIC_CIT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "PIC_CIT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "PIC_CIT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "PIC_CIT",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 7,
+                "sectionTitle": "Margin",
+                "sectionKey": "MARGIN",
+                "rowLabels": [
+                    {
+                        "label": "Direct Margin",
+                        "rowKey": "DIRECT_MARGIN",
+                        "cellList": [
+                            {
+                                "value": 1035500000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 716600000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 5559918,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -98399934.4,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Direct Margin before Incentives and Project bonus",
+                        "rowKey": "DIRECT_MARGIN_BONUS",
+                        "cellList": [
+                            {
+                                "value": 1217560000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DIRECT_MARGIN_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 726600000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DIRECT_MARGIN_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 6559918,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DIRECT_MARGIN_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DIRECT_MARGIN_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DIRECT_MARGIN_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 65.6,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DIRECT_MARGIN_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Allocation of pool and unbillable",
+                        "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Indirect margin",
+                        "rowKey": "INDIRECT_MARGIN",
+                        "cellList": [
+                            {
+                                "value": 1035500000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "INDIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 716600000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "INDIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 5559918,
+                                "columnKey": "SALE_169",
+                                "rowKey": "INDIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "INDIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "INDIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -98399934.4,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "INDIRECT_MARGIN",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Direct margin %",
+                        "rowKey": "DIRECT_MARGIN_RATE",
+                        "cellList": [
+                            {
+                                "value": -1057.656,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 47.339,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 67.804,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -119999920,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Direct Margin before Incentives and Project bonus %",
+                        "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                        "cellList": [
+                            {
+                                "value": 160,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 17.888,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 48,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 17.888,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 79.999,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 17.888,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 17.888,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 80,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 17.888,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Indirect margin %",
+                        "rowKey": "INDIRECT_MARGIN_RATE",
+                        "cellList": [
+                            {
+                                "value": -1057.656,
+                                "columnKey": "TOTAL",
+                                "rowKey": "INDIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 47.339,
+                                "columnKey": "SALE_40",
+                                "rowKey": "INDIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 67.804,
+                                "columnKey": "SALE_169",
+                                "rowKey": "INDIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "INDIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "INDIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -119999920,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "INDIRECT_MARGIN_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "index": 8,
+                "sectionTitle": "Reference",
+                "sectionKey": "REFERENCE",
+                "rowLabels": [
+                    {
+                        "label": "Average delivery expenses",
+                        "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                        "cellList": [
+                            {
+                                "value": 40000000,
+                                "columnKey": "TOTAL",
+                                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 8000000,
+                                "columnKey": "SALE_40",
+                                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1,
+                                "columnKey": "SALE_169",
+                                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 40000000,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Average direct labor cost/MM",
+                        "rowKey": "SALARY_AVERAGE_EXPENSES",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Billable rate (%)",
+                        "rowKey": "BILLABLE_RATE",
+                        "cellList": [
+                            {
+                                "value": 3333.333,
+                                "columnKey": "TOTAL",
+                                "rowKey": "BILLABLE_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 0,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 100,
+                                "columnKey": "SALE_40",
+                                "rowKey": "BILLABLE_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 0,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 100,
+                                "columnKey": "SALE_169",
+                                "rowKey": "BILLABLE_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 0,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "BILLABLE_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "BILLABLE_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 0,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 3333.333,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "BILLABLE_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": 0,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Productivity",
+                        "rowKey": "PRODUCTIVITY",
+                        "cellList": [
+                            {
+                                "value": 20325203.252,
+                                "columnKey": "TOTAL",
+                                "rowKey": "PRODUCTIVITY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "PRODUCTIVITY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "PRODUCTIVITY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "PRODUCTIVITY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "PRODUCTIVITY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 33.333,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "PRODUCTIVITY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Efficiency",
+                        "rowKey": "EFFICIENCY",
+                        "cellList": [
+                            {
+                                "value": -37739837.398,
+                                "columnKey": "TOTAL",
+                                "rowKey": "EFFICIENCY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "EFFICIENCY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "EFFICIENCY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "EFFICIENCY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "EFFICIENCY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": -39999973.333,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "EFFICIENCY",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Incentives rate (%)",
+                        "rowKey": "INCENTIVES_RATE",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "INCENTIVES_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 2,
+                                "columnKey": "SALE_40",
+                                "rowKey": "INCENTIVES_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 2,
+                                "columnKey": "SALE_169",
+                                "rowKey": "INCENTIVES_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "INCENTIVES_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "INCENTIVES_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "INCENTIVES_RATE",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Project bonus/MM",
+                        "rowKey": "PRODUCTION_MM_BONUS",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "PRODUCTION_MM_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "PRODUCTION_MM_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "PRODUCTION_MM_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "PRODUCTION_MM_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "PRODUCTION_MM_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 1200000,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "PRODUCTION_MM_BONUS",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            }
+                        ]
+                    },
+                    {
+                        "label": "Billable rate norm (%)",
+                        "rowKey": "BILL_RATE_NORM",
+                        "cellList": [
+                            {
+                                "value": 0,
+                                "columnKey": "TOTAL",
+                                "rowKey": "BILL_RATE_NORM",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_40",
+                                "rowKey": "BILL_RATE_NORM",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "SALE_169",
+                                "rowKey": "BILL_RATE_NORM",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "INTERNAL",
+                                "rowKey": "BILL_RATE_NORM",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": false,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 0,
+                                "columnKey": "DELIVERY_UNIT_1",
+                                "rowKey": "BILL_RATE_NORM",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            },
+                            {
+                                "value": 85,
+                                "columnKey": "DELIVERY_UNIT_39",
+                                "rowKey": "BILL_RATE_NORM",
+                                "normUnitPriceConfig": null,
+                                "normUnitPriceFloor": null,
+                                "normUnitPriceCeiling": null,
+                                "normBusinessPlanConfig": null,
+                                "editable": true,
+                                "permissionView": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

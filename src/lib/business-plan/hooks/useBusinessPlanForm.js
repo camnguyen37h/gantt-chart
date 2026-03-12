@@ -7,7 +7,7 @@ import { NotificationManager } from 'react-notifications'
 
 const useBusinessPlanForm = () => {
   const dispatch = useDispatch()
-  const { businessPlanItems, columns, compareBusinessPlanItems } = useSelector(
+  const { businessPlanItems, columns, compareBusinessPlanItems, compareColumnLabels } = useSelector(
     state => state.businessPlanDetails
   )
 
@@ -88,6 +88,7 @@ const useBusinessPlanForm = () => {
     getCompareBusinessPlanDetail,
     columns,
     compareBusinessPlanItems,
+    compareColumnLabels,
     clearCompareBusinessPlan,
   }
 }

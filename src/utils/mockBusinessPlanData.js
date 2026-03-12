@@ -6,6 +6,13 @@
  * Last updated: 2024
  */
 
+// ==================== VIEW MODE SPECIFIC DATA ====================
+import mockBusinessPlanByViewTotal from './mock-data/businessPlanTotal.json'
+import mockBusinessPlanByViewOB from './mock-data/businessPlanOB.json'
+import mockBusinessPlanByViewOnsite from './mock-data/businessPlanOnsite.json'
+import mockBusinessPlanByViewOffshore from './mock-data/businessPlanOffshore.json'
+import mockBusinessPlanByViewOffshoreV2 from './mock-data/businessPlanOffshoreV2.json'
+
 // ==================== BUSINESS PLAN DETAIL ====================
 export const mockBusinessPlanDetail = {
   "httpStatus": 200,
@@ -2237,16 +2244,206 @@ export const mockBusinessPlanDetail = {
   "errorMessage": ""
 };
 
-// Create business plan detail for id=437 (GLBOD2500047 as root)
-export const mockBusinessPlanDetail437 = JSON.parse(JSON.stringify({
-  ...mockBusinessPlanDetail,
-  data: {
-    ...mockBusinessPlanDetail.data,
-    id: 437,
-    projectCode: "GLBOD2500047",
-    status: "Draft"
-  }
-}));
+// Create business plan detail for id=437 (Version 2: GLBTM2500093 - GLBOD2500087)
+export const mockBusinessPlanDetail437 = {
+  "httpStatus": 200,
+  "data": {
+    "id": 437,
+    "projectCode": "GLBTM2500093",
+    "status": "Draft",
+    "version": 2,
+    "startDate": 1770915600000,
+    "endDate": 1784134800000,
+    "warningMessage": [],
+    "versions": [
+      {
+        "versionId": 436,
+        "versionName": "Version 1",
+        "status": "APPROVED",
+        "statusName": "Approved"
+      },
+      {
+        "versionId": 437,
+        "versionName": "Version 2",
+        "status": "DRAFT",
+        "statusName": "Draft"
+      }
+    ],
+    "generalInfos": [
+      {
+        "listAM": [
+          {
+            "id": 11240,
+            "businessPlanVersionId": 437,
+            "memberType": "AM",
+            "userId": 3744,
+            "ldap": "ntmanh6",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 99437,
+            "businessPlanVersionId": 437,
+            "memberType": "PREPARATOR",
+            "userId": 1,
+            "ldap": "Demo User",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": 11241,
+            "businessPlanVersionId": 437,
+            "memberType": "PM",
+            "userId": 3860,
+            "ldap": "ttlam1",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "GLBTM2500093 Onsite V2",
+        "customerName": "MyFirstMillion",
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "orderType": "Commercial",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 15000000,
+        "industry": 18,
+        "customerMarket": "US",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 15000000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 70,
+          "businessPlanVersionId": 437,
+          "kpiPm": 30,
+          "kpiQa": 3,
+          "kpiMember": 67
+        },
+        "projectCode": "GLBTM2500093",
+        "mvvLocationType": "Onsite",
+        "id": 437
+      },
+      {
+        "listAM": [
+          {
+            "id": 11242,
+            "businessPlanVersionId": 438,
+            "memberType": "AM",
+            "userId": 700,
+            "ldap": "vdtung",
+            "departmentId": 3,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [
+          {
+            "id": 11243,
+            "businessPlanVersionId": 438,
+            "memberType": "TEAM_LEAD",
+            "userId": 800,
+            "ldap": "ntthuong",
+            "departmentId": 4,
+            "departmentName": "BJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 99438,
+            "businessPlanVersionId": 438,
+            "memberType": "PREPARATOR",
+            "userId": 1,
+            "ldap": "Demo User",
+            "departmentId": 4,
+            "departmentName": "BJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": 11244,
+            "businessPlanVersionId": 438,
+            "memberType": "PM",
+            "userId": 900,
+            "ldap": "pmuser",
+            "departmentId": 5,
+            "departmentName": "BJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "GLBOD2500087 Offshore V2",
+        "customerName": "MyFirstMillion",
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 10000000,
+        "industry": 18,
+        "customerMarket": "Korea",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 10000000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 71,
+          "businessPlanVersionId": 438,
+          "kpiPm": 25,
+          "kpiQa": 2,
+          "kpiMember": 50
+        },
+        "projectCode": "GLBOD2500087",
+        "mvvLocationType": "Offshore",
+        "id": 438
+      }
+    ],
+    "columnLabels": [
+      { "id": null, "label": "Total", "index": 1, "columnKey": "TOTAL" },
+      { "id": 40, "label": "DJ2", "index": 2, "columnKey": "SALE_40" },
+      { "id": null, "label": "Internal", "index": 3, "columnKey": "INTERNAL" },
+      { "id": 1, "label": "DU-DJ2", "index": 4, "columnKey": "DELIVERY_UNIT_1", "mvvLocationType": "Onsite" },
+      { "id": 39, "label": "DU-BJ2", "index": 5, "columnKey": "DELIVERY_UNIT_39", "mvvLocationType": "Offshore" }
+    ],
+    "sectionList": []
+  },
+  "messageId": "Success",
+  "errorMessage": ""
+};
 
 // ==================== PRODUCTION REVENUE ====================
 export const mockProductionRevenue = {
@@ -2869,22 +3066,25 @@ const filterDataByViewMode = (data, viewMode) => {
  * @param {string} viewMode - 'Total' | 'OB' | 'Onsite' | 'Offshore'
  * @returns {object} Mock data for the specified view mode
  */
-export const getBusinessPlanDataByViewMode = (viewMode = 'Total') => {
-  // Use mockBusinessPlanDetail as the base data source
-  const baseData = JSON.parse(JSON.stringify(mockBusinessPlanDetail));
-  
-  // For Total view, return all data
-  if (viewMode === 'Total') {
-    return baseData;
+// V2 business plan IDs: 437 (Onsite), 438 (Offshore)
+var V2_BUSINESS_PLAN_IDS = [437, 438]
+
+export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
+  viewMode = viewMode || 'Total'
+  var id = Number(businessPlanId)
+  var isV2 = V2_BUSINESS_PLAN_IDS.indexOf(id) !== -1
+
+  var offshoreData = isV2 ? mockBusinessPlanByViewOffshoreV2 : mockBusinessPlanByViewOffshore
+
+  var dataMap = {
+    'Total': mockBusinessPlanByViewTotal,
+    'OB': mockBusinessPlanByViewOB,
+    'Onsite': mockBusinessPlanByViewOnsite,
+    'Offshore': offshoreData,
   }
-  
-  // For other views, filter the data
-  const filteredData = filterDataByViewMode(baseData.data, viewMode);
-  
-  return {
-    httpStatus: 200,
-    data: filteredData
-  };
+
+  var data = dataMap[viewMode] || mockBusinessPlanByViewTotal
+  return JSON.parse(JSON.stringify(data))
 };
 
 

@@ -26,9 +26,22 @@ const delay = (ms = NETWORK_DELAY_MS) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 // In-memory storage for business plans
+// 436 = Version 1: GLBTM2500093 (Onsite) side
+// 437 = Version 2: GLBTM2500093 (Onsite) side  
+// 438 = Version 2: GLBOD2500087 (Offshore, DJ2+BJ2) side
+const mockBusinessPlanDetail438 = JSON.parse(JSON.stringify({
+  ...mockBusinessPlanDetail437,
+  data: {
+    ...mockBusinessPlanDetail437.data,
+    id: 438,
+    projectCode: "GLBOD2500087",
+  }
+}));
+
 const businessPlansStore = new Map([
   [436, JSON.parse(JSON.stringify(mockBusinessPlanDetail))],
-  [437, JSON.parse(JSON.stringify(mockBusinessPlanDetail437))]
+  [437, JSON.parse(JSON.stringify(mockBusinessPlanDetail437))],
+  [438, JSON.parse(JSON.stringify(mockBusinessPlanDetail438))],
 ]);
 
 // In-memory storage for production revenue
@@ -81,9 +94,17 @@ export const getBusinessPlanDetail = async (businessPlanId) => {
  * @param {string} viewMode - View mode ('Total', 'OB', 'Onsite', 'Offshore')
  * @returns {Promise<Object>} Business plan detail with columnLabels and sectionList based on view mode
  */
-export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewMode = 'Total') => {
+export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewModeOrParams) => {
   await delay();
-  
+
+  // Handle both string viewMode and params object like { view: 'Offshore' }
+  var viewMode = 'Total';
+  if (viewModeOrParams && typeof viewModeOrParams === 'object') {
+    viewMode = viewModeOrParams.view || 'Total';
+  } else if (viewModeOrParams) {
+    viewMode = viewModeOrParams;
+  }
+
   // Convert to number to match Map keys
   const id = Number(businessPlanId);
   const businessPlan = businessPlansStore.get(id);
@@ -93,7 +114,7 @@ export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewMode =
   }
   
   // Get view mode specific mock data from Mock API/Business plan folder
-  const viewModeData = getBusinessPlanDataByViewMode(viewMode);
+  const viewModeData = getBusinessPlanDataByViewMode(viewMode, id);
   
   // businessPlan has structure: { httpStatus: 200, data: {...} }
   // Extract the base data object

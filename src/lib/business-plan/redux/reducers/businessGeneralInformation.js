@@ -104,8 +104,8 @@ export const businessGeneralInformationSlice = createSlice({
       state.generalInfos = data.generalInfos.filter(item => !!item.id) || []
       state.selectedMvvCode = data.projectCode
       state.mvvLocationTypeIdMap = (state.generalInfos || []).reduce(
-        (map, { mvvLocationType, id }) =>
-          mvvLocationType && id ? { ...map, [mvvLocationType]: id } : map,
+        (map, info) =>
+          info.mvvLocationType && info.projectCode ? { ...map, [info.mvvLocationType]: info.projectCode } : map,
         {}
       )
 
