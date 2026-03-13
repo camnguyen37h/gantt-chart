@@ -17,8 +17,10 @@ import {
 } from '../../redux'
 const { Option } = Select
 
+const ALL_OPTION_VALUE = 'all'
+
 const BusinessPlanDropdownDu = memo(
-  ({ buId, dataDU, duValue, updateIsSaveConfirmShowed }) => {
+  ({ buId, dataDU, duValue, updateIsSaveConfirmShowed, showAllOption }) => {
     const { listDUDelivery } = useSelector(state => state.businessPlanDelivery)
     const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
     const { activePanel } = useSelector(state => state.businessPlanDetails)
@@ -50,22 +52,33 @@ const BusinessPlanDropdownDu = memo(
           )
           break
         case 'Delivery':
-          findDu = listDUDelivery.find(item => item.groupId === value)
-
-          const data = {
-            businessPlanVersionId: buId,
-            deliveryUnit: findDu.groupName,
-          }
           dispatch(resetSaveDeliveryPlanParams())
           dispatch(setDuValueDelivery(value))
-          dispatch(setDeliveryUnitDataDelivery(findDu))
-          dispatch(getLocationExchangeRate(data))
-          dispatch(
-            getSummaryDeliveryPlan({
+
+          if (value === ALL_OPTION_VALUE) {
+            dispatch(setDeliveryUnitDataDelivery(null))
+            dispatch(
+              getSummaryDeliveryPlan({
+                businessPlanVersionId: buId,
+                groupId: '',
+              })
+            )
+          } else {
+            findDu = listDUDelivery.find(item => item.groupId === value)
+
+            const data = {
               businessPlanVersionId: buId,
-              groupId: value,
-            })
-          )
+              deliveryUnit: findDu.groupName,
+            }
+            dispatch(setDeliveryUnitDataDelivery(findDu))
+            dispatch(getLocationExchangeRate(data))
+            dispatch(
+              getSummaryDeliveryPlan({
+                businessPlanVersionId: buId,
+                groupId: value,
+              })
+            )
+          }
 
           break
         default:
@@ -90,20 +103,25 @@ const BusinessPlanDropdownDu = memo(
       }
     }
 
+    const options = [
+      ...(showAllOption ? [{ groupId: ALL_OPTION_VALUE, groupName: 'All' }] : []),
+      ...dataDU,
+    ]
+
     return (
-      <div>
-        <Select
-          placeholder={'Select a delivery unit'}
-          style={{ width: 200, float: 'right' }}
-          value={duValue}
-          onChange={value => handleSelectChange(value)}>
-          {dataDU.map(item => (
-            <Option key={item.groupId}>
-              {item.groupName} - {item.groupSale ? 'Sales' : 'Delivery'}
-            </Option>
-          ))}
-        </Select>
-      </div>
+      <Select
+        placeholder={'Select a delivery unit'}
+        style={{ width: 200, float: 'right' }}
+        value={duValue}
+        onChange={value => handleSelectChange(value)}>
+        {options.map(item => (
+          <Option key={item.groupId} value={item.groupId}>
+            {item.groupId === ALL_OPTION_VALUE
+              ? 'All'
+              : `${item.groupName} - ${item.groupSale ? 'Sales' : 'Delivery'}`}
+          </Option>
+        ))}
+      </Select>
     )
   }
 )

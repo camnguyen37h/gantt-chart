@@ -365,6 +365,7 @@ const BusinessPlanDelivery = forwardRef(
             dataDU={dataDu}
             duValue={duValueDelivery}
             updateIsSaveConfirmShowed={updateIsSaveConfirmShowed}
+            showAllOption
           />
           <Panel style={customPanelStyle} header="Summary" key="1">
             <DeliverySummary buId={buId} />
