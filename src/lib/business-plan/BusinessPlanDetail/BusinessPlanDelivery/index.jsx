@@ -371,41 +371,39 @@ const BusinessPlanDelivery = forwardRef(
           <Panel style={customPanelStyle} header="Summary" key="1">
             <DeliverySummary buId={buId} />
           </Panel>
-          {deliveryUnitDataDelivery && (
-            <Panel
-              style={customPanelStyle}
-              header="Resources Information"
-              key="2">
-              <ResourcesInformation
-                ref={resourcesInformationRef}
-                isExpandPanel={activePanelList.includes('2')}
-                buId={buId}
-                deliveryUnitDataDelivery={deliveryUnitDataDelivery}
-                isSaveShowed={isSaveShowed}
-                mvv={mvv}
-                canEdit={
-                  status !== statusBusinessPlanDetail.approved &&
-                  (status === statusBusinessPlanDetail.draft ||
-                    canEditDeliveryPlanAllStatus)
-                }
-              />
-            </Panel>
-          )}
-          {deliveryUnitDataDelivery && (
-            <Panel style={customPanelStyle} header="Other expenses" key="3">
-              <OtherExpensesTable
-                ref={deliveryPlanOtherExpensesRef}
-                isExpandPanel={activePanelList.includes('3')}
-                buId={buId}
-                deliveryUnitDataDelivery={deliveryUnitDataDelivery}
-                canEdit={
-                  status !== statusBusinessPlanDetail.approved &&
-                  (status === statusBusinessPlanDetail.draft ||
-                    canEditDeliveryPlanAllStatus)
-                }
-              />
-            </Panel>
-          )}
+          <Panel
+            style={customPanelStyle}
+            header="Resources Information"
+            key="2">
+            <ResourcesInformation
+              ref={resourcesInformationRef}
+              isExpandPanel={activePanelList.includes('2')}
+              buId={buId}
+              deliveryUnitDataDelivery={deliveryUnitDataDelivery}
+              isSaveShowed={isSaveShowed}
+              mvv={mvv}
+              canEdit={
+                !!deliveryUnitDataDelivery &&
+                status !== statusBusinessPlanDetail.approved &&
+                (status === statusBusinessPlanDetail.draft ||
+                  canEditDeliveryPlanAllStatus)
+              }
+            />
+          </Panel>
+          <Panel style={customPanelStyle} header="Other expenses" key="3">
+            <OtherExpensesTable
+              ref={deliveryPlanOtherExpensesRef}
+              isExpandPanel={activePanelList.includes('3')}
+              buId={buId}
+              deliveryUnitDataDelivery={deliveryUnitDataDelivery}
+              canEdit={
+                !!deliveryUnitDataDelivery &&
+                status !== statusBusinessPlanDetail.approved &&
+                (status === statusBusinessPlanDetail.draft ||
+                  canEditDeliveryPlanAllStatus)
+              }
+            />
+          </Panel>
           <Panel style={customPanelStyle} header="Reference" key="4">
             <DeliveryPlanReference
               ref={deliveryPlanReferenceRef}
@@ -417,16 +415,14 @@ const BusinessPlanDelivery = forwardRef(
               }
             />
           </Panel>
-          {deliveryUnitDataDelivery && (
-            <Panel style={customPanelStyle} header="History" key="5">
-              <BusinessPlanHistoryTable
-                getBusinessPlanHistoryAPI="HistoryDeliveryPlan"
-                BusinessPlanVersionId={buId}
-                DeliveryUnit={deliveryUnitDataDelivery.groupName}
-                isSale={deliveryUnitDataDelivery.groupSale ? 1 : 0}
-              />
-            </Panel>
-          )}
+          <Panel style={customPanelStyle} header="History" key="5">
+            <BusinessPlanHistoryTable
+              getBusinessPlanHistoryAPI="HistoryDeliveryPlan"
+              BusinessPlanVersionId={buId}
+              DeliveryUnit={deliveryUnitDataDelivery?.groupName}
+              isSale={deliveryUnitDataDelivery?.groupSale ? 1 : 0}
+            />
+          </Panel>
         </Collapse>
         <StyledAffix ref={affixRef} className={isSaveShowed ? 'active' : ''}>
           <div className="affix-content">
