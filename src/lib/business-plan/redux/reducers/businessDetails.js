@@ -5,6 +5,7 @@ import {
   getBusinessPlanDetailByViewMode,
   getCompareBusinessPlanDetail,
   getSpecificPermission,
+  getSummaryRevenuePlan,
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
 import { setSelectedMvvCode } from './businessGeneralInformation'
@@ -305,6 +306,18 @@ const businessDetailsSlice = createSlice({
     )
 
     builder.addCase(getBusinessPlanDetailByViewMode.rejected, state => {
+      state.loadingBusinessPlan = false
+    })
+
+    builder.addCase(getSummaryRevenuePlan.pending, state => {
+      state.loadingBusinessPlan = true
+    })
+
+    builder.addCase(getSummaryRevenuePlan.fulfilled, state => {
+      state.loadingBusinessPlan = false
+    })
+
+    builder.addCase(getSummaryRevenuePlan.rejected, state => {
       state.loadingBusinessPlan = false
     })
 

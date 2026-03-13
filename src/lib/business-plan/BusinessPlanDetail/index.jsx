@@ -104,6 +104,7 @@ function BusinessPlanDetail({ match, history }) {
     endDate,
     createNewVersion,
     generalInformationParams,
+    selectedMvvCode,
   } = useBusinessPlanDetails()
 
   const { getBusinessPlanWorkflow } = useBusinessPlanStep()
@@ -281,10 +282,15 @@ function BusinessPlanDetail({ match, history }) {
       })
     })
     const params = {
-      businessPlanVersionId: parseInt(match.params.buId),
-      generalInformation: generalInformationParams,
-      sectionList,
-      columnLabels,
+      generalInformation: {
+        ...generalInformationParams,
+        mvv: selectedMvvCode,
+      },
+      businessPlan: {
+        sectionList,
+        columnLabels,
+        mvv: mvvLocationTypeIdMap[viewMode],
+      },
     }
     await saveDraft(params)
     await dispatch(getBusinessPlanHistory(match.params.buId))
@@ -312,6 +318,13 @@ function BusinessPlanDetail({ match, history }) {
         activeKey,
       })
     )
+    if (activeKey !== '1' && (viewMode === 'Total' || viewMode === 'OB')) {
+      const currentMVV =
+        generalInfos && generalInfos.find(info => info.id === Number(match.params.buId))
+      if (currentMVV && currentMVV.mvvLocationType) {
+        setViewMode(currentMVV.mvvLocationType)
+      }
+    }
   }
 
   useEffect(() => {
@@ -441,7 +454,7 @@ function BusinessPlanDetail({ match, history }) {
                       key="2"
                       disabled={isSaveShowedDeliveryPlan || isSaveShowed}>
                       <BusinessPlanRevenue
-                        businessVersion={match.params.buId}
+                        businessVersion={mvvLocationTypeIdMap[viewMode]}
                         projectCode={projectCode}
                         status={status}
                         dataDu={listDuRevenue}
