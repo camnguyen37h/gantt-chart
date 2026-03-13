@@ -17,7 +17,7 @@ import {
 } from '../../redux'
 const { Option } = Select
 
-const ALL_OPTION_VALUE = 'all'
+const ALL_OPTION_VALUE = ''
 
 const BusinessPlanDropdownDu = memo(
   ({ buId, dataDU, duValue, updateIsSaveConfirmShowed, showAllOption }) => {
@@ -52,34 +52,25 @@ const BusinessPlanDropdownDu = memo(
           )
           break
         case 'Delivery':
+          findDu = listDUDelivery.find(item => item.groupId === value) || null
+
           dispatch(resetSaveDeliveryPlanParams())
           dispatch(setDuValueDelivery(value))
-
-          if (value === ALL_OPTION_VALUE) {
-            dispatch(setDeliveryUnitDataDelivery(null))
+          dispatch(setDeliveryUnitDataDelivery(findDu))
+          if (findDu) {
             dispatch(
-              getSummaryDeliveryPlan({
+              getLocationExchangeRate({
                 businessPlanVersionId: buId,
-                groupId: '',
-              })
-            )
-          } else {
-            findDu = listDUDelivery.find(item => item.groupId === value)
-
-            const data = {
-              businessPlanVersionId: buId,
-              deliveryUnit: findDu.groupName,
-            }
-            dispatch(setDeliveryUnitDataDelivery(findDu))
-            dispatch(getLocationExchangeRate(data))
-            dispatch(
-              getSummaryDeliveryPlan({
-                businessPlanVersionId: buId,
-                groupId: value,
+                deliveryUnit: findDu.groupName,
               })
             )
           }
-
+          dispatch(
+            getSummaryDeliveryPlan({
+              businessPlanVersionId: buId,
+              groupId: value,
+            })
+          )
           break
         default:
           break
@@ -115,7 +106,7 @@ const BusinessPlanDropdownDu = memo(
         value={duValue}
         onChange={value => handleSelectChange(value)}>
         {options.map(item => (
-          <Option key={item.groupId} value={item.groupId}>
+          <Option key={item.groupId || 'all'} value={item.groupId}>
             {item.groupId === ALL_OPTION_VALUE
               ? 'All'
               : `${item.groupName} - ${item.groupSale ? 'Sales' : 'Delivery'}`}

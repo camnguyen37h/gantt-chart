@@ -282,6 +282,7 @@ const BusinessPlanDelivery = forwardRef(
       const isValid = handleValidate()
 
       if (!isValid) return
+      if (!deliveryUnitDataDelivery) return
 
       const saveDeliveryPlanParams = {
         businessPlanId: Number(buId),
