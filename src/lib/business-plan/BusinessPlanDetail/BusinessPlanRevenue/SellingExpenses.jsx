@@ -409,11 +409,16 @@ const SellingExpenses = ({
           children: [
             {
               title: (
-                <div style={{ display: 'flex' }}>
-                  <div onClick={toggleExpandAll}>
-                    {expandAll ? <Icon type="down" /> : <Icon type="right" />}
-                  </div>
-                </div>
+                <Icon
+                  onClick={toggleExpandAll}
+                  type="right"
+                  style={{
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    transform: expandAll ? 'rotate(90deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.3s ease',
+                  }}
+                />
               ),
               dataIndex: 'icon-expand',
               key: 'icon-expand',
@@ -428,13 +433,18 @@ const SellingExpenses = ({
                       gap: '8px',
                       alignItems: 'center',
                     }}>
-                    <div onClick={() => toggleExpand(record.key)}>
-                      {expandedKeys.includes(record.key) ? (
-                        <Icon type="down" />
-                      ) : (
-                        <Icon type="right" />
-                      )}
-                    </div>
+                    <Icon
+                      onClick={() => toggleExpand(record.key)}
+                      type="right"
+                      style={{
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        transform: expandedKeys.includes(record.key)
+                          ? 'rotate(90deg)'
+                          : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease',
+                      }}
+                    />
                     <Tooltip
                       placement="leftTop"
                       title={

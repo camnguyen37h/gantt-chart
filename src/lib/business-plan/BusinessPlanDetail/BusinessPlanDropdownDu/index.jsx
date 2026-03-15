@@ -1,7 +1,11 @@
 import { Modal, Select } from 'antd'
 import { memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { CONFIRM_MODAL_CHANGE_DEPARTMENT } from '../../constants'
+import {
+  ALL_OPTION,
+  ALL_OPTION_VALUE,
+  CONFIRM_MODAL_CHANGE_DEPARTMENT,
+} from '../../constants'
 import {
   getLocationExchangeRate,
   getSummaryDeliveryPlan,
@@ -16,8 +20,6 @@ import {
   setLoadDataFromValue,
 } from '../../redux'
 const { Option } = Select
-
-const ALL_OPTION_VALUE = ''
 
 const BusinessPlanDropdownDu = memo(
   ({ buId, dataDU, duValue, updateIsSaveConfirmShowed, showAllOption }) => {
@@ -56,7 +58,6 @@ const BusinessPlanDropdownDu = memo(
 
           dispatch(resetSaveDeliveryPlanParams())
           dispatch(setDuValueDelivery(value))
-          dispatch(setDeliveryUnitDataDelivery(findDu))
           if (findDu) {
             dispatch(
               getLocationExchangeRate({
@@ -64,13 +65,17 @@ const BusinessPlanDropdownDu = memo(
                 deliveryUnit: findDu.groupName,
               })
             )
+            dispatch(setDeliveryUnitDataDelivery(findDu))
+          } else {
+            dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
           }
           dispatch(
             getSummaryDeliveryPlan({
               businessPlanVersionId: buId,
-              groupId: value,
+              groupId: value === ALL_OPTION_VALUE ? '' : value,
             })
           )
+
           break
         default:
           break
@@ -94,8 +99,10 @@ const BusinessPlanDropdownDu = memo(
       }
     }
 
-    const options = [
-      ...(showAllOption ? [{ groupId: ALL_OPTION_VALUE, groupName: 'All' }] : []),
+    const deliveryOptions = [
+      ...(showAllOption
+        ? [{ groupId: ALL_OPTION_VALUE, groupName: 'All' }]
+        : []),
       ...dataDU,
     ]
 
@@ -105,7 +112,7 @@ const BusinessPlanDropdownDu = memo(
         style={{ width: 200, float: 'right' }}
         value={duValue}
         onChange={value => handleSelectChange(value)}>
-        {options.map(item => (
+        {deliveryOptions.map(item => (
           <Option key={item.groupId || 'all'} value={item.groupId}>
             {item.groupId === ALL_OPTION_VALUE
               ? 'All'

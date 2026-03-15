@@ -55,7 +55,7 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { listAM, hasIncompleteGeneralInfos } = useSelector(state => state.businessGeneralInformation)
+  const { listAM } = useSelector(state => state.businessGeneralInformation)
 
   // Mock user for demo
   const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
@@ -232,11 +232,11 @@ function BusinessPlanVersion({
             </Dropdown>
           )}
           {isDraft && (isAMSubmit || isSubmit) && (
-            <Tooltip title={renderTooltipButton(hasIncompleteGeneralInfos ? 'Some linked MVVs are missing data and cannot be submitted' : errorMessage)}>
+            <Tooltip title={renderTooltipButton(errorMessage)}>
               <Button
                 type="primary"
                 onClick={() => setSubmitModalVisible(true)}
-                disabled={errorMessage || hasIncompleteGeneralInfos}
+                disabled={errorMessage}
                 loading={loadingSubmit}>
                 Submit
               </Button>

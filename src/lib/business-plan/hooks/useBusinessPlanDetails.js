@@ -11,13 +11,12 @@ import { DateFormat } from '../../constants/DateFormat'
 const useBusinessPlanDetails = () => {
   const dispatch = useDispatch()
   const {
+    activePanel,
     loadingBusinessPlan,
     isSaveShowed,
     exchangeRate,
     totalContractPrice,
-    projectCode,
     version,
-    status,
     originalBusinessPlanItems,
     columns,
     validation,
@@ -45,8 +44,6 @@ const useBusinessPlanDetails = () => {
     businessPlanSettingMaxKpiSetting,
     planningStartDate,
     planningEndDate,
-    selectedMvvCode,
-    mvvLocationTypeIdMap,
   } = useSelector(state => state.businessGeneralInformation)
   const { listDocuments } = useSelector(state => state.businessDocuments)
   const changeDataWithoutId = data => {
@@ -103,8 +100,8 @@ const useBusinessPlanDetails = () => {
   )
 
   const getBusinessPlanDetailByViewMode = useCallback(
-    (id, viewMode) => {
-      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, viewMode }))
+    (id, params) => {
+      return dispatch(redux.getBusinessPlanDetailByViewMode({ id, params }))
     },
     [dispatch]
   )
@@ -369,6 +366,7 @@ const useBusinessPlanDetails = () => {
   )
 
   return {
+    activePanel,
     loadingBusinessPlan,
     isSaveShowed,
     exchangeRate,
@@ -380,9 +378,7 @@ const useBusinessPlanDetails = () => {
     getBusinessPlanDetailByViewMode,
     setContractPriceData,
     handleValidate,
-    projectCode,
     version,
-    status,
     originalBusinessPlanItems,
     columns,
     setValidation,
@@ -400,8 +396,6 @@ const useBusinessPlanDetails = () => {
     otherFees,
     warningMessage,
     errorMessage,
-    selectedMvvCode,
-    mvvLocationTypeIdMap,
   }
 }
 

@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from 'antd'
 import cloneDeep from 'lodash/cloneDeep'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../hooks'
@@ -29,9 +29,9 @@ import { GeneralInformationTotalTemplate } from './BusinessPlanReport/constant'
 import BusinessPlanRevenue from './BusinessPlanRevenue'
 import BusinessPlanStep from './BusinessPlanStep'
 import BusinessPlanVersion from './BusinessPlanVersion'
-import BusinessPlanTabWrapper from './BusinessPlanTabWrapper'
 import './style.css'
 import Loading from '../../../components/common/Loading/Loading'
+import BusinessPlanTabWrapper from './BusinessPlanTabWrapper'
 import { NotificationManager } from 'react-notifications'
 
 const { Panel } = Collapse
@@ -96,15 +96,12 @@ function BusinessPlanDetail({ match, history }) {
     submit,
     getBusinessPlanDetail,
     getBusinessPlanDetailByViewMode,
-    projectCode,
-    status,
     originalBusinessPlanItems,
     columns: columnLabels,
     startDate,
     endDate,
     createNewVersion,
     generalInformationParams,
-    selectedMvvCode,
   } = useBusinessPlanDetails()
 
   const { getBusinessPlanWorkflow } = useBusinessPlanStep()
@@ -169,6 +166,20 @@ function BusinessPlanDetail({ match, history }) {
     }
   }, [generalInfos, match.params.buId])
 
+  const businessPlanVersionId = useMemo(() => {
+    return +mvvLocationTypeIdMap[viewMode] || null
+  }, [viewMode])
+
+  const projectCode = useMemo(() => {
+    return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
+      .projectCode
+  }, [viewMode])
+
+  const statusProjectCode = useMemo(() => {
+    return (generalInfos.find(item => item.id === businessPlanVersionId) || [])
+      .status
+  }, [viewMode])
+
   const customPanelStyle = {
     border: 0,
     overflow: 'hidden',
@@ -202,7 +213,7 @@ function BusinessPlanDetail({ match, history }) {
 
     const param = {
       mvv: projectCode,
-      businessVersion: versionId,
+      businessVersion: businessPlanVersionId,
     }
     return await dispatch(postSubmitBaselineRevenuePlan(param))
   }
@@ -282,15 +293,10 @@ function BusinessPlanDetail({ match, history }) {
       })
     })
     const params = {
-      generalInformation: {
-        ...generalInformationParams,
-        mvv: selectedMvvCode,
-      },
-      businessPlan: {
-        sectionList,
-        columnLabels,
-        mvv: mvvLocationTypeIdMap[viewMode],
-      },
+      businessPlanVersionId: parseInt(match.params.buId),
+      generalInformation: generalInformationParams,
+      sectionList,
+      columnLabels,
     }
     await saveDraft(params)
     await dispatch(getBusinessPlanHistory(match.params.buId))
@@ -318,25 +324,21 @@ function BusinessPlanDetail({ match, history }) {
         activeKey,
       })
     )
-    if (activeKey !== '1' && (viewMode === 'Total' || viewMode === 'OB')) {
-      const currentMVV =
-        generalInfos && generalInfos.find(info => info.id === Number(match.params.buId))
-      if (currentMVV && currentMVV.mvvLocationType) {
-        setViewMode(currentMVV.mvvLocationType)
-      }
-    }
   }
 
   useEffect(() => {
-    if (match.params.buId && viewMode && activeCollapse.includes('2')) {
-      getBusinessPlanDetailByViewMode(match.params.buId, viewMode)
-    }
-  }, [
-    viewMode,
-    match.params.buId,
-    activeCollapse,
-    getBusinessPlanDetailByViewMode,
-  ])
+    if (
+      !match.params.buId ||
+      !viewMode ||
+      !activeCollapse.includes('2') ||
+      !activeTab.includes('1')
+    )
+      return
+
+    getBusinessPlanDetailByViewMode(match.params.buId, {
+      view: viewMode,
+    })
+  }, [viewMode, activeCollapse, match.params.buId])
 
   useEffect(() => {
     const result = {
@@ -351,18 +353,20 @@ function BusinessPlanDetail({ match, history }) {
     }
     dispatch(setValidation(result))
 
-    const dataDelivery = {
-      businessPlanVersionId: match.params.buId,
-      type: 'Delivery',
-    }
-    dispatch(getListDUByVersionDelivery(dataDelivery))
+    if (businessPlanVersionId) {
+      const dataDelivery = {
+        businessPlanVersionId: businessPlanVersionId,
+        type: 'Delivery',
+      }
+      dispatch(getListDUByVersionDelivery(dataDelivery))
 
-    const dataRevenue = {
-      businessPlanVersionId: match.params.buId,
-      type: 'Revenue',
+      const dataRevenue = {
+        businessPlanVersionId: businessPlanVersionId,
+        type: 'Revenue',
+      }
+      dispatch(getListDUByVersionRevenue(dataRevenue))
     }
-    dispatch(getListDUByVersionRevenue(dataRevenue))
-  }, [])
+  }, [businessPlanVersionId])
 
   return (
     <div className="main-content-pr">
@@ -427,12 +431,11 @@ function BusinessPlanDetail({ match, history }) {
                     }
                     key="1"
                     disabled={isSaveShowedDeliveryPlan || isEditingRevenuePlan}>
-                    {viewMode && (
-                      <BusinessPlanFormSection
-                        handleChangeTab={handleChangeTab}
-                        viewMode={viewMode}
-                      />
-                    )}
+                    <BusinessPlanFormSection
+                      handleChangeTab={handleChangeTab}
+                      activeTab={activeTab}
+                      viewMode={viewMode}
+                    />
                   </BusinessPlanTabWrapper>
                   {listDuRevenue && listDuRevenue.length > 0 && (
                     <BusinessPlanTabWrapper
@@ -453,12 +456,14 @@ function BusinessPlanDetail({ match, history }) {
                       }
                       key="2"
                       disabled={isSaveShowedDeliveryPlan || isSaveShowed}>
-                      <BusinessPlanRevenue
-                        businessVersion={mvvLocationTypeIdMap[viewMode]}
-                        projectCode={projectCode}
-                        status={status}
-                        dataDu={listDuRevenue}
-                      />
+                      {businessPlanVersionId && (
+                        <BusinessPlanRevenue
+                          businessVersion={businessPlanVersionId}
+                          projectCode={projectCode}
+                          status={statusProjectCode}
+                          dataDu={listDuRevenue}
+                        />
+                      )}
                     </BusinessPlanTabWrapper>
                   )}
 
@@ -485,9 +490,9 @@ function BusinessPlanDetail({ match, history }) {
                       disabled={isEditingRevenuePlan || isSaveShowed}>
                       <BusinessPlanDelivery
                         ref={businessPlanDeliveryRef}
-                        buId={match.params.buId}
+                        buId={businessPlanVersionId}
                         mvv={projectCode}
-                        status={status}
+                        status={statusProjectCode}
                         dataDu={listDUDelivery}
                       />
                     </BusinessPlanTabWrapper>

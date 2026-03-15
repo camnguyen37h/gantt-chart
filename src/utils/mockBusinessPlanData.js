@@ -19,7 +19,7 @@ export const mockBusinessPlanDetail = {
   "data": {
     "id": 436,
     "projectCode": "GLBTM2500093",
-    "status": "Approved",
+    "status": "Draft",
     "version": 1,
     "startDate": 1770915600000,
     "endDate": 1784134800000,

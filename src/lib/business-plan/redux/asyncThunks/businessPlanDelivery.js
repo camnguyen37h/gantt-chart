@@ -158,10 +158,7 @@ export const getSummaryDeliveryPlan = createAsyncThunk(
 export const getLocationExchangeRate = createAsyncThunk(
   'get/getLocationExchangeRate',
   async data => {
-    const result = await Request(
-      BUSINESS_PLAN_API.getLocationExchangeRate,
-      data
-    )
+    const result = await BusinessPlanAPI.getLocationExchangeRate(data)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

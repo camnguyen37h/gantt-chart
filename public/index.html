@@ -57,68 +57,29 @@
           roles: mockUser.roles
         };
         
-        // Mock Permissions - Full Business Plan Module Permissions
+        // Mock Permissions - structured format required by checkRolePermission()
+        // Format: [{ key: SourceConstants.xxx, activities: [{ name: ActivityKeyConstants.xxx }] }]
         const mockPermissions = [
-          // Business Plan List
-          'BUSINESS_PLAN_VIEW',
-          'BUSINESS_PLAN_LIST_VIEW',
-          'BUSINESS_PLAN_FILTER',
-          'BUSINESS_PLAN_SEARCH',
-          
-          // Business Plan Detail
-          'BUSINESS_PLAN_DETAIL_VIEW',
-          'BUSINESS_PLAN_EDIT',
-          'BUSINESS_PLAN_CREATE',
-          'BUSINESS_PLAN_DELETE',
-          'BUSINESS_PLAN_SAVE_DRAFT',
-          'BUSINESS_PLAN_SUBMIT',
-          'BUSINESS_PLAN_VERSION_CREATE',
-          
-          // Revenue Plan
-          'REVENUE_PLAN_VIEW',
-          'REVENUE_PLAN_EDIT',
-          'REVENUE_PLAN_PRODUCTION_EDIT',
-          'REVENUE_PLAN_OTHER_EDIT',
-          'REVENUE_PLAN_SELLING_EDIT',
-          'REVENUE_PLAN_SUMMARY_VIEW',
-          'REVENUE_PLAN_BASELINE_SUBMIT',
-          
-          // Delivery Plan
-          'DELIVERY_PLAN_VIEW',
-          'DELIVERY_PLAN_EDIT',
-          'DELIVERY_PLAN_RESOURCE_ADD',
-          'DELIVERY_PLAN_RESOURCE_EDIT',
-          'DELIVERY_PLAN_RESOURCE_DELETE',
-          'DELIVERY_PLAN_EXPENSE_EDIT',
-          'DELIVERY_PLAN_SUMMARY_VIEW',
-          'DELIVERY_PLAN_SAVE',
-          
-          // Documents
-          'BUSINESS_PLAN_DOCUMENT_VIEW',
-          'BUSINESS_PLAN_DOCUMENT_UPLOAD',
-          'BUSINESS_PLAN_DOCUMENT_DELETE',
-          'BUSINESS_PLAN_DOCUMENT_DOWNLOAD',
-          
-          // Workflow & Approval
-          'BUSINESS_PLAN_WORKFLOW_VIEW',
-          'BUSINESS_PLAN_APPROVE',
-          'BUSINESS_PLAN_REJECT',
-          'BUSINESS_PLAN_REASSIGN',
-          
-          // Comments
-          'BUSINESS_PLAN_COMMENT_VIEW',
-          'BUSINESS_PLAN_COMMENT_ADD',
-          
-          // History
-          'BUSINESS_PLAN_HISTORY_VIEW',
-          
-          // Export
-          'BUSINESS_PLAN_EXPORT',
-          
-          // Admin
-          'BUSINESS_PLAN_ADMIN',
-          'BUSINESS_PLAN_SETTINGS_VIEW',
-          'BUSINESS_PLAN_SETTINGS_EDIT'
+          {
+            key: '/delivery/business-plan-list',
+            activities: [
+              { name: 'EXPORT_BUSINESS_PLAN' },
+            ]
+          },
+          {
+            key: '/delivery/business-plan-list/{buId}/business-plan-detail',
+            activities: [
+              { name: 'EDIT_BUSINESS_PLAN' },
+              { name: 'EDIT_BUSINESS_PLAN_ALL' },
+              { name: 'EDIT_DOCUMENT_ALL' },
+              { name: 'EDIT_DOCUMENT_DU' },
+              { name: 'CREATE_NEW_VERSION' },
+              { name: 'EXPORT_BUSINESS_PLAN' },
+              { name: 'SUBMIT_BUSINESS_PLAN' },
+              { name: 'EDIT_REVENUE_PLAN_ALL_STATUS' },
+              { name: 'EDIT_DELIVERY_PLAN_ALL_STATUS' },
+            ]
+          },
         ];
         
         // Mock Tokens
@@ -143,10 +104,9 @@
           console.log('✅ Mock userPOA initialized');
         }
         
-        if (!localStorage.getItem('permissions')) {
-          localStorage.setItem('permissions', JSON.stringify(mockPermissions));
-          console.log('✅ Mock permissions initialized:', mockPermissions.length, 'permissions');
-        }
+        // Always overwrite permissions to ensure the correct structured format is used
+        localStorage.setItem('permissions', JSON.stringify(mockPermissions));
+        console.log('✅ Mock permissions initialized:', mockPermissions.length, 'entries');
         
         if (!localStorage.getItem('access_token')) {
           localStorage.setItem('access_token', mockAccessToken);

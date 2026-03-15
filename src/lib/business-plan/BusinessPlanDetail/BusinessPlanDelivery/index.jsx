@@ -51,7 +51,7 @@ import './style.css'
 import useBussinessPlanHistoryService from '../../hooks/useBussinessPlanHistoryService'
 import { DeliverySummaryTooltip } from '../BusinessPlanRevenue/constant'
 import { ResponseStatusCode } from '../../../service/constant'
-
+import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
 const { Panel } = Collapse
 const DEFAULT_PANELS = ['1']
 const customPanelStyle = {
@@ -90,34 +90,34 @@ const StyledAffix = styled.div`
 `
 const CustomDescription = ({ title, value }) => {
   return (
-    <div>
-      <Row>
-        <Col span={4} style={{ marginBottom: 4 }}>
-          {title}
-        </Col>
-        <Col span={4}>
-          <Row type="flex" align="middle">
-            <Col span={16}>
-              <Tooltip title={DeliverySummaryTooltip[title]}>
-                <Icon type="question-circle" style={{ cursor: 'pointer' }} />
-              </Tooltip>
-            </Col>
-            <Col span={8}>
-              <div style={{ textAlign: 'left' }}>
-                {value < 0
-                  ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
-                  : formatFloatNumber(value, 0, 3)}
-              </div>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </div>
+    <Row>
+      <Col span={5} style={{ marginBottom: 4 }}>
+        {title}
+      </Col>
+      <Col span={7}>
+        <Row type="flex" align="middle">
+          <Col span={4} type="flex" align="middle">
+            <Tooltip title={DeliverySummaryTooltip[title]}>
+              <Icon
+                type="question-circle"
+                style={{ cursor: 'pointer', padding: '4px' }}
+              />
+            </Tooltip>
+          </Col>
+          <Col span={7}>
+            <div style={{ textAlign: 'left' }}>
+              {value < 0
+                ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
+                : formatFloatNumber(value, 0, 3)}
+            </div>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   )
 }
 
-const DeliverySummary = ({ buId }) => {
-  const dispatch = useDispatch()
+const DeliverySummary = () => {
   const { summaryDeliveryPlan, loadingSummaryDeliveryPlan } = useSelector(
     state => state.businessPlanDelivery
   )
@@ -212,7 +212,7 @@ const BusinessPlanDelivery = forwardRef(
           deliveryUnit: '',
         })
       )
-    }, [])
+    }, [buId])
 
     const handleCancel = () => {
       setVisible(true)
@@ -283,6 +283,11 @@ const BusinessPlanDelivery = forwardRef(
 
       if (!isValid) return
       if (!deliveryUnitDataDelivery) return
+      if (deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE) {
+        return NotificationManager.error(
+          'You cannot operate task because changes at filter all, changes cannot be saved'
+        )
+      }
 
       const saveDeliveryPlanParams = {
         businessPlanId: Number(buId),
@@ -340,16 +345,16 @@ const BusinessPlanDelivery = forwardRef(
     useEffect(() => {
       dispatch(resetSummaryDeliveryPlan())
       if (activePanel === 'Delivery') {
-        dispatch(setDeliveryUnitDataDelivery(dataDu[0]))
-        dispatch(setDuValueDelivery(dataDu && dataDu[0] && dataDu[0].groupId))
+        dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
+        dispatch(setDuValueDelivery(ALL_OPTION_VALUE))
         dispatch(
           getSummaryDeliveryPlan({
             businessPlanVersionId: Number(buId),
-            groupId: dataDu[0] && parseInt(dataDu[0].groupId),
+            groupId: '',
           })
         )
       }
-    }, [activePanel])
+    }, [activePanel, buId])
 
     return (
       <div>
@@ -383,10 +388,10 @@ const BusinessPlanDelivery = forwardRef(
               isSaveShowed={isSaveShowed}
               mvv={mvv}
               canEdit={
-                !!deliveryUnitDataDelivery &&
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
-                  canEditDeliveryPlanAllStatus)
+                  canEditDeliveryPlanAllStatus) &&
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
               }
             />
           </Panel>
@@ -397,10 +402,10 @@ const BusinessPlanDelivery = forwardRef(
               buId={buId}
               deliveryUnitDataDelivery={deliveryUnitDataDelivery}
               canEdit={
-                !!deliveryUnitDataDelivery &&
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
-                  canEditDeliveryPlanAllStatus)
+                  canEditDeliveryPlanAllStatus) &&
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
               }
             />
           </Panel>
@@ -419,8 +424,12 @@ const BusinessPlanDelivery = forwardRef(
             <BusinessPlanHistoryTable
               getBusinessPlanHistoryAPI="HistoryDeliveryPlan"
               BusinessPlanVersionId={buId}
-              DeliveryUnit={deliveryUnitDataDelivery?.groupName}
-              isSale={deliveryUnitDataDelivery?.groupSale ? 1 : 0}
+              DeliveryUnit={
+                deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
+                  ? undefined
+                  : deliveryUnitDataDelivery.groupName
+              }
+              isSale={deliveryUnitDataDelivery.groupSale ? 1 : 0}
             />
           </Panel>
         </Collapse>

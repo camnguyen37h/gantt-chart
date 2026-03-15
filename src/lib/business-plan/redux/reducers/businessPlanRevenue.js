@@ -13,7 +13,7 @@ import {
   getSummaryRevenuePlan,
   postBusinessPlanOtherRevenue,
   postSubmitBaselineRevenuePlan,
-} from '../asyncThunks'
+} from '../asyncThunks/businessPlanRevenue'
 
 const initialState = {
   dataSourceTableRevenue: undefined,
@@ -426,7 +426,7 @@ const businessPlanRevenueSlice = createSlice({
     })
 
     builder.addCase(getPositionRevenuePlan.fulfilled, (state, { payload }) => {
-      const { data, errorMessage, httpStatus } = payload || {}
+      const { data, errorMessage, httpStatus } = payload
       if (httpStatus === ResponseStatusCode.success) {
         state.dataFilterPosition = data
       }
@@ -438,45 +438,35 @@ const businessPlanRevenueSlice = createSlice({
       state.isLoadingFilterPosition = false
     })
 
-    builder.addCase(getSummaryRevenuePlan.pending, (state, action) => {
-      state.summaryRevenuePlan.loading = true
-    })
-
     builder.addCase(getSummaryRevenuePlan.fulfilled, (state, action) => {
       state.summaryRevenuePlan.loading = false
 
-      const payload = action.payload || {}
       state.summaryRevenuePlan['mmBill'] =
-        payload['mmBill'] !== null ? payload['mmBill'] : ''
+        action.payload['mmBill'] !== null ? action.payload['mmBill'] : ''
       state.summaryRevenuePlan['softwareProductionRevenues'] =
-        payload['softwareProductionRevenues'] !== null
-          ? payload['softwareProductionRevenues']
+        action.payload['softwareProductionRevenues'] !== null
+          ? action.payload['softwareProductionRevenues']
           : ''
       state.summaryRevenuePlan['deduction'] =
-        payload['deduction'] !== null ? payload['deduction'] : ''
+        action.payload['deduction'] !== null ? action.payload['deduction'] : ''
       state.summaryRevenuePlan['onsiteFee'] =
-        payload['onsiteFee'] !== null ? payload['onsiteFee'] : ''
+        action.payload['onsiteFee'] !== null ? action.payload['onsiteFee'] : ''
       state.summaryRevenuePlan['equipmentRevenue'] =
-        payload['equipmentRevenue'] !== null
-          ? payload['equipmentRevenue']
+        action.payload['equipmentRevenue'] !== null
+          ? action.payload['equipmentRevenue']
           : ''
       state.summaryRevenuePlan['otherRevenues'] =
-        payload['otherRevenues'] !== null
-          ? payload['otherRevenues']
+        action.payload['otherRevenues'] !== null
+          ? action.payload['otherRevenues']
           : ''
       state.summaryRevenuePlan['agencyExpenses'] =
-        payload['agencyExpenses'] !== null
-          ? payload['agencyExpenses']
+        action.payload['agencyExpenses'] !== null
+          ? action.payload['agencyExpenses']
           : ''
-    })
-
-    builder.addCase(getSummaryRevenuePlan.rejected, (state, action) => {
-      state.summaryRevenuePlan.loading = false
     })
 
     builder.addCase(getListDUByVersionRevenue.fulfilled, (state, action) => {
-      const payload = action.payload || []
-      const filteredItems = payload
+      const filteredItems = action.payload
         .filter(item => item.groupId !== null)
         .map(item => ({
           ...item,

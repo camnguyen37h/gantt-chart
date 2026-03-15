@@ -585,6 +585,443 @@ export const getListDUByVersionDelivery = async (params) => {
   };
 };
 
+// ========== Delivery Plan APIs ==========
+
+/**
+ * Get Summary Delivery Plan
+ * @param {Object} params - { businessPlanVersionId, groupId }
+ * @returns {Promise<Object>} Delivery plan summary metrics
+ */
+export const getSummaryDeliveryPlan = async (params) => {
+  await delay();
+
+  return {
+    httpStatus: 200,
+    data: {
+      mmEffort: 6,
+      directLaborCost: 87600000,
+      outsourcingCost: null,
+      equipmentExpense: null,
+      onsiteExpense: null,
+      overtime: null,
+      other: null,
+      nonDeductibleInputVAT: null,
+    },
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get Location Exchange Rate
+ * @param {Object} params - { businessPlanVersionId, groupId }
+ * @returns {Promise<Object>} Exchange rates and salary/expense indices per location
+ */
+export const getLocationExchangeRate = async (params) => {
+  await delay();
+
+  return {
+    httpStatus: 200,
+    data: {
+      locationExchangeRateData: [
+        { location: 'Vietnam', exchangeRate: 25000 },
+        { location: 'Japan', exchangeRate: 170 },
+      ],
+      locationSalaryExpenseIndexData: [
+        { location: 'Vietnam', salaryIndex: 1.0, expenseIndex: 1.0 },
+        { location: 'Japan', salaryIndex: 3.5, expenseIndex: 3.0 },
+      ],
+    },
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+// In-memory store for delivery plan resources (headcount table)
+const deliveryPlanResourcesStore = new Map([
+  [
+    436,
+    {
+      total: 1,
+      body: {
+        listLabelMonth: ['Feb-26', 'Mar-26', 'Apr-26', 'May-26', 'Jun-26', 'Jul-26'],
+        listBudgetMMForEachMonth: {
+          'Feb-26': 1, 'Mar-26': 1, 'Apr-26': 1, 'May-26': 1, 'Jun-26': 1, 'Jul-26': 1,
+        },
+        deliveryPlanByHeadCountList: [
+          {
+            deliveryMemberId: 1000110,
+            userId: 3860,
+            resourceType: 'User',
+            resourceFullName: 'Lam. Tran Tung  - CMCGlobal DJ2',
+            location: 'Vietnam',
+            ldap: 'ttlam1',
+            employeeType: 'In-house',
+            originalGrossSalary: 5000000,
+            grossSalary: 5000000,
+            position: 'SE02',
+            role: 'Member',
+            rowTotal: 6,
+            budgetMMValue: null,
+            budgetMMValueDTO: {
+              'Feb-26': { id: 1000283, deliveryMemberId: 1000110, month: 2, year: 2026, value: 1 },
+              'Mar-26': { id: 1000284, deliveryMemberId: 1000110, month: 3, year: 2026, value: 1 },
+              'Apr-26': { id: 1000285, deliveryMemberId: 1000110, month: 4, year: 2026, value: 1 },
+              'May-26': { id: 1000286, deliveryMemberId: 1000110, month: 5, year: 2026, value: 1 },
+              'Jun-26': { id: 1000287, deliveryMemberId: 1000110, month: 6, year: 2026, value: 1 },
+              'Jul-26': { id: 1000288, deliveryMemberId: 1000110, month: 7, year: 2026, value: 1 },
+            },
+            groupId: 2,
+            groupName: 'DJ2',
+          },
+        ],
+        totalRecord: 1,
+      },
+      page: 1,
+      size: 20,
+    },
+  ],
+]);
+
+/**
+ * Get Resources Information Delivery Plan (headcount table)
+ * @param {Object} params - { businessPlanVersionId, deliveryUnit, pageNum, pageSize, ... }
+ * @returns {Promise<Object>} Paginated resources information
+ */
+export const getResourcesInformationDeliveryPlan = async (params) => {
+  await delay();
+
+  const { businessPlanVersionId } = params || {};
+  const id = Number(businessPlanVersionId);
+  const stored = deliveryPlanResourcesStore.get(id);
+
+  if (stored) {
+    return {
+      httpStatus: 200,
+      data: JSON.parse(JSON.stringify(stored)),
+      messageId: "Success",
+      errorMessage: "",
+    };
+  }
+
+  return {
+    httpStatus: 200,
+    data: {
+      total: 0,
+      body: {
+        listLabelMonth: [],
+        listBudgetMMForEachMonth: {},
+        deliveryPlanByHeadCountList: [],
+        totalRecord: 0,
+      },
+      page: 1,
+      size: 20,
+    },
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get List Resource Type
+ * @returns {Promise<Object>} List of resource types (User, Generic Resource)
+ */
+export const getListResourceType = async () => {
+  await delay(200);
+
+  return {
+    httpStatus: 200,
+    data: [
+      { value: 'User' },
+      { value: 'Generic Resource' },
+    ],
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get List Resource (search employees/users)
+ * @param {Object} params - { name } optional search filter
+ * @returns {Promise<Object>} List of employees
+ */
+export const getListResource = async (params) => {
+  await delay(300);
+
+  const { name } = params || {};
+  const allResources = [
+    { id: 3860, value: 'ttlam1', location: 'Vietnam', employeeType: 'In-house', groupId: 2 },
+    { id: 3861, value: 'nthanh1', location: 'Vietnam', employeeType: 'In-house', groupId: 2 },
+    { id: 3862, value: 'pvhung1', location: 'Japan', employeeType: 'In-house', groupId: 3 },
+    { id: 3863, value: 'lmtuan1', location: 'Vietnam', employeeType: 'Outsource', groupId: 2 },
+  ];
+
+  const filtered = name
+    ? allResources.filter(r => r.value.toLowerCase().includes(name.toLowerCase()))
+    : allResources;
+
+  return {
+    httpStatus: 200,
+    data: filtered,
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get Location list
+ * @returns {Promise<Object>} List of locations
+ */
+export const getLocation = async () => {
+  await delay(200);
+
+  return {
+    httpStatus: 200,
+    data: [
+      { name: 'Vietnam' },
+      { name: 'Japan' },
+      { name: 'USA' },
+    ],
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get Employee Type list
+ * @returns {Promise<Object>} List of employee types
+ */
+export const getEmployeeType = async () => {
+  await delay(200);
+
+  return {
+    httpStatus: 200,
+    data: [
+      { value: 'In-house' },
+      { value: 'Outsource' },
+    ],
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get Employee Position list
+ * @param {Object} params - { mvv } optional filter
+ * @returns {Promise<Object>} List of positions
+ */
+export const getEmployeePosition = async (params) => {
+  await delay(200);
+
+  return {
+    httpStatus: 200,
+    data: [
+      { id: 803, idStr: null, name: 'SE02', value: 'SE02' },
+      { id: 804, idStr: null, name: 'SE01', value: 'SE01' },
+      { id: 805, idStr: null, name: 'TEST03', value: 'TEST03' },
+      { id: 806, idStr: null, name: 'PM01', value: 'PM01' },
+      { id: 807, idStr: null, name: 'SA01', value: 'SA01' },
+      { id: 808, idStr: null, name: 'SE04', value: 'SE04' },
+      { id: 809, idStr: null, name: 'TEST02', value: 'TEST02' },
+      { id: 810, idStr: null, name: 'COMTOR02', value: 'COMTOR02' },
+      { id: 811, idStr: null, name: 'SYE02', value: 'SYE02' },
+      { id: 812, idStr: null, name: 'SYE01', value: 'SYE01' },
+    ],
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get Employee Role list
+ * @returns {Promise<Object>} List of roles
+ */
+export const getEmployeeRole = async () => {
+  await delay(200);
+
+  return {
+    httpStatus: 200,
+    data: [
+      { value: 'Member' },
+      { value: 'Leader' },
+      { value: 'PM' },
+      { value: 'BA' },
+      { value: 'QA' },
+    ],
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+// In-memory store for other expenses
+const otherExpensesStore = new Map([
+  [
+    436,
+    {
+      total: 5,
+      body: {
+        labelMonth: ['Feb-26', 'Mar-26', 'Apr-26', 'May-26', 'Jun-26', 'Jul-26'],
+        dataList: [
+          { otherExpenseId: null, expenseCategoriesEnum: 'Onsite', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Equipment', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Overtime', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Non-deductible input VAT', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Others', categoriesDataList: null, totalExpenseValue: null },
+        ],
+        totalRecords: 5,
+      },
+      page: 1,
+      size: 10,
+    },
+  ],
+]);
+
+/**
+ * Get Other Expenses Table
+ * @param {Object} params - { businessPlanVersionId, deliveryUnit, pageNum, pageSize }
+ * @returns {Promise<Object>} Paginated other expenses table
+ */
+export const getOtherExpensesTable = async (params) => {
+  await delay();
+
+  const { businessPlanVersionId } = params || {};
+  const id = Number(businessPlanVersionId);
+  const stored = otherExpensesStore.get(id);
+
+  if (stored) {
+    return {
+      httpStatus: 200,
+      data: JSON.parse(JSON.stringify(stored)),
+      messageId: "Success",
+      errorMessage: "",
+    };
+  }
+
+  return {
+    httpStatus: 200,
+    data: {
+      total: 5,
+      body: {
+        labelMonth: [],
+        dataList: [
+          { otherExpenseId: null, expenseCategoriesEnum: 'Onsite', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Equipment', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Overtime', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Non-deductible input VAT', categoriesDataList: null, totalExpenseValue: null },
+          { otherExpenseId: null, expenseCategoriesEnum: 'Others', categoriesDataList: null, totalExpenseValue: null },
+        ],
+        totalRecords: 5,
+      },
+      page: 1,
+      size: 10,
+    },
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Save Delivery Plan
+ * @param {Object} params - Save payload
+ * @returns {Promise<Object>} Save result
+ */
+export const saveDeliveryPlan = async (params) => {
+  await delay(800);
+
+  return {
+    httpStatus: 200,
+    data: 'Delivery plan saved successfully',
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+/**
+ * Get Resources Information Reference
+ * Returns reference-type (Actual TS / Allocated / Book / Available) data per resource
+ * @param {Object} params - { businessPlanVersionId, deliveryUnit, userId, ... }
+ * @returns {Promise<Object>} Reference data keyed by type
+ */
+export const getResourcesInformationReference = async (params) => {
+  await delay();
+
+  const labelMonth = { 'Feb-26': 1.0, 'Mar-26': 1.0, 'Apr-26': 1.0, 'May-26': 1.0, 'Jun-26': 1.0, 'Jul-26': 1.0 };
+
+  return {
+    httpStatus: 200,
+    data: {
+      actualTS: { resourceType: 'Actual TS', labelMonth, total: 6 },
+      allocated: { resourceType: 'Allocated', labelMonth: {}, total: 0 },
+      book: { resourceType: 'Book', labelMonth: {}, total: 0 },
+      available: { resourceType: 'Available', labelMonth: {}, total: 0 },
+    },
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+// In-memory store for delivery plan history
+const deliveryHistoryStore = new Map([
+  [
+    436,
+    {
+      total: 2,
+      body: {
+        userActionHistoryDtoList: [
+          {
+            id: 116603,
+            actionTime: '10/Feb/26 14:33 PM',
+            author: 'ttlam1',
+            historyType: 'DELIVERY_PLAN',
+            oldValueString: '{"id":1000110,"items":{}}',
+            newValueString: '{"id":1000110,"items":{"04-2026":1.0,"05-2026":1.0,"06-2026":1.0,"07-2026":1.0}}',
+            entity: 'Resource Info - ttlam1',
+          },
+          {
+            id: 116572,
+            actionTime: '10/Feb/26 14:30 PM',
+            author: 'ttlam1',
+            historyType: 'DELIVERY_PLAN',
+            oldValueString: null,
+            newValueString: '{"employeeType":"In-house","grossSalaryVnd":5000000.0,"role":"Member","location":"Vietnam","id":1000110,"position":"SE02","userName":"ttlam1","items":{"02-2026":1.0,"03-2026":1.0},"originalGrossSalary":5000000.0,"resourceType":"User"}',
+            entity: 'Resource Info - ttlam1',
+          },
+        ],
+        total: 2,
+        pageNum: 1,
+        pageSize: 10,
+      },
+      page: 1,
+      size: 10,
+    },
+  ],
+]);
+
+/**
+ * Get History Delivery Plan
+ * @param {number} businessPlanVersionId
+ * @param {string} deliveryUnit
+ * @param {number} pageNum
+ * @param {number} pageSize
+ * @param {boolean} isSale
+ * @returns {Promise<Object>} Action history for delivery plan
+ */
+export const getHistoryDeliveryPlan = async (businessPlanVersionId, deliveryUnit, pageNum, pageSize, isSale) => {
+  await delay();
+
+  const id = Number(businessPlanVersionId);
+  const stored = deliveryHistoryStore.get(id);
+
+  return {
+    httpStatus: 200,
+    data: stored
+      ? JSON.parse(JSON.stringify(stored))
+      : { total: 0, body: { userActionHistoryDtoList: [], total: 0, pageNum: 1, pageSize: 10 }, page: 1, size: 10 },
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
 // Export all mock API functions as default
 const mockBusinessPlanApi = {
   getBusinessPlanDetail,
@@ -609,6 +1046,20 @@ const mockBusinessPlanApi = {
   getAllApprovalSteps,
   uploadDocument,
   getUserActionHistory,
+  // Delivery Plan APIs
+  getSummaryDeliveryPlan,
+  getLocationExchangeRate,
+  getResourcesInformationDeliveryPlan,
+  getListResourceType,
+  getListResource,
+  getLocation,
+  getEmployeeType,
+  getEmployeePosition,
+  getEmployeeRole,
+  getOtherExpensesTable,
+  saveDeliveryPlan,
+  getResourcesInformationReference,
+  getHistoryDeliveryPlan,
 };
 
 export default mockBusinessPlanApi;

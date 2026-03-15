@@ -7,7 +7,7 @@ import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { Icon, Input, InputNumber, Table, Tooltip } from 'antd'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { CAN_NOT_EDIT_REVENUE, REVENUE_TYPE_ID } from '../../constants'
@@ -406,11 +406,16 @@ const OtherRevenueTable = ({
           children: [
             {
               title: (
-                <div style={{ display: 'flex' }}>
-                  <div onClick={toggleExpandAll}>
-                    {expandAll ? <Icon type="down" /> : <Icon type="right" />}
-                  </div>
-                </div>
+                <Icon
+                  onClick={toggleExpandAll}
+                  type="right"
+                  style={{
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    transform: expandAll ? 'rotate(90deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.3s ease',
+                  }}
+                />
               ),
               dataIndex: 'icon-expand',
               key: 'icon-expand',
@@ -425,13 +430,19 @@ const OtherRevenueTable = ({
                       gap: '8px',
                       alignItems: 'center',
                     }}>
-                    <div onClick={() => toggleExpand(record.key)}>
-                      {expandedKeys.includes(record.key) ? (
-                        <Icon type="down" />
-                      ) : (
-                        <Icon type="right" />
-                      )}
-                    </div>
+                    <Icon
+                      onClick={() => toggleExpand(record.key)}
+                      type="right"
+                      style={{
+                        fontSize: '12px',
+                        cursor: 'pointer',
+                        transform: expandedKeys.includes(record.key)
+                          ? 'rotate(90deg)'
+                          : 'rotate(0deg)',
+                        transition: 'transform 0.3s ease',
+                      }}
+                    />
+
                     <Tooltip
                       placement="leftTop"
                       title={
@@ -599,6 +610,7 @@ const OtherRevenueTable = ({
 
   useEffect(() => {
     if (!isExpandPanel) return
+
     dispatch(
       getBusinessPlanOtherRevenue({
         mvv: projectCode,
@@ -608,7 +620,7 @@ const OtherRevenueTable = ({
         status,
       })
     )
-  }, [isExpandPanel, deliveryUnitDataRevenue.groupId, status])
+  }, [isExpandPanel, deliveryUnitDataRevenue.groupId, businessVersion])
 
   useEffect(() => {
     if (isUpdated) {
@@ -623,7 +635,7 @@ const OtherRevenueTable = ({
       )
       updateIsSaveConfirmShowed(false)
     }
-  }, [isUpdated])
+  }, [isUpdated, businessVersion])
 
   useEffect(() => {
     if (listRevenueInvalid.length > 0) {

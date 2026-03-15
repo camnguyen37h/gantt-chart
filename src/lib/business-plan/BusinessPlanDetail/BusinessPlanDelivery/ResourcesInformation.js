@@ -45,7 +45,7 @@ import {
 } from '../../redux'
 import { debounce, isEqual } from 'lodash'
 import RESOURCE_INFORMATION_TYPE from './constants'
-
+import { ALL_OPTION_VALUE } from '../../constants'
 const { Option } = Select
 
 const ResourcesInformation = forwardRef((props, ref) => {
@@ -103,17 +103,17 @@ const ResourcesInformation = forwardRef((props, ref) => {
   const filterSelectProps = (name, options, title) => {
     const mappedOptions = options
       ? options.map(item =>
-        name === 'location'
-          ? {
-            ...item,
-            text: item.name,
-            value: item.name,
-          }
-          : {
-            ...item,
-            text: item.value,
-          }
-      )
+          name === 'location'
+            ? {
+                ...item,
+                text: item.name,
+                value: item.name,
+              }
+            : {
+                ...item,
+                text: item.value,
+              }
+        )
       : []
 
     return {
@@ -160,9 +160,9 @@ const ResourcesInformation = forwardRef((props, ref) => {
       type: 'select',
       options: listPosition
         ? listPosition.map(item => ({
-          ...item,
-          text: item.value,
-        }))
+            ...item,
+            text: item.value,
+          }))
         : [],
       title: 'Position',
       mode: 'single',
@@ -179,12 +179,9 @@ const ResourcesInformation = forwardRef((props, ref) => {
             ),
           600
         ),
-        onDropdownVisibleChange: debounce(
-          (open) => {
-            if (!open) dispatch(getEmployeePosition({ mvv }))
-          },
-          300
-        )
+        onDropdownVisibleChange: debounce(open => {
+          if (!open) dispatch(getEmployeePosition({ mvv }))
+        }, 300),
       },
     },
     filterSelectProps('role', listRole, 'Role'),
@@ -259,7 +256,10 @@ const ResourcesInformation = forwardRef((props, ref) => {
       ...resourceInfoTableParams,
       businessPlanVersionId: Number(buId),
       loadDataFromType: loadDataFromValue || '',
-      deliveryUnit: deliveryUnitDataDelivery.groupName || '',
+      deliveryUnit:
+        deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
+          ? undefined
+          : deliveryUnitDataDelivery.groupName,
       viewType: valueRadio,
       resource: filters['resource'] ? [filters['resource']] : [],
       resourceType: filters['resourceType'] ? filters['resourceType'] : '',
@@ -276,6 +276,7 @@ const ResourcesInformation = forwardRef((props, ref) => {
     isExpandPanel,
     valueRadio,
     deliveryUnitDataDelivery,
+    buId,
   ])
 
   useImperativeHandle(

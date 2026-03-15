@@ -19,7 +19,7 @@ import {
   addUpdateOtherExpense,
   addCreateOtherExpense,
   removeUpdateOtherExpense,
-  removeCreateOtherExpense
+  removeCreateOtherExpense,
 } from '../../redux'
 import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { formatInputNumber, parseInputNumber } from '../../utils'
@@ -29,9 +29,9 @@ import {
   OTHER_EXPENSE_TABLE_WIDTH,
   OTHER_EXPENSES_KEYS,
   REVIEWING_WARNING_MESSAGE,
-  VALIDATE_REQUIRED_FIELDS_MESSAGE
+  VALIDATE_REQUIRED_FIELDS_MESSAGE,
 } from './constants'
-
+import { ALL_OPTION_VALUE } from '../../constants'
 const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
     display: none;
@@ -53,8 +53,14 @@ const OtherExpensesTable = forwardRef(
       getOtherExpensesTableLoading,
     } = useSelector(state => state.businessPlanDelivery)
 
-    const listCreateOtherExpenses = useSelector(state => state.businessPlanDelivery.dataCreateRequest.listOtherExpensesTableData)
-    const listUpdateOtherExpenses = useSelector(state => state.businessPlanDelivery.dataUpdateRequest.listOtherExpensesTableData)
+    const listCreateOtherExpenses = useSelector(
+      state =>
+        state.businessPlanDelivery.dataCreateRequest.listOtherExpensesTableData
+    )
+    const listUpdateOtherExpenses = useSelector(
+      state =>
+        state.businessPlanDelivery.dataUpdateRequest.listOtherExpensesTableData
+    )
 
     const [expandedKeys, setExpandedKeys] = useState([])
     const [listInvalid, setListInvalid] = useState({})
@@ -62,7 +68,7 @@ const OtherExpensesTable = forwardRef(
     const [data, setData] = useState([])
 
     const updateIsSaveConfirmShowed = useCallback(
-      (value) => {
+      value => {
         return dispatch(setIsSaveShowedDeliveryPlan(value))
       },
       [dispatch]
@@ -73,7 +79,10 @@ const OtherExpensesTable = forwardRef(
       if (!deliveryUnitDataDelivery) return
       dispatch(
         getOtherExpensesTable({
-          deliveryUnit: deliveryUnitDataDelivery.groupName || '',
+          deliveryUnit:
+            deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
+              ? undefined
+              : deliveryUnitDataDelivery.groupName,
           businessPlanVersionId: Number(buId),
           pageNum: 1,
           pageSize: 10,
@@ -88,14 +97,14 @@ const OtherExpensesTable = forwardRef(
       }
 
       setData(
-        dataListOtherExpenses.map((item) => ({
+        dataListOtherExpenses.map(item => ({
           key: item.expenseCategoriesEnum,
           otherExpenseId: item.otherExpenseId,
           expenseCategoriesEnum: item.expenseCategoriesEnum,
-          totalExpenseValue: item.totalExpenseValue || "",
+          totalExpenseValue: item.totalExpenseValue || '',
           children:
             (item.categoriesDataList &&
-              item.categoriesDataList.map((child) => ({
+              item.categoriesDataList.map(child => ({
                 ...child,
                 parentKey: item.expenseCategoriesEnum,
                 key: uniqueId(
@@ -108,10 +117,10 @@ const OtherExpensesTable = forwardRef(
     }, [dataListOtherExpenses])
 
     const toggleExpandAll = () => {
-      const allKeys = dataListOtherExpenses.map(item => item.expenseCategoriesEnum)
-      setExpandedKeys(prev =>
-        prev.length > 0 ? [] : allKeys
+      const allKeys = dataListOtherExpenses.map(
+        item => item.expenseCategoriesEnum
       )
+      setExpandedKeys(prev => (prev.length > 0 ? [] : allKeys))
     }
 
     const toggleExpandedKeys = key => {
@@ -122,39 +131,39 @@ const OtherExpensesTable = forwardRef(
       )
     }
 
-    const handleAddSubTableRow = (parent) => {
-      if (!canEdit) return;
-      updateIsSaveConfirmShowed(true);
-      setExpandedKeys((prevExpandedKeys) => {
+    const handleAddSubTableRow = parent => {
+      if (!canEdit) return
+      updateIsSaveConfirmShowed(true)
+      setExpandedKeys(prevExpandedKeys => {
         if (!prevExpandedKeys.includes(parent.key)) {
-          return [...prevExpandedKeys, parent.key];
+          return [...prevExpandedKeys, parent.key]
         }
-        return prevExpandedKeys;
-      });
+        return prevExpandedKeys
+      })
       const newChildKey = uniqueId(
         `${OTHER_EXPENSES_KEYS.NEW_EXPENSE_COSTNAME}-${parent.key}-`
-      );
+      )
       const newSubCategoryItem = {
         key: newChildKey,
         parentKey: parent.key,
-        expenseCategoriesEnum: "",
-        costName: "",
-        totalExpenseValue: "",
+        expenseCategoriesEnum: '',
+        costName: '',
+        totalExpenseValue: '',
         otherExpensesMonthlyDTO: {},
-      };
-      setData((prevRows) => {
-        const data = prevRows.map((prevRow) =>
+      }
+      setData(prevRows => {
+        const data = prevRows.map(prevRow =>
           prevRow.key === parent.key
             ? {
-              ...prevRow,
-              children: prevRow.children
-                ? [newSubCategoryItem, ...prevRow.children]
-                : [newSubCategoryItem],
-            }
+                ...prevRow,
+                children: prevRow.children
+                  ? [newSubCategoryItem, ...prevRow.children]
+                  : [newSubCategoryItem],
+              }
             : prevRow
-        );
-        return data;
-      });
+        )
+        return data
+      })
       const newPayload = {
         expenseCategoriesEnum: parent.expenseCategoriesEnum,
         key: parent.key,
@@ -164,34 +173,36 @@ const OtherExpensesTable = forwardRef(
           {
             key: newChildKey,
             parentKey: parent.expenseCategoriesEnum,
-            costName: "",
+            costName: '',
             otherExpensesMonthlyDTO: {},
           },
         ],
-      };
-      dispatch(addCreateOtherExpense(newPayload));
-    };
+      }
+      dispatch(addCreateOtherExpense(newPayload))
+    }
 
     const handleSave = useCallback(
       (updatedRow, isUpdate) => {
-        if (isUpdate) dispatch(addUpdateOtherExpense(updatedRow));
-        else dispatch(addCreateOtherExpense(updatedRow));
+        if (isUpdate) dispatch(addUpdateOtherExpense(updatedRow))
+        else dispatch(addCreateOtherExpense(updatedRow))
       },
       [dispatch]
-    );
+    )
 
     const handleChangeCostName = debounce((record, field, value) => {
-      updateIsSaveConfirmShowed(true);
-      const parentRow = data.find((row) => row.key === record.parentKey);
-      const isUpdate = record.key.includes(OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME);
+      updateIsSaveConfirmShowed(true)
+      const parentRow = data.find(row => row.key === record.parentKey)
+      const isUpdate = record.key.includes(
+        OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME
+      )
 
-      if (value !== null && value !== undefined && value.trim() !== "") {
+      if (value !== null && value !== undefined && value.trim() !== '') {
         setListInvalid(prevErrors => ({
           ...prevErrors,
           [record.key]: {
             ...prevErrors[record.key],
-            costName: !value
-          }
+            costName: !value,
+          },
         }))
         setListDuplicated(prevErrors => {
           const newRowErrors = { ...prevErrors }
@@ -215,21 +226,19 @@ const OtherExpensesTable = forwardRef(
           ],
         },
         isUpdate
-      );
-    },
-      300
-    )
+      )
+    }, 300)
 
     const handleChangeRow = debounce((record, month, value) => {
-      if (isNaN(value) || value === null || value === undefined) return;
-      updateIsSaveConfirmShowed(true);
-      const parentRow = data.find((row) => row.key === record.parentKey);
+      if (isNaN(value) || value === null || value === undefined) return
+      updateIsSaveConfirmShowed(true)
+      const parentRow = data.find(row => row.key === record.parentKey)
       const { expenseCategoriesEnum, totalExpenseValue, otherExpenseId } =
-        parentRow;
+        parentRow
 
       const isUpdate = record.key.includes(
         OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME
-      );
+      )
       handleSave(
         {
           expenseCategoriesEnum,
@@ -250,12 +259,10 @@ const OtherExpensesTable = forwardRef(
           ],
         },
         isUpdate
-      );
-    },
-      300
-    );
+      )
+    }, 300)
 
-    const handleDeleteSubData = (subRow) => {
+    const handleDeleteSubData = subRow => {
       if (!subRow) return
       updateIsSaveConfirmShowed(true)
       setListInvalid(prevErrors => {
@@ -263,28 +270,30 @@ const OtherExpensesTable = forwardRef(
         delete newRowErrors[subRow.key]
         return newRowErrors
       })
-      setData(prevRows => prevRows.map(prevRow => {
-        if (prevRow.key === subRow.parentKey) {
-          return {
-            ...prevRow,
-            children: prevRow.children.filter(item => item.key !== subRow.key)
+      setData(prevRows =>
+        prevRows.map(prevRow => {
+          if (prevRow.key === subRow.parentKey) {
+            return {
+              ...prevRow,
+              children: prevRow.children.filter(
+                item => item.key !== subRow.key
+              ),
+            }
           }
-        }
-        return prevRow
-      }))
+          return prevRow
+        })
+      )
       if (subRow.key.includes(OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME)) {
         dispatch(removeUpdateOtherExpense(subRow))
       } else dispatch(removeCreateOtherExpense(subRow))
     }
 
-    useImperativeHandle(ref, () => ({
-      validate,
-    }),
-      [
-        listCreateOtherExpenses,
-        listUpdateOtherExpenses,
-        data
-      ]
+    useImperativeHandle(
+      ref,
+      () => ({
+        validate,
+      }),
+      [listCreateOtherExpenses, listUpdateOtherExpenses, data]
     )
 
     const validate = () => {
@@ -292,17 +301,22 @@ const OtherExpensesTable = forwardRef(
       if (!isExpandPanel) return allValid
       const existedDatas = data.flatMap(row => row.children)
 
-      const editingRows = [...listCreateOtherExpenses, ...listUpdateOtherExpenses].flatMap(row => row.categoriesDataList)
-      const invalidList = editingRows.reduce(
-        (acc, row) => {
-          if (row.hasOwnProperty('costName') && !row.costName) {
-            if (!acc[row.key]) acc[row.key] = {}
-            acc[row.key] = { costName: true }
-            allValid = false
-          }
-          return acc
-        }, {})
-      const duplicateInvalidList = checkForDuplicateCostNames([...existedDatas, ...editingRows]);
+      const editingRows = [
+        ...listCreateOtherExpenses,
+        ...listUpdateOtherExpenses,
+      ].flatMap(row => row.categoriesDataList)
+      const invalidList = editingRows.reduce((acc, row) => {
+        if (row.hasOwnProperty('costName') && !row.costName) {
+          if (!acc[row.key]) acc[row.key] = {}
+          acc[row.key] = { costName: true }
+          allValid = false
+        }
+        return acc
+      }, {})
+      const duplicateInvalidList = checkForDuplicateCostNames([
+        ...existedDatas,
+        ...editingRows,
+      ])
       setListInvalid(invalidList)
       setListDuplicated(duplicateInvalidList)
       if (!allValid) {
@@ -315,20 +329,21 @@ const OtherExpensesTable = forwardRef(
       }
       return allValid
     }
-    const checkForDuplicateCostNames = (editingRows) => {
-      const costNameMap = {};
-      const invalidList = {};
+    const checkForDuplicateCostNames = editingRows => {
+      const costNameMap = {}
+      const invalidList = {}
 
       editingRows.forEach(row => {
         if (row.costName) {
-          const { key, parentKey, costName } = row;
+          const { key, parentKey, costName } = row
           if (!costNameMap[parentKey]) {
-            costNameMap[parentKey] = {};
+            costNameMap[parentKey] = {}
           }
 
-          costNameMap[parentKey][costName] = (costNameMap[parentKey][costName] || 0) + 1;
+          costNameMap[parentKey][costName] =
+            (costNameMap[parentKey][costName] || 0) + 1
         }
-      });
+      })
       const normalizeCostName = name =>
         name.trim().replace(/\s+/g, ' ').toLowerCase()
       // Check for duplicates in costName within the same parentKey
@@ -336,103 +351,118 @@ const OtherExpensesTable = forwardRef(
         for (const [name, count] of Object.entries(names)) {
           if (count >= 2) {
             editingRows.forEach(row => {
-              if (row.parentKey === parentKey && normalizeCostName(row.costName) === normalizeCostName(name)) {
+              if (
+                row.parentKey === parentKey &&
+                normalizeCostName(row.costName) === normalizeCostName(name)
+              ) {
                 if (!invalidList[parentKey]) {
-                  invalidList[parentKey] = {}; // Create parentKey if it doesn't exist
+                  invalidList[parentKey] = {} // Create parentKey if it doesn't exist
                 }
-                invalidList[parentKey][row.key] = { costName: true }; // Mark as invalid
+                invalidList[parentKey][row.key] = { costName: true } // Mark as invalid
               }
-            });
+            })
           }
         }
-      });
+      })
 
-      return invalidList;
+      return invalidList
     }
 
-    const totalMonthValues = useMemo(
-      () => {
-        const monthlyTotals = {};
-        dataListOtherExpenses.forEach(({ categoriesDataList }) => {
-          if (categoriesDataList) {
-            categoriesDataList.forEach(({ otherExpensesMonthlyDTO }) => {
-              Object.entries(otherExpensesMonthlyDTO).forEach(([month, { value }]) => {
+    const totalMonthValues = useMemo(() => {
+      const monthlyTotals = {}
+      dataListOtherExpenses.forEach(({ categoriesDataList }) => {
+        if (categoriesDataList) {
+          categoriesDataList.forEach(({ otherExpensesMonthlyDTO }) => {
+            Object.entries(otherExpensesMonthlyDTO).forEach(
+              ([month, { value }]) => {
                 if (!monthlyTotals[month]) {
-                  monthlyTotals[month] = 0;
+                  monthlyTotals[month] = 0
                 }
-                monthlyTotals[month] += value; // Sum the values for each month
-              });
-            });
-          }
-        });
+                monthlyTotals[month] += value // Sum the values for each month
+              }
+            )
+          })
+        }
+      })
 
-        return monthlyTotals;
-      },
-      [dataListOtherExpenses]
-    )
+      return monthlyTotals
+    }, [dataListOtherExpenses])
 
-    const totalMonthRow = useMemo(
-      () => {
-        return dataListOtherExpenses.reduce((acc, { expenseCategoriesEnum, categoriesDataList }) => {
+    const totalMonthRow = useMemo(() => {
+      return dataListOtherExpenses.reduce(
+        (acc, { expenseCategoriesEnum, categoriesDataList }) => {
           if (categoriesDataList) {
             categoriesDataList.forEach(({ otherExpensesMonthlyDTO }) => {
-              Object.entries(otherExpensesMonthlyDTO).forEach(([month, { value }]) => {
-                acc[expenseCategoriesEnum] = acc[expenseCategoriesEnum] || {};
-                acc[expenseCategoriesEnum][month] = (acc[expenseCategoriesEnum][month] || 0) + value;
-              });
-            });
+              Object.entries(otherExpensesMonthlyDTO).forEach(
+                ([month, { value }]) => {
+                  acc[expenseCategoriesEnum] = acc[expenseCategoriesEnum] || {}
+                  acc[expenseCategoriesEnum][month] =
+                    (acc[expenseCategoriesEnum][month] || 0) + value
+                }
+              )
+            })
           }
-          return acc;
-        }, {});
-      },
-      [dataListOtherExpenses]
-    );
+          return acc
+        },
+        {}
+      )
+    }, [dataListOtherExpenses])
 
     const columnsConfig = useCallback(
       (expandedKeys, toggleExpandedKeys) => {
-
         return [
           {
             title: '',
             fixed: 'left',
             children: [
               {
-                title: expandedKeys.length > 0 ? (
-                  <Icon type="down" onClick={toggleExpandAll} />
-                ) : (
-                  <Icon type="right" onClick={toggleExpandAll} />
-                ),
+                title:
+                  expandedKeys.length > 0 ? (
+                    <Icon type="down" onClick={toggleExpandAll} />
+                  ) : (
+                    <Icon type="right" onClick={toggleExpandAll} />
+                  ),
                 dataIndex: 'expand',
                 key: 'expand',
                 width: OTHER_EXPENSE_TABLE_WIDTH.ACTION,
                 render: (_, record) => {
-                  return !record.parentKey && (
-                    <Icon
-                      type={
-                        expandedKeys.includes(record.key) ? "down" : "right"
-                      }
-                      onClick={() => toggleExpandedKeys(record.key)}
-                    />
+                  return (
+                    !record.parentKey && (
+                      <Icon
+                        type={
+                          expandedKeys.includes(record.key) ? 'down' : 'right'
+                        }
+                        onClick={() => toggleExpandedKeys(record.key)}
+                      />
+                    )
                   )
-                }
+                },
               },
               {
                 dataIndex: 'add',
                 key: 'add',
                 width: OTHER_EXPENSE_TABLE_WIDTH.ACTION,
                 render: (_, record) =>
-                  canEdit
-                    ? (record.parentKey ? (
-                      <Icon type="minus-circle" onClick={() => handleDeleteSubData(record)} />
+                  canEdit ? (
+                    record.parentKey ? (
+                      <Icon
+                        type="minus-circle"
+                        onClick={() => handleDeleteSubData(record)}
+                      />
                     ) : (
-                      <Icon type="plus-circle" onClick={() => handleAddSubTableRow(record)} />
-                    ))
-                    : (<Tooltip
-                      title={REVIEWING_WARNING_MESSAGE}
-                    >
-                      <StyledDisabledIcon type={record.parentKey ? "minus-circle" : "plus-circle"} />
-                    </Tooltip>)
-              }
+                      <Icon
+                        type="plus-circle"
+                        onClick={() => handleAddSubTableRow(record)}
+                      />
+                    )
+                  ) : (
+                    <Tooltip title={REVIEWING_WARNING_MESSAGE}>
+                      <StyledDisabledIcon
+                        type={record.parentKey ? 'minus-circle' : 'plus-circle'}
+                      />
+                    </Tooltip>
+                  ),
+              },
             ],
           },
           {
@@ -446,15 +476,16 @@ const OtherExpensesTable = forwardRef(
                 align: 'left',
                 width: OTHER_EXPENSE_TABLE_WIDTH.EXPENSE_CATEGORIES,
                 render: (_, record) => {
-                  const isError = (listInvalid[record.key]
-                    && listInvalid[record.key].costName)
-                    || (listDuplicated[record.parentKey]
-                      && listDuplicated[record.parentKey][record.key]
-                      && listDuplicated[record.parentKey][record.key]
-                      && listDuplicated[record.parentKey][record.key].costName)
+                  const isError =
+                    (listInvalid[record.key] &&
+                      listInvalid[record.key].costName) ||
+                    (listDuplicated[record.parentKey] &&
+                      listDuplicated[record.parentKey][record.key] &&
+                      listDuplicated[record.parentKey][record.key] &&
+                      listDuplicated[record.parentKey][record.key].costName)
                   return record.parentKey ? (
-                    canEdit ?
-                      (<Input
+                    canEdit ? (
+                      <Input
                         className={isError ? 'input-error' : ''}
                         defaultValue={record.costName}
                         onChange={e =>
@@ -464,11 +495,14 @@ const OtherExpensesTable = forwardRef(
                             e.target.value
                           )
                         }
-                      />)
-                      : record.costName
+                      />
+                    ) : (
+                      record.costName
+                    )
+                  ) : (
+                    record.expenseCategoriesEnum
                   )
-                    : record.expenseCategoriesEnum
-                }
+                },
               },
             ],
           },
@@ -485,82 +519,89 @@ const OtherExpensesTable = forwardRef(
                 key: 'totalExpenseValue',
                 align: 'center',
                 width: OTHER_EXPENSE_TABLE_WIDTH.TOTAL_EXPENSE,
-                render: (text) => (<span title={formatFloatNumber(text)}>{formatFloatNumber(text)}</span>)
+                render: text => (
+                  <span title={formatFloatNumber(text)}>
+                    {formatFloatNumber(text)}
+                  </span>
+                ),
               },
             ],
           },
           ...(labelMonthOtherExpenses.length > 0
             ? labelMonthOtherExpenses.map(date => {
-              const monthWidth = Math.max(
-                (OTHER_EXPENSE_TABLE_WIDTH.TABLE
-                  - (2 * OTHER_EXPENSE_TABLE_WIDTH.ACTION)
-                  - OTHER_EXPENSE_TABLE_WIDTH.EXPENSE_CATEGORIES
-                  - OTHER_EXPENSE_TABLE_WIDTH.TOTAL_EXPENSE)
-                / labelMonthOtherExpenses.length,
-                OTHER_EXPENSE_TABLE_WIDTH.MONTH)
-              return {
-                title: (
-                  <span title={totalMonthValues[date] && formatFloatNumber(totalMonthValues[date])}>
-                    {
-                      isNaN(totalMonthValues[date]) || !totalMonthValues[date]
+                const monthWidth = Math.max(
+                  (OTHER_EXPENSE_TABLE_WIDTH.TABLE -
+                    2 * OTHER_EXPENSE_TABLE_WIDTH.ACTION -
+                    OTHER_EXPENSE_TABLE_WIDTH.EXPENSE_CATEGORIES -
+                    OTHER_EXPENSE_TABLE_WIDTH.TOTAL_EXPENSE) /
+                    labelMonthOtherExpenses.length,
+                  OTHER_EXPENSE_TABLE_WIDTH.MONTH
+                )
+                return {
+                  title: (
+                    <span
+                      title={
+                        totalMonthValues[date] &&
+                        formatFloatNumber(totalMonthValues[date])
+                      }>
+                      {isNaN(totalMonthValues[date]) || !totalMonthValues[date]
                         ? ''
-                        : formatFloatNumber(totalMonthValues[date])
-                    }
-                  </span>
-                ),
-                ellipsis: true,
-                align: 'center',
-                children: [
-                  {
-                    title: date,
-                    dataIndex: ["otherExpensesMonthlyDTO", date],
-                    key: date,
-                    align: 'center',
-                    ellipsis: true,
-                    width: monthWidth,
-                    render: (_, record) => {
-                      const defaultValue = record.parentKey
-                        && record.otherExpensesMonthlyDTO
-                        && record.otherExpensesMonthlyDTO[date]
-                        && record.otherExpensesMonthlyDTO[date].value || ""
-                      const totalMonth = totalMonthRow && totalMonthRow[record.key] && formatFloatNumber(totalMonthRow[record.key][date]) || ""
-                      return record.parentKey
-                        && (
-                          canEdit ? (
-                            <StyledInputNumber
-                              style={{ width: "100%", maxWidth: "150px" }}
-                              defaultValue={defaultValue}
-                              formatter={formatInputNumber}
-                              parser={parseInputNumber}
-                              onChange={value =>
-                                handleChangeRow(
-                                  record,
-                                  date,
-                                  value
-                                )
-                              }
-                            />
-                          )
-                            : <span title={formatFloatNumber(defaultValue)}>
-                              {formatFloatNumber(defaultValue)}
-                            </span>
+                        : formatFloatNumber(totalMonthValues[date])}
+                    </span>
+                  ),
+                  ellipsis: true,
+                  align: 'center',
+                  children: [
+                    {
+                      title: date,
+                      dataIndex: ['otherExpensesMonthlyDTO', date],
+                      key: date,
+                      align: 'center',
+                      ellipsis: true,
+                      width: monthWidth,
+                      render: (_, record) => {
+                        const defaultValue =
+                          (record.parentKey &&
+                            record.otherExpensesMonthlyDTO &&
+                            record.otherExpensesMonthlyDTO[date] &&
+                            record.otherExpensesMonthlyDTO[date].value) ||
+                          ''
+                        const totalMonth =
+                          (totalMonthRow &&
+                            totalMonthRow[record.key] &&
+                            formatFloatNumber(
+                              totalMonthRow[record.key][date]
+                            )) ||
+                          ''
+                        return (
+                          (record.parentKey &&
+                            (canEdit ? (
+                              <StyledInputNumber
+                                style={{ width: '100%', maxWidth: '150px' }}
+                                defaultValue={defaultValue}
+                                formatter={formatInputNumber}
+                                parser={parseInputNumber}
+                                onChange={value =>
+                                  handleChangeRow(record, date, value)
+                                }
+                              />
+                            ) : (
+                              <span title={formatFloatNumber(defaultValue)}>
+                                {formatFloatNumber(defaultValue)}
+                              </span>
+                            ))) || <span title={totalMonth}>{totalMonth}</span>
                         )
-                        || (
-                          <span title={totalMonth}>
-                            {totalMonth}
-                          </span>
-                        )
-                    }
-                  },
-                ],
-              }
-            })
+                      },
+                    },
+                  ],
+                }
+              })
             : [
-              {
-                title: '',
-                key: 'empty',
-              },
-            ]),
+                {
+                  title: '',
+                  key: 'empty',
+                },
+              ]),
         ]
       },
       [
@@ -582,7 +623,9 @@ const OtherExpensesTable = forwardRef(
       <div>
         <Table
           className="other-expenses-table"
-          rowClassName={record => record.parentKey ? 'other-expenses-sub-row' : 'other-expenses-row'}
+          rowClassName={record =>
+            record.parentKey ? 'other-expenses-sub-row' : 'other-expenses-row'
+          }
           columns={columnsConfig(expandedKeys, toggleExpandedKeys)}
           onExpand={(expanded, record) => {
             const keys = expanded

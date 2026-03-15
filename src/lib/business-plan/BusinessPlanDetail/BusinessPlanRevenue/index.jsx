@@ -360,7 +360,7 @@ const BusinessPlanRevenue = forwardRef(
           })
         )
       }
-    }, [activePanel])
+    }, [activePanel, businessVersion])
 
     return (
       <div>

@@ -1,0 +1,1249 @@
+- Khi vào màn business plan detail có call 2 api để get list SALE và DU theo business_plan_version_id 
+==> Update : call api cho 2 mã để get data 
+
+***********TAB Revenue**************
+Không có filter ALL
+Khi vào tab Revenue, mặc định load vào Revenue của mã đang xem detail - truyền business_plan_version_id và bu tương ứng
+Với cụm Revenue này, truyền dữ liệu theo data get từ cụm General Information cho đúng.
+1. Summary
+- CURL : 
+curl --location 'localhost:8085/api/revenue-plan/revenue-summary' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ********' \
+--data '{
+    "businessPlanVersionId": "436",
+    "duSelected": {
+        "groupName": "BU3",
+        "groupId": 220,
+        "groupSale": true
+    }
+}'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "mmBill": 1.000000,
+        "softwareProductionRevenues": 12000000.0000,
+        "deduction": -7000000.000000000000,
+        "onsiteFee": null,
+        "equipmentRevenue": null,
+        "otherRevenues": null,
+        "agencyExpenses": null
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+
+2. Sofware Production Revenue Info
+a. API get filter position ( search theo MVV- projectCode )
+- CURL :
+curl --location 'localhost:8085/api/revenue-plan/filter-position?mvv=GLBTM2500093' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": [
+        {
+            "id": 803,
+            "idStr": null,
+            "name": "SE02",
+            "value": "SE02"
+        },
+        {
+            "id": 804,
+            "idStr": null,
+            "name": "SE01",
+            "value": "SE01"
+        },
+        {
+            "id": 805,
+            "idStr": null,
+            "name": "TEST03",
+            "value": "TEST03"
+        } 
+     ],
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+
+b. API get data 
+- CURL :
+curl --location 'localhost:8085/api/business-plan/production-revenue?status=Approved&mvv=GLBTM2500093&duId=220&type=Sales&revenueSwitch=Headcount&businessVersion=436&pageNum=0' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "revenueInfos": [
+            {
+                "saleWorkOrderId": "271626",
+                "groupId": null,
+                "pipelineKey": "WO-7821",
+                "position": "",
+                "unitPrice": 5000000.00000,
+                "rateCard": null,
+                "department": "BU3",
+                "exchangeRate": 1.00000,
+                "pipeLineRatio": 100.0,
+                "totalManMonth": 1.000000,
+                "totalRevenue": 0,
+                "revenue": {
+                    "03-2026": {
+                        "manMonth": 1.000000,
+                        "revenue": null
+                    }
+                }
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+3. Other Revenue
+- CURL :
+curl --location 'localhost:8085/api/business-plan/other-revenue?mvv=GLBTM2500085&duId=330&businessVersion=431&isSale=true&status=Approved' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "startDate": 1769706000000,
+        "endDate": 1801328400000,
+        "revenues": [
+            {
+                "type": "Onsite Fee",
+                "revenueTypeId": 0,
+                "total": 100000.000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 0,
+                        "revenueTypeSpecificId": 1695,
+                        "revenueName": "eee",
+                        "total": 100000.000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 0,
+                                "revenueTypeSpecificId": 1695,
+                                "revenueName": "eee",
+                                "month": 1,
+                                "year": 2026,
+                                "date": "01-2026",
+                                "value": 100000.000
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "Equipment",
+                "revenueTypeId": 1,
+                "total": 100000.000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 1,
+                        "revenueTypeSpecificId": 1696,
+                        "revenueName": "Equipment",
+                        "total": 100000.000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 1,
+                                "revenueTypeSpecificId": 1696,
+                                "revenueName": "Equipment",
+                                "month": 1,
+                                "year": 2026,
+                                "date": "01-2026",
+                                "value": 100000.000
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "Other",
+                "revenueTypeId": 2,
+                "total": 50000.000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 2,
+                        "revenueTypeSpecificId": 1697,
+                        "revenueName": "Othres",
+                        "total": 50000.000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 2,
+                                "revenueTypeSpecificId": 1697,
+                                "revenueName": "Othres",
+                                "month": 1,
+                                "year": 2026,
+                                "date": "01-2026",
+                                "value": 50000.000
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+4. Selling Expenses
+- CURL :
+curl --location 'localhost:8085/api/business-plan/selling-plan?mvv=GLBTM2500085&duId=330&businessVersion=431&isSale=true&status=Approved' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "startDate": 1769706000000,
+        "endDate": 1801328400000,
+        "revenues": [
+            {
+                "type": "Agency Expense",
+                "revenueTypeId": 3,
+                "total": 60000.000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 3,
+                        "revenueTypeSpecificId": 1698,
+                        "revenueName": "AGE",
+                        "total": 60000.000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 3,
+                                "revenueTypeSpecificId": 1698,
+                                "revenueName": "AGE",
+                                "month": 1,
+                                "year": 2026,
+                                "date": "01-2026",
+                                "value": 60000.000
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+5. History
+- CURL : 
+curl --location 'localhost:8085/api/business-plan-user-action-history/get-user-action-history?businessPlanVersionId=431&deliveryUnit=BJ1&pageNum=1&pageSize=10&module=REVENUE_PLAN&isSale=1' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 4,
+        "body": {
+            "userActionHistoryDtoList": [
+                {
+                    "id": 115594,
+                    "actionTime": "06/Feb/26 09:57 AM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"01-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":1,\"revenueName\":\"Equipment\",\"items\":{\"01-2026\":100000}}",
+                    "entity": "Equipment - Equipment"
+                },
+                {
+                    "id": 115595,
+                    "actionTime": "06/Feb/26 09:57 AM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"01-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":2,\"revenueName\":\"Othres\",\"items\":{\"01-2026\":50000}}",
+                    "entity": "Other - Othres"
+                },
+                {
+                    "id": 115596,
+                    "actionTime": "06/Feb/26 09:57 AM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"01-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":3,\"revenueName\":\"AGE\",\"items\":{\"01-2026\":60000}}",
+                    "entity": "Agency Expense - AGE"
+                },
+                {
+                    "id": 115519,
+                    "actionTime": "05/Feb/26 11:30 AM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"01-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":0,\"revenueName\":\"eee\",\"items\":{\"01-2026\":100000}}",
+                    "entity": "Onsite Fee - eee"
+                }
+            ],
+            "total": 4,
+            "pageNum": 1,
+            "pageSize": 10
+        },
+        "page": 1,
+        "size": 10
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+***********TAB Delivery**************
+Có filter ALL
+Mặc định load Onsite/Offshore theo mã detail, view ALL
+
+1. Delivery Summary
+a. API get reference table ( get theo business_plan_version_id )
+* param deliveryUnit update thành require false ( Do logic hiện tại không sử dụng gì tới param này )
+
+- CURL :
+curl --location 'localhost:8085/api/delivery-plan/get-reference-table?businessPlanVersionId=431&deliveryUnit=' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "locationExchangeRateData": [
+            {
+                "location": "Vietnam",
+                "exchangeRate": 1.0
+            },
+            {
+                "location": "Japan",
+                "exchangeRate": 0.0
+            },
+            {
+                "location": "Singapore",
+                "exchangeRate": 0.0
+            },
+            {
+                "location": "Korea",
+                "exchangeRate": 0.0
+            },
+            {
+                "location": "US",
+                "exchangeRate": 0.0
+            }
+        ],
+        "locationSalaryExpenseIndexData": [
+            {
+                "location": "Korea",
+                "salaryIndex": 1.340000033378601,
+                "expenseIndex": 7000000.0
+            },
+            {
+                "location": "Vietnam",
+                "salaryIndex": 2.2200000286102295,
+                "expenseIndex": 3500000.0
+            },
+            {
+                "location": "Japan",
+                "salaryIndex": 1.2899999618530273,
+                "expenseIndex": 5671776.0
+            },
+            {
+                "location": "Singapore",
+                "salaryIndex": 1.340000033378601,
+                "expenseIndex": 7000000.0
+            },
+            {
+                "location": "US",
+                "salaryIndex": 1.340000033378601,
+                "expenseIndex": 2.0E7
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+b. Delivery Summary
+Mặc định load vào view của mã detail (Onsite/Offshore ) - view ALL 
+*param groupdId update thành required = false : Với filter ALL thì k truyền groupId 
+
+CASE có truyền groupId 
+--------------------------
+- CURL :
+curl --location 'localhost:8085/api/delivery-plan/delivery-plan-summary?businessPlanVersionId=433&groupId=3' \
+--header 'Authorization: Bearer ********'
+ 
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "mmEffort": 4.0,
+        "directLaborCost": 67280000.00000,
+        "outsourcingCost": null,
+        "equipmentExpense": null,
+        "onsiteExpense": null,
+        "overtime": null,
+        "other": null,
+        "nonDeductibleInputVAT": null
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+Case không truyền groupId
+----------------------------
+- CURL :
+curl --location 'localhost:8085/api/delivery-plan/delivery-plan-summary?businessPlanVersionId=433' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE : 
+{
+    "httpStatus": 200,
+    "data": {
+        "mmEffort": 60.0,
+        "directLaborCost": 718491000.00000,
+        "outsourcingCost": null,
+        "equipmentExpense": 0,
+        "onsiteExpense": 0,
+        "overtime": 0,
+        "other": 0,
+        "nonDeductibleInputVAT": 0
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+2. Resources Information
+* Tương tự với view ALL, thì không cần truyền deliveryUnit 
+
+CASE có delivery unit
+--------------------------
+- CURL :
+curl --location 'localhost:8085/api/delivery-plan/get-list-delivery-plan-member' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ********' \
+--data '{
+    "businessPlanVersionId": 433,
+    "deliveryUnit": "DJ2",
+    "loadDataFromType": "",
+    "viewType": 1,
+    "resourceType": "",
+    "resource": [],
+    "location": [],
+    "employeeType": [],
+    "position": [],
+    "role": [],
+    "pageNum": 1,
+    "pageSize": 20
+}'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 6,
+        "body": {
+            "listLabelMonth": [
+                "Feb-26",
+                "Mar-26",
+                "Apr-26",
+                "May-26",
+                "Jun-26",
+                "Jul-26",
+                "Aug-26",
+                "Sep-26",
+                "Oct-26",
+                "Nov-26",
+                "Dec-26",
+                "Jan-27",
+                "Feb-27"
+            ],
+            "listBudgetMMForEachMonth": {
+                "Feb-26": 17.0,
+                "Mar-26": 17.0,
+                "Apr-26": 17.0,
+                "May-26": 5.0
+            },
+            "deliveryPlanByHeadCountList": [
+                {
+                    "deliveryMemberId": 1000092,
+                    "userId": 7873,
+                    "resourceType": "User",
+                    "resourceFullName": "Thai. Nguyen Van - CMC Global DJ2",
+                    "location": "Vietnam",
+                    "ldap": "nvthai3",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 6000000.0,
+                    "grossSalary": 6000000.0,
+                    "position": "PM01",
+                    "role": "Member",
+                    "rowTotal": 20.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000260,
+                            "deliveryMemberId": 1000092,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Mar-26": {
+                            "id": 1000261,
+                            "deliveryMemberId": 1000092,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Apr-26": {
+                            "id": 1000262,
+                            "deliveryMemberId": 1000092,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "May-26": {
+                            "id": 1000263,
+                            "deliveryMemberId": 1000092,
+                            "month": 5,
+                            "year": 2026,
+                            "value": 5.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000091,
+                    "userId": 142,
+                    "resourceType": "User",
+                    "resourceFullName": "Quan. Le Duc - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ldquan",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 5000000.0,
+                    "grossSalary": 5000000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": 15.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000257,
+                            "deliveryMemberId": 1000091,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Mar-26": {
+                            "id": 1000258,
+                            "deliveryMemberId": 1000091,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Apr-26": {
+                            "id": 1000259,
+                            "deliveryMemberId": 1000091,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 5.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000090,
+                    "userId": 142,
+                    "resourceType": "User",
+                    "resourceFullName": "Quan. Le Duc - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ldquan",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 500000.0,
+                    "grossSalary": 500000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": null,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {},
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000089,
+                    "userId": 142,
+                    "resourceType": "User",
+                    "resourceFullName": "Quan. Le Duc - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ldquan",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 50000.0,
+                    "grossSalary": 50000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": 15.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000254,
+                            "deliveryMemberId": 1000089,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Mar-26": {
+                            "id": 1000255,
+                            "deliveryMemberId": 1000089,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Apr-26": {
+                            "id": 1000256,
+                            "deliveryMemberId": 1000089,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 5.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000088,
+                    "userId": 243,
+                    "resourceType": "User",
+                    "resourceFullName": "Nguyễn Hoàng Minh - CMC Global DU3",
+                    "location": "Vietnam",
+                    "ldap": "nhminh",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 1600000.0,
+                    "grossSalary": 1600000.0,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 3.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000251,
+                            "deliveryMemberId": 1000088,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Mar-26": {
+                            "id": 1000252,
+                            "deliveryMemberId": 1000088,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Apr-26": {
+                            "id": 1000253,
+                            "deliveryMemberId": 1000088,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1.0
+                        }
+                    },
+                    "groupId": 3,
+                    "groupName": "DU1.3"
+                },
+                {
+                    "deliveryMemberId": 1000087,
+                    "userId": 3860,
+                    "resourceType": "User",
+                    "resourceFullName": "Lam. Tran Tung  - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ttlam1",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 1500000.0,
+                    "grossSalary": 1500000.0,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 3.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000248,
+                            "deliveryMemberId": 1000087,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Mar-26": {
+                            "id": 1000249,
+                            "deliveryMemberId": 1000087,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Apr-26": {
+                            "id": 1000250,
+                            "deliveryMemberId": 1000087,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                }
+            ],
+            "totalRecord": 6
+        },
+        "page": 1,
+        "size": 20
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+CASE không có delivery unit (Filter ALL)
+-----------------------------------------
+- CURL :
+curl --location 'localhost:8085/api/delivery-plan/get-list-delivery-plan-member' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ********' \
+--data '{
+    "businessPlanVersionId": 433,
+    "loadDataFromType": "",
+    "viewType": 1,
+    "resourceType": "",
+    "resource": [],
+    "location": [],
+    "employeeType": [],
+    "position": [],
+    "role": [],
+    "pageNum": 1,
+    "pageSize": 20
+}'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 7,
+        "body": {
+            "listLabelMonth": [
+                "Feb-26",
+                "Mar-26",
+                "Apr-26",
+                "May-26",
+                "Jun-26",
+                "Jul-26",
+                "Aug-26",
+                "Sep-26",
+                "Oct-26",
+                "Nov-26",
+                "Dec-26",
+                "Jan-27",
+                "Feb-27"
+            ],
+            "listBudgetMMForEachMonth": {
+                "Feb-26": 18.0,
+                "Mar-26": 18.0,
+                "Apr-26": 18.0,
+                "May-26": 6.0
+            },
+            "deliveryPlanByHeadCountList": [
+                {
+                    "deliveryMemberId": 1000093,
+                    "userId": 44,
+                    "resourceType": "User",
+                    "resourceFullName": "Huyen. Dinh Khanh - CMC Global DU1.6",
+                    "location": "Vietnam",
+                    "ldap": "dkhuyen",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 6000000.0,
+                    "grossSalary": 6000000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": 4.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000264,
+                            "deliveryMemberId": 1000093,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Mar-26": {
+                            "id": 1000265,
+                            "deliveryMemberId": 1000093,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Apr-26": {
+                            "id": 1000266,
+                            "deliveryMemberId": 1000093,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "May-26": {
+                            "id": 1000267,
+                            "deliveryMemberId": 1000093,
+                            "month": 5,
+                            "year": 2026,
+                            "value": 1.0
+                        }
+                    },
+                    "groupId": 6,
+                    "groupName": "DU1.6"
+                },
+                {
+                    "deliveryMemberId": 1000092,
+                    "userId": 7873,
+                    "resourceType": "User",
+                    "resourceFullName": "Thai. Nguyen Van - CMC Global DJ2",
+                    "location": "Vietnam",
+                    "ldap": "nvthai3",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 6000000.0,
+                    "grossSalary": 6000000.0,
+                    "position": "PM01",
+                    "role": "Member",
+                    "rowTotal": 20.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000260,
+                            "deliveryMemberId": 1000092,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Mar-26": {
+                            "id": 1000261,
+                            "deliveryMemberId": 1000092,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Apr-26": {
+                            "id": 1000262,
+                            "deliveryMemberId": 1000092,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "May-26": {
+                            "id": 1000263,
+                            "deliveryMemberId": 1000092,
+                            "month": 5,
+                            "year": 2026,
+                            "value": 5.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000091,
+                    "userId": 142,
+                    "resourceType": "User",
+                    "resourceFullName": "Quan. Le Duc - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ldquan",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 5000000.0,
+                    "grossSalary": 5000000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": 15.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000257,
+                            "deliveryMemberId": 1000091,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Mar-26": {
+                            "id": 1000258,
+                            "deliveryMemberId": 1000091,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Apr-26": {
+                            "id": 1000259,
+                            "deliveryMemberId": 1000091,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 5.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000090,
+                    "userId": 142,
+                    "resourceType": "User",
+                    "resourceFullName": "Quan. Le Duc - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ldquan",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 500000.0,
+                    "grossSalary": 500000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": null,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {},
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000089,
+                    "userId": 142,
+                    "resourceType": "User",
+                    "resourceFullName": "Quan. Le Duc - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ldquan",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 50000.0,
+                    "grossSalary": 50000.0,
+                    "position": "SE01",
+                    "role": "Member",
+                    "rowTotal": 15.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000254,
+                            "deliveryMemberId": 1000089,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Mar-26": {
+                            "id": 1000255,
+                            "deliveryMemberId": 1000089,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 5.0
+                        },
+                        "Apr-26": {
+                            "id": 1000256,
+                            "deliveryMemberId": 1000089,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 5.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000088,
+                    "userId": 243,
+                    "resourceType": "User",
+                    "resourceFullName": "Nguyễn Hoàng Minh - CMC Global DU3",
+                    "location": "Vietnam",
+                    "ldap": "nhminh",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 1600000.0,
+                    "grossSalary": 1600000.0,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 3.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000251,
+                            "deliveryMemberId": 1000088,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Mar-26": {
+                            "id": 1000252,
+                            "deliveryMemberId": 1000088,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Apr-26": {
+                            "id": 1000253,
+                            "deliveryMemberId": 1000088,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1.0
+                        }
+                    },
+                    "groupId": 3,
+                    "groupName": "DU1.3"
+                },
+                {
+                    "deliveryMemberId": 1000087,
+                    "userId": 3860,
+                    "resourceType": "User",
+                    "resourceFullName": "Lam. Tran Tung  - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ttlam1",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 1500000.0,
+                    "grossSalary": 1500000.0,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 3.0,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000248,
+                            "deliveryMemberId": 1000087,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Mar-26": {
+                            "id": 1000249,
+                            "deliveryMemberId": 1000087,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1.0
+                        },
+                        "Apr-26": {
+                            "id": 1000250,
+                            "deliveryMemberId": 1000087,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1.0
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                }
+            ],
+            "totalRecord": 7
+        },
+        "page": 1,
+        "size": 20
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+
+3. Other expenses
+* Tương tự logic như resource information - filter ALL thì không truyền deliveryUnit
+- CURL :
+curl --location 'localhost:8085/api/delivery-plan/get-other-expenses-table' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ********' \
+--data '{
+    "deliveryUnit": "DU1.3",
+    "businessPlanVersionId": 433,
+    "pageNum": 1,
+    "pageSize": 10
+}' 
+
+hoặc 
+
+curl --location 'localhost:8085/api/delivery-plan/get-other-expenses-table' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ********' \
+--data '{
+    "businessPlanVersionId": 433,
+    "pageNum": 1,
+    "pageSize": 10
+}' 
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 5,
+        "body": {
+            "labelMonth": [
+                "Feb-26",
+                "Mar-26",
+                "Apr-26",
+                "May-26",
+                "Jun-26",
+                "Jul-26",
+                "Aug-26",
+                "Sep-26",
+                "Oct-26",
+                "Nov-26",
+                "Dec-26",
+                "Jan-27",
+                "Feb-27"
+            ],
+            "dataList": [
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Onsite",
+                    "categoriesDataList": [],
+                    "totalExpenseValue": 0.0
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Equipment",
+                    "categoriesDataList": [],
+                    "totalExpenseValue": 0.0
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Overtime",
+                    "categoriesDataList": [],
+                    "totalExpenseValue": 0.0
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Non-deductible input VAT",
+                    "categoriesDataList": [],
+                    "totalExpenseValue": 0.0
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Others",
+                    "categoriesDataList": [],
+                    "totalExpenseValue": 0.0
+                }
+            ],
+            "totalRecords": 5
+        },
+        "page": 1,
+        "size": 10
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+} 
+
+4 . History 
+* filter ALL thì không truyền deliveryUnit
+- CURL :
+curl --location 'localhost:8085/api/business-plan-user-action-history/get-user-action-history?businessPlanVersionId=433&deliveryUnit=DU1.3&pageNum=1&pageSize=10&module=DELIVERY_PLAN&isSale=0' \
+--header 'Authorization: Bearer ********'
+
+hoặc 
+
+curl --location 'localhost:8085/api/business-plan-user-action-history/get-user-action-history?businessPlanVersionId=433&pageNum=1&pageSize=10&module=DELIVERY_PLAN&isSale=0' \
+--header 'Authorization: Bearer ********'
+
+- RESPONSE :
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 13,
+        "body": {
+            "userActionHistoryDtoList": [
+                {
+                    "id": 115886,
+                    "actionTime": "06/Feb/26 11:02 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1150000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000084,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"02-2026\":1.0,\"04-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":1150000.0,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ttlam1"
+                },
+                {
+                    "id": 115887,
+                    "actionTime": "06/Feb/26 11:02 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1.5E7,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000087,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"02-2026\":1.0,\"04-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":1.5E7,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ttlam1"
+                },
+                {
+                    "id": 115943,
+                    "actionTime": "06/Feb/26 11:02 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1150000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000084,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"02-2026\":1.0,\"04-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":1150000.0,\"resourceType\":\"User\"}",
+                    "newValueString": null,
+                    "entity": "Resource Information - ttlam1"
+                },
+                {
+                    "id": 115944,
+                    "actionTime": "06/Feb/26 11:02 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1.515E7,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000085,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{},\"originalGrossSalary\":1.515E7,\"resourceType\":\"User\"}",
+                    "newValueString": null,
+                    "entity": "Resource Information - ttlam1"
+                },
+                {
+                    "id": 115945,
+                    "actionTime": "06/Feb/26 11:02 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1.515E9,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000086,\"position\":null,\"userName\":\"ttlam1\",\"items\":{},\"originalGrossSalary\":1.515E9,\"resourceType\":\"User\"}",
+                    "newValueString": null,
+                    "entity": "Resource Information - ttlam1"
+                },
+                {
+                    "id": 115976,
+                    "actionTime": "06/Feb/26 11:08 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1.6E7,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000088,\"position\":\"SE02\",\"userName\":\"nhminh\",\"items\":{\"02-2026\":1.0,\"04-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":1.6E7,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - nhminh"
+                },
+                {
+                    "id": 116007,
+                    "actionTime": "06/Feb/26 11:13 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":50000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000089,\"position\":\"SE01\",\"userName\":\"ldquan\",\"items\":{\"02-2026\":5.0,\"04-2026\":5.0,\"03-2026\":5.0},\"originalGrossSalary\":50000.0,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ldquan"
+                },
+                {
+                    "id": 116008,
+                    "actionTime": "06/Feb/26 11:13 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":5000000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000091,\"position\":\"SE01\",\"userName\":\"ldquan\",\"items\":{\"02-2026\":5.0,\"04-2026\":5.0,\"03-2026\":5.0},\"originalGrossSalary\":5000000.0,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ldquan"
+                },
+                {
+                    "id": 116039,
+                    "actionTime": "06/Feb/26 11:15 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":6000000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000092,\"position\":\"PM01\",\"userName\":\"nvthai3\",\"items\":{\"02-2026\":5.0,\"04-2026\":5.0,\"05-2026\":5.0,\"03-2026\":5.0},\"originalGrossSalary\":6000000.0,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - nvthai3"
+                },
+                {
+                    "id": 116040,
+                    "actionTime": "06/Feb/26 11:15 AM",
+                    "author": "nvthai3",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": "{\"location\":\"Vietnam\",\"position\":null,\"id\":1000090,\"items\":{}}",
+                    "newValueString": "{\"location\":\"Vietnam\",\"position\":\"SE01\",\"id\":1000090,\"items\":{}}",
+                    "entity": "Resource Info - ldquan"
+                }
+            ],
+            "total": 13,
+            "pageNum": 1,
+            "pageSize": 10
+        },
+        "page": 1,
+        "size": 10
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+

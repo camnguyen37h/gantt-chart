@@ -152,6 +152,7 @@ const BusinessPlanHistoryTable = ({
       const children = [
         {
           key: `${item.id || uniqueId()}-title`,
+          className: 'sub-row-header',
           titleField: 'Field',
           titleOldValue: 'Old Value',
           titleNewValue: 'New Value',
@@ -208,10 +209,17 @@ const BusinessPlanHistoryTable = ({
   const columns = (expandedKeys, toggleExpand) => [
     {
       title: (
-        <div style={{ display: 'flex' }}>
-          <div onClick={toggleExpandAll} style={{ marginLeft: 0 }}>
-            {expandAll ? <Icon type="down" /> : <Icon type="right" />}
-          </div>
+        <div style={{ display: 'flex', cursor: 'pointer' }}>
+          <Icon
+            onClick={toggleExpandAll}
+            type="right"
+            style={{
+              fontSize: '12px',
+              cursor: 'pointer',
+              transform: expandAll ? 'rotate(90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+            }}
+          />
         </div>
       ),
       dataIndex: 'icon-expand',
@@ -221,15 +229,18 @@ const BusinessPlanHistoryTable = ({
       className: 'text-column-revenue-table',
       render: (text, record) =>
         record.children ? (
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div onClick={() => toggleExpand(record.key)}>
-              {expandedKeys.includes(record.key) ? (
-                <Icon type="down" />
-              ) : (
-                <Icon type="right" />
-              )}
-            </div>
-          </div>
+          <Icon
+            onClick={() => toggleExpand(record.key)}
+            type="right"
+            style={{
+              fontSize: '12px',
+              cursor: 'pointer',
+              transform: expandedKeys.includes(record.key)
+                ? 'rotate(90deg)'
+                : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+            }}
+          />
         ) : null,
     },
     {
@@ -318,29 +329,29 @@ const BusinessPlanHistoryTable = ({
   }
 
   return (
-    <div>
-      <Table
-        columns={columns(expandedKeys, toggleExpand)}
-        dataSource={mapDataDetails() || []}
-        onChange={handleChangePage}
-        expandedRowKeys={expandedKeys}
-        onExpand={(expanded, record) => {
-          const keys = expanded
-            ? [...expandedKeys, record.key]
-            : expandedKeys.filter(key => key !== record.key)
-          setExpandedKeys(keys)
-        }}
-        expandIconColumnIndex={-1}
-        expandIconAsCell={false}
-        scroll={{ x: 'max-content', y: 500 }}
-        pagination={{
-          current: currentPage,
-          pageSize: pageSize,
-          total: totalPage,
-        }}
-        loading={loading}
-      />
-    </div>
+    <Table
+      className="revenue-history-table"
+      columns={columns(expandedKeys, toggleExpand)}
+      dataSource={mapDataDetails() || []}
+      onChange={handleChangePage}
+      expandedRowKeys={expandedKeys}
+      onExpand={(expanded, record) => {
+        const keys = expanded
+          ? [...expandedKeys, record.key]
+          : expandedKeys.filter(key => key !== record.key)
+        setExpandedKeys(keys)
+      }}
+      expandIconColumnIndex={-1}
+      expandIconAsCell={false}
+      scroll={{ x: 'max-content', y: 500 }}
+      rowClassName={record => record.className || ''}
+      pagination={{
+        current: currentPage,
+        pageSize: pageSize,
+        total: totalPage,
+      }}
+      loading={loading}
+    />
   )
 }
 

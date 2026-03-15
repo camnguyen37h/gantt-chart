@@ -8,29 +8,30 @@ import { RevenueSummaryTooltip } from './constant'
 
 const CustomDescription = ({ title, value }) => {
   return (
-    <div>
-      <Row>
-        <Col span={4} style={{ marginBottom: 4 }}>
-          {title}
-        </Col>
-        <Col span={4}>
-          <Row type="flex" align="middle">
-            <Col span={16}>
-              <Tooltip title={RevenueSummaryTooltip[title]}>
-                <Icon type="question-circle" style={{ cursor: 'pointer' }} />
-              </Tooltip>
-            </Col>
-            <Col span={8}>
-              <div style={{ textAlign: 'left' }}>
-                {value < 0
-                  ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
-                  : formatFloatNumber(value, 0, 3)}
-              </div>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    </div>
+    <Row>
+      <Col span={5} style={{ marginBottom: 4 }}>
+        {title}
+      </Col>
+      <Col span={7}>
+        <Row type="flex" align="middle">
+          <Col span={4} type="flex" align="middle">
+            <Tooltip title={RevenueSummaryTooltip[title]}>
+              <Icon
+                type="question-circle"
+                style={{ cursor: 'pointer', padding: '4px' }}
+              />
+            </Tooltip>
+          </Col>
+          <Col span={7}>
+            <div style={{ textAlign: 'left' }}>
+              {value < 0
+                ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
+                : formatFloatNumber(value, 0, 3)}
+            </div>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   )
 }
 

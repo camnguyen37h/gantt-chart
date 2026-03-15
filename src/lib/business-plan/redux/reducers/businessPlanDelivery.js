@@ -13,6 +13,7 @@ import {
   getLocationExchangeRate,
   getSummaryDeliveryPlan,
 } from '../asyncThunks/businessPlanDelivery.js'
+import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
 
 const initialState = {
   // Resources Information & Filter
@@ -199,9 +200,9 @@ const businessPlanDeliverySlice = createSlice({
           )
             ? state.dataDeleteRequest.listResourceInformation
             : [
-              ...state.dataDeleteRequest.listResourceInformation,
-              action.payload,
-            ],
+                ...state.dataDeleteRequest.listResourceInformation,
+                action.payload,
+              ],
       }
     },
     removeCreateOrUpdateResourceInformation: (state, action) => {
@@ -289,9 +290,9 @@ const businessPlanDeliverySlice = createSlice({
           )
             ? state.dataDeleteRequest.listOtherExpensesTableData
             : [
-              ...state.dataDeleteRequest.listOtherExpensesTableData,
-              payload.otherExpenseId,
-            ],
+                ...state.dataDeleteRequest.listOtherExpensesTableData,
+                payload.otherExpenseId,
+              ],
       }
     },
     removeCreateOtherExpense: (state, { payload }) => {
@@ -344,9 +345,9 @@ const businessPlanDeliverySlice = createSlice({
         state.listLocationExchangeRateData.map(item =>
           item.location === location
             ? {
-              ...item,
-              exchangeRate: exchangeRate,
-            }
+                ...item,
+                exchangeRate: exchangeRate,
+              }
             : item
         )
 
@@ -519,18 +520,18 @@ const businessPlanDeliverySlice = createSlice({
 
       const filteredItems = action.payload
         ? action.payload
-          .filter(item => item.groupId !== null)
-          .map(item => ({
-            ...item,
-            groupId: item.groupId.toString(),
-          }))
+            .filter(item => item.groupId !== null)
+            .map(item => ({
+              ...item,
+              groupId: item.groupId.toString(),
+            }))
         : []
 
       state.listDUDelivery = filteredItems
       state.deliveryUnitDataDelivery =
-        filteredItems.length > 0 ? filteredItems[0] : {}
+        filteredItems.length > 0 ? ALL_OPTION : {}
       state.duValueDelivery =
-        filteredItems.length > 0 ? filteredItems[0].groupId : undefined
+        filteredItems.length > 0 ? ALL_OPTION_VALUE : undefined
     })
 
     builder.addCase(getListDUByVersionDelivery.rejected, (state, action) => {
@@ -544,32 +545,31 @@ const businessPlanDeliverySlice = createSlice({
     builder.addCase(getSummaryDeliveryPlan.fulfilled, (state, action) => {
       state.loadingSummaryDeliveryPlan = false
 
-      const payload = action.payload || {}
       state.summaryDeliveryPlan['mmEffort'] =
-        payload['mmEffort'] !== null ? payload['mmEffort'] : ''
+        action.payload['mmEffort'] !== null ? action.payload['mmEffort'] : ''
       state.summaryDeliveryPlan['directLaborCost'] =
-        payload['directLaborCost'] !== null
-          ? payload['directLaborCost']
+        action.payload['directLaborCost'] !== null
+          ? action.payload['directLaborCost']
           : ''
       state.summaryDeliveryPlan['outsourcingCost'] =
-        payload['outsourcingCost'] !== null
-          ? payload['outsourcingCost']
+        action.payload['outsourcingCost'] !== null
+          ? action.payload['outsourcingCost']
           : ''
       state.summaryDeliveryPlan['equipmentExpense'] =
-        payload['equipmentExpense'] !== null
-          ? payload['equipmentExpense']
+        action.payload['equipmentExpense'] !== null
+          ? action.payload['equipmentExpense']
           : ''
       state.summaryDeliveryPlan['onsiteExpense'] =
-        payload['onsiteExpense'] !== null
-          ? payload['onsiteExpense']
+        action.payload['onsiteExpense'] !== null
+          ? action.payload['onsiteExpense']
           : ''
       state.summaryDeliveryPlan['overtime'] =
-        payload['overtime'] !== null ? payload['overtime'] : ''
+        action.payload['overtime'] !== null ? action.payload['overtime'] : ''
       state.summaryDeliveryPlan['other'] =
-        payload['other'] !== null ? payload['other'] : ''
+        action.payload['other'] !== null ? action.payload['other'] : ''
       state.summaryDeliveryPlan['nonDeductibleInputVAT'] =
-        payload['nonDeductibleInputVAT'] !== null
-          ? payload['nonDeductibleInputVAT']
+        action.payload['nonDeductibleInputVAT'] !== null
+          ? action.payload['nonDeductibleInputVAT']
           : ''
     })
 

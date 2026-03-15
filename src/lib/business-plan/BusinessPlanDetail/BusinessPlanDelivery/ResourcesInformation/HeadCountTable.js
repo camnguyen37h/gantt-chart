@@ -1,44 +1,47 @@
 import {
-  Button,
-  Icon,
-  Input,
-  InputNumber,
-  Select,
-  Spin,
-  Table,
-  Tooltip
-} from 'antd'
-import Decimal from 'decimal.js'
-import { cloneDeep, debounce, isEqual, uniqueId } from 'lodash'
-import moment from 'moment'
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
   useState,
+  useEffect,
+  useCallback,
+  forwardRef,
+  useImperativeHandle,
+  memo,
+  useMemo,
 } from 'react'
-import { NotificationManager } from 'react-notifications'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
-import { v4 as uuid } from 'uuid'
-import Request from '../../../..//service/request'
-import BUSINESS_PLAN_API from '../../../../service/api/businessPlan'
-import { ResponseStatusCode } from '../../../../service/constant'
-import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber'
 import {
-  addOrUpdateCreateResource,
-  addOrUpdateUpdateResource,
-  getEmployeePosition,
+  Table,
+  Button,
+  InputNumber,
+  Icon,
+  Select,
+  Popover,
+  Tooltip,
+  Spin,
+  Dropdown,
+  Input,
+  Menu,
+} from 'antd'
+import { cloneDeep, debounce, set, uniqueId, isEqual } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import {
   getListResource,
-  removeCreateOrUpdateResourceInformation,
   setIsSaveShowedDeliveryPlan,
   setListIdToDeleteResourceInformation,
   setListResource,
+  addOrUpdateCreateResource,
+  addOrUpdateUpdateResource,
+  removeCreateOrUpdateResourceInformation,
+  getEmployeePosition,
 } from '../../../redux'
+import BUSINESS_PLAN_API from '../../../../service/api/businessPlan'
+import { ResponseStatusCode } from '../../../../service/constant'
+import Request from '../../../..//service/request'
+import { NotificationManager } from 'react-notifications'
+import Decimal from 'decimal.js'
+import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber'
 import { formatInputNumber, parseInputNumber } from '../../../utils'
+import styled from 'styled-components'
+import { formatterMMValues, parserMMValues } from '../utils'
+import { v4 as uuid } from 'uuid'
 import {
   DU_MEMBER_WARNING_MESSAGE,
   RESOURCE_REFERENCE_TYPE_ENUM,
@@ -49,10 +52,8 @@ import {
   REVIEWING_WARNING_MESSAGE,
   VALIDATE_REQUIRED_FIELDS_MESSAGE,
 } from '../constants'
-import { formatterMMValues, parserMMValues } from '../utils'
-
+import moment from 'moment'
 const { Option } = Select
-
 const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
     display: none;
@@ -128,7 +129,7 @@ const EditableCell = ({
       }
       const user =
         listResource.length > 0 &&
-          listResource.find(item => item.value === value)
+        listResource.find(item => item.value === value)
           ? listResource.find(item => item.value === value)
           : {}
 
@@ -219,7 +220,7 @@ const HeadCountTable = forwardRef((props, ref) => {
     listLocationExchangeRateData,
     loadDataFromValue,
     errorDataSubmitDeliveryPlan,
-    summaryDeliveryPlan
+    summaryDeliveryPlan,
   } = useSelector(state => state.businessPlanDelivery)
   const dispatch = useDispatch()
 
@@ -308,53 +309,54 @@ const HeadCountTable = forwardRef((props, ref) => {
       (errorDataSubmitDeliveryPlan && errorDataSubmitDeliveryPlan.data) || []
     const dataWithKeys = dataResourcesInformation.deliveryPlanByHeadCountList
       ? dataResourcesInformation.deliveryPlanByHeadCountList.map(item => {
-        const key = uniqueId(
-          `${item.deliveryMemberId
-            ? RESOURCES_KEYS.DELIVERY_MEMBER
-            : RESOURCES_KEYS.NEW_DELIVERY_MEMBER
-          }-${item.deliveryMemberId}-`
-        )
-        // if data is from load data from => move it into dataCreateRequest
-        if (!item.deliveryMemberId) {
-          const { budgetMMValue, role, ...restValue } = item
-          updateRow({
-            key,
-            ...restValue,
-            role: role ? role : 'Member',
-          })
-        }
-
-        if (
-          item.resourceType === RESOURCE_TYPE_ENUM.GENERIC_RESOURCE &&
-          item.resourceFullName.includes(RESOURCE_TYPE_ENUM.RESOURCE)
-        ) {
-          setCountGenericResource(prev => prev + 1)
-        }
-
-        listError.forEach(error => {
-          if (
-            +error.groupId === +deliveryUnit.groupId &&
-            error.deliveryMemberId === item.deliveryMemberId
-          ) {
-            error.missingRequiredFields.forEach(field => {
-              updateListInvalid(field, '', key)
+          const key = uniqueId(
+            `${
+              item.deliveryMemberId
+                ? RESOURCES_KEYS.DELIVERY_MEMBER
+                : RESOURCES_KEYS.NEW_DELIVERY_MEMBER
+            }-${item.deliveryMemberId}-`
+          )
+          // if data is from load data from => move it into dataCreateRequest
+          if (!item.deliveryMemberId) {
+            const { budgetMMValue, role, ...restValue } = item
+            updateRow({
+              key,
+              ...restValue,
+              role: role ? role : 'Member',
             })
           }
-        })
 
-        return {
-          ...item,
-          key,
-          role: !item.deliveryMemberId ? 'Member' : item.role,
-          children: RESOURCE_REFERENCE_TYPE_ENUM.map(type => ({
-            key: `${key}-${type}`,
-            parentKey: key,
-            resourceType: type,
-            rowTotal: '',
-            budgetMMValueDTO: {},
-          })),
-        }
-      })
+          if (
+            item.resourceType === RESOURCE_TYPE_ENUM.GENERIC_RESOURCE &&
+            item.resourceFullName.includes(RESOURCE_TYPE_ENUM.RESOURCE)
+          ) {
+            setCountGenericResource(prev => prev + 1)
+          }
+
+          listError.forEach(error => {
+            if (
+              +error.groupId === +deliveryUnit.groupId &&
+              error.deliveryMemberId === item.deliveryMemberId
+            ) {
+              error.missingRequiredFields.forEach(field => {
+                updateListInvalid(field, '', key)
+              })
+            }
+          })
+
+          return {
+            ...item,
+            key,
+            role: !item.deliveryMemberId ? 'Member' : item.role,
+            children: RESOURCE_REFERENCE_TYPE_ENUM.map(type => ({
+              key: `${key}-${type}`,
+              parentKey: key,
+              resourceType: type,
+              rowTotal: '',
+              budgetMMValueDTO: {},
+            })),
+          }
+        })
       : []
     setTitleRowTotal(
       dataResourcesInformation.deliveryPlanByHeadCountList.reduce(
@@ -373,12 +375,12 @@ const HeadCountTable = forwardRef((props, ref) => {
       !listLocationExchangeRateData
         ? {}
         : listLocationExchangeRateData.reduce(
-          (acc, { location, exchangeRate }) => {
-            acc[location] = exchangeRate
-            return acc
-          },
-          {}
-        )
+            (acc, { location, exchangeRate }) => {
+              acc[location] = exchangeRate
+              return acc
+            },
+            {}
+          )
     )
   }, [listLocationExchangeRateData])
 
@@ -432,9 +434,10 @@ const HeadCountTable = forwardRef((props, ref) => {
           ...prevData,
           ...result.data.body.deliveryPlanByHeadCountList.map(item => {
             const key = uniqueId(
-              `${item.deliveryMemberId
-                ? RESOURCES_KEYS.DELIVERY_MEMBER
-                : RESOURCES_KEYS.NEW_DELIVERY_MEMBER
+              `${
+                item.deliveryMemberId
+                  ? RESOURCES_KEYS.DELIVERY_MEMBER
+                  : RESOURCES_KEYS.NEW_DELIVERY_MEMBER
               }-${item.deliveryMemberId}-`
             )
             return {
@@ -527,6 +530,33 @@ const HeadCountTable = forwardRef((props, ref) => {
     }
   }
 
+  const mainColumnsWidth = useMemo(() => {
+    let totalWidth = 0
+
+    mainColumns.forEach(item => {
+      if (item.children && Array.isArray(item.children)) {
+        item.children.forEach(child => {
+          totalWidth += child.width
+        })
+      }
+    })
+    return totalWidth
+  }, [mainColumns])
+
+  const fetchEmployeePosition = useCallback(
+    async (key, value) => {
+      try {
+        setLoadingGetPosition(key)
+        await dispatch(getEmployeePosition({ name: value, mvv }))
+      } catch (error) {
+        NotificationManager.error(error)
+      } finally {
+        setLoadingGetPosition(null)
+      }
+    },
+    [mvv, dispatch]
+  )
+
   const columnsConfig = useCallback(() => {
     if (!listLocationExchangeRateData) return
     const isLoading = Object.values(loadingExpandedRow).some(
@@ -562,8 +592,8 @@ const HeadCountTable = forwardRef((props, ref) => {
                   isLoading
                     ? 'loading'
                     : expandedKeys.length > 0
-                      ? 'down'
-                      : 'right'
+                    ? 'down'
+                    : 'right'
                 }
                 style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
                 onClick={toggleExpandAll}
@@ -607,8 +637,15 @@ const HeadCountTable = forwardRef((props, ref) => {
           return {
             ...column,
             title: (
-              <span title={ summaryDeliveryPlan.mmEffort || formatFloatNumber(titleRowTotal, 0, 3) || 0 } >
-                { summaryDeliveryPlan.mmEffort || formatFloatNumber(titleRowTotal, 0, 3) || 0 }
+              <span
+                title={
+                  summaryDeliveryPlan.mmEffort ||
+                  formatFloatNumber(titleRowTotal, 0, 3) ||
+                  0
+                }>
+                {summaryDeliveryPlan.mmEffort ||
+                  formatFloatNumber(titleRowTotal, 0, 3) ||
+                  0}
               </span>
             ),
             ellipsis: true,
@@ -616,14 +653,11 @@ const HeadCountTable = forwardRef((props, ref) => {
               return {
                 ...child,
                 render: (text, record) => {
-                  const content = (record.parentKey
-                    ? formatFloatNumber(text, 0, 2)
-                    : formatFloatNumber(text, 0, 3)) || 0
-                  return (
-                    <span title={content}>
-                      {content}
-                    </span>
-                  )
+                  const content =
+                    (record.parentKey
+                      ? formatFloatNumber(text, 0, 2)
+                      : formatFloatNumber(text, 0, 3)) || 0
+                  return <span title={content}>{content}</span>
                 },
               }
             }),
@@ -631,201 +665,199 @@ const HeadCountTable = forwardRef((props, ref) => {
         }
         return {
           ...column,
-          children: column.children && column.children.map(child => {
-            if(child.dataIndex === 'no') {
-              return{
-                ...child,
-                render: (_, record, index) =>
-                  !record.parentKey &&
-                  (index + 1)
-              }
-            }
-            if(child.dataIndex === 'fill') {
-              return {
-                ...child,
-                title: canEdit ? 'Fill' : '',
-                width: canEdit ? RESOURCE_TABLE_WIDTH.NO : 0,
-                render: (_, record) =>
-                  !record.parentKey && canEdit &&
-                  <Icon
-                    type="plus-circle"
-                    onClick={() => handleFill(record)}
-                />
-              }
-            }
-            if ([
-              'resourceType',
-              'location',
-              'employeeType',
-              'role',
-            ].includes(child.dataIndex)) {
-              return {
-                ...child,
-                title:
-                  child.dataIndex === 'resourceType' ? (
-                    <div className="d-flex gap-10 align-items-center">
-                      <span>{child.title}</span>
-                      <Tooltip
-                        title={RESOURCE_TYPE_TOOLTIP}
-                        overlayClassName="resource-type-tooltip">
+          children:
+            (column.children &&
+              column.children.map(child => {
+                if (child.dataIndex === 'no') {
+                  return {
+                    ...child,
+                    render: (_, record, index) =>
+                      !record.parentKey && index + 1,
+                  }
+                }
+                if (child.dataIndex === 'fill') {
+                  return {
+                    ...child,
+                    title: canEdit ? 'Fill' : '',
+                    width: canEdit ? RESOURCE_TABLE_WIDTH.NO : 0,
+                    render: (_, record) =>
+                      !record.parentKey &&
+                      canEdit && (
                         <Icon
-                          type="question-circle"
-                          style={{ cursor: 'pointer' }}
+                          type="plus-circle"
+                          onClick={() => handleFill(record)}
                         />
-                      </Tooltip>
-                    </div>
-                  ) : (
-                    child.title
-                  ),
-                render: (text, record) =>
-                  (!record.parentKey &&
-                    (!canEdit ? (
-                      <span title={text}>{text}</span>
-                    ) : (
-                      renderCommonSelect(
-                        record,
-                        record[child.dataIndex],
-                        child.dataIndex
-                      )
-                    ))) ||
-                  (child.dataIndex === 'resourceType' && (
-                    <div className="d-flex justify-content-between gap-4 align-items-center">
-                      <span>{text}</span>
-                      <Button
-                        onClick={() =>
-                          onClickSetData(record.parentKey, record)
-                        }
-                        disabled={!canEdit}>
-                        Set
-                      </Button>
-                    </div>
-                  )),
-              }
-            }
-            if (child.dataIndex === 'position') {
-              return {
-                ...child,
-                render: (text, record) =>
-                  !record.parentKey &&
-                  canEdit ? (
-                    <Select
-                      className={
-                        listInvalid[record.key] &&
-                          listInvalid[record.key].position
-                          ? 'select-error'
-                          : ''
-                      }
-                      style={{ width: '100%' }}
-                      showSearch
-                      filterOption={false}
-                      value={record.position || ''}
-                      onChange={value =>
-                        handleSelectChange(
-                          record,
-                          record.deliveryMemberId,
-                          child.dataIndex,
-                          value
-                        )
-                      }
-                      onSearch={debounce(
-                        value =>
-                          fetchEmployeePosition(record.key, value.trim()),
-                        600
-                      )}
-                      onDropdownVisibleChange={debounce(
-                        (open) => {
-                          if (!open) dispatch(getEmployeePosition({ mvv }))
-                        },
-                        300
-                      )}
-                      loading={loadingGetPosition === record.key}
-                    >
-                      {listPosition.map(option => (
-                        <Option
-                          value={option.name}
-                          key={`${option.name}-${option.id}`}>
-                          <span title={option.name}>{option.name}</span>
-                        </Option>
-                      ))}
-                    </Select>
-                  ) : (
-                    <span title={text}>{text}</span>
-                  ),
-              }
-            }
-            if (child.dataIndex === 'originalGrossSalary') {
-              return {
-                ...child,
-                render: (_, record) =>
-                  !record.parentKey &&
-                  (canEdit ? (
-                    <StyledInputNumber
-                      key={`${record.key}-${child.dataIndex}-${keyReset}`}
-                      min={0}
-                      className={
-                        listInvalid[record.key] &&
-                          listInvalid[record.key].originalGrossSalary
-                          ? 'input-error'
-                          : ''
-                      }
-                      style={{ width: '100%' }}
-                      defaultValue={record.originalGrossSalary}
-                      onChange={debounce(
-                        value =>
-                          handleOGGrossSalaryInput(
+                      ),
+                  }
+                }
+                if (
+                  ['resourceType', 'location', 'employeeType', 'role'].includes(
+                    child.dataIndex
+                  )
+                ) {
+                  return {
+                    ...child,
+                    title:
+                      child.dataIndex === 'resourceType' ? (
+                        <div className="d-flex gap-10 align-items-center">
+                          <span>{child.title}</span>
+                          <Tooltip
+                            title={RESOURCE_TYPE_TOOLTIP}
+                            overlayClassName="resource-type-tooltip">
+                            <Icon
+                              type="question-circle"
+                              style={{ cursor: 'pointer' }}
+                            />
+                          </Tooltip>
+                        </div>
+                      ) : (
+                        child.title
+                      ),
+                    render: (text, record) =>
+                      (!record.parentKey &&
+                        (!canEdit ? (
+                          <span title={text}>{text}</span>
+                        ) : (
+                          renderCommonSelect(
                             record,
-                            value,
+                            record[child.dataIndex],
                             child.dataIndex
-                          ),
-                        350
-                      )}
-                      formatter={formatInputNumber}
-                      parser={parseInputNumber}
-                    />
-                  ) : (
-                    <span
-                      title={formatFloatNumber(record.originalGrossSalary)}>
-                      {formatFloatNumber(record.originalGrossSalary)}
-                    </span>
-                  )),
-              }
-            }
-            if (child.dataIndex === 'grossSalary') {
-              return {
-                ...child,
-                render: (_, record) => {
-                  const value = formatFloatNumber(
-                    calculateGrossSalary(
-                      record.originalGrossSalary,
-                      record.location
-                    )
-                  )
-                  return (
-                    !record.parentKey && <span title={value}>{value}</span>
-                  )
-                },
-              }
-            }
-            if (child.dataIndex === 'resourceFullName') {
-              return {
-                ...child,
-                ellipsis: true,
-                onCell: record =>
-                  !record.parentKey && {
-                    record,
-                    editable: canEdit,
-                    dataIndex: child.dataIndex,
-                    handleSave,
-                    isInvalid:
-                      listInvalid[record.key] &&
-                      listInvalid[record.key].resourceFullName,
-                    updateListInvalid,
-                    updateIsSaveShowed,
-                  },
-              }
-            }
-            return child
-          }) || [],
+                          )
+                        ))) ||
+                      (child.dataIndex === 'resourceType' && (
+                        <div className="d-flex justify-content-between gap-4 align-items-center">
+                          <span>{text}</span>
+                          <Button
+                            onClick={() =>
+                              onClickSetData(record.parentKey, record)
+                            }
+                            disabled={!canEdit}>
+                            Set
+                          </Button>
+                        </div>
+                      )),
+                  }
+                }
+                if (child.dataIndex === 'position') {
+                  return {
+                    ...child,
+                    render: (text, record) =>
+                      !record.parentKey && canEdit ? (
+                        <Select
+                          className={
+                            listInvalid[record.key] &&
+                            listInvalid[record.key].position
+                              ? 'select-error'
+                              : ''
+                          }
+                          style={{ width: '100%' }}
+                          showSearch
+                          filterOption={false}
+                          value={record.position || ''}
+                          onChange={value =>
+                            handleSelectChange(
+                              record,
+                              record.deliveryMemberId,
+                              child.dataIndex,
+                              value
+                            )
+                          }
+                          onSearch={debounce(
+                            value =>
+                              fetchEmployeePosition(record.key, value.trim()),
+                            600
+                          )}
+                          onDropdownVisibleChange={debounce(open => {
+                            if (!open) dispatch(getEmployeePosition({ mvv }))
+                          }, 300)}
+                          loading={loadingGetPosition === record.key}>
+                          {listPosition.map(option => (
+                            <Option
+                              value={option.name}
+                              key={`${option.name}-${option.id}`}>
+                              <span title={option.name}>{option.name}</span>
+                            </Option>
+                          ))}
+                        </Select>
+                      ) : (
+                        <span title={text}>{text}</span>
+                      ),
+                  }
+                }
+                if (child.dataIndex === 'originalGrossSalary') {
+                  return {
+                    ...child,
+                    render: (_, record) =>
+                      !record.parentKey &&
+                      (canEdit ? (
+                        <StyledInputNumber
+                          key={`${record.key}-${child.dataIndex}-${keyReset}`}
+                          min={0}
+                          className={
+                            listInvalid[record.key] &&
+                            listInvalid[record.key].originalGrossSalary
+                              ? 'input-error'
+                              : ''
+                          }
+                          style={{ width: '100%' }}
+                          defaultValue={record.originalGrossSalary}
+                          onChange={debounce(
+                            value =>
+                              handleOGGrossSalaryInput(
+                                record,
+                                value,
+                                child.dataIndex
+                              ),
+                            350
+                          )}
+                          formatter={formatInputNumber}
+                          parser={parseInputNumber}
+                        />
+                      ) : (
+                        <span
+                          title={formatFloatNumber(record.originalGrossSalary)}>
+                          {formatFloatNumber(record.originalGrossSalary)}
+                        </span>
+                      )),
+                  }
+                }
+                if (child.dataIndex === 'grossSalary') {
+                  return {
+                    ...child,
+                    render: (_, record) => {
+                      const value = formatFloatNumber(
+                        calculateGrossSalary(
+                          record.originalGrossSalary,
+                          record.location
+                        )
+                      )
+                      return (
+                        !record.parentKey && <span title={value}>{value}</span>
+                      )
+                    },
+                  }
+                }
+                if (child.dataIndex === 'resourceFullName') {
+                  return {
+                    ...child,
+                    ellipsis: true,
+                    onCell: record =>
+                      !record.parentKey && {
+                        record,
+                        editable: canEdit,
+                        dataIndex: child.dataIndex,
+                        handleSave,
+                        isInvalid:
+                          listInvalid[record.key] &&
+                          listInvalid[record.key].resourceFullName,
+                        updateListInvalid,
+                        updateIsSaveShowed,
+                      },
+                  }
+                }
+                return child
+              })) ||
+            [],
         }
       }),
     ]
@@ -833,78 +865,90 @@ const HeadCountTable = forwardRef((props, ref) => {
     const totalMonthWidth =
       RESOURCE_TABLE_WIDTH.TABLE -
       RESOURCE_TABLE_WIDTH.WARNING -
-      (2 * RESOURCE_TABLE_WIDTH.ACTION) -
+      2 * RESOURCE_TABLE_WIDTH.ACTION -
       mainColumnsWidth
 
     const calculatedWidth = Math.max(
       totalMonthWidth /
-      (dataResourcesInformation.listLabelMonth && dataResourcesInformation.listLabelMonth.length),
+        (dataResourcesInformation.listLabelMonth &&
+          dataResourcesInformation.listLabelMonth.length),
       RESOURCE_TABLE_WIDTH.MAX_MONTH_WIDTH
     )
 
     const monthsColumns = dataResourcesInformation.listLabelMonth
       ? dataResourcesInformation.listLabelMonth.map(date => {
-        return {
-          title: (
-            <span
-              title={formatFloatNumber(dataResourcesInformation.listBudgetMMForEachMonth[date], 0, 3)}>
-              {formatFloatNumber(dataResourcesInformation.listBudgetMMForEachMonth[date], 0, 3)}
-            </span>
-          ),
-          align: 'center',
-          ellipsis: true,
-          key: `title-${date}`,
-          children: [
-            {
-              title: date,
-              dataIndex: ['budgetMMValueDTO', date],
-              key: date,
-              width: calculatedWidth,
-              ellipsis: true,
-              align: 'center',
-              render: (_, record) => {
-                const value =
-                  (record.parentKey && record.budgetMMValueDTO[date]) ||
-                  (record.budgetMMValueDTO &&
+          return {
+            title: (
+              <span
+                title={formatFloatNumber(
+                  dataResourcesInformation.listBudgetMMForEachMonth[date],
+                  0,
+                  3
+                )}>
+                {formatFloatNumber(
+                  dataResourcesInformation.listBudgetMMForEachMonth[date],
+                  0,
+                  3
+                )}
+              </span>
+            ),
+            align: 'center',
+            ellipsis: true,
+            key: `title-${date}`,
+            children: [
+              {
+                title: date,
+                dataIndex: ['budgetMMValueDTO', date],
+                key: date,
+                width: calculatedWidth,
+                ellipsis: true,
+                align: 'center',
+                render: (_, record) => {
+                  const value =
+                    (record.parentKey && record.budgetMMValueDTO[date]) ||
+                    (record.budgetMMValueDTO &&
                     record.budgetMMValueDTO[date] &&
                     typeof record.budgetMMValueDTO[date].value === 'number'
-                    ? record.budgetMMValueDTO[date].value
-                    : '')
-                return !record.parentKey && canEdit ? (
-                  <StyledInputNumber
-                    style={{ fontSize: 'small', maxWidth: RESOURCE_TABLE_WIDTH.MAX_MONTH_WIDTH }}
-                    key={`${record.key}-${date}-${keyReset}`}
-                    min={0}
-                    defaultValue={value}
-                    value={value}
-                    onChange={debounce(
-                      value =>
-                        handleRowChange(
-                          record,
-                          record.deliveryMemberId,
-                          date,
-                          value
-                        ),
-                      350
-                    )}
-                    formatter={formatterMMValues}
-                    parser={parserMMValues}
-                  />
-                ) : (
-                  <span title={formatFloatNumber(value, 0, 2)}>
-                    {formatFloatNumber(value, 0, 2)}
-                  </span>
-                )
+                      ? record.budgetMMValueDTO[date].value
+                      : '')
+                  return !record.parentKey && canEdit ? (
+                    <StyledInputNumber
+                      style={{
+                        fontSize: 'small',
+                        maxWidth: RESOURCE_TABLE_WIDTH.MAX_MONTH_WIDTH,
+                      }}
+                      key={`${record.key}-${date}-${keyReset}`}
+                      min={0}
+                      defaultValue={value}
+                      value={value}
+                      onChange={debounce(
+                        value =>
+                          handleRowChange(
+                            record,
+                            record.deliveryMemberId,
+                            date,
+                            value
+                          ),
+                        350
+                      )}
+                      formatter={formatterMMValues}
+                      parser={parserMMValues}
+                    />
+                  ) : (
+                    <span title={formatFloatNumber(value, 0, 2)}>
+                      {formatFloatNumber(value, 0, 2)}
+                    </span>
+                  )
+                },
               },
-            },
-          ],
-        }
-      })
+            ],
+          }
+        })
       : [
-        {
-          key: 'emptyColumn2',
-        },
-      ]
+          {
+            key: 'emptyColumn2',
+          },
+        ]
 
     return [...columns, ...monthsColumns]
   }, [
@@ -934,7 +978,6 @@ const HeadCountTable = forwardRef((props, ref) => {
     updatedRow => {
       // check if row is new or old
       if (updatedRow.key.includes(RESOURCES_KEYS.NEW_DELIVERY_MEMBER)) {
-
         dispatch(addOrUpdateCreateResource(updatedRow))
       } else if (updatedRow.key.includes(RESOURCES_KEYS.DELIVERY_MEMBER)) {
         dispatch(addOrUpdateUpdateResource(updatedRow))
@@ -973,7 +1016,7 @@ const HeadCountTable = forwardRef((props, ref) => {
         expandedKeys.includes(partialRow.key)
       ) {
         await fetchResourceInforReferenceData(
-          partialRow.userId,
+          newData[rowIndex].userId,
           partialRow.key
         )
       }
@@ -1025,22 +1068,7 @@ const HeadCountTable = forwardRef((props, ref) => {
     [handleSave, updateIsSaveShowed]
   )
 
-  const mainColumnsWidth = useMemo(
-    () => {
-      let totalWidth = 0;
-
-      mainColumns.forEach(item => {
-        if (item.children && Array.isArray(item.children)) {
-          item.children.forEach(child => {
-            totalWidth += child.width;
-          });
-        }
-      });
-      return totalWidth
-    }
-    , [mainColumns]
-  )
-  const handleSelectChange = (record, deliveryMemberId, field, value) => {
+  function handleSelectChange(record, deliveryMemberId, field, value) {
     if (value) updateListInvalid(field, value, record.key)
 
     const updatedRow = {
@@ -1173,7 +1201,7 @@ const HeadCountTable = forwardRef((props, ref) => {
     )
   }
 
-  const toggleExpandedKeys = async (key, record) => {
+  async function toggleExpandedKeys(key, record) {
     const isExpanded = expandedKeys.includes(key)
     const newKeys = isExpanded
       ? expandedKeys.filter(k => k !== key)
@@ -1212,28 +1240,28 @@ const HeadCountTable = forwardRef((props, ref) => {
             prevData.map(item =>
               item.userId === userId && item.key === rowKey
                 ? {
-                  ...item,
-                  children: item.children.map(child => {
-                    const data = Object.values(response.data).find(
-                      data => data.resourceType === child.resourceType
-                    )
-                    const formattedBudgetMMValue = data.labelMonth
-                      ? Object.fromEntries(
-                        Object.entries(data.labelMonth).map(
-                          ([month, value]) => [
-                            month,
-                            parseFloat(formatFloatNumber(value)),
-                          ]
-                        )
+                    ...item,
+                    children: item.children.map(child => {
+                      const data = Object.values(response.data).find(
+                        data => data.resourceType === child.resourceType
                       )
-                      : {}
-                    return {
-                      ...child,
-                      rowTotal: data.total,
-                      budgetMMValueDTO: formattedBudgetMMValue,
-                    }
-                  }),
-                }
+                      const formattedBudgetMMValue = data.labelMonth
+                        ? Object.fromEntries(
+                            Object.entries(data.labelMonth).map(
+                              ([month, value]) => [
+                                month,
+                                parseFloat(formatFloatNumber(value)),
+                              ]
+                            )
+                          )
+                        : {}
+                      return {
+                        ...child,
+                        rowTotal: data.total,
+                        budgetMMValueDTO: formattedBudgetMMValue,
+                      }
+                    }),
+                  }
                 : item
             )
           )
@@ -1252,23 +1280,7 @@ const HeadCountTable = forwardRef((props, ref) => {
     [loadDataFromValue, buId, deliveryUnit]
   )
 
-  const fetchEmployeePosition = useCallback(
-    async (key, value) => {
-      try {
-        setLoadingGetPosition(key)
-        await dispatch(getEmployeePosition({ name: value, mvv }))
-      } catch (error) {
-        NotificationManager.error(error)
-      } finally {
-        setLoadingGetPosition(null)
-      }
-    },
-    [
-      mvv,
-      dispatch
-    ]
-  )
-  const toggleExpandAll = async () => {
+  async function toggleExpandAll() {
     const rowKeys = data.map(item => item.key)
     if (expandedKeys.length > 0) {
       setExpandedKeys([])
@@ -1352,20 +1364,20 @@ const HeadCountTable = forwardRef((props, ref) => {
           year,
           value: 1,
         }
-        } else if (
-          existingItem &&
-          (existingItem.value === null ||
-            existingItem.value === undefined ||
-            existingItem.value === 0 ||
-            existingItem.value === '')
-        ) {
+      } else if (
+        existingItem &&
+        (existingItem.value === null ||
+          existingItem.value === undefined ||
+          existingItem.value === 0 ||
+          existingItem.value === '')
+      ) {
         recodeInit.budgetMMValueDTO[key].value = 1
       }
     })
 
     if (!isEqual(record.budgetMMValueDTO, recodeInit.budgetMMValueDTO)) {
       const updatedDataInTable = dataInit.map(item =>
-            item.key === recodeInit.key ? recodeInit : item
+        item.key === recodeInit.key ? recodeInit : item
       )
       setData(updatedDataInTable)
 

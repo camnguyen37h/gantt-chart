@@ -4,11 +4,10 @@ import {
   getBusinessPlanDetail,
   getBusinessPlanDetailByViewMode,
   getCompareBusinessPlanDetail,
-  getSpecificPermission,
+  getPositionRevenuePlan,
   getSummaryRevenuePlan,
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
-import { setSelectedMvvCode } from './businessGeneralInformation'
 
 const initialState = {
   isSaveShowed: false,
@@ -19,9 +18,7 @@ const initialState = {
   softwareDevelopmentFee: null,
   otherFees: null,
   validation: {},
-  projectCode: '',
   version: null,
-  status: null,
   originalBusinessPlanItems: [],
   compareBusinessPlanItems: null,
   compareColumnLabels: null,
@@ -187,9 +184,7 @@ const businessDetailsSlice = createSlice({
       if (!data) return
 
       state.listVersions = data.versions || []
-      state.projectCode = data.projectCode
       state.version = data.version
-      state.status = data.status
       state.versionId = data.id
       state.startDate = data.startDate
       state.endDate = data.endDate
@@ -295,11 +290,7 @@ const businessDetailsSlice = createSlice({
         )
         state.originalBusinessPlanItems = originalBusinessPlanItems
         state.columns = data.columnLabels
-
-        state.projectCode = data.projectCode
         state.version = data.version
-        state.status = data.status
-
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
       }
@@ -309,21 +300,14 @@ const businessDetailsSlice = createSlice({
       state.loadingBusinessPlan = false
     })
 
-    builder.addCase(getSummaryRevenuePlan.pending, state => {
+    builder.addCase(getCompareBusinessPlanDetail.pending, state => {
       state.loadingBusinessPlan = true
-    })
-
-    builder.addCase(getSummaryRevenuePlan.fulfilled, state => {
-      state.loadingBusinessPlan = false
-    })
-
-    builder.addCase(getSummaryRevenuePlan.rejected, state => {
-      state.loadingBusinessPlan = false
     })
 
     builder.addCase(
       getCompareBusinessPlanDetail.fulfilled,
       (state, { payload }) => {
+        state.loadingBusinessPlan = false
         state.compareColumnLabels = payload.columnLabels || null
         state.compareBusinessPlanItems = (payload.sectionList || []).reduce(
           (res, cur) => {
@@ -346,6 +330,22 @@ const businessDetailsSlice = createSlice({
         )
       }
     )
+
+    builder.addCase(getCompareBusinessPlanDetail.rejected, state => {
+      state.loadingBusinessPlan = false
+    })
+
+    builder.addCase(getSummaryRevenuePlan.pending, (state, { payload }) => {
+      state.loadingBusinessPlan = true
+    })
+
+    builder.addCase(getSummaryRevenuePlan.fulfilled, (state, { payload }) => {
+      state.loadingBusinessPlan = false
+    })
+
+    builder.addCase(getSummaryRevenuePlan.rejected, (state, action) => {
+      state.loadingBusinessPlan = false
+    })
   },
 })
 

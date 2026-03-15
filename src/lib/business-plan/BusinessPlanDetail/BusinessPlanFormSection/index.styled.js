@@ -7,6 +7,7 @@ const StyledWrapper = styled.div`
   max-height: 700px;
   overflow: auto;
   margin-top: 24px;
+  background-color: #ffffff;
 
   .ant-input-number-input {
     text-align: center;
@@ -30,19 +31,23 @@ const StyledWrapper = styled.div`
     }
 
     thead {
+      position: sticky;
+      top: 0;
+      z-index: 100;
       th {
-        padding: 0;
         position: sticky;
         top: 0;
         z-index: 1;
+        padding: 0;
         font-weight: 500;
         text-align: center;
         background: #fff;
-        vertical-align: bottom;
 
-        /* &:not(:last-child) div {
-          border-right: 1px solid #e1e1e1;
-        } */
+        > span {
+          display: inline-block;
+          padding: 6px 8px;
+          width: 100%;
+        }
 
         &:first-child {
           left: 0;

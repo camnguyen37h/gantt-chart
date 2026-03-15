@@ -5,6 +5,9 @@ import {
 } from '../constants/ActivityKeyConstants'
 import { Divider } from 'antd'
 
+export const ALL_OPTION_VALUE = 'All'
+export const ALL_OPTION = { groupId: ALL_OPTION_VALUE, groupName: 'All' }
+
 export const STATUS_COLOR = {
   VERIFICATION: { color: '#1890FF', backgroundColor: '#CDEDFF' },
   APPROVED: { color: '#4CAF50', backgroundColor: '#D9F7BE' },
@@ -22,6 +25,11 @@ export const STATUS_COLOR_DETAIL = {
 export const STATUS_COLOR_PROJECT_TYPE = {
   Onsite: { backgroundColor: 'green' },
   Offshore: { backgroundColor: 'blue' },
+}
+
+export const MVV_TYPE_BADGE = {
+  onsite: { color: '#1890FF', backgroundColor: '#CDEDFF' },
+  offshore: { color: '#4CAF50', backgroundColor: '#D9F7BE' },
 }
 
 export const STATUS_COLOR_ICON = {

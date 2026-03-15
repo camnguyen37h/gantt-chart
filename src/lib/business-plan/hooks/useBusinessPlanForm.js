@@ -7,9 +7,12 @@ import { NotificationManager } from 'react-notifications'
 
 const useBusinessPlanForm = () => {
   const dispatch = useDispatch()
-  const { businessPlanItems, columns, compareBusinessPlanItems, compareColumnLabels } = useSelector(
-    state => state.businessPlanDetails
-  )
+  const {
+    businessPlanItems,
+    columns,
+    compareBusinessPlanItems,
+    compareColumnLabels,
+  } = useSelector(state => state.businessPlanDetails)
 
   const setBusinessPlanItem = useCallback(
     ({ item }) => {

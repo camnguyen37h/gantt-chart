@@ -199,6 +199,7 @@ const RevenueInformation = ({
     maxTagCount: 1,
     loading: isLoadingFilterPositionRevenuePlan,
   }
+
   const filterConfig = [
     {
       name: 'position',
@@ -539,7 +540,7 @@ const RevenueInformation = ({
   useEffect(() => {
     if (!isExpandPanel) return
     dispatch(getPositionRevenuePlan({ projectCode }))
-  }, [isExpandPanel])
+  }, [isExpandPanel, projectCode])
 
   useEffect(() => {
     if (!isExpandPanel) return
@@ -548,7 +549,7 @@ const RevenueInformation = ({
       ...filters,
       deliveryUnitDataRevenue,
     })
-  }, [isExpandPanel, switchValue, filters])
+  }, [isExpandPanel, switchValue, filters, businessVersion])
 
   useEffect(() => {
     const tableBodyRevenue = document.querySelector(

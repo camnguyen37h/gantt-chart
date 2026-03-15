@@ -3,7 +3,6 @@ import { Fragment, useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { KPI_BONUS_ENUMS } from "../../constants";
-
 const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
     display: none;
