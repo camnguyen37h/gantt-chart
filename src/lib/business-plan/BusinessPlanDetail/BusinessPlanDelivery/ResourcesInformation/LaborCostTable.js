@@ -26,12 +26,13 @@ const LaborCostTable = ({ mainColumns }) => {
   } = useSelector(state => state.businessPlanDelivery);
 
   useEffect(() => {
-    setData(
-      dataResourcesInformation && dataResourcesInformation.deliveryPlanByHeadCountList || []
-    );
+    const deliveryList = (dataResourcesInformation && dataResourcesInformation.deliveryPlanByHeadCountList)
+      ? dataResourcesInformation.deliveryPlanByHeadCountList
+      : []
+    setData(deliveryList)
     setHasMore(true)
     setPageNum(PAGE_NUMBER)
-  }, [dataResourcesInformation]);
+  }, [dataResourcesInformation])
 
   useEffect(() => {
     const tableBody = document.querySelector('.labor-cost-table .ant-table-body');
@@ -84,55 +85,59 @@ const LaborCostTable = ({ mainColumns }) => {
     }
   }
 
-  const mainColumnsWidth = useMemo(
-    () => {
-      let totalWidth = 0;
+  const mainColumnsWidth = useMemo(() => {
+    let totalWidth = 0
+    mainColumns.forEach(item => {
+      if (item.children && Array.isArray(item.children)) {
+        item.children.forEach(child => {
+          totalWidth += child.width
+        })
+      }
+    })
+    return totalWidth
+  }, [mainColumns])
 
-      mainColumns.forEach(item => {
-        if (item.children && Array.isArray(item.children)) {
-          item.children.forEach(child => {
-            totalWidth += child.width;
-          });
-        }
-      });
-      return totalWidth
-    }
-    , [mainColumns]
+  const calculateGrossSalary = useCallback(
+    (originalSalary, location) => {
+      if (!originalSalary || !location) return 0
+      const rateItem = listLocationExchangeRateData.find(item => item.location === location)
+      const exchangeRate = rateItem ? rateItem.exchangeRate : 0
+      if (!exchangeRate) return 0
+      return new Decimal(originalSalary).mul(new Decimal(exchangeRate)).toNumber()
+    },
+    [listLocationExchangeRateData]
   )
 
   const columns = useMemo(() => {
     if (!dataResourcesInformation || !dataResourcesInformation.listLabelMonth) {
       return [
-        { 
+        {
           title: 'No',
           key: 'ldap',
           align: 'center',
           width: RESOURCE_TABLE_WIDTH.NO,
-          render: (_, record, index) => (index + 1)
+          render: (_, record, index) => (index + 1),
         },
         ...mainColumns,
-        {
-          key: 'emptyColumn',
-        }
-      ];
+        { key: 'emptyColumn' },
+      ]
     }
 
-    const calculatedRowTotal = data.reduce((sum, item) => sum + Number(item.rowTotal), 0);
-
-    const totalMonthWidth =
-      RESOURCE_TABLE_WIDTH.TABLE -
-      mainColumnsWidth
-
+    const calculatedRowTotal = data.reduce((sum, item) => sum + Number(item.rowTotal), 0)
+    const totalMonthWidth = RESOURCE_TABLE_WIDTH.TABLE - mainColumnsWidth
+    const labelMonthCount = dataResourcesInformation.listLabelMonth.length > 0
+      ? dataResourcesInformation.listLabelMonth.length
+      : 1
     const calculatedWidth = Math.max(
-      totalMonthWidth /
-      (dataResourcesInformation.listLabelMonth && dataResourcesInformation.listLabelMonth.length),
+      totalMonthWidth / labelMonthCount,
       RESOURCE_TABLE_WIDTH.MAX_MONTH_WIDTH
     )
 
     const createColumnConfig = (month, listBudgetMMForEachMonth) => ({
-      title: listBudgetMMForEachMonth[month] ?
-        <span title={formatFloatNumber(listBudgetMMForEachMonth[month], 0, 3)}>{formatFloatNumber(listBudgetMMForEachMonth[month], 0, 3)}</span> : '',
-      align: "center",
+      title: listBudgetMMForEachMonth[month]
+        ? <span title={formatFloatNumber(listBudgetMMForEachMonth[month], 0, 3)}>{formatFloatNumber(listBudgetMMForEachMonth[month], 0, 3)}</span>
+        : '',
+      align: 'center',
       ellipsis: true,
       children: [
         {
@@ -143,134 +148,94 @@ const LaborCostTable = ({ mainColumns }) => {
           align: 'center',
           width: calculatedWidth,
           render: (_, record) => {
-            const budgetMMValue = record.budgetMMValueDTO
-              && record.budgetMMValueDTO[month]
-              && record.budgetMMValueDTO[month].value || "";
+            const monthEntry = record.budgetMMValueDTO ? record.budgetMMValueDTO[month] : null
+            const budgetMMValue = (monthEntry && typeof monthEntry.value === 'number') ? monthEntry.value : ''
             return (
               <span title={formatFloatNumber(budgetMMValue)}>
                 {formatFloatNumber(budgetMMValue)}
               </span>
-            );
-          }
-        }
+            )
+          },
+        },
       ],
-    });
+    })
 
-    const monthsColumns =
-      dataResourcesInformation.listLabelMonth
-      && dataResourcesInformation.listLabelMonth.map(date =>
-        createColumnConfig(date, dataResourcesInformation.listBudgetMMForEachMonth));
+    const monthsColumns = dataResourcesInformation.listLabelMonth.map(date =>
+      createColumnConfig(date, dataResourcesInformation.listBudgetMMForEachMonth)
+    )
 
+    const formattedValue =
+      formatFloatNumber(summaryDeliveryPlan.directLaborCost, 0, 3) ||
+      formatFloatNumber(calculatedRowTotal, 0, 3)
     return [
       ...mainColumns.map(item => {
         if (item.key === 'rowTotal') {
-          const formattedValue = formatFloatNumber(summaryDeliveryPlan.directLaborCost, 0, 3) || formatFloatNumber(calculatedRowTotal, 0, 3)
           return {
             ...item,
             title: <span title={formattedValue}>{formattedValue}</span>,
             ellipsis: true,
-            children: item.children.map(child => {
-              return {
-                ...child,
-                render: (_, record) => {
-                  return (
-                    <span title={formatFloatNumber(record.rowTotal, 0, 3)}>
-                      {formatFloatNumber(record.rowTotal, 0, 3) || 0 }
-                    </span>
-                  );
-                }
-              }
-            }),
+            children: item.children.map(child => ({
+              ...child,
+              render: (_, record) => (
+                <span title={formatFloatNumber(record.rowTotal, 0, 3)}>
+                  {formatFloatNumber(record.rowTotal, 0, 3) || 0}
+                </span>
+              ),
+            })),
           }
         }
         return {
           ...item,
-          children: item.children ? item.children.map(child => {
-            if (child.dataIndex === 'no') {
-              return {
-                ...child,
-                title: "NO",
-                render: (_, record, index) => (index + 1)
-              }
-            }
-            if(child.dataIndex === 'fill') {
-              return {
-                ...child,
-                title:  '',
-                width: 0,
-                render: (_, record) => false
-              }
-            }
-            if (child.dataIndex === 'resourceType') {
-              return {
-                ...child,
-                title: (
-                  <div className='d-flex gap-10 align-items-center'>
-                    <span>
-                      {child.title}
-                    </span>
-                    <Tooltip title={RESOURCE_TYPE_TOOLTIP} overlayClassName='resource-type-tooltip'>
-                      <Icon type="question-circle" style={{ cursor: 'pointer' }} />
-                    </Tooltip>
-                  </div>
-                )
-              }
-            }
-            if (child.dataIndex === 'grossSalary') {
-              return {
-                ...child,
-                render: (_, record) => {
-                  const calculatedGrossSalary = calculateGrossSalary(
-                    record.originalGrossSalary,
-                    record.location
-                  );
-
-                  const grossSalary = formatFloatNumber(calculatedGrossSalary);
-                  return (<span title={grossSalary}>
-                    {grossSalary}
-                  </span>)
+          children: item.children
+            ? item.children.map(child => {
+                if (child.dataIndex === 'no') {
+                  return { ...child, title: 'NO', render: (_, record, index) => (index + 1) }
                 }
-              }
-            }
-            if (child.dataIndex === 'originalGrossSalary') {
-              return {
-                ...child,
-                render: text => formatFloatNumber(text)
-              }
-            }
-            return child
-          }) : []
+                if (child.dataIndex === 'fill') {
+                  return { ...child, title: '', width: 0, render: () => false }
+                }
+                if (child.dataIndex === 'resourceType') {
+                  return {
+                    ...child,
+                    title: (
+                      <div className="d-flex gap-10 align-items-center">
+                        <span>{child.title}</span>
+                        <Tooltip title={RESOURCE_TYPE_TOOLTIP} overlayClassName="resource-type-tooltip">
+                          <Icon type="question-circle" style={{ cursor: 'pointer' }} />
+                        </Tooltip>
+                      </div>
+                    ),
+                  }
+                }
+                if (child.dataIndex === 'grossSalary') {
+                  return {
+                    ...child,
+                    render: (_, record) => {
+                      const grossSalary = formatFloatNumber(
+                        calculateGrossSalary(record.originalGrossSalary, record.location)
+                      )
+                      return <span title={grossSalary}>{grossSalary}</span>
+                    },
+                  }
+                }
+                if (child.dataIndex === 'originalGrossSalary') {
+                  return { ...child, render: text => formatFloatNumber(text) }
+                }
+                return child
+              })
+            : [],
         }
-      })
-      , ...monthsColumns];
-  },
-    [
-      dataResourcesInformation,
-      mainColumns,
-      mainColumnsWidth,
-      data,
-      calculateGrossSalary
+      }),
+      ...monthsColumns,
     ]
-  );
-
-  const calculateGrossSalary = useCallback(
-    (originalSalary, location) => {
-      const exchangeRate =
-        location &&
-        listLocationExchangeRateData.length > 0 &&
-        listLocationExchangeRateData.find(
-          (item) => item.location === location
-        ).exchangeRate || 0;
-
-      if (!exchangeRate || !originalSalary) return 0
-      const salary = new Decimal(originalSalary)
-      const rate = new Decimal(exchangeRate)
-      return salary.mul(rate)
-    },
-    [
-      listLocationExchangeRateData
-    ]
-  )
+  }, [
+    dataResourcesInformation,
+    mainColumns,
+    mainColumnsWidth,
+    data,
+    calculateGrossSalary,
+    summaryDeliveryPlan,
+  ])
 
   return (
     <div>

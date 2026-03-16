@@ -101,7 +101,7 @@ function CollaboratorBodyItem({
 
     dispatch(setValidation(result))
 
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleChangeDate = (id, dataSource, rangePickerValue, fieldName) => {
@@ -130,7 +130,7 @@ function CollaboratorBodyItem({
 
     dispatch(setValidation(result))
 
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleSearchUserName = value => {
@@ -185,7 +185,7 @@ function CollaboratorBodyItem({
         newItem,
       })
     )
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleDeleteItem = (
@@ -229,7 +229,7 @@ function CollaboratorBodyItem({
         id,
       })
     )
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleChangeTable = (pagination, setPagination) => {

@@ -49,13 +49,13 @@ const BusinessPlanTabWrapper = ({
   value = 'TOTAL',
   onChange,
   activeTab = '1',
+  availableModes,
   tab,
   ...rest
 }) => {
   const visibleOptions = VIEW_OPTIONS.filter(option => {
-    if (activeTab === '1') return true
-
-    return !option.businessPlanOnly
+    if (option.businessPlanOnly) return activeTab === '1'
+    return !availableModes || availableModes.indexOf(option.value) !== -1
   })
 
   return (

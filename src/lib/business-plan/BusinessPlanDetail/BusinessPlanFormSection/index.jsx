@@ -55,7 +55,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
   const hasSuffix = typeof suffix !== 'undefined' && suffix !== ''
 
   const onChange = value => {
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ businessPlan: true })
 
     if (value === null || value === '') {
       setBusinessPlanItem({ item: { ...item, value: null } })
@@ -209,7 +209,7 @@ const ServiceControl = ({
     var cloneRow = cloneDeep(row)
     cloneRow.title = value[1] || ''
     if (validation[labelKey]) setValidation({ [labelKey]: false })
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ businessPlan: true })
     updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
   }
 
@@ -217,7 +217,7 @@ const ServiceControl = ({
     var cloneRow = cloneDeep(row)
     cloneRow.title = value
     if (validation[labelKey]) setValidation({ [labelKey]: false })
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ businessPlan: true })
     updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
   }
 
@@ -590,7 +590,7 @@ function BusinessPlanFormSection({
       rowKey: generatedKey,
       row: { title: '', data: newItems, new: true },
     })
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ businessPlan: true })
   }
 
   function getCellDisplayValue(item, sectionKey, rowKey, isService) {

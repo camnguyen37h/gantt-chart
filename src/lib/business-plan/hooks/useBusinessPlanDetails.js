@@ -120,10 +120,10 @@ const useBusinessPlanDetails = () => {
     const result = await BusinessPlanAPI.saveDraft(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data)
-      updateIsSaveShowed(false)
+      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
       return result.data
     } else {
-      updateIsSaveShowed(false)
+      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
       return NotificationManager.error(result.message)
     }
   }
@@ -135,10 +135,10 @@ const useBusinessPlanDetails = () => {
     const result = await BusinessPlanAPI.submit(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data)
-      updateIsSaveShowed(false)
+      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
       return result.data
     } else {
-      updateIsSaveShowed(false)
+      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
       return NotificationManager.error(result.message)
     }
   }

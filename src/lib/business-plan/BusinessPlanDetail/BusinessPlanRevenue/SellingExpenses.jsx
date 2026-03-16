@@ -51,24 +51,20 @@ const SellingExpenses = ({
   const [rowsData, setRowsData] = useState([])
 
   const dispatch = useDispatch()
-  const mainData = useSelector(
-    state => state.businessPlanRevenue.dataSourceTableSellingExpenses
-  )
-  const isLoading = useSelector(
-    state => state.businessPlanRevenue.isLoadingSellingExpenses
-  )
-  const isUpdated = useSelector(
-    state => state.businessPlanRevenue.isUpdatedSellingExpenses
-  )
-  const listRevenueInvalid = useSelector(
-    state => state.businessPlanRevenue.listRevenueInvalid
-  )
+  const {
+    dataSourceTableSellingExpenses: mainData,
+    isLoadingSellingExpenses: isLoading,
+    isUpdatedSellingExpenses: isUpdated,
+    listRevenueInvalid,
+  } = useSelector(state => state.businessPlanRevenue)
   const updateIsSaveConfirmShowed = useCallback(
     value => {
       return dispatch(setIsSaveConfirmShowed(value))
     },
     [dispatch]
   )
+
+  const { dataSourceValidation } = useBusinessPlanRevenue(listRevenueInvalid, dataSourceTable)
 
   const generateMonthColumns = (startDate, endDate) => {
     const start = moment(startDate)
@@ -128,59 +124,66 @@ const SellingExpenses = ({
     }))
   }
 
-  const handleEdit = updatedRow => {
-    dispatch(setUpdateSellingExpensesData(updatedRow))
-  }
+  const handleEdit = useCallback(
+    updatedRow => {
+      dispatch(setUpdateSellingExpensesData(updatedRow))
+    },
+    [dispatch]
+  )
 
-  const handleRowChange = debounce((key, field, month, value) => {
-    updateIsSaveConfirmShowed(true)
-    let updatedRows = []
+  const handleRowChange = useMemo(
+    () =>
+      debounce((key, field, month, value) => {
+        updateIsSaveConfirmShowed(true)
+        let updatedRows = []
 
-    setRowsData(prevRows =>
-      prevRows.map(row => {
-        if (row.key !== key) return row
+        setRowsData(prevRows =>
+          prevRows.map(row => {
+            if (row.key !== key) return row
 
-        const updatedRow = {
-          ...row,
-          [field]:
-            field === 'revenueDetails'
-              ? {
-                  ...row.revenueDetails,
-                  [month]: {
-                    value,
-                    revenueTypeId: row.revenueTypeId,
-                  },
-                }
-              : value,
-        }
-
-        const formattedRow = {
-          key: updatedRow.key,
-          revenueTypeId: updatedRow.revenueTypeId,
-          revenueTypeSpecificId: updatedRow.revenueTypeSpecificId,
-          revenueName: updatedRow.revenueName,
-          total: updatedRow.total,
-          revenueDetails: Object.entries(updatedRow.revenueDetails).map(
-            ([date, detail]) => {
-              const [monthNum, year] = date.split('-')
-              return {
-                revenueTypeId: detail.revenueTypeId,
-                revenueTypeSpecificId: updatedRow.revenueTypeSpecificId,
-                revenueName: updatedRow.revenueName,
-                month: parseInt(monthNum, 10),
-                year: parseInt(year, 10),
-                date,
-                value: parseFloat(detail.value) || 0,
-              }
+            const updatedRow = {
+              ...row,
+              [field]:
+                field === 'revenueDetails'
+                  ? {
+                      ...row.revenueDetails,
+                      [month]: {
+                        value,
+                        revenueTypeId: row.revenueTypeId,
+                      },
+                    }
+                  : value,
             }
-          ),
-        }
-        updatedRows.push(formattedRow)
-        return updatedRow
-      })
-    )
-    updatedRows.forEach(row => handleEdit(row))
-  }, 500)
+
+            const formattedRow = {
+              key: updatedRow.key,
+              revenueTypeId: updatedRow.revenueTypeId,
+              revenueTypeSpecificId: updatedRow.revenueTypeSpecificId,
+              revenueName: updatedRow.revenueName,
+              total: updatedRow.total,
+              revenueDetails: Object.entries(updatedRow.revenueDetails).map(
+                ([date, detail]) => {
+                  const [monthNum, year] = date.split('-')
+                  return {
+                    revenueTypeId: detail.revenueTypeId,
+                    revenueTypeSpecificId: updatedRow.revenueTypeSpecificId,
+                    revenueName: updatedRow.revenueName,
+                    month: parseInt(monthNum, 10),
+                    year: parseInt(year, 10),
+                    date,
+                    value: parseFloat(detail.value) || 0,
+                  }
+                }
+              ),
+            }
+            updatedRows.push(formattedRow)
+            return updatedRow
+          })
+        )
+        updatedRows.forEach(row => handleEdit(row))
+      }, 500),
+    [handleEdit, updateIsSaveConfirmShowed]
+  )
 
   const canEditRevenueAllStatus =
     checkRolePermission(
@@ -630,10 +633,6 @@ const SellingExpenses = ({
 
   useEffect(() => {
     if (listRevenueInvalid.length > 0) {
-      const { dataSourceValidation } = useBusinessPlanRevenue(
-        listRevenueInvalid,
-        dataSourceTable
-      )
       setDataSourceTable(dataSourceValidation)
     }
   }, [listRevenueInvalid])

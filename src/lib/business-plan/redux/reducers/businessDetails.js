@@ -10,7 +10,7 @@ import {
 import { sectionConfig } from '../../constants'
 
 const initialState = {
-  isSaveShowed: false,
+  isSaveShowed: { generalInformation: false, businessPlan: false },
   businessPlanItems: {},
   columns: [],
   exchangeRate: null,
@@ -29,7 +29,6 @@ const initialState = {
   warningMessage: null,
   activePanel: '',
   deliveryUnitDataDelivery: {},
-  deliveryUnitDataRevenue: {},
   loadingBusinessPlan: false,
 }
 const businessDetailsSlice = createSlice({
@@ -37,7 +36,7 @@ const businessDetailsSlice = createSlice({
   initialState,
   reducers: {
     setIsSaveShowed: (state, action) => {
-      state.isSaveShowed = action.payload
+      state.isSaveShowed = { ...state.isSaveShowed, ...action.payload }
     },
     setBusinessPlanItems: (state, { payload }) => {
       state.businessPlanItems = payload

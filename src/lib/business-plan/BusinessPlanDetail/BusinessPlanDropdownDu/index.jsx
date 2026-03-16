@@ -67,6 +67,12 @@ const BusinessPlanDropdownDu = memo(
             )
             dispatch(setDeliveryUnitDataDelivery(findDu))
           } else {
+            dispatch(
+              getLocationExchangeRate({
+                businessPlanVersionId: buId,
+                deliveryUnit: '',
+              })
+            )
             dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
           }
           dispatch(

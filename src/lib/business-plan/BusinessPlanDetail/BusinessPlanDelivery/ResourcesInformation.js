@@ -15,6 +15,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -35,7 +36,6 @@ import {
   setResourceInfoTableParams,
   setLoadDataFromValue,
   setIsSaveShowedDeliveryPlan,
-  setViewType,
   getEmployeePosition,
   getEmployeeRole,
   getEmployeeType,
@@ -47,6 +47,30 @@ import { debounce, isEqual } from 'lodash'
 import RESOURCE_INFORMATION_TYPE from './constants'
 import { ALL_OPTION_VALUE } from '../../constants'
 const { Option } = Select
+
+const buildFilterSelectConfig = (name, options, title) => {
+  const mappedOptions = options
+    ? options.map(item =>
+        name === 'location'
+          ? { ...item, text: item.name, value: item.name }
+          : { ...item, text: item.value }
+      )
+    : []
+  return {
+    name,
+    type: 'select',
+    options: mappedOptions,
+    title,
+    mode: 'single',
+    controlProps: {
+      showSearch: true,
+      optionFilterProp: 'value',
+      filterOption: (input, option) =>
+        option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+      maxTagCount: 1,
+    },
+  }
+}
 
 const ResourcesInformation = forwardRef((props, ref) => {
   const {
@@ -73,7 +97,6 @@ const ResourcesInformation = forwardRef((props, ref) => {
     loadingListResource,
     resourceInfoTableParams,
     loadDataFromValue,
-    viewType,
   } = useSelector(state => state.businessPlanDelivery)
 
   const filters = useSelector(
@@ -100,92 +123,83 @@ const ResourcesInformation = forwardRef((props, ref) => {
     }
   }, [canEdit, mvv])
 
-  const filterSelectProps = (name, options, title) => {
-    const mappedOptions = options
-      ? options.map(item =>
-          name === 'location'
-            ? {
-                ...item,
-                text: item.name,
-                value: item.name,
-              }
-            : {
-                ...item,
-                text: item.value,
-              }
-        )
-      : []
+  const handleSearchResource = useCallback(
+    debounce(
+      value => dispatch(getListResource({ name: value.toString().trim() })),
+      1000
+    ),
+    [dispatch]
+  )
 
-    return {
-      name: name,
-      type: 'select',
-      options: mappedOptions,
-      title: title,
-      mode: 'single',
-      controlProps: {
-        showSearch: true,
-        optionFilterProp: 'value',
-        filterOption: (input, option) =>
-          option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0,
-        maxTagCount: 1,
-      },
-    }
-  }
+  const handleSearchPosition = useCallback(
+    debounce(
+      value => dispatch(getEmployeePosition({ name: value.toString().trim(), mvv })),
+      600
+    ),
+    [dispatch, mvv]
+  )
 
-  const filterConfig = [
-    {
-      name: 'resource',
-      type: 'select',
-      options: listResourceFilter,
-      title: 'Resource',
-      mode: 'single',
-      controlProps: {
-        showSearch: true,
-        allowClear: true,
-        filterOption: false,
-        maxTagCount: 1,
-        loading: loadingListResource,
-        onFocus: () => dispatch(getListResource()),
-        onSearch: debounce(
-          value => dispatch(getListResource({ name: value.toString().trim() })),
-          1000
-        ),
+  const handlePositionDropdownClose = useCallback(
+    debounce(open => {
+      if (!open) dispatch(getEmployeePosition({ mvv }))
+    }, 300),
+    [dispatch, mvv]
+  )
+
+  const filterConfig = useMemo(
+    () => [
+      {
+        name: 'resource',
+        type: 'select',
+        options: listResourceFilter,
+        title: 'Resource',
+        mode: 'single',
+        controlProps: {
+          showSearch: true,
+          allowClear: true,
+          filterOption: false,
+          maxTagCount: 1,
+          loading: loadingListResource,
+          onFocus: () => dispatch(getListResource()),
+          onSearch: handleSearchResource,
+        },
       },
-    },
-    filterSelectProps('resourceType', listResourceType, 'Resource Type'),
-    filterSelectProps('location', listLocation, 'Location'),
-    filterSelectProps('employeeType', listEmployeeType, 'Employee Type'),
-    {
-      name: 'position',
-      type: 'select',
-      options: listPosition
-        ? listPosition.map(item => ({
-            ...item,
-            text: item.value,
-          }))
-        : [],
-      title: 'Position',
-      mode: 'single',
-      controlProps: {
-        showSearch: true,
-        allowClear: true,
-        filterOption: false,
-        maxTagCount: 1,
-        loading: loadingListPosition,
-        onSearch: debounce(
-          value =>
-            dispatch(
-              getEmployeePosition({ name: value.toString().trim(), mvv })
-            ),
-          600
-        ),
-        onDropdownVisibleChange: debounce(open => {
-          if (!open) dispatch(getEmployeePosition({ mvv }))
-        }, 300),
+      buildFilterSelectConfig('resourceType', listResourceType, 'Resource Type'),
+      buildFilterSelectConfig('location', listLocation, 'Location'),
+      buildFilterSelectConfig('employeeType', listEmployeeType, 'Employee Type'),
+      {
+        name: 'position',
+        type: 'select',
+        options: listPosition ? listPosition.map(item => ({ ...item, text: item.value })) : [],
+        title: 'Position',
+        mode: 'single',
+        controlProps: {
+          showSearch: true,
+          allowClear: true,
+          filterOption: false,
+          maxTagCount: 1,
+          loading: loadingListPosition,
+          onSearch: handleSearchPosition,
+          onDropdownVisibleChange: handlePositionDropdownClose,
+        },
       },
-    },
-    filterSelectProps('role', listRole, 'Role'),
-  ]
+      buildFilterSelectConfig('role', listRole, 'Role'),
+    ],
+    [
+      listResourceFilter,
+      listResourceType,
+      listLocation,
+      listEmployeeType,
+      listPosition,
+      listRole,
+      loadingListResource,
+      loadingListPosition,
+      handleSearchResource,
+      handleSearchPosition,
+      handlePositionDropdownClose,
+      dispatch,
+    ]
+  )
 
   useEffect(() => {
     if (listResource) {
@@ -199,29 +213,34 @@ const ResourcesInformation = forwardRef((props, ref) => {
     }
   }, [listResource])
 
-  const handleSearchFilters = value => {
-    dispatch(setFiltersResourcesInformation(value))
-  }
-  const handleCheckboxChange = e => {
-    setCheckedItems({
-      ...checkedItems,
-      [e.target.name]: e.target.checked,
-    })
-  }
+  const handleSearchFilters = useCallback(
+    value => dispatch(setFiltersResourcesInformation(value)),
+    [dispatch]
+  )
 
-  const content = (
-    <Menu>
-      {checkboxItems.map(item => (
-        <Menu.Item key={item.value}>
-          <Checkbox
-            name={item.value}
-            checked={checkedItems[item.value]}
-            onChange={handleCheckboxChange}>
-            {item.label}
-          </Checkbox>
-        </Menu.Item>
-      ))}
-    </Menu>
+  const handleCheckboxChange = useCallback(e => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [e.target.name]: e.target.checked,
+    }))
+  }, [])
+
+  const settingsMenuContent = useMemo(
+    () => (
+      <Menu>
+        {checkboxItems.map(item => (
+          <Menu.Item key={item.value}>
+            <Checkbox
+              name={item.value}
+              checked={checkedItems[item.value]}
+              onChange={handleCheckboxChange}>
+              {item.label}
+            </Checkbox>
+          </Menu.Item>
+        ))}
+      </Menu>
+    ),
+    [checkedItems, handleCheckboxChange]
   )
 
   const updateIsSaveConfirmShowed = useCallback(
@@ -231,23 +250,20 @@ const ResourcesInformation = forwardRef((props, ref) => {
     [dispatch]
   )
 
-  const onChangeRadio = ({ target: { value } }) => {
-    dispatch(setViewType(value))
+  const onChangeRadio = useCallback(({ target: { value } }) => {
     setValueRadio(value)
-  }
+  }, [])
 
-  const onChangeLoadData = value => {
-    dispatch(setLoadDataFromValue(value))
-    dispatch(resetPayloadSaveDelivery())
-
-    if (
-      value &&
-      canEdit &&
-      valueRadio === RESOURCE_INFORMATION_TYPE.HEAD_COUNT
-    ) {
-      updateIsSaveConfirmShowed(true)
-    }
-  }
+  const onChangeLoadData = useCallback(
+    value => {
+      dispatch(setLoadDataFromValue(value))
+      dispatch(resetPayloadSaveDelivery())
+      if (value && canEdit && valueRadio === RESOURCE_INFORMATION_TYPE.HEAD_COUNT) {
+        updateIsSaveConfirmShowed(true)
+      }
+    },
+    [dispatch, canEdit, valueRadio, updateIsSaveConfirmShowed]
+  )
 
   useEffect(() => {
     if (!isExpandPanel || !buId) return
@@ -305,7 +321,7 @@ const ResourcesInformation = forwardRef((props, ref) => {
           />
           <Popover
             placement="bottomLeft"
-            content={content}
+            content={settingsMenuContent}
             trigger="click"
             className="delivery-setting-table">
             <Button icon="setting" size="default" />

@@ -481,7 +481,6 @@ const OtherExpensesTable = forwardRef(
                       listInvalid[record.key].costName) ||
                     (listDuplicated[record.parentKey] &&
                       listDuplicated[record.parentKey][record.key] &&
-                      listDuplicated[record.parentKey][record.key] &&
                       listDuplicated[record.parentKey][record.key].costName)
                   return record.parentKey ? (
                     canEdit ? (

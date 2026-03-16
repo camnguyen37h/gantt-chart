@@ -127,11 +127,7 @@ const EditableCell = ({
         saveRow({ [dataIndex]: '', ldap: '' })
         return
       }
-      const user =
-        listResource.length > 0 &&
-        listResource.find(item => item.value === value)
-          ? listResource.find(item => item.value === value)
-          : {}
+      const user = listResource.find(item => item.value === value) || {}
 
       value && updateListInvalid(dataIndex, value, record.key)
       value &&
@@ -494,14 +490,14 @@ const HeadCountTable = forwardRef((props, ref) => {
   }
 
   const updateListInvalid = useCallback((field, value, rowKey) => {
-    setListInvalid(prev => {
-      prev[rowKey] = {
+    setListInvalid(prev => ({
+      ...prev,
+      [rowKey]: {
         ...prev[rowKey],
         [field]: !value,
-      }
-      return prev
-    })
-  })
+      },
+    }))
+  }, [])
 
   const calculateGrossSalary = useCallback(
     (originalSalary, location) => {
@@ -868,10 +864,13 @@ const HeadCountTable = forwardRef((props, ref) => {
       2 * RESOURCE_TABLE_WIDTH.ACTION -
       mainColumnsWidth
 
+    const labelMonthCount =
+      dataResourcesInformation.listLabelMonth &&
+      dataResourcesInformation.listLabelMonth.length > 0
+        ? dataResourcesInformation.listLabelMonth.length
+        : 1
     const calculatedWidth = Math.max(
-      totalMonthWidth /
-        (dataResourcesInformation.listLabelMonth &&
-          dataResourcesInformation.listLabelMonth.length),
+      totalMonthWidth / labelMonthCount,
       RESOURCE_TABLE_WIDTH.MAX_MONTH_WIDTH
     )
 
@@ -1016,7 +1015,7 @@ const HeadCountTable = forwardRef((props, ref) => {
         expandedKeys.includes(partialRow.key)
       ) {
         await fetchResourceInforReferenceData(
-          newData[rowIndex].userId,
+          partialRow.userId,
           partialRow.key
         )
       }

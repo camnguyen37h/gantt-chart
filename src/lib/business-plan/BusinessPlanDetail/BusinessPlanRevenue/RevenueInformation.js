@@ -6,7 +6,7 @@ import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { Col, Radio, Row, Table } from 'antd'
 import { isEqual } from 'lodash'
 import moment from 'moment'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NotificationManager } from 'react-notifications'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -181,44 +181,47 @@ const RevenueInformation = ({
   const tableRef = useRef(null)
 
   const dispatch = useDispatch()
-  const filters = useSelector(
-    state => state.businessPlanRevenue.filtersRevenue,
+  const { filtersRevenue: filters, dataFilterPosition: positionRevenuePlan, isLoadingFilterPosition: isLoadingFilterPositionRevenuePlan } = useSelector(
+    state => state.businessPlanRevenue,
     isEqual
-  )
-  const positionRevenuePlan = useSelector(
-    state => state.businessPlanRevenue.dataFilterPosition
-  )
-  const isLoadingFilterPositionRevenuePlan = useSelector(
-    state => state.businessPlanRevenue.isLoadingFilterPosition
   )
   const filterRef = useRef()
   const isInitialRender = useRef(true)
 
-  const defaultSelectProps = {
-    filterOption: false,
-    maxTagCount: 1,
-    loading: isLoadingFilterPositionRevenuePlan,
-  }
+  const handleSearchPosition = useCallback(
+    text => {
+      if (!text.length) return
+      dispatch(getPositionRevenuePlan({ text, projectCode }))
+    },
+    [dispatch, projectCode]
+  )
 
-  const filterConfig = [
-    {
-      name: 'position',
-      type: 'select',
-      options: positionRevenuePlan,
-      title: 'Position',
-      mode: 'single',
-      controlProps: {
-        ...defaultSelectProps,
-        onSearch: text => {
-          if (!text.length) return
-          dispatch(getPositionRevenuePlan({ text, projectCode }))
-        },
-        onDropdownVisibleChange: open => {
-          if (!open) dispatch(getPositionRevenuePlan({ projectCode }))
+  const handlePositionDropdownClose = useCallback(
+    open => {
+      if (!open) dispatch(getPositionRevenuePlan({ projectCode }))
+    },
+    [dispatch, projectCode]
+  )
+
+  const filterConfig = useMemo(
+    () => [
+      {
+        name: 'position',
+        type: 'select',
+        options: positionRevenuePlan,
+        title: 'Position',
+        mode: 'single',
+        controlProps: {
+          filterOption: false,
+          maxTagCount: 1,
+          loading: isLoadingFilterPositionRevenuePlan,
+          onSearch: handleSearchPosition,
+          onDropdownVisibleChange: handlePositionDropdownClose,
         },
       },
-    },
-  ]
+    ],
+    [positionRevenuePlan, isLoadingFilterPositionRevenuePlan, handleSearchPosition, handlePositionDropdownClose]
+  )
 
   const fetchProductionRevenuePlan = async (start, pageSize, param) => {
     setLoadingTable(true)
@@ -255,9 +258,9 @@ const RevenueInformation = ({
     }
   }
 
-  function handleSwitchHeadcountRevenue(e) {
+  const handleSwitchHeadcountRevenue = useCallback(e => {
     setSwitchValue(e.target.value)
-  }
+  }, [])
 
   const handleScroll = useCallback(
     e => {
@@ -563,7 +566,7 @@ const RevenueInformation = ({
         tableBodyRevenue.removeEventListener('scroll', handleScroll)
       }
     }
-  }, [dataSourceTable, hasMore, loadingTable])
+  }, [handleScroll])
 
   useEffect(() => {
     setHasMore(true)
@@ -575,9 +578,12 @@ const RevenueInformation = ({
     })
   }, [isExpandPanel, switchValue, filters, deliveryUnitDataRevenue.groupId])
 
-  const handleSearch = value => {
-    dispatch(setFiltersRevenue(value))
-  }
+  const handleSearch = useCallback(
+    value => {
+      dispatch(setFiltersRevenue(value))
+    },
+    [dispatch]
+  )
 
   useEffect(() => {
     if (isInitialRender.current) {

@@ -198,9 +198,11 @@ export const getBusinessPlanDetail = async (id) => {
  */
 export const saveDraft = async (data) => {
   await delay(500);
-  const { businessPlanVersionId, ...updates } = data;
-  
-  updateBusinessPlan(businessPlanVersionId, updates);
+  const businessPlanVersionId =
+    (data.generalInformation && data.generalInformation.businessPlanVersionId) ||
+    data.businessPlanVersionId;
+
+  updateBusinessPlan(businessPlanVersionId, data);
   return successResponse({
     id: businessPlanVersionId,
     message: "Business plan saved successfully"

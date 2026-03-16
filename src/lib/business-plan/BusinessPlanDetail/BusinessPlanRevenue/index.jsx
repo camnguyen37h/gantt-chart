@@ -80,37 +80,19 @@ const BusinessPlanRevenue = forwardRef(
     const [loadingSave, setLoadingSave] = useState(false)
     const [keyReset, setKeyReset] = useState(0)
     const affixRef = useRef(null)
-    const isSaveShowed = useSelector(
-      state => state.businessPlanRevenue.isSaveConfirmShowed
-    )
-    const updateOtherRevenues = useSelector(
-      state => state.businessPlanRevenue.updateOtherRevenuesData
-    )
-    const deleteOtherRevenues = useSelector(
-      state => state.businessPlanRevenue.deleteOtherRevenuesData
-    )
-    const createOtherRevenues = useSelector(
-      state => state.businessPlanRevenue.createOtherRevenuesData
-    )
-    const updateSellingExpenses = useSelector(
-      state => state.businessPlanRevenue.updateSellingExpensesData
-    )
-    const deleteSellingExpenses = useSelector(
-      state => state.businessPlanRevenue.deleteSellingExpensesData
-    )
-    const createSellingExpenses = useSelector(
-      state => state.businessPlanRevenue.createSellingExpensesData
-    )
-    const { deliveryUnitDataRevenue, duValueRevenue } = useSelector(
-      state => state.businessPlanRevenue
-    )
-    const mainDataOtherRevenues = useSelector(
-      state => state.businessPlanRevenue.dataSourceTableRevenue
-    )
-    const mainDataSellingExpenses = useSelector(
-      state => state.businessPlanRevenue.dataSourceTableSellingExpenses
-    )
-
+    const {
+      isSaveConfirmShowed: isSaveShowed,
+      updateOtherRevenuesData: updateOtherRevenues,
+      deleteOtherRevenuesData: deleteOtherRevenues,
+      createOtherRevenuesData: createOtherRevenues,
+      updateSellingExpensesData: updateSellingExpenses,
+      deleteSellingExpensesData: deleteSellingExpenses,
+      createSellingExpensesData: createSellingExpenses,
+      deliveryUnitDataRevenue,
+      duValueRevenue,
+      dataSourceTableRevenue: mainDataOtherRevenues,
+      dataSourceTableSellingExpenses: mainDataSellingExpenses,
+    } = useSelector(state => state.businessPlanRevenue)
     const { activePanel } = useSelector(state => state.businessPlanDetails)
     const dispatch = useDispatch()
 
@@ -435,9 +417,7 @@ const BusinessPlanRevenue = forwardRef(
                 />
               </div>
             </Panel>
-          ) : (
-            <React.Fragment></React.Fragment>
-          )}
+          ) : null}
 
           <Panel
             style={customPanelStyle}

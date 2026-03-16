@@ -116,7 +116,7 @@ function BusinessPlanDetail({ match, history }) {
   const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap } =
     useSelector(state => state.businessGeneralInformation)
 
-  const { listDuRevenue, deliveryUnitDataRevenue } = useSelector(
+  const { listDuRevenue } = useSelector(
     state => state.businessPlanRevenue
   )
 
@@ -133,7 +133,7 @@ function BusinessPlanDetail({ match, history }) {
     dataUpdateRequest,
     dataDeleteRequest,
   } = useSelector(state => state.businessPlanDelivery)
-  const { versionId } = useSelector(state => state.businessGeneralInformation)
+  const { versionId } = useSelector(state => state.businessPlanDetails)
 
   useEffect(() => {
     ;(async () => {
@@ -180,13 +180,20 @@ function BusinessPlanDetail({ match, history }) {
       .status
   }, [viewMode])
 
+  const availableModes = useMemo(() => {
+    const modes = []
+    if (mvvLocationTypeIdMap['Onsite']) modes.push('Onsite')
+    if (mvvLocationTypeIdMap['Offshore']) modes.push('Offshore')
+    return modes
+  }, [mvvLocationTypeIdMap])
+
   const customPanelStyle = {
     border: 0,
     overflow: 'hidden',
   }
 
   const onSubmit = async () => {
-    updateIsSaveShowed(false)
+    updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
     const params = {
       businessPlanVersionId: versionId,
@@ -211,9 +218,14 @@ function BusinessPlanDetail({ match, history }) {
   const onBaselineRevenuePlan = async () => {
     if (!listDuRevenue) return
 
-    const param = {
-      mvv: projectCode,
-      businessVersion: businessPlanVersionId,
+    const param = {}
+    const onsiteInfo = generalInfos.find(item => item.mvvLocationType === 'Onsite')
+    const offshoreInfo = generalInfos.find(item => item.mvvLocationType === 'Offshore')
+    if (offshoreInfo) {
+      param.offshore = { mvv: offshoreInfo.projectCode, businessVersion: offshoreInfo.id }
+    }
+    if (onsiteInfo) {
+      param.onsite = { mvv: onsiteInfo.projectCode, businessVersion: onsiteInfo.id }
     }
     return await dispatch(postSubmitBaselineRevenuePlan(param))
   }
@@ -282,22 +294,33 @@ function BusinessPlanDetail({ match, history }) {
 
   const onSaveDraft = async () => {
     setLoadingSave(true)
-    const sectionList = cloneDeep(originalBusinessPlanItems)
-    sectionList.forEach(section => {
-      section.rowLabels = section.rowLabels.filter(row => {
-        if (row.label) return true
-        if (row.cellList.some(item => item.editable && item.value !== null)) {
-          return true
-        }
-        return false
-      })
-    })
     const params = {
-      businessPlanVersionId: parseInt(match.params.buId),
-      generalInformation: generalInformationParams,
-      sectionList,
-      columnLabels,
+      generalInformation: {
+        ...generalInformationParams,
+        businessPlanVersionId: businessPlanVersionId,
+        projectCode: projectCode,
+      },
     }
+
+    if (isSaveShowed.businessPlan && businessPlanVersionId && (viewMode === 'Onsite' || viewMode === 'Offshore')) {
+      const sectionList = cloneDeep(originalBusinessPlanItems)
+      sectionList.forEach(section => {
+        section.rowLabels = section.rowLabels.filter(row => {
+          if (row.label) return true
+          if (row.cellList.some(item => item.editable && item.value !== null)) {
+            return true
+          }
+          return false
+        })
+      })
+      params.businessPlanSectionDTO = {
+        columnLabels,
+        sectionList,
+        businessPlanVersionId: businessPlanVersionId,
+        projectCode: projectCode,
+      }
+    }
+
     await saveDraft(params)
     await dispatch(getBusinessPlanHistory(match.params.buId))
     setLoadingSave(false)
@@ -309,7 +332,7 @@ function BusinessPlanDetail({ match, history }) {
 
   const handleConfirmCancel = async () => {
     setVisible(false)
-    updateIsSaveShowed(false)
+    updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     await getBusinessPlanDetail(match.params.buId)
   }
 
@@ -415,6 +438,7 @@ function BusinessPlanDetail({ match, history }) {
                     value={viewMode}
                     onChange={e => setViewMode(e.target.value)}
                     activeTab={activeTab}
+                    availableModes={availableModes}
                     tab={
                       isSaveShowedDeliveryPlan || isEditingRevenuePlan ? (
                         <Tooltip
@@ -442,11 +466,12 @@ function BusinessPlanDetail({ match, history }) {
                       value={viewMode}
                       onChange={e => setViewMode(e.target.value)}
                       activeTab={activeTab}
+                      availableModes={availableModes}
                       tab={
-                        isSaveShowedDeliveryPlan || isSaveShowed ? (
-                          <Tooltip
+                        isSaveShowedDeliveryPlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan ? (
+                        <Tooltip
                             title={`You should save ${
-                              isSaveShowed ? 'Business Plan' : 'Delivery Plan'
+                              isSaveShowed.generalInformation || isSaveShowed.businessPlan ? 'Business Plan' : 'Delivery Plan'
                             } before viewing other tabs`}>
                             <span>Revenue Plan</span>
                           </Tooltip>
@@ -455,7 +480,7 @@ function BusinessPlanDetail({ match, history }) {
                         )
                       }
                       key="2"
-                      disabled={isSaveShowedDeliveryPlan || isSaveShowed}>
+                      disabled={isSaveShowedDeliveryPlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan}>
                       {businessPlanVersionId && (
                         <BusinessPlanRevenue
                           businessVersion={businessPlanVersionId}
@@ -472,8 +497,9 @@ function BusinessPlanDetail({ match, history }) {
                       value={viewMode}
                       onChange={e => setViewMode(e.target.value)}
                       activeTab={activeTab}
+                      availableModes={availableModes}
                       tab={
-                        isEditingRevenuePlan || isSaveShowed ? (
+                        isEditingRevenuePlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan ? (
                           <Tooltip
                             title={`You should save ${
                               isEditingRevenuePlan
@@ -487,7 +513,7 @@ function BusinessPlanDetail({ match, history }) {
                         )
                       }
                       key="3"
-                      disabled={isEditingRevenuePlan || isSaveShowed}>
+                      disabled={isEditingRevenuePlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan}>
                       <BusinessPlanDelivery
                         ref={businessPlanDeliveryRef}
                         buId={businessPlanVersionId}
@@ -513,7 +539,7 @@ function BusinessPlanDetail({ match, history }) {
           {/*  <BusinessPlanActivity />*/}
           {/*</Panel>*/}
         </StyledCollapse>
-        <StyledAffix ref={affixRef} className={isSaveShowed ? 'active' : ''}>
+        <StyledAffix ref={affixRef} className={(isSaveShowed.generalInformation || isSaveShowed.businessPlan) ? 'active' : ''}>
           <div className="affix-content">
             <span>Save change ?</span>
             <div className="d-flex gap-8">

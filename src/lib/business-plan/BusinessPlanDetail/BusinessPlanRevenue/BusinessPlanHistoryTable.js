@@ -16,9 +16,8 @@ const BusinessPlanHistoryTable = ({
   const [expandAll, setExpandAll] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
-  const isUpdated = useSelector(state => state.businessPlanRevenue.isUpdated)
-  const isUpdatedSellingExpenses = useSelector(
-    state => state.businessPlanRevenue.isUpdatedSellingExpenses
+  const { isUpdated, isUpdatedSellingExpenses } = useSelector(
+    state => state.businessPlanRevenue
   )
   const { activePanel } = useSelector(state => state.businessPlanDetails)
 
@@ -51,8 +50,6 @@ const BusinessPlanHistoryTable = ({
         pageSize,
         isSale
       )
-    } else {
-      console.error('Invalid getBusinessPlanHistoryAPI value')
     }
   }, [
     activePanel,
@@ -206,7 +203,8 @@ const BusinessPlanHistoryTable = ({
     })
   }, [data])
 
-  const columns = (expandedKeys, toggleExpand) => [
+  const columns = useCallback(
+    (expandedKeys, toggleExpand) => [
     {
       title: (
         <div style={{ display: 'flex', cursor: 'pointer' }}>
@@ -300,7 +298,9 @@ const BusinessPlanHistoryTable = ({
         )
       },
     },
-  ]
+  ],
+    [expandAll, mapDataDetails]
+  )
   const toggleExpand = key => {
     setExpandedKeys(prevExpandedKeys => {
       const isExpanded = prevExpandedKeys.includes(key)

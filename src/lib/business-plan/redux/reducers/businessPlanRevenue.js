@@ -102,10 +102,7 @@ const businessPlanRevenueSlice = createSlice({
           state.deleteOtherRevenuesData.indexOf(removedDataId)
 
         if (existingIndex === -1) {
-          state.deleteOtherRevenuesData = [
-            ...state.deleteOtherRevenuesData,
-            removedDataId,
-          ]
+          state.deleteOtherRevenuesData.push(removedDataId)
         }
       }
     },
@@ -194,10 +191,7 @@ const businessPlanRevenueSlice = createSlice({
           state.deleteSellingExpensesData.indexOf(removedDataId)
 
         if (existingIndex === -1) {
-          state.deleteSellingExpensesData = [
-            ...state.deleteSellingExpensesData,
-            removedDataId,
-          ]
+          state.deleteSellingExpensesData.push(removedDataId)
         }
       }
     },
@@ -426,12 +420,11 @@ const businessPlanRevenueSlice = createSlice({
     })
 
     builder.addCase(getPositionRevenuePlan.fulfilled, (state, { payload }) => {
-      const { data, errorMessage, httpStatus } = payload
+      const { data, httpStatus } = payload
       if (httpStatus === ResponseStatusCode.success) {
         state.dataFilterPosition = data
       }
       state.isLoadingFilterPosition = false
-      // state.errorMessage = errorMessage
     })
 
     builder.addCase(getPositionRevenuePlan.rejected, (state, { payload }) => {
@@ -439,30 +432,15 @@ const businessPlanRevenueSlice = createSlice({
     })
 
     builder.addCase(getSummaryRevenuePlan.fulfilled, (state, action) => {
+      const p = action.payload
       state.summaryRevenuePlan.loading = false
-
-      state.summaryRevenuePlan['mmBill'] =
-        action.payload['mmBill'] !== null ? action.payload['mmBill'] : ''
-      state.summaryRevenuePlan['softwareProductionRevenues'] =
-        action.payload['softwareProductionRevenues'] !== null
-          ? action.payload['softwareProductionRevenues']
-          : ''
-      state.summaryRevenuePlan['deduction'] =
-        action.payload['deduction'] !== null ? action.payload['deduction'] : ''
-      state.summaryRevenuePlan['onsiteFee'] =
-        action.payload['onsiteFee'] !== null ? action.payload['onsiteFee'] : ''
-      state.summaryRevenuePlan['equipmentRevenue'] =
-        action.payload['equipmentRevenue'] !== null
-          ? action.payload['equipmentRevenue']
-          : ''
-      state.summaryRevenuePlan['otherRevenues'] =
-        action.payload['otherRevenues'] !== null
-          ? action.payload['otherRevenues']
-          : ''
-      state.summaryRevenuePlan['agencyExpenses'] =
-        action.payload['agencyExpenses'] !== null
-          ? action.payload['agencyExpenses']
-          : ''
+      state.summaryRevenuePlan.mmBill = p.mmBill !== null ? p.mmBill : ''
+      state.summaryRevenuePlan.softwareProductionRevenues = p.softwareProductionRevenues !== null ? p.softwareProductionRevenues : ''
+      state.summaryRevenuePlan.deduction = p.deduction !== null ? p.deduction : ''
+      state.summaryRevenuePlan.onsiteFee = p.onsiteFee !== null ? p.onsiteFee : ''
+      state.summaryRevenuePlan.equipmentRevenue = p.equipmentRevenue !== null ? p.equipmentRevenue : ''
+      state.summaryRevenuePlan.otherRevenues = p.otherRevenues !== null ? p.otherRevenues : ''
+      state.summaryRevenuePlan.agencyExpenses = p.agencyExpenses !== null ? p.agencyExpenses : ''
     })
 
     builder.addCase(getListDUByVersionRevenue.fulfilled, (state, action) => {

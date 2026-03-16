@@ -143,7 +143,7 @@ const BusinessPlanGeneralInformation = () => {
 
     dispatch(setValidation(result))
 
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleChangePlanningDate = (value, fieldName) => {
@@ -158,7 +158,7 @@ const BusinessPlanGeneralInformation = () => {
         value: timestampValue,
       })
     )
-    updateIsSaveShowed(true)
+    updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleMvvChange = value => dispatch(setSelectedMvvCode(value))
@@ -253,7 +253,7 @@ const BusinessPlanGeneralInformation = () => {
       [key]: false,
     }
     dispatch(setValidation(result))
-    if (value) updateIsSaveShowed(true)
+    if (value) updateIsSaveShowed({ generalInformation: true })
   }
 
   const onChangeKpiBonusInput = (value, key) => {
@@ -267,7 +267,7 @@ const BusinessPlanGeneralInformation = () => {
       [key]: false,
     }
     dispatch(setValidation(validation))
-    if (!isNaN(value)) updateIsSaveShowed(true)
+    if (!isNaN(value)) updateIsSaveShowed({ generalInformation: true })
   }
 
   const handleRenderTooltip = () => {

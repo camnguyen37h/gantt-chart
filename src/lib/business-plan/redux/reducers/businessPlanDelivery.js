@@ -46,13 +46,10 @@ const initialState = {
     pageNum: 1,
     pageSize: 20,
   },
-  viewType: 1,
-
   filtersResourcesInfo: {},
   // Other Expenses
   dataListOtherExpenses: [],
   labelMonthOtherExpenses: [],
-  formattedRowsData: [],
   getOtherExpensesTableLoading: false,
 
   // Reference Table
@@ -192,34 +189,19 @@ const businessPlanDeliverySlice = createSlice({
       state.filtersResourcesInfo = action.payload
     },
     setListIdToDeleteResourceInformation: (state, action) => {
-      state.dataDeleteRequest = {
-        ...state.dataDeleteRequest,
-        listResourceInformation:
-          state.dataDeleteRequest.listResourceInformation.includes(
-            action.payload
-          )
-            ? state.dataDeleteRequest.listResourceInformation
-            : [
-                ...state.dataDeleteRequest.listResourceInformation,
-                action.payload,
-              ],
+      if (!state.dataDeleteRequest.listResourceInformation.includes(action.payload)) {
+        state.dataDeleteRequest.listResourceInformation.push(action.payload)
       }
     },
     removeCreateOrUpdateResourceInformation: (state, action) => {
-      state.dataCreateRequest = {
-        ...state.dataCreateRequest,
-        listResourceInformation:
-          state.dataCreateRequest.listResourceInformation.filter(
-            r => r.key !== action.payload
-          ),
-      }
-      state.dataUpdateRequest = {
-        ...state.dataUpdateRequest,
-        listResourceInformation:
-          state.dataUpdateRequest.listResourceInformation.filter(
-            r => r.key !== action.payload
-          ),
-      }
+      state.dataCreateRequest.listResourceInformation =
+        state.dataCreateRequest.listResourceInformation.filter(
+          r => r.key !== action.payload
+        )
+      state.dataUpdateRequest.listResourceInformation =
+        state.dataUpdateRequest.listResourceInformation.filter(
+          r => r.key !== action.payload
+        )
     },
     addOrUpdateCreateResource: (state, { payload }) => {
       state.dataCreateRequest = {
@@ -282,17 +264,8 @@ const businessPlanDeliverySlice = createSlice({
         listOtherExpensesTableData: listOtherExpensesTableDataUpdated,
       }
 
-      state.dataDeleteRequest = {
-        ...state.dataDeleteRequest,
-        listOtherExpensesTableData:
-          state.dataDeleteRequest.listOtherExpensesTableData.includes(
-            payload.otherExpenseId
-          )
-            ? state.dataDeleteRequest.listOtherExpensesTableData
-            : [
-                ...state.dataDeleteRequest.listOtherExpensesTableData,
-                payload.otherExpenseId,
-              ],
+      if (!state.dataDeleteRequest.listOtherExpensesTableData.includes(payload.otherExpenseId)) {
+        state.dataDeleteRequest.listOtherExpensesTableData.push(payload.otherExpenseId)
       }
     },
     removeCreateOtherExpense: (state, { payload }) => {
@@ -396,9 +369,6 @@ const businessPlanDeliverySlice = createSlice({
     },
     setLoadDataFromValue: (state, { payload }) => {
       state.loadDataFromValue = payload
-    },
-    setViewType: (state, { payload }) => {
-      state.viewType = payload
     },
     setListResource: (state, { payload }) => {
       state.listResource = payload
@@ -606,7 +576,6 @@ export const {
   setDuValueDelivery,
   resetSummaryDeliveryPlan,
   setLoadDataFromValue,
-  setViewType,
   setListResource,
   removeCreateOrUpdateResourceInformation,
   addOrUpdateCreateResource,

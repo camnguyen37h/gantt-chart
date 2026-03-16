@@ -185,7 +185,6 @@ const BusinessPlanDelivery = forwardRef(
       saveDeliveryPlanLoading,
       deliveryUnitDataDelivery,
       duValueDelivery,
-      viewType,
     } = useSelector(state => state.businessPlanDelivery)
 
     const { activePanel } = useSelector(state => state.businessPlanDetails)
@@ -229,7 +228,9 @@ const BusinessPlanDelivery = forwardRef(
     const reloadData = async () => {
       if (!deliveryUnitDataDelivery) return
       const businessPlanVersionId = Number(buId)
-      const deliveryUnit = deliveryUnitDataDelivery.groupName
+      const isAllSelected = deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
+      const deliveryUnit = isAllSelected ? undefined : deliveryUnitDataDelivery.groupName
+      const groupId = isAllSelected ? '' : parseInt(deliveryUnitDataDelivery.groupId)
       if (
         activePanelList.includes('2') &&
         !resourceInfoTableParams.loadDataFromType
@@ -243,7 +244,7 @@ const BusinessPlanDelivery = forwardRef(
           })
         )
       }
-      activePanelList.includes('3') &&
+      if (activePanelList.includes('3')) {
         dispatch(
           getOtherExpensesTable({
             deliveryUnit,
@@ -252,31 +253,32 @@ const BusinessPlanDelivery = forwardRef(
             pageSize: 10,
           })
         )
-      activePanelList.includes('4') &&
+      }
+      if (activePanelList.includes('4')) {
         dispatch(
           getLocationExchangeRate({
             businessPlanVersionId,
             deliveryUnit: '',
           })
         )
+      }
       dispatch(resetSaveDeliveryPlanParams())
       dispatch(setLoadDataFromValue(undefined))
       await dispatch(
         getSummaryDeliveryPlan({
           businessPlanVersionId,
-          groupId:
-            deliveryUnitDataDelivery &&
-            parseInt(deliveryUnitDataDelivery.groupId),
+          groupId,
         })
       )
-      activePanelList.includes('5') &&
+      if (activePanelList.includes('5')) {
         fetchHistoryDeliveryPlan(
           buId,
-          deliveryUnitDataDelivery.groupName,
+          deliveryUnit,
           1,
           10,
           deliveryUnitDataDelivery.groupSale
         )
+      }
     }
     const handleSaveDraft = async () => {
       const isValid = handleValidate()
