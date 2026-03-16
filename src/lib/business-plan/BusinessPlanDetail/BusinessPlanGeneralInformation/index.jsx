@@ -38,7 +38,6 @@ const BusinessPlanGeneralInformation = () => {
     totalContractPrice: totalContractPriceValue,
     softwareDevelopmentFee,
     otherFees,
-    status,
     updateIsSaveShowed,
     startDate,
     endDate,
@@ -73,6 +72,8 @@ const BusinessPlanGeneralInformation = () => {
     planningEndDate,
   } = useSelector(state => state.businessGeneralInformation)
 
+  const isDraft = generalInfos.length > 0 && generalInfos.every(item => item.status === statusBusinessPlanDetail.draft)
+
   const isEditInputDraft =
     (checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
@@ -80,7 +81,7 @@ const BusinessPlanGeneralInformation = () => {
     ) ||
       (listAM && listAM.some(p => p.ldap === userName)) ||
       (listPreparator && listPreparator.some(p => p.ldap === userName))) &&
-    status === statusBusinessPlanDetail.draft
+    isDraft
 
   const { validation } = useSelector(state => state.businessPlanDetails)
 
@@ -272,7 +273,7 @@ const BusinessPlanGeneralInformation = () => {
 
   const handleRenderTooltip = () => {
     if (!isEditInputDraft) {
-      if (status !== statusBusinessPlanDetail.draft) {
+      if (!isDraft) {
         return 'Cannot edit as the business plan is being reviewed'
       }
       return "You don't have permission to EDIT BUSINESS PLAN"

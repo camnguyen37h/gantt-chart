@@ -45,7 +45,7 @@ function CollaboratorBodyItem({
   startDate,
   endDate,
 }) {
-  const { updateIsSaveShowed, status, listAM, listPreparator } =
+  const { updateIsSaveShowed, listAM, listPreparator } =
     useBusinessPlanDetails()
   // Mock user for demo
   const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
@@ -58,13 +58,15 @@ function CollaboratorBodyItem({
     ) ||
     listAM && listAM.some(p => p.ldap === userName) ||
     listPreparator && listPreparator.some(p => p.ldap === userName)) &&
-    status === statusBusinessPlanDetail.draft
+    isDraft
 
   const dispatch = useDispatch()
 
-  const { listUsername } = useSelector(
+  const { listUsername, generalInfos } = useSelector(
     state => state.businessGeneralInformation
   )
+
+  const isDraft = generalInfos.length > 0 && generalInfos.every(item => item.status === statusBusinessPlanDetail.draft)
 
   const { validation } = useSelector(state => state.businessPlanDetails)
 
@@ -151,7 +153,7 @@ function CollaboratorBodyItem({
     const dataClone = cloneDeep(dataSource)
     if (!isEditInput) {
       NotificationManager.error(
-        status !== statusBusinessPlanDetail.draft
+        !isDraft
           ? 'Cannot edit as the business plan is being reviewed'
           : "You don't have permission EDIT BUSINESS PLAN"
       )
@@ -200,7 +202,7 @@ function CollaboratorBodyItem({
     const dataClone = cloneDeep(dataSource)
     if (!isEditInput) {
       NotificationManager.error(
-        status !== statusBusinessPlanDetail.draft
+        !isDraft
           ? 'Cannot edit as the business plan is being reviewed'
           : "You don't have permission EDIT BUSINESS PLAN"
       )
@@ -247,7 +249,7 @@ function CollaboratorBodyItem({
       return 'In order to change this information, please contact Sale and change in PC (CRM System)'
     }
     if (!isEditInput) {
-      if (status !== statusBusinessPlanDetail.draft) {
+      if (!isDraft) {
         return 'Cannot edit as the business plan is being reviewed'
       }
       return "You don't have permission to EDIT BUSINESS PLAN"

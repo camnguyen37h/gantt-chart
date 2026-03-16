@@ -113,7 +113,7 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap } =
+  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap, selectedMvvCode } =
     useSelector(state => state.businessGeneralInformation)
 
   const { listDuRevenue } = useSelector(
@@ -169,6 +169,15 @@ function BusinessPlanDetail({ match, history }) {
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
   }, [viewMode])
+
+  const generalInfoVersionId = useMemo(() => {
+    const info = generalInfos.find(item => item.projectCode === selectedMvvCode)
+    return info ? info.id : null
+  }, [generalInfos, selectedMvvCode])
+
+  const generalInfoProjectCode = useMemo(() => {
+    return selectedMvvCode || null
+  }, [selectedMvvCode])
 
   const projectCode = useMemo(() => {
     return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
@@ -297,8 +306,8 @@ function BusinessPlanDetail({ match, history }) {
     const params = {
       generalInformation: {
         ...generalInformationParams,
-        businessPlanVersionId: businessPlanVersionId,
-        projectCode: projectCode,
+        businessPlanVersionId: generalInfoVersionId,
+        projectCode: generalInfoProjectCode,
       },
     }
 
