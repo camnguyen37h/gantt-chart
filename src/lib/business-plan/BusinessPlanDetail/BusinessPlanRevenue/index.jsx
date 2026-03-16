@@ -80,6 +80,7 @@ const BusinessPlanRevenue = forwardRef(
     const [loadingSave, setLoadingSave] = useState(false)
     const [keyReset, setKeyReset] = useState(0)
     const affixRef = useRef(null)
+    const prevVersionRef = useRef(businessVersion)
     const {
       isSaveConfirmShowed: isSaveShowed,
       updateOtherRevenuesData: updateOtherRevenues,
@@ -330,19 +331,24 @@ const BusinessPlanRevenue = forwardRef(
     }))
 
     useEffect(() => {
+      const isVersionChanged = prevVersionRef.current !== businessVersion
+      prevVersionRef.current = businessVersion
+
       dispatch(resetSummaryRevenuePlan())
 
-      if (activePanel === 'Revenue') {
-        dispatch(setDeliveryUnitDataRevenue(dataDu[0]))
-        dispatch(setDuValueRevenue(dataDu && dataDu[0] && dataDu[0].groupId))
-        dispatch(
-          getSummaryRevenuePlan({
-            businessPlanVersionId: businessVersion,
-            duSelected: { ...dataDu[0], groupId: parseInt(dataDu[0].groupId) },
-          })
-        )
-      }
-    }, [activePanel, businessVersion])
+      if (activePanel !== 'Revenue' || !dataDu || dataDu.length === 0) return
+      // businessVersion vừa đổi → dataDu vẫn còn stale, chờ dataDu update ở render tiếp
+      if (isVersionChanged) return
+
+      dispatch(setDeliveryUnitDataRevenue(dataDu[0]))
+      dispatch(setDuValueRevenue(dataDu[0].groupId))
+      dispatch(
+        getSummaryRevenuePlan({
+          businessPlanVersionId: businessVersion,
+          duSelected: { ...dataDu[0], groupId: parseInt(dataDu[0].groupId) },
+        })
+      )
+    }, [activePanel, businessVersion, dataDu])
 
     return (
       <div>

@@ -7,7 +7,7 @@ import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { Icon, Input, InputNumber, Table, Tooltip } from 'antd'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { CAN_NOT_EDIT_REVENUE, REVENUE_TYPE_ID } from '../../constants'
@@ -65,6 +65,7 @@ const OtherRevenueTable = ({
   )
 
   const { dataSourceValidation } = useBusinessPlanRevenue(listRevenueInvalid, dataSourceTable)
+  const prevVersionRef = useRef(businessVersion)
 
   const generateMonthColumns = (startDate, endDate) => {
     const start = moment(startDate)
@@ -616,7 +617,11 @@ const OtherRevenueTable = ({
   }, [mainData])
 
   useEffect(() => {
+    const isVersionChanged = prevVersionRef.current !== businessVersion
+    prevVersionRef.current = businessVersion
+
     if (!isExpandPanel) return
+    if (isVersionChanged) return
 
     dispatch(
       getBusinessPlanOtherRevenue({

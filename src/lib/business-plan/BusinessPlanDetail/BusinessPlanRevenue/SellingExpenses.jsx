@@ -7,7 +7,7 @@ import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { Icon, Input, InputNumber, Table, Tooltip } from 'antd'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { CAN_NOT_EDIT_REVENUE, SELLING_EXPENSES_TYPE_ID } from '../../constants'
@@ -65,6 +65,7 @@ const SellingExpenses = ({
   )
 
   const { dataSourceValidation } = useBusinessPlanRevenue(listRevenueInvalid, dataSourceTable)
+  const prevVersionRef = useRef(businessVersion)
 
   const generateMonthColumns = (startDate, endDate) => {
     const start = moment(startDate)
@@ -604,7 +605,12 @@ const SellingExpenses = ({
   }, [mainData])
 
   useEffect(() => {
+    const isVersionChanged = prevVersionRef.current !== businessVersion
+    prevVersionRef.current = businessVersion
+
     if (!isExpandPanel) return
+    if (isVersionChanged) return
+
     dispatch(
       getBusinessPlanSellingExpenses({
         mvv: projectCode,

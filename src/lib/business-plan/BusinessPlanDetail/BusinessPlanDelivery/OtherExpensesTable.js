@@ -66,6 +66,7 @@ const OtherExpensesTable = forwardRef(
     const [listInvalid, setListInvalid] = useState({})
     const [listDuplicated, setListDuplicated] = useState({})
     const [data, setData] = useState([])
+    const prevBuIdRef = useRef(buId)
 
     const updateIsSaveConfirmShowed = useCallback(
       value => {
@@ -75,8 +76,11 @@ const OtherExpensesTable = forwardRef(
     )
 
     useEffect(() => {
+      const isVersionChanged = prevBuIdRef.current !== buId
+      prevBuIdRef.current = buId
       if (!isExpandPanel) return
       if (!deliveryUnitDataDelivery) return
+      if (isVersionChanged && deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE) return
       dispatch(
         getOtherExpensesTable({
           deliveryUnit:

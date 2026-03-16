@@ -1,5 +1,5 @@
 import { Icon, Table } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import './style.css'
 import useBussinessPlanHistoryService from '../../hooks/useBussinessPlanHistoryService'
 import { useSelector } from 'react-redux'
@@ -28,8 +28,14 @@ const BusinessPlanHistoryTable = ({
     loading,
     totalPage,
   } = useBussinessPlanHistoryService()
+  const prevVersionRef = useRef(BusinessPlanVersionId)
 
   useEffect(() => {
+    const isVersionChanged = prevVersionRef.current !== BusinessPlanVersionId
+    prevVersionRef.current = BusinessPlanVersionId
+
+    if (isVersionChanged) return
+
     if (activePanel === 'Delivery') {
       fetchHistoryDeliveryPlan(
         BusinessPlanVersionId,

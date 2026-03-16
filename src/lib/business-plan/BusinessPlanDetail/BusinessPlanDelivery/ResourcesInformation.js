@@ -85,6 +85,7 @@ const ResourcesInformation = forwardRef((props, ref) => {
   const dispatch = useDispatch()
   const filterRef = useRef()
   const headCountTableRef = useRef()
+  const prevBuIdRef = useRef(buId)
 
   const {
     listResource,
@@ -266,8 +267,11 @@ const ResourcesInformation = forwardRef((props, ref) => {
   )
 
   useEffect(() => {
+    const isVersionChanged = prevBuIdRef.current !== buId
+    prevBuIdRef.current = buId
     if (!isExpandPanel || !buId) return
     if (!deliveryUnitDataDelivery) return
+    if (isVersionChanged && deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE) return
     const params = {
       ...resourceInfoTableParams,
       businessPlanVersionId: Number(buId),

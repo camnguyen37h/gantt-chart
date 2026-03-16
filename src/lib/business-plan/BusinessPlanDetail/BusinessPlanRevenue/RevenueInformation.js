@@ -187,6 +187,7 @@ const RevenueInformation = ({
   )
   const filterRef = useRef()
   const isInitialRender = useRef(true)
+  const prevVersionRef = useRef(businessVersion)
 
   const handleSearchPosition = useCallback(
     text => {
@@ -546,7 +547,12 @@ const RevenueInformation = ({
   }, [isExpandPanel, projectCode])
 
   useEffect(() => {
+    const isVersionChanged = prevVersionRef.current !== businessVersion
+    prevVersionRef.current = businessVersion
+
     if (!isExpandPanel) return
+    if (isVersionChanged) return
+
     fetchProductionRevenuePlan(PAGE_INDEX_START, PAGE_SIZE, {
       switchValue,
       ...filters,
