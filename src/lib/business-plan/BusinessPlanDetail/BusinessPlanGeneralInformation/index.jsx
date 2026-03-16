@@ -28,6 +28,7 @@ import { MEMBER_TYPE } from './data'
 import { statusBusinessPlanDetail } from '../constant'
 import moment from 'moment'
 import { DateFormat } from '../../../constants/DateFormat'
+import { isEmpty } from 'lodash'
 
 const { Option } = Select
 
@@ -72,7 +73,9 @@ const BusinessPlanGeneralInformation = () => {
     planningEndDate,
   } = useSelector(state => state.businessGeneralInformation)
 
-  const isDraft = generalInfos.length > 0 && generalInfos.every(item => item.status === statusBusinessPlanDetail.draft)
+  const isDraft =
+    !isEmpty(listGeneralInformation) &&
+    listGeneralInformation.status === statusBusinessPlanDetail.draft
 
   const isEditInputDraft =
     (checkRolePermission(

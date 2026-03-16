@@ -1,7 +1,7 @@
 import { Icon, Table } from 'antd'
 import React, { useState, useEffect, useRef } from 'react'
 import './style.css'
-import useBussinessPlanHistoryService from '../../hooks/useBussinessPlanHistoryService'
+import useBusinessPlanHistoryService from '../../hooks/useBusinessPlanHistoryService'
 import { useSelector } from 'react-redux'
 import { useCallback } from 'react'
 import { uniqueId } from 'lodash'
@@ -16,19 +16,15 @@ const BusinessPlanHistoryTable = ({
   const [expandAll, setExpandAll] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const prevVersionRef = useRef(BusinessPlanVersionId)
+
   const { isUpdated, isUpdatedSellingExpenses } = useSelector(
     state => state.businessPlanRevenue
   )
   const { activePanel } = useSelector(state => state.businessPlanDetails)
 
-  const {
-    data,
-    fetchHistoryDeliveryPlan,
-    fetchHistoryRevenuePlan,
-    loading,
-    totalPage,
-  } = useBussinessPlanHistoryService()
-  const prevVersionRef = useRef(BusinessPlanVersionId)
+  const { data, fetchUserActionHistory, loading, totalPage } =
+    useBusinessPlanHistoryService()
 
   useEffect(() => {
     const isVersionChanged = prevVersionRef.current !== BusinessPlanVersionId
@@ -37,24 +33,26 @@ const BusinessPlanHistoryTable = ({
     if (isVersionChanged) return
 
     if (activePanel === 'Delivery') {
-      fetchHistoryDeliveryPlan(
+      fetchUserActionHistory(
         BusinessPlanVersionId,
         DeliveryUnit,
         currentPage,
         pageSize,
-        isSale
+        isSale,
+        'DELIVERY_PLAN'
       )
     } else if (
       activePanel === 'Revenue' ||
       isUpdated ||
       isUpdatedSellingExpenses
     ) {
-      fetchHistoryRevenuePlan(
+      fetchUserActionHistory(
         BusinessPlanVersionId,
         DeliveryUnit,
         currentPage,
         pageSize,
-        isSale
+        isSale,
+        'REVENUE_PLAN'
       )
     }
   }, [
@@ -62,8 +60,7 @@ const BusinessPlanHistoryTable = ({
     DeliveryUnit,
     BusinessPlanVersionId,
     isSale,
-    fetchHistoryDeliveryPlan,
-    fetchHistoryRevenuePlan,
+    fetchUserActionHistory,
     currentPage,
     pageSize,
     isUpdated,
@@ -211,100 +208,100 @@ const BusinessPlanHistoryTable = ({
 
   const columns = useCallback(
     (expandedKeys, toggleExpand) => [
-    {
-      title: (
-        <div style={{ display: 'flex', cursor: 'pointer' }}>
-          <Icon
-            onClick={toggleExpandAll}
-            type="right"
-            style={{
-              fontSize: '12px',
-              cursor: 'pointer',
-              transform: expandAll ? 'rotate(90deg)' : 'rotate(0deg)',
-              transition: 'transform 0.3s ease',
-            }}
-          />
-        </div>
-      ),
-      dataIndex: 'icon-expand',
-      key: 'icon-expand',
-      align: 'left',
-      width: '1%',
-      className: 'text-column-revenue-table',
-      render: (text, record) =>
-        record.children ? (
-          <Icon
-            onClick={() => toggleExpand(record.key)}
-            type="right"
-            style={{
-              fontSize: '12px',
-              cursor: 'pointer',
-              transform: expandedKeys.includes(record.key)
-                ? 'rotate(90deg)'
-                : 'rotate(0deg)',
-              transition: 'transform 0.3s ease',
-            }}
-          />
-        ) : null,
-    },
-    {
-      title: 'Action Time',
-      dataIndex: 'actionTime',
-      key: 'actionTime',
-      align: 'left',
-      width: '33%',
-      className: 'text-column-revenue-table',
-      render: (_, record) => {
-        const { isParent } = record
-        return isParent ? (
-          record.actionTime
-        ) : (
-          <div>
-            <div style={{ fontWeight: 'bold' }}>{record.titleField}</div>
-            {record.field && <div>{renderFieldName(record.field)}</div>}
+      {
+        title: (
+          <div style={{ display: 'flex', cursor: 'pointer' }}>
+            <Icon
+              onClick={toggleExpandAll}
+              type="right"
+              style={{
+                fontSize: '12px',
+                cursor: 'pointer',
+                transform: expandAll ? 'rotate(90deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+              }}
+            />
           </div>
-        )
+        ),
+        dataIndex: 'icon-expand',
+        key: 'icon-expand',
+        align: 'left',
+        width: '1%',
+        className: 'text-column-revenue-table',
+        render: (text, record) =>
+          record.children ? (
+            <Icon
+              onClick={() => toggleExpand(record.key)}
+              type="right"
+              style={{
+                fontSize: '12px',
+                cursor: 'pointer',
+                transform: expandedKeys.includes(record.key)
+                  ? 'rotate(90deg)'
+                  : 'rotate(0deg)',
+                transition: 'transform 0.3s ease',
+              }}
+            />
+          ) : null,
       },
-    },
-    {
-      title: 'Author',
-      dataIndex: 'author',
-      key: 'author',
-      align: 'left',
-      width: '33%',
-      className: 'text-column-revenue-table',
-      render: (_, record) => {
-        const { isParent } = record
-        return isParent ? (
-          record.author
-        ) : (
-          <div>
-            <div style={{ fontWeight: 'bold' }}>{record.titleOldValue}</div>
-            {record.oldValue && <div>{record.oldValue}</div>}
-          </div>
-        )
+      {
+        title: 'Action Time',
+        dataIndex: 'actionTime',
+        key: 'actionTime',
+        align: 'left',
+        width: '33%',
+        className: 'text-column-revenue-table',
+        render: (_, record) => {
+          const { isParent } = record
+          return isParent ? (
+            record.actionTime
+          ) : (
+            <div>
+              <div style={{ fontWeight: 'bold' }}>{record.titleField}</div>
+              {record.field && <div>{renderFieldName(record.field)}</div>}
+            </div>
+          )
+        },
       },
-    },
-    {
-      title: 'Entity',
-      dataIndex: 'entity',
-      key: 'entity',
-      align: 'left',
-      width: '33%',
-      className: 'text-column-revenue-table',
-      render: (_, record) => {
-        const { isParent } = record
-        return isParent ? (
-          record.entity
-        ) : (
-          <div>
-            <div style={{ fontWeight: 'bold' }}>{record.titleNewValue}</div>
-            {record.newValue && <div>{record.newValue}</div>}
-          </div>
-        )
+      {
+        title: 'Author',
+        dataIndex: 'author',
+        key: 'author',
+        align: 'left',
+        width: '33%',
+        className: 'text-column-revenue-table',
+        render: (_, record) => {
+          const { isParent } = record
+          return isParent ? (
+            record.author
+          ) : (
+            <div>
+              <div style={{ fontWeight: 'bold' }}>{record.titleOldValue}</div>
+              {record.oldValue && <div>{record.oldValue}</div>}
+            </div>
+          )
+        },
       },
-    },
-  ],
+      {
+        title: 'Entity',
+        dataIndex: 'entity',
+        key: 'entity',
+        align: 'left',
+        width: '33%',
+        className: 'text-column-revenue-table',
+        render: (_, record) => {
+          const { isParent } = record
+          return isParent ? (
+            record.entity
+          ) : (
+            <div>
+              <div style={{ fontWeight: 'bold' }}>{record.titleNewValue}</div>
+              {record.newValue && <div>{record.newValue}</div>}
+            </div>
+          )
+        },
+      },
+    ],
     [expandAll, mapDataDetails]
   )
   const toggleExpand = key => {

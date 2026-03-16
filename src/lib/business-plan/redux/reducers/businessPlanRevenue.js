@@ -435,12 +435,20 @@ const businessPlanRevenueSlice = createSlice({
       const p = action.payload
       state.summaryRevenuePlan.loading = false
       state.summaryRevenuePlan.mmBill = p.mmBill !== null ? p.mmBill : ''
-      state.summaryRevenuePlan.softwareProductionRevenues = p.softwareProductionRevenues !== null ? p.softwareProductionRevenues : ''
-      state.summaryRevenuePlan.deduction = p.deduction !== null ? p.deduction : ''
-      state.summaryRevenuePlan.onsiteFee = p.onsiteFee !== null ? p.onsiteFee : ''
-      state.summaryRevenuePlan.equipmentRevenue = p.equipmentRevenue !== null ? p.equipmentRevenue : ''
-      state.summaryRevenuePlan.otherRevenues = p.otherRevenues !== null ? p.otherRevenues : ''
-      state.summaryRevenuePlan.agencyExpenses = p.agencyExpenses !== null ? p.agencyExpenses : ''
+      state.summaryRevenuePlan.softwareProductionRevenues =
+        p.softwareProductionRevenues !== null
+          ? p.softwareProductionRevenues
+          : ''
+      state.summaryRevenuePlan.deduction =
+        p.deduction !== null ? p.deduction : ''
+      state.summaryRevenuePlan.onsiteFee =
+        p.onsiteFee !== null ? p.onsiteFee : ''
+      state.summaryRevenuePlan.equipmentRevenue =
+        p.equipmentRevenue !== null ? p.equipmentRevenue : ''
+      state.summaryRevenuePlan.otherRevenues =
+        p.otherRevenues !== null ? p.otherRevenues : ''
+      state.summaryRevenuePlan.agencyExpenses =
+        p.agencyExpenses !== null ? p.agencyExpenses : ''
     })
 
     builder.addCase(getListDUByVersionRevenue.fulfilled, (state, action) => {

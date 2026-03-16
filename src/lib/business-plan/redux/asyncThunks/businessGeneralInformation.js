@@ -1,7 +1,7 @@
 import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { ResponseStatusCode } from '../../../service/constant'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import {NotificationManager} from "react-notifications";
+import { NotificationManager } from 'react-notifications'
 
 export const getIndustryDomain = createAsyncThunk(
   'get/getIndustryDomain',
@@ -30,7 +30,9 @@ export const getIndustryCurrency = createAsyncThunk(
 export const getUserAndDepartmentCollaborator = createAsyncThunk(
   'get/getUserAndDepartmentCollaborator',
   async params => {
-    const result = await BusinessPlanAPI.getUserAndDepartmentCollaborator(params)
+    const result = await BusinessPlanAPI.getUserAndDepartmentCollaborator(
+      params
+    )
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

@@ -49,6 +49,7 @@ const SellingExpenses = ({
   const [expandedKeys, setExpandedKeys] = useState([])
   const [expandAll, setExpandAll] = useState(false)
   const [rowsData, setRowsData] = useState([])
+  const prevVersionRef = useRef(businessVersion)
 
   const dispatch = useDispatch()
   const {
@@ -64,8 +65,10 @@ const SellingExpenses = ({
     [dispatch]
   )
 
-  const { dataSourceValidation } = useBusinessPlanRevenue(listRevenueInvalid, dataSourceTable)
-  const prevVersionRef = useRef(businessVersion)
+  const { dataSourceValidation } = useBusinessPlanRevenue(
+    listRevenueInvalid,
+    dataSourceTable
+  )
 
   const generateMonthColumns = (startDate, endDate) => {
     const start = moment(startDate)
@@ -620,7 +623,7 @@ const SellingExpenses = ({
         status,
       })
     )
-  }, [isExpandPanel, deliveryUnitDataRevenue.groupId, status])
+  }, [isExpandPanel, deliveryUnitDataRevenue.groupId, status, businessVersion])
 
   useEffect(() => {
     if (isUpdated) {

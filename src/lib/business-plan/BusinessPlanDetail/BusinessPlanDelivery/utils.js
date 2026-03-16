@@ -24,80 +24,92 @@ export const formatNumberThousands = num => {
 }
 
 export const formatterMMValues = value => {
-  if (value === null) return value;
-  if (value === '-') return null;
-  if (value === '') return value;
+  if (value === null) return value
+  if (value === '-') return null
+  if (value === '') return value
 
-  const res = value.toString().match(/^(\d{0,4})(\.(\d{0,6})?)?/); // Limit to 4 digits before and 6 after
-  if (!res) return '';
+  const res = value.toString().match(/^(\d{0,4})(\.(\d{0,6})?)?/) // Limit to 4 digits before and 6 after
+  if (!res) return ''
 
-  const intPart = res[1];
-  const decimalPart = res[3] || '';
-  const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const intPart = res[1]
+  const decimalPart = res[3] || ''
+  const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
   return decimalPart !== ''
     ? `${formattedInt}.${decimalPart}`
-    : `${formattedInt}${res[2] ? '.' : ''}`;
+    : `${formattedInt}${res[2] ? '.' : ''}`
 }
 
 export const parserMMValues = value => {
-  if (value === null || value === '') return '';
+  if (value === null || value === '') return ''
 
-  const cleaned = value.replace(/[-,]/g, ''); // Remove negative sign and commas
-  const res = cleaned.match(/^(\d{0,4})(\.(\d{0,6})?)?/); // Limit to 4 digits before and 6 after
-  return res ? `${res[1]}${res[2] || ''}` : '';
+  const cleaned = value.replace(/[-,]/g, '') // Remove negative sign and commas
+  const res = cleaned.match(/^(\d{0,4})(\.(\d{0,6})?)?/) // Limit to 4 digits before and 6 after
+  return res ? `${res[1]}${res[2] || ''}` : ''
 }
 
 export const getVisibleColumns = (columns, visibilityData) => {
   return columns.reduce((acc, column) => {
     if (column.children && column.children.length > 0) {
       const visibleChildren = column.children.filter(item => {
-        return !(item.key in visibilityData) || visibilityData[item.key] === true;
-      });
+        return (
+          !(item.key in visibilityData) || visibilityData[item.key] === true
+        )
+      })
 
       // Only add the column if it has visible children
       if (visibleChildren.length > 0) {
         acc.push({
           ...column,
           children: visibleChildren,
-        });
+        })
       }
     } else {
-      acc.push(column); // Add columns without children
+      acc.push(column) // Add columns without children
     }
-    return acc;
-  }, []);
-};
-export const getMissingFieldsArray = (array) => {
-  const result = {};
+    return acc
+  }, [])
+}
+export const getMissingFieldsArray = array => {
+  const result = {}
 
   array.forEach(item => {
-    const { groupId, groupName, deliveryMemberId, ldap, missingRequiredFields } = item;
-    const key = `${groupId}-${groupName}`;
+    const {
+      groupId,
+      groupName,
+      deliveryMemberId,
+      ldap,
+      missingRequiredFields,
+    } = item
+    const key = `${groupId}-${groupName}`
 
     if (!result[key]) {
-      result[key] = {};
+      result[key] = {}
     }
 
     if (!result[key][deliveryMemberId]) {
-      result[key][deliveryMemberId] = { ldap, fields: new Set() };
+      result[key][deliveryMemberId] = { ldap, fields: new Set() }
     }
 
     missingRequiredFields.forEach(field => {
-      const fieldItem = REQUIRED_FIELDS_DELIVERY.find(f => f.key === field);
+      const fieldItem = REQUIRED_FIELDS_DELIVERY.find(f => f.key === field)
       if (fieldItem) {
-        result[key][deliveryMemberId].fields.add(fieldItem.title);
+        result[key][deliveryMemberId].fields.add(fieldItem.title)
       }
-    });
-  });
+    })
+  })
 
   return Object.entries(result).flatMap(([key, memberData]) => {
-    const [groupId, groupName] = key.split('-');
-    return Object.entries(memberData).map(([deliveryMemberId, { ldap, fields }]) => {
-      return `${groupName}: Ldap: ${ldap || ''}: ${Array.from(fields).join(', ')}`;
-    });
-  });
-};
+    const [groupId, groupName] = key.split('-')
+    return Object.entries(memberData).map(
+      ([deliveryMemberId, { ldap, fields }]) => {
+        return `${groupName}: Ldap: ${ldap || ''}: ${Array.from(fields).join(
+          ', '
+        )}`
+      }
+    )
+  })
+}
 
 export const checkboxItems = [
   { value: 'location', label: 'Show Location', checked: true },
@@ -121,8 +133,8 @@ export const loadDataFromList = [
 
 export const mainColumns = [
   {
-    title: "",
-    key: "fixed-columns",
+    title: '',
+    key: 'fixed-columns',
     fixed: 'left',
     children: [
       {
@@ -166,7 +178,7 @@ export const mainColumns = [
         ellipsis: true,
         width: RESOURCE_TABLE_WIDTH.NO,
       },
-    ]
+    ],
   },
   {
     title: 'Total Plan',
@@ -204,7 +216,7 @@ export const mainColumns = [
         align: 'left',
         ellipsis: true,
         width: RESOURCE_TABLE_WIDTH.EMPLOYEE_COST,
-        render: text => formatFloatNumber(text)
+        render: text => formatFloatNumber(text),
       },
       {
         title: 'Position',
@@ -233,7 +245,7 @@ export const mainColumns = [
       //     const content = formatFloatNumber(text, 0, 6) || 0
       //     return (
       //       <span title={content}>{content}</span>
-      //     )   
+      //     )
       //   },
       // },
     ],
@@ -256,5 +268,3 @@ export const mainColumns = [
     ],
   },
 ]
-
-

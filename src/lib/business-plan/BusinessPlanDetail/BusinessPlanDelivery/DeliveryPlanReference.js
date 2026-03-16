@@ -10,10 +10,7 @@ import {
   useImperativeHandle,
   useState,
 } from 'react'
-import {
-  setIsSaveShowedDeliveryPlan,
-  setUpdateExchangeRate,
-} from '../../redux'
+import { setIsSaveShowedDeliveryPlan, setUpdateExchangeRate } from '../../redux'
 import { formatInputNumber, parseInputNumber } from '../../utils'
 import styled from 'styled-components'
 import { VALIDATE_REQUIRED_FIELDS_MESSAGE } from './constants'
@@ -33,22 +30,24 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
   const {
     listLocationExchangeRateData,
     listLaborRateData,
-    loadingGetReferenceTable
+    loadingGetReferenceTable,
   } = useSelector(state => state.businessPlanDelivery)
 
   const handleChangeInputExchangeRate = (value, record, field) => {
-    dispatch(setUpdateExchangeRate({
-      ...record,
-      [field]: value
-    }))
+    dispatch(
+      setUpdateExchangeRate({
+        ...record,
+        [field]: value,
+      })
+    )
 
     setListInvalid(prevErrors => {
       if (
-        prevErrors[record.location]
-        && prevErrors[record.location][field]
-        && value !== null
-        && value !== ''
-        && value !== undefined
+        prevErrors[record.location] &&
+        prevErrors[record.location][field] &&
+        value !== null &&
+        value !== '' &&
+        value !== undefined
       ) {
         const newRowErrors = { ...prevErrors[record.location] }
         delete newRowErrors[field]
@@ -78,7 +77,11 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
     listLocationExchangeRateData.forEach(row => {
       const rowErrors = {}
 
-      if (row.exchangeRate === null || row.exchangeRate === '' || row.exchangeRate === undefined) {
+      if (
+        row.exchangeRate === null ||
+        row.exchangeRate === '' ||
+        row.exchangeRate === undefined
+      ) {
         rowErrors.exchangeRate = true
         isValid = false
       }
@@ -101,7 +104,7 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
       dataIndex: 'location',
       key: 'location',
       align: 'left',
-      width: "30%"
+      width: '30%',
     },
     {
       title: 'Exchange Rate',
@@ -111,10 +114,15 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
       render: (text, record) => {
         return canEdit ? (
           <StyledInputNumber
-            style={{ width: "100%", maxWidth: "150px" }}
+            style={{ width: '100%', maxWidth: '150px' }}
             min={0}
             value={record.exchangeRate}
-            className={listInvalid[record.location] && listInvalid[record.location].exchangeRate ? 'input-error' : ''}
+            className={
+              listInvalid[record.location] &&
+              listInvalid[record.location].exchangeRate
+                ? 'input-error'
+                : ''
+            }
             size="small"
             onChange={debounce(
               value =>

@@ -134,7 +134,8 @@ const ResourcesInformation = forwardRef((props, ref) => {
 
   const handleSearchPosition = useCallback(
     debounce(
-      value => dispatch(getEmployeePosition({ name: value.toString().trim(), mvv })),
+      value =>
+        dispatch(getEmployeePosition({ name: value.toString().trim(), mvv })),
       600
     ),
     [dispatch, mvv]
@@ -165,13 +166,23 @@ const ResourcesInformation = forwardRef((props, ref) => {
           onSearch: handleSearchResource,
         },
       },
-      buildFilterSelectConfig('resourceType', listResourceType, 'Resource Type'),
+      buildFilterSelectConfig(
+        'resourceType',
+        listResourceType,
+        'Resource Type'
+      ),
       buildFilterSelectConfig('location', listLocation, 'Location'),
-      buildFilterSelectConfig('employeeType', listEmployeeType, 'Employee Type'),
+      buildFilterSelectConfig(
+        'employeeType',
+        listEmployeeType,
+        'Employee Type'
+      ),
       {
         name: 'position',
         type: 'select',
-        options: listPosition ? listPosition.map(item => ({ ...item, text: item.value })) : [],
+        options: listPosition
+          ? listPosition.map(item => ({ ...item, text: item.value }))
+          : [],
         title: 'Position',
         mode: 'single',
         controlProps: {
@@ -259,7 +270,11 @@ const ResourcesInformation = forwardRef((props, ref) => {
     value => {
       dispatch(setLoadDataFromValue(value))
       dispatch(resetPayloadSaveDelivery())
-      if (value && canEdit && valueRadio === RESOURCE_INFORMATION_TYPE.HEAD_COUNT) {
+      if (
+        value &&
+        canEdit &&
+        valueRadio === RESOURCE_INFORMATION_TYPE.HEAD_COUNT
+      ) {
         updateIsSaveConfirmShowed(true)
       }
     },
@@ -269,9 +284,15 @@ const ResourcesInformation = forwardRef((props, ref) => {
   useEffect(() => {
     const isVersionChanged = prevBuIdRef.current !== buId
     prevBuIdRef.current = buId
+
     if (!isExpandPanel || !buId) return
     if (!deliveryUnitDataDelivery) return
-    if (isVersionChanged && deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE) return
+    if (
+      isVersionChanged &&
+      deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
+    )
+      return
+
     const params = {
       ...resourceInfoTableParams,
       businessPlanVersionId: Number(buId),

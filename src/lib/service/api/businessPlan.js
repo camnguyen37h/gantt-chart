@@ -261,6 +261,10 @@ const BUSINESS_PLAN_API = {
     url: `${API_SALE}/api/delivery-plan/save`,
     method: 'post',
   },
+  getUserActionHistory: {
+    url: `${API_SALE}/api/business-plan-user-action-history/get-user-action-history`,
+    method: 'get',
+  },
 }
 
 export default BUSINESS_PLAN_API

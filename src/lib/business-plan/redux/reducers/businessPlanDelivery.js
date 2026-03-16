@@ -189,7 +189,11 @@ const businessPlanDeliverySlice = createSlice({
       state.filtersResourcesInfo = action.payload
     },
     setListIdToDeleteResourceInformation: (state, action) => {
-      if (!state.dataDeleteRequest.listResourceInformation.includes(action.payload)) {
+      if (
+        !state.dataDeleteRequest.listResourceInformation.includes(
+          action.payload
+        )
+      ) {
         state.dataDeleteRequest.listResourceInformation.push(action.payload)
       }
     },
@@ -264,8 +268,14 @@ const businessPlanDeliverySlice = createSlice({
         listOtherExpensesTableData: listOtherExpensesTableDataUpdated,
       }
 
-      if (!state.dataDeleteRequest.listOtherExpensesTableData.includes(payload.otherExpenseId)) {
-        state.dataDeleteRequest.listOtherExpensesTableData.push(payload.otherExpenseId)
+      if (
+        !state.dataDeleteRequest.listOtherExpensesTableData.includes(
+          payload.otherExpenseId
+        )
+      ) {
+        state.dataDeleteRequest.listOtherExpensesTableData.push(
+          payload.otherExpenseId
+        )
       }
     },
     removeCreateOtherExpense: (state, { payload }) => {

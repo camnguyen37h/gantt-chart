@@ -54,7 +54,9 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { listAM, generalInfos } = useSelector(state => state.businessGeneralInformation)
+  const { listAM, generalInfos } = useSelector(
+    state => state.businessGeneralInformation
+  )
 
   // Mock user for demo
   const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
@@ -68,8 +70,18 @@ function BusinessPlanVersion({
     listAM.map(item => item.ldap) &&
     listAM.map(item => item.ldap).includes(userName)
 
-  const isDraft = generalInfos.length > 0 && generalInfos.every(item => item.status === statusBusinessPlanDetail.draft)
-  const isApproved = generalInfos.length > 0 && generalInfos.every(item => item.status === statusBusinessPlanDetail.approved)
+  const isDraft =
+    (generalInfos.length > 0 &&
+      generalInfos.every(
+        item => item.status === statusBusinessPlanDetail.draft
+      )) ||
+    ''
+  const isApproved =
+    (generalInfos.length > 0 &&
+      generalInfos.every(
+        item => item.status === statusBusinessPlanDetail.approved
+      )) ||
+    ''
   const isLatest = listVersions[listVersions.length - 1]
     ? listVersions[listVersions.length - 1].versionId === versionId
     : null

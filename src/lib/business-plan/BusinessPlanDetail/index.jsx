@@ -113,12 +113,14 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap, selectedMvvCode } =
-    useSelector(state => state.businessGeneralInformation)
+  const {
+    loadingCollaborator,
+    listGeneralInformation,
+    generalInfos,
+    mvvLocationTypeIdMap,
+  } = useSelector(state => state.businessGeneralInformation)
 
-  const { listDuRevenue } = useSelector(
-    state => state.businessPlanRevenue
-  )
+  const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
 
   const isEditingRevenuePlan = useSelector(
     state => state.businessPlanRevenue.isSaveConfirmShowed
@@ -133,7 +135,6 @@ function BusinessPlanDetail({ match, history }) {
     dataUpdateRequest,
     dataDeleteRequest,
   } = useSelector(state => state.businessPlanDelivery)
-  const { versionId } = useSelector(state => state.businessPlanDetails)
 
   useEffect(() => {
     ;(async () => {
@@ -170,15 +171,6 @@ function BusinessPlanDetail({ match, history }) {
     return +mvvLocationTypeIdMap[viewMode] || null
   }, [viewMode])
 
-  const generalInfoVersionId = useMemo(() => {
-    const info = generalInfos.find(item => item.projectCode === selectedMvvCode)
-    return info ? info.id : null
-  }, [generalInfos, selectedMvvCode])
-
-  const generalInfoProjectCode = useMemo(() => {
-    return selectedMvvCode || null
-  }, [selectedMvvCode])
-
   const projectCode = useMemo(() => {
     return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
       .projectCode
@@ -205,7 +197,7 @@ function BusinessPlanDetail({ match, history }) {
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
     const params = {
-      businessPlanVersionId: versionId,
+      businessPlanVersionId: match.params.buId,
       generalInformation: generalInformationParams,
       sectionList: originalBusinessPlanItems,
       columnLabels,
@@ -228,13 +220,23 @@ function BusinessPlanDetail({ match, history }) {
     if (!listDuRevenue) return
 
     const param = {}
-    const onsiteInfo = generalInfos.find(item => item.mvvLocationType === 'Onsite')
-    const offshoreInfo = generalInfos.find(item => item.mvvLocationType === 'Offshore')
+    const onsiteInfo = generalInfos.find(
+      item => item.mvvLocationType === 'Onsite'
+    )
+    const offshoreInfo = generalInfos.find(
+      item => item.mvvLocationType === 'Offshore'
+    )
     if (offshoreInfo) {
-      param.offshore = { mvv: offshoreInfo.projectCode, businessVersion: offshoreInfo.id }
+      param.offshore = {
+        mvv: offshoreInfo.projectCode,
+        businessVersion: offshoreInfo.id,
+      }
     }
     if (onsiteInfo) {
-      param.onsite = { mvv: onsiteInfo.projectCode, businessVersion: onsiteInfo.id }
+      param.onsite = {
+        mvv: onsiteInfo.projectCode,
+        businessVersion: onsiteInfo.id,
+      }
     }
     return await dispatch(postSubmitBaselineRevenuePlan(param))
   }
@@ -280,7 +282,7 @@ function BusinessPlanDetail({ match, history }) {
   }
 
   const handleCreateNewVersion = async () => {
-    const res = await createNewVersion(versionId)
+    const res = await createNewVersion(match.params.buId)
     if (res) {
       history.push(`/delivery/business-plan-list/${res}/business-plan-detail`)
     }
@@ -303,15 +305,21 @@ function BusinessPlanDetail({ match, history }) {
 
   const onSaveDraft = async () => {
     setLoadingSave(true)
-    const params = {
-      generalInformation: {
+    const params = {}
+
+    if (isSaveShowed.generalInformation && listGeneralInformation) {
+      params.generalInformation = {
         ...generalInformationParams,
-        businessPlanVersionId: generalInfoVersionId,
-        projectCode: generalInfoProjectCode,
-      },
+        businessPlanVersionId: listGeneralInformation.id || undefined,
+        projectCode: listGeneralInformation.projectCode || undefined,
+      }
     }
 
-    if (isSaveShowed.businessPlan && businessPlanVersionId && (viewMode === 'Onsite' || viewMode === 'Offshore')) {
+    if (
+      isSaveShowed.businessPlan &&
+      businessPlanVersionId &&
+      (viewMode === 'Onsite' || viewMode === 'Offshore')
+    ) {
       const sectionList = cloneDeep(originalBusinessPlanItems)
       sectionList.forEach(section => {
         section.rowLabels = section.rowLabels.filter(row => {
@@ -477,10 +485,15 @@ function BusinessPlanDetail({ match, history }) {
                       activeTab={activeTab}
                       availableModes={availableModes}
                       tab={
-                        isSaveShowedDeliveryPlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan ? (
-                        <Tooltip
+                        isSaveShowedDeliveryPlan ||
+                        isSaveShowed.generalInformation ||
+                        isSaveShowed.businessPlan ? (
+                          <Tooltip
                             title={`You should save ${
-                              isSaveShowed.generalInformation || isSaveShowed.businessPlan ? 'Business Plan' : 'Delivery Plan'
+                              isSaveShowed.generalInformation ||
+                              isSaveShowed.businessPlan
+                                ? 'Business Plan'
+                                : 'Delivery Plan'
                             } before viewing other tabs`}>
                             <span>Revenue Plan</span>
                           </Tooltip>
@@ -489,7 +502,11 @@ function BusinessPlanDetail({ match, history }) {
                         )
                       }
                       key="2"
-                      disabled={isSaveShowedDeliveryPlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan}>
+                      disabled={
+                        isSaveShowedDeliveryPlan ||
+                        isSaveShowed.generalInformation ||
+                        isSaveShowed.businessPlan
+                      }>
                       {businessPlanVersionId && (
                         <BusinessPlanRevenue
                           businessVersion={businessPlanVersionId}
@@ -508,7 +525,9 @@ function BusinessPlanDetail({ match, history }) {
                       activeTab={activeTab}
                       availableModes={availableModes}
                       tab={
-                        isEditingRevenuePlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan ? (
+                        isEditingRevenuePlan ||
+                        isSaveShowed.generalInformation ||
+                        isSaveShowed.businessPlan ? (
                           <Tooltip
                             title={`You should save ${
                               isEditingRevenuePlan
@@ -522,7 +541,11 @@ function BusinessPlanDetail({ match, history }) {
                         )
                       }
                       key="3"
-                      disabled={isEditingRevenuePlan || isSaveShowed.generalInformation || isSaveShowed.businessPlan}>
+                      disabled={
+                        isEditingRevenuePlan ||
+                        isSaveShowed.generalInformation ||
+                        isSaveShowed.businessPlan
+                      }>
                       <BusinessPlanDelivery
                         ref={businessPlanDeliveryRef}
                         buId={businessPlanVersionId}
@@ -548,7 +571,13 @@ function BusinessPlanDetail({ match, history }) {
           {/*  <BusinessPlanActivity />*/}
           {/*</Panel>*/}
         </StyledCollapse>
-        <StyledAffix ref={affixRef} className={(isSaveShowed.generalInformation || isSaveShowed.businessPlan) ? 'active' : ''}>
+        <StyledAffix
+          ref={affixRef}
+          className={
+            isSaveShowed.generalInformation || isSaveShowed.businessPlan
+              ? 'active'
+              : ''
+          }>
           <div className="affix-content">
             <span>Save change ?</span>
             <div className="d-flex gap-8">

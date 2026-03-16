@@ -510,39 +510,17 @@ export const uploadDocument = async (businessPlanId, file) => {
 };
 
 /**
- * Get User Action History
- * @param {number} businessPlanId - Business Plan ID
- * @returns {Promise<Array>} Action history
+ * Get User Action History (unified replacement for getHistoryDeliveryPlan & getHistoryRevenuePlan)
+ * @param {number} businessPlanVersionId
+ * @param {string} deliveryUnit
+ * @param {number} pageNum
+ * @param {number} pageSize
+ * @param {string} module - 'DELIVERY_PLAN' | 'REVENUE_PLAN'
+ * @param {boolean} isSale
+ * @returns {Promise<Object>} Action history
  */
-export const getUserActionHistory = async (businessPlanId) => {
-  await delay(500);
-  
-  return [
-    {
-      id: 1,
-      action: 'Created',
-      user: 'John Doe',
-      ldap: 'jdoe',
-      timestamp: Date.now() - 86400000 * 7,
-      details: 'Created business plan',
-    },
-    {
-      id: 2,
-      action: 'Updated',
-      user: 'Jane Smith',
-      ldap: 'jsmith',
-      timestamp: Date.now() - 86400000 * 5,
-      details: 'Updated production revenue',
-    },
-    {
-      id: 3,
-      action: 'Approved',
-      user: 'Bob Johnson',
-      ldap: 'bjohnson',
-      timestamp: Date.now() - 86400000 * 2,
-      details: 'Approved business plan version 1',
-    },
-  ];
+export const getUserActionHistory = async (businessPlanVersionId, deliveryUnit, pageNum, pageSize, module, isSale) => {
+  return getHistoryDeliveryPlan(businessPlanVersionId, deliveryUnit, pageNum, pageSize, isSale);
 };
 
 /**

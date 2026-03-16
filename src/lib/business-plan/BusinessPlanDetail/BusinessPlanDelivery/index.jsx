@@ -48,7 +48,7 @@ import DeliveryPlanReference from './DeliveryPlanReference'
 import OtherExpensesTable from './OtherExpensesTable'
 import ResourcesInformation from './ResourcesInformation'
 import './style.css'
-import useBussinessPlanHistoryService from '../../hooks/useBussinessPlanHistoryService'
+import useBusinessPlanHistoryService from '../../hooks/useBusinessPlanHistoryService'
 import { DeliverySummaryTooltip } from '../BusinessPlanRevenue/constant'
 import { ResponseStatusCode } from '../../../service/constant'
 import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
@@ -176,7 +176,7 @@ const BusinessPlanDelivery = forwardRef(
     const isSaveShowed = useSelector(
       state => state.businessPlanDelivery.isSaveShowedDeliveryPlan
     )
-    const { fetchHistoryDeliveryPlan } = useBussinessPlanHistoryService()
+    const { fetchUserActionHistory } = useBusinessPlanHistoryService()
     const {
       resourceInfoTableParams,
       dataCreateRequest,
@@ -228,9 +228,14 @@ const BusinessPlanDelivery = forwardRef(
     const reloadData = async () => {
       if (!deliveryUnitDataDelivery) return
       const businessPlanVersionId = Number(buId)
-      const isAllSelected = deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
-      const deliveryUnit = isAllSelected ? undefined : deliveryUnitDataDelivery.groupName
-      const groupId = isAllSelected ? '' : parseInt(deliveryUnitDataDelivery.groupId)
+      const isAllSelected =
+        deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
+      const deliveryUnit = isAllSelected
+        ? undefined
+        : deliveryUnitDataDelivery.groupName
+      const groupId = isAllSelected
+        ? ''
+        : parseInt(deliveryUnitDataDelivery.groupId)
       if (
         activePanelList.includes('2') &&
         !resourceInfoTableParams.loadDataFromType
@@ -271,12 +276,13 @@ const BusinessPlanDelivery = forwardRef(
         })
       )
       if (activePanelList.includes('5')) {
-        fetchHistoryDeliveryPlan(
+        fetchUserActionHistory(
           buId,
           deliveryUnit,
           1,
           10,
-          deliveryUnitDataDelivery.groupSale
+          deliveryUnitDataDelivery.groupSale,
+          'DELIVERY_PLAN'
         )
       }
     }

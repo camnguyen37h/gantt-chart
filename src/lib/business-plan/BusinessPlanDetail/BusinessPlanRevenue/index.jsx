@@ -336,9 +336,13 @@ const BusinessPlanRevenue = forwardRef(
 
       dispatch(resetSummaryRevenuePlan())
 
-      if (activePanel !== 'Revenue' || !dataDu || dataDu.length === 0) return
-      // businessVersion vừa đổi → dataDu vẫn còn stale, chờ dataDu update ở render tiếp
-      if (isVersionChanged) return
+      if (
+        activePanel !== 'Revenue' ||
+        !dataDu ||
+        dataDu.length === 0 ||
+        isVersionChanged
+      )
+        return
 
       dispatch(setDeliveryUnitDataRevenue(dataDu[0]))
       dispatch(setDuValueRevenue(dataDu[0].groupId))

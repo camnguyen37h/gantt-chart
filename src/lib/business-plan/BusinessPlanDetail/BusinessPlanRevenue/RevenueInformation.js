@@ -181,10 +181,11 @@ const RevenueInformation = ({
   const tableRef = useRef(null)
 
   const dispatch = useDispatch()
-  const { filtersRevenue: filters, dataFilterPosition: positionRevenuePlan, isLoadingFilterPosition: isLoadingFilterPositionRevenuePlan } = useSelector(
-    state => state.businessPlanRevenue,
-    isEqual
-  )
+  const {
+    filtersRevenue: filters,
+    dataFilterPosition: positionRevenuePlan,
+    isLoadingFilterPosition: isLoadingFilterPositionRevenuePlan,
+  } = useSelector(state => state.businessPlanRevenue, isEqual)
   const filterRef = useRef()
   const isInitialRender = useRef(true)
   const prevVersionRef = useRef(businessVersion)
@@ -221,7 +222,12 @@ const RevenueInformation = ({
         },
       },
     ],
-    [positionRevenuePlan, isLoadingFilterPositionRevenuePlan, handleSearchPosition, handlePositionDropdownClose]
+    [
+      positionRevenuePlan,
+      isLoadingFilterPositionRevenuePlan,
+      handleSearchPosition,
+      handlePositionDropdownClose,
+    ]
   )
 
   const fetchProductionRevenuePlan = async (start, pageSize, param) => {
@@ -558,7 +564,13 @@ const RevenueInformation = ({
       ...filters,
       deliveryUnitDataRevenue,
     })
-  }, [isExpandPanel, switchValue, filters, businessVersion])
+  }, [
+    isExpandPanel,
+    switchValue,
+    filters,
+    businessVersion,
+    deliveryUnitDataRevenue.groupId,
+  ])
 
   useEffect(() => {
     const tableBodyRevenue = document.querySelector(

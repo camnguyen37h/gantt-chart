@@ -141,7 +141,7 @@ export const getEmployeeRole = api.getEmployeeRole;
 export const getOtherExpensesTable = api.getOtherExpensesTable;
 export const saveDeliveryPlan = api.saveDeliveryPlan;
 export const getHistoryDeliveryPlan = api.getHistoryDeliveryPlan;
-export const getUserActionHistory = api.getHistoryDeliveryPlan; // Alias
+export const getUserActionHistory = api.getUserActionHistory;
 
 // ========== Export Functionality ==========
 export const exportBusinessPlan = async (id) => {

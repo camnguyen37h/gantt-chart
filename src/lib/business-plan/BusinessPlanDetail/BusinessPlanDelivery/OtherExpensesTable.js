@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { cloneDeep, debounce, set, uniqueId } from 'lodash'
-import {
+import React, {
   forwardRef,
   memo,
   useCallback,
@@ -78,9 +78,15 @@ const OtherExpensesTable = forwardRef(
     useEffect(() => {
       const isVersionChanged = prevBuIdRef.current !== buId
       prevBuIdRef.current = buId
+
       if (!isExpandPanel) return
       if (!deliveryUnitDataDelivery) return
-      if (isVersionChanged && deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE) return
+      if (
+        isVersionChanged &&
+        deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
+      )
+        return
+
       dispatch(
         getOtherExpensesTable({
           deliveryUnit:
@@ -420,12 +426,21 @@ const OtherExpensesTable = forwardRef(
             fixed: 'left',
             children: [
               {
-                title:
-                  expandedKeys.length > 0 ? (
-                    <Icon type="down" onClick={toggleExpandAll} />
-                  ) : (
-                    <Icon type="right" onClick={toggleExpandAll} />
-                  ),
+                title: (
+                  <Icon
+                    onClick={toggleExpandAll}
+                    type="right"
+                    style={{
+                      fontSize: '12px',
+                      cursor: 'pointer',
+                      transform:
+                        expandedKeys.length > 0
+                          ? 'rotate(90deg)'
+                          : 'rotate(0deg)',
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                ),
                 dataIndex: 'expand',
                 key: 'expand',
                 width: OTHER_EXPENSE_TABLE_WIDTH.ACTION,
@@ -433,10 +448,16 @@ const OtherExpensesTable = forwardRef(
                   return (
                     !record.parentKey && (
                       <Icon
-                        type={
-                          expandedKeys.includes(record.key) ? 'down' : 'right'
-                        }
                         onClick={() => toggleExpandedKeys(record.key)}
+                        type="right"
+                        style={{
+                          fontSize: '12px',
+                          cursor: 'pointer',
+                          transform: expandedKeys.includes(record.key)
+                            ? 'rotate(90deg)'
+                            : 'rotate(0deg)',
+                          transition: 'transform 0.3s ease',
+                        }}
                       />
                     )
                   )

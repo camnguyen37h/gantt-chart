@@ -11,7 +11,7 @@ import {
   Table,
   Tooltip,
 } from 'antd'
-import { cloneDeep, debounce } from 'lodash'
+import { cloneDeep, debounce, isEmpty } from 'lodash'
 import { NotificationManager } from 'react-notifications'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -48,27 +48,32 @@ function CollaboratorBodyItem({
   const { updateIsSaveShowed, listAM, listPreparator } =
     useBusinessPlanDetails()
   // Mock user for demo
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+    userName: 'Demo User',
+    userId: 1,
+  }
   const { userName } = userPOA
+
+  const dispatch = useDispatch()
+
+  const { listUsername, listGeneralInformation } = useSelector(
+    state => state.businessGeneralInformation
+  )
+
+  const { validation } = useSelector(state => state.businessPlanDetails)
+
+  const isDraft =
+    !isEmpty(listGeneralInformation) &&
+    listGeneralInformation.status === statusBusinessPlanDetail.draft
 
   const isEditInput =
     (checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_BUSINESS_PLAN
     ) ||
-    listAM && listAM.some(p => p.ldap === userName) ||
-    listPreparator && listPreparator.some(p => p.ldap === userName)) &&
+      (listAM && listAM.some(p => p.ldap === userName)) ||
+      (listPreparator && listPreparator.some(p => p.ldap === userName))) &&
     isDraft
-
-  const dispatch = useDispatch()
-
-  const { listUsername, generalInfos } = useSelector(
-    state => state.businessGeneralInformation
-  )
-
-  const isDraft = generalInfos.length > 0 && generalInfos.every(item => item.status === statusBusinessPlanDetail.draft)
-
-  const { validation } = useSelector(state => state.businessPlanDetails)
 
   const handleReturnIndexItem = (pagination, index) => {
     return (pagination.current - 1) * pagination.pageSize + index + 1
@@ -241,7 +246,7 @@ function CollaboratorBodyItem({
     })
   }
 
-  const handleRenderTooltip = (index) => {
+  const handleRenderTooltip = index => {
     if (
       (titleColumn === 'AM' || titleColumn === 'PM') &&
       handleReturnIndexItem(pagination, index) === 1
@@ -328,6 +333,7 @@ function CollaboratorBodyItem({
       dataIndex: '',
       key: '',
       align: 'left',
+      width: 220,
       render: (_, record, index) => {
         const rangeValue = [
           moment(record.startDate || startDate),
@@ -362,8 +368,6 @@ function CollaboratorBodyItem({
           </div>
         )
       },
-      align: 'center',
-      width: 220,
     },
     {
       title: 'Department',

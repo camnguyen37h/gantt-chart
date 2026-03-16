@@ -1,4 +1,4 @@
-import {
+import React, {
   useState,
   useEffect,
   useCallback,
@@ -53,7 +53,9 @@ import {
   VALIDATE_REQUIRED_FIELDS_MESSAGE,
 } from '../constants'
 import moment from 'moment'
+
 const { Option } = Select
+
 const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
     display: none;
@@ -584,15 +586,15 @@ const HeadCountTable = forwardRef((props, ref) => {
           {
             title: (
               <Icon
-                type={
-                  isLoading
-                    ? 'loading'
-                    : expandedKeys.length > 0
-                    ? 'down'
-                    : 'right'
-                }
-                style={{ cursor: isLoading ? 'not-allowed' : 'pointer' }}
                 onClick={toggleExpandAll}
+                type="right"
+                style={{
+                  fontSize: '12px',
+                  cursor: isLoading ? 'not-allowed' : 'pointer',
+                  transform:
+                    expandedKeys.length > 0 ? 'rotate(90deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s ease',
+                }}
               />
             ),
             key: 'expand',
@@ -869,6 +871,7 @@ const HeadCountTable = forwardRef((props, ref) => {
       dataResourcesInformation.listLabelMonth.length > 0
         ? dataResourcesInformation.listLabelMonth.length
         : 1
+
     const calculatedWidth = Math.max(
       totalMonthWidth / labelMonthCount,
       RESOURCE_TABLE_WIDTH.MAX_MONTH_WIDTH
@@ -1014,10 +1017,7 @@ const HeadCountTable = forwardRef((props, ref) => {
         partialRow.userId !== oldUserId &&
         expandedKeys.includes(partialRow.key)
       ) {
-        await fetchResourceInforReferenceData(
-          partialRow.userId,
-          partialRow.key
-        )
+        await fetchResourceInforReferenceData(partialRow.userId, partialRow.key)
       }
     },
     [updateRow]
@@ -1303,26 +1303,18 @@ const HeadCountTable = forwardRef((props, ref) => {
     const isLoading = !!record.userId && loadingExpandedRow[record.userId]
 
     return (
-      !record.parentKey &&
-      (expanded ? (
+      !record.parentKey && (
         <Icon
-          type={isLoading ? 'loading' : 'down'}
-          style={{
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            color: isLoading && '#ccc',
-          }}
           onClick={() => toggleExpandedKeys(record.key, record)}
-        />
-      ) : (
-        <Icon
-          type={isLoading ? 'loading' : 'right'}
+          type="right"
           style={{
+            fontSize: '12px',
             cursor: isLoading ? 'not-allowed' : 'pointer',
-            color: isLoading && '#ccc',
+            transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s ease',
           }}
-          onClick={() => toggleExpandedKeys(record.key, record)}
         />
-      ))
+      )
     )
   }
 
