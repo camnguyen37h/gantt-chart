@@ -1,21 +1,21 @@
-﻿✅ Mock permissions initialized: 2 entries
-VM5:121 ✅ Mock session user initialized
-VM5:192 
-VM5:193 ========================================
-VM5:194 🎭 MOCK SYSTEM INITIALIZED
-VM5:195 ========================================
-VM5:196 User: ttlam1 - Lam. Tran Tung
-VM5:197 Department: DJ2
-VM5:198 Permissions: 2
-VM5:199 Mode: Standalone Mock
-VM5:200 ========================================
-VM5:201 
+﻿
+✅ Mock permissions initialized: 2 entries
+business-plan-detail:200 
+business-plan-detail:201 ========================================
+business-plan-detail:202 🎭 MOCK SYSTEM INITIALIZED
+business-plan-detail:203 ========================================
+business-plan-detail:204 User: ttlam1 - Lam. Tran Tung
+business-plan-detail:205 Department: DJ2
+business-plan-detail:206 Permissions: 2
+business-plan-detail:207 Mode: Standalone Mock
+business-plan-detail:208 ========================================
+business-plan-detail:209 
 log.js:24 [HMR] Waiting for update signal from WDS...
 index.js:1 Warning: Legacy context API has been detected within a strict-mode tree.
 
 The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
 
-Please update the following components: Connect(MenuItem), Connect(SubPopupMenu), LocaleReceiver, Provider, Trigger
+Please update the following components: BaseTable, BodyTable, ColGroup, Connect(BaseTable), Connect(ExpandableRow), Connect(ExpandableTable), Connect(MenuItem), Connect(SubPopupMenu), Connect(TableHeaderRow), Connect(TableRow), HeadTable, LocaleProvider, LocaleReceiver, Provider, Table, TableHeader, Trigger
 
 Learn more about this warning here: https://fb.me/react-legacy-context
     in Trigger (created by SelectTrigger)
@@ -41,7 +41,7 @@ index.js:1 Warning: Using UNSAFE_componentWillReceiveProps in strict mode is not
 * Move data fetching code or side effects to componentDidUpdate.
 * If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state
 
-Please update the following components: Animate
+Please update the following components: Animate, Form(WrappedComponent)
 console.<computed> @ index.js:1Understand this error
 index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of AnimateChild which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
     in sup (created by Context.Consumer)
@@ -64,42 +64,60 @@ index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pas
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
 console.<computed> @ index.js:1Understand this error
-6CollaboratorBodyItem.jsx:54 Uncaught ReferenceError: Cannot access 'isDraft' before initialization
-    at CollaboratorBodyItem (CollaboratorBodyItem.jsx:54:1)
-    at renderWithHooks (react-dom.development.js:14803:1)
-    at mountIndeterminateComponent (react-dom.development.js:17482:1)
-    at beginWork (react-dom.development.js:18596:1)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
-    at invokeGuardedCallback (react-dom.development.js:292:1)
-    at beginWork$1 (react-dom.development.js:23203:1)
-    at performUnitOfWork (react-dom.development.js:22154:1)
-    at workLoopSync (react-dom.development.js:22130:1)
-    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
-    at react-dom.development.js:11089:1
-    at unstable_runWithPriority (scheduler.development.js:653:1)
-    at runWithPriority$1 (react-dom.development.js:11039:1)
-    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
-    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
-    at unbatchedUpdates (react-dom.development.js:21909:1)
-    at legacyRenderSubtreeIntoContainer (react-dom.development.js:24757:1)
-    at Object.render (react-dom.development.js:24840:1)
-    at Module.<anonymous> (index.js:11:1)
-    at ./src/index.js (index.js:16:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at 1 (mockBusinessPlanData.js:3089:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at checkDeferredModules (bootstrap:45:1)
-    at Array.webpackJsonpCallback [as push] (bootstrap:32:1)
-    at main.chunk.js:1:79Understand this error
-index.js:1 Warning: Legacy context API has been detected within a strict-mode tree.
-
-The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
-
-Please update the following components: BaseTable, BodyTable, ColGroup, Connect(BaseTable), Connect(ExpandableRow), Connect(ExpandableTable), Connect(TableHeaderRow), Connect(TableRow), HeadTable, Table, TableHeader
-
-Learn more about this warning here: https://fb.me/react-legacy-context
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Wave which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in button (created by Context.Consumer)
+    in Wave (created by Context.Consumer)
+    in Button (at BusinessPlanVersion/index.jsx:240)
+    in Trigger (created by Dropdown)
+    in Dropdown (created by Context.Consumer)
+    in Dropdown (at BusinessPlanVersion/index.jsx:239)
+    in div (at BusinessPlanVersion/index.jsx:237)
+    in div (at BusinessPlanVersion/index.jsx:224)
+    in div (at BusinessPlanVersion/index.jsx:223)
+    in BusinessPlanVersion (created by Context.Consumer)
+    in withRouter(BusinessPlanVersion) (at BusinessPlanDetail/index.jsx:436)
+    in div (at BusinessPlanDetail/index.jsx:432)
+    in div (at BusinessPlanDetail/index.jsx:431)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:34)
+    in Switch (at App.js:32)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:23)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:21)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:19)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:18)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+console.<computed> @ index.js:1Understand this error
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of TableRow which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in tr (created by BodyRow)
+    in BodyRow (created by TableRow)
+    in TableRow (created by Connect(TableRow))
+    in Connect(TableRow) (created by ExpandableRow)
+    in ExpandableRow (created by Connect(ExpandableRow))
+    in Connect(ExpandableRow) (created by BaseTable)
+    in tbody (created by BaseTable)
+    in table (created by BaseTable)
+    in BaseTable (created by Connect(BaseTable))
+    in Connect(BaseTable) (created by BodyTable)
+    in div (created by BodyTable)
+    in BodyTable (created by ExpandableTable)
+    in div (created by ExpandableTable)
+    in div (created by ExpandableTable)
+    in ExpandableTable (created by Connect(ExpandableTable))
+    in Connect(ExpandableTable) (created by Table)
+    in Provider (created by Table)
     in Table (created by LocaleReceiver)
     in LocaleReceiver (created by Context.Consumer)
     in div (created by Context.Consumer)
@@ -109,13 +127,13 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in Table (created by withStore(Table))
     in withStore(Table) (at KpiBonusBodyItem.jsx:98)
     in Unknown (created by Form(WrappedComponent))
-    in Form(WrappedComponent) (at BusinessPlanGeneralInformation/index.jsx:578)
-    in div (at BusinessPlanGeneralInformation/index.jsx:577)
-    in div (at BusinessPlanGeneralInformation/index.jsx:553)
+    in Form(WrappedComponent) (at BusinessPlanGeneralInformation/index.jsx:581)
+    in div (at BusinessPlanGeneralInformation/index.jsx:580)
+    in div (at BusinessPlanGeneralInformation/index.jsx:556)
     in form (created by Context.Consumer)
-    in Form (at BusinessPlanGeneralInformation/index.jsx:380)
-    in div (at BusinessPlanGeneralInformation/index.jsx:357)
-    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:434)
+    in Form (at BusinessPlanGeneralInformation/index.jsx:383)
+    in div (at BusinessPlanGeneralInformation/index.jsx:360)
+    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:461)
     in div (created by PanelContent)
     in div (created by PanelContent)
     in PanelContent (created by CollapsePanel)
@@ -123,13 +141,13 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in Animate (created by CollapsePanel)
     in div (created by CollapsePanel)
     in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:429)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:456)
     in div (created by Collapse)
     in Collapse (created by Context.Consumer)
     in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:425)
-    in div (at BusinessPlanDetail/index.jsx:405)
-    in div (at BusinessPlanDetail/index.jsx:404)
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:452)
+    in div (at BusinessPlanDetail/index.jsx:432)
+    in div (at BusinessPlanDetail/index.jsx:431)
     in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
     in BusinessPlanDetailPage (created by Context.Consumer)
     in Route (at App.js:34)
@@ -152,49 +170,17 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
 console.<computed> @ index.js:1Understand this error
-index.js:1 Warning: Using UNSAFE_componentWillReceiveProps in strict mode is not recommended and may indicate bugs in your code. See https://fb.me/react-unsafe-component-lifecycles for details.
-
-* Move data fetching code or side effects to componentDidUpdate.
-* If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state
-
-Please update the following components: Form(WrappedComponent)
-console.<computed> @ index.js:1Understand this error
-6index.js:1 The above error occurred in the <CollaboratorBodyItem> component:
-    in CollaboratorBodyItem (created by Context.Consumer)
-    in withRouter(CollaboratorBodyItem) (at BusinessPlanGeneralInformation/index.jsx:535)
-    in div (at BusinessPlanGeneralInformation/index.jsx:533)
-    in div (at BusinessPlanGeneralInformation/index.jsx:528)
-    in form (created by Context.Consumer)
-    in Form (at BusinessPlanGeneralInformation/index.jsx:380)
-    in div (at BusinessPlanGeneralInformation/index.jsx:357)
-    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:434)
-    in div (created by PanelContent)
-    in div (created by PanelContent)
-    in PanelContent (created by CollapsePanel)
-    in AnimateChild (created by Animate)
-    in Animate (created by CollapsePanel)
-    in div (created by CollapsePanel)
-    in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:429)
-    in div (created by Collapse)
-    in Collapse (created by Context.Consumer)
-    in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:425)
-    in div (at BusinessPlanDetail/index.jsx:405)
-    in div (at BusinessPlanDetail/index.jsx:404)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of SelectTrigger which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in div (created by Select)
+    in Trigger (created by SelectTrigger)
+    in SelectTrigger (created by Select)
+    in Select (created by Context.Consumer)
+    in Select (at AppHeader.jsx:27)
+    in div (at AppHeader.jsx:26)
+    in header (created by Basic)
     in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
+    in Header (at AppHeader.jsx:10)
+    in AppHeader (at App.js:20)
     in section (created by BasicLayout)
     in BasicLayout (created by Context.Consumer)
     in Layout (at App.js:19)
@@ -203,40 +189,27 @@ console.<computed> @ index.js:1Understand this error
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-
-Consider adding an error boundary to your tree to customize error handling behavior.
-Visit https://fb.me/react-error-boundaries to learn more about error boundaries.
 console.<computed> @ index.js:1Understand this error
-react-dom.development.js:11102 Uncaught ReferenceError: Cannot access 'isDraft' before initialization
-    at CollaboratorBodyItem (CollaboratorBodyItem.jsx:54:1)
-    at renderWithHooks (react-dom.development.js:14803:1)
-    at mountIndeterminateComponent (react-dom.development.js:17482:1)
-    at beginWork (react-dom.development.js:18596:1)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
-    at invokeGuardedCallback (react-dom.development.js:292:1)
-    at beginWork$1 (react-dom.development.js:23203:1)
-    at performUnitOfWork (react-dom.development.js:22154:1)
-    at workLoopSync (react-dom.development.js:22130:1)
-    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
-    at react-dom.development.js:11089:1
-    at unstable_runWithPriority (scheduler.development.js:653:1)
-    at runWithPriority$1 (react-dom.development.js:11039:1)
-    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
-    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
-    at unbatchedUpdates (react-dom.development.js:21909:1)
-    at legacyRenderSubtreeIntoContainer (react-dom.development.js:24757:1)
-    at Object.render (react-dom.development.js:24840:1)
-    at Module.<anonymous> (index.js:11:1)
-    at ./src/index.js (index.js:16:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at 1 (mockBusinessPlanData.js:3089:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at checkDeferredModules (bootstrap:45:1)
-    at Array.webpackJsonpCallback [as push] (bootstrap:32:1)
-    at main.chunk.js:1:79Understand this error
-VM9:2 Uncaught ReferenceError: process is not defined
+businessApproval.js:26 Uncaught (in promise) TypeError: Cannot convert undefined or null to object
+    at Object.values (<anonymous>)
+    at businessApproval.js:26:1
+    at createReducer.ts:294:1
+    at produce (immerClass.ts:94:1)
+    at createReducer.ts:293:1
+    at Array.reduce (<anonymous>)
+    at reducer (createReducer.ts:260:1)
+    at reducer (createSlice.ts:372:1)
+    at combination (redux.js:560:1)
+    at dispatch (redux.js:288:1)
+    at index.js:20:1
+    at immutableStateInvariantMiddleware.ts:266:1
+    at actionCreatorInvariantMiddleware.ts:32:1
+    at dispatch (redux.js:691:1)
+    at createAsyncThunk.ts:682:1
+    at step (RefreshUtils.js:174:1)
+    at Object.next (RefreshUtils.js:174:1)
+    at fulfilled (RefreshUtils.js:174:1)Understand this error
+VM34:2 Uncaught ReferenceError: process is not defined
     at 4043 (<anonymous>:2:13175)
     at r (<anonymous>:2:306606)
     at 8048 (<anonymous>:2:9504)
@@ -246,4 +219,4 @@ VM9:2 Uncaught ReferenceError: process is not defined
     at <anonymous>:2:315634
     at <anonymous>:2:324254
     at <anonymous>:2:324258
-    at e.onload (index.js:1:1)
+    at e.onload (index.js:1:1)Understand this error

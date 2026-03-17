@@ -215,9 +215,6 @@ const ApprovalList = ({
               }
 
               const gWO = listDU[gKey]
-              const gWOLength = gWO.reduce((res, wo) => {
-                return res + (wo.length || 0)
-              }, gWO.length)
               return (
                 step.map[gKey] &&
                 step.map[gKey].length > 0 && (
@@ -247,8 +244,8 @@ const ApprovalList = ({
                         }
                       />
                     ))}
-                    {gWOLength > step.map[gKey].length &&
-                      new Array(gWOLength - step.map[gKey].length)
+                    {gWO.length > step.map[gKey].length &&
+                      new Array(gWO.length - step.map[gKey].length)
                         .fill('')
                         .map(() => <div style={{ height: 29 }}></div>)}
                   </div>

@@ -488,6 +488,16 @@ export const getAllApprovalSteps = async () => {
 };
 
 /**
+ * Get Business Plan Workflow (single combined workflow for all MVV groups)
+ * @param {Object} params - { referenceId, mvv }
+ * @returns {Promise<Object>} Combined workflow steps and work order
+ */
+export const getBusinessPlanWorkflow = async (params) => {
+  await delay(300);
+  return JSON.parse(JSON.stringify(mockApprovalSteps));
+};
+
+/**
  * Upload Document
  * @param {number} businessPlanId - Business Plan ID
  * @param {File} file - File to upload
@@ -1022,6 +1032,7 @@ const mockBusinessPlanApi = {
   getAllCurrencies,
   getAllIndustries,
   getAllApprovalSteps,
+  getBusinessPlanWorkflow,
   uploadDocument,
   getUserActionHistory,
   // Delivery Plan APIs

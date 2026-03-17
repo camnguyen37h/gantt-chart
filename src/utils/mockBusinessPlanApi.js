@@ -250,8 +250,6 @@ export const createNewVersion = async (id) => {
  */
 export const getBusinessPlanWorkflow = async (params) => {
   await delay();
-  // eslint-disable-next-line no-unused-vars
-  const { businessPlanVersionId } = params || {};
   return mockApprovalSteps;
 };
 

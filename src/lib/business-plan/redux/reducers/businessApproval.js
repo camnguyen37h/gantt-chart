@@ -22,7 +22,7 @@ const businessApprovalSlice = createSlice({
     builder.addCase(
       fetchBusinessPlanWorkflow.fulfilled,
       (state, { payload }) => {
-        if (!payload) return
+        if (!payload || !payload.data) return
         const ogSteps = Object.values(payload.data)
         const filteredSteps = ogSteps.filter(
           item => !item.stateName.match(/Draft|Approved/)
