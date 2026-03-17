@@ -6,6 +6,7 @@
 import {
   mockBusinessPlanDetail,
   mockBusinessPlanDetail437,
+  mockBusinessPlanDetailReal,
   mockBusinessPlanEdgeCaseDetail,
   mockProductionRevenue,
   mockOtherRevenue,
@@ -43,6 +44,8 @@ const businessPlansStore = new Map([
   [436, JSON.parse(JSON.stringify(mockBusinessPlanDetail))],
   [437, JSON.parse(JSON.stringify(mockBusinessPlanDetail437))],
   [438, JSON.parse(JSON.stringify(mockBusinessPlanDetail438))],
+  [454, JSON.parse(JSON.stringify(mockBusinessPlanDetailReal))],
+  [455, JSON.parse(JSON.stringify(mockBusinessPlanDetailReal))],
   [500, JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail))],
 ]);
 
@@ -109,38 +112,11 @@ export const getBusinessPlanDetailByViewMode = async (businessPlanId, viewModeOr
 
   // Convert to number to match Map keys
   const id = Number(businessPlanId);
-  const businessPlan = businessPlansStore.get(id);
-  
-  if (!businessPlan) {
-    throw new Error(`Business Plan with ID ${businessPlanId} not found`);
-  }
-  
+
   // Get view mode specific mock data from Mock API/Business plan folder
   const viewModeData = getBusinessPlanDataByViewMode(viewMode, id);
-  
-  // businessPlan has structure: { httpStatus: 200, data: {...} }
-  // Extract the base data object
-  const planData = businessPlan.data || businessPlan;
-  
-  // Merge base data with view mode specific columnLabels and sectionList
-  const result = {
-    httpStatus: 200,
-    data: {
-      // Use columnLabels and sectionList from view mode specific mock data
-      sectionList: viewModeData.data.sectionList,
-      columnLabels: viewModeData.data.columnLabels,
-      // Keep other metadata from the base business plan
-      projectCode: planData.projectCode,
-      status: planData.status,
-      version: planData.version,
-      versionId: planData.id,
-      startDate: planData.startDate,
-      endDate: planData.endDate,
-      warningMessage: planData.warningMessage,
-    }
-  };
-  
-  return JSON.parse(JSON.stringify(result));
+
+  return JSON.parse(JSON.stringify(viewModeData));
 };
 
 /**

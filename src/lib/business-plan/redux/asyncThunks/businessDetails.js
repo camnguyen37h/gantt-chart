@@ -35,10 +35,10 @@ export const getCompareBusinessPlanDetail = createAsyncThunk(
 
 export const getBusinessPlanDetailByViewMode = createAsyncThunk(
   'get/getBusinessPlanDetailByViewMode',
-  async ({ id, viewMode }) => {
+  async ({ id, params }) => {
     const result = await BusinessPlanAPI.getBusinessPlanDetailByViewMode(
       id,
-      viewMode
+      params
     )
     if (result.status === ResponseStatusCode.success) {
       return { data: result.data, errorMessage: result.errorMessage }

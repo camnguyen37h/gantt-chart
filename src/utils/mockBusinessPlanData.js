@@ -2445,6 +2445,116 @@ export const mockBusinessPlanDetail437 = {
   "errorMessage": ""
 };
 
+// ==================== REAL DATA DETAIL (GLBPB2500108 / GLBOD2500109) ====================
+// Navigate to BP id=455 to use the real API response data.
+// Sub-version 454 → Onsite (GLBPB2500108), 455 → Offshore (GLBOD2500109).
+// getBusinessPlanDataByViewMode will serve the real JSON files for these IDs.
+export const mockBusinessPlanDetailReal = {
+  "httpStatus": 200,
+  "data": {
+    "id": 455,
+    "projectCode": "GLBOD2500109",
+    "status": "Draft",
+    "version": 1,
+    "startDate": 1767200400000,
+    "endDate": 1798736400000,
+    "warningMessage": [],
+    "versions": [
+      {
+        "versionId": 455,
+        "versionName": "Version 1",
+        "status": "DRAFT",
+        "statusName": "Draft"
+      }
+    ],
+    "generalInfos": [
+      {
+        "listAM": [],
+        "listTeamLead": [],
+        "listPreSale": [],
+        "listPreparator": [],
+        "listAdviser": [],
+        "listPM": [],
+        "businessPlanName": "GLBPB2500108 Onsite",
+        "customerName": "Real Customer",
+        "startDate": 1767200400000,
+        "endDate": 1798736400000,
+        "orderType": "Commercial",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 0,
+        "industry": 18,
+        "customerMarket": "US",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 0,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 454,
+          "businessPlanVersionId": 454,
+          "kpiPm": 30,
+          "kpiQa": 3,
+          "kpiMember": 67
+        },
+        "projectCode": "GLBPB2500108",
+        "mvvLocationType": "Onsite",
+        "id": 454
+      },
+      {
+        "listAM": [],
+        "listTeamLead": [],
+        "listPreSale": [],
+        "listPreparator": [],
+        "listAdviser": [],
+        "listPM": [],
+        "businessPlanName": "GLBOD2500109 Offshore",
+        "customerName": "Real Customer",
+        "startDate": 1767200400000,
+        "endDate": 1798736400000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 0,
+        "industry": 18,
+        "customerMarket": "Korea",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 0,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 455,
+          "businessPlanVersionId": 455,
+          "kpiPm": 25,
+          "kpiQa": 2,
+          "kpiMember": 50
+        },
+        "projectCode": "GLBOD2500109",
+        "mvvLocationType": "Offshore",
+        "id": 455
+      }
+    ],
+    "columnLabels": [
+      { "id": null,  "label": "Total",    "index": 1, "columnKey": "TOTAL" },
+      { "id": 1,     "label": "DU3.1",   "index": 2, "columnKey": "SALE_1" },
+      { "id": 45,    "label": "BU1",      "index": 3, "columnKey": "SALE_45" },
+      { "id": null,  "label": "Internal", "index": 4, "columnKey": "INTERNAL" },
+      { "id": 173,   "label": "DU1.26",  "index": 5, "columnKey": "DELIVERY_UNIT_173", "mvvLocationType": "Offshore" },
+      { "id": 176,   "label": "DE3",      "index": 6, "columnKey": "DELIVERY_UNIT_176", "mvvLocationType": "Offshore" },
+      { "id": 34,    "label": "DU3.11",  "index": 7, "columnKey": "DELIVERY_UNIT_34",  "mvvLocationType": "Onsite" },
+      { "id": 39,    "label": "DU1.12",  "index": 8, "columnKey": "DELIVERY_UNIT_39",  "mvvLocationType": "Onsite" }
+    ],
+    "sectionList": []
+  },
+  "messageId": "Success",
+  "errorMessage": ""
+};
+
 // ==================== EDGE-CASE DETAIL (NaN / Infinity test) ====================
 // Use business plan ID 500 to navigate to this scenario.
 // Sub-version 501 → Onsite, 502 → Offshore.
@@ -3153,6 +3263,8 @@ export const mockUserAndDepartment = {
 let businessPlanStore = {
   436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data)),
   437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data)),
+  454: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
+  455: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
   500: JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail.data)),
 };
 
@@ -3187,6 +3299,8 @@ export const resetMockData = () => {
   businessPlanStore = {
     436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data)),
     437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data)),
+    454: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
+    455: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
     500: JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail.data)),
   };
   deliveryPlanStore = {};
