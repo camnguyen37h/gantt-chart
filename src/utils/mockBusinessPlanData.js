@@ -2732,39 +2732,90 @@ export const mockMaxKPISetting = {
 export const mockApprovalSteps = {
   httpStatus: 200,
   data: {
+    // Flat dict of step objects keyed by step ID — mirrors the real API response.
+    // Two separate workflow groups (G3 and G1+GKR) each have their own Draft,
+    // BU/DU Lead, G Lead, FC, BOM, CEO and Approved steps.
+    // The reducer merges steps at the same (stateOrder, order) position.
     data: {
-      "draft": {
-        stepName: "Draft",
-        stateName: "Draft",
-        stateOrder: 10,
-        stateHidden: false,
-        order: 1,
+      // ── G3 workflow ──────────────────────────────────────────────────────────
+      "8447": {
+        stepName: "Draft", stateName: "Draft",
+        stateOrder: 10, stateHidden: false, order: 1,
         map: { None: [] }
       },
-      // BU/DU Lead — combines G1 (DU1.12), G3 (DU3.1, BU3), GKR (BKR1)
-      "budu_lead": {
-        stepName: "BU/DU Lead Pending Approval",
-        stateName: "Verification",
-        stateOrder: 100,
-        stateHidden: false,
-        order: 1,
+      "8448": {
+        stepName: "BU/DU Lead Pending Approval", stateName: "Verification",
+        stateOrder: 100, stateHidden: false, order: 1,
         map: {
-          G1:  [{ id: 5310, taskKey: "BP-5310", approvalStepId: 8579, ldap: "nvthang9", departmentName: "DU1.12", processStatus: "APPROVED", history: [{ id: 3479, approvalPersonId: 5310, ldap: "ltlinh7", previousLdap: "nvthang9", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }],
-          G3:  [
+          G3: [
             { id: 5182, taskKey: "BP-5182", approvalStepId: 8448, ldap: "ntviet2", departmentName: "DU3.1", processStatus: "APPROVED", history: [{ id: 3405, approvalPersonId: 5182, ldap: "nbtduy", previousLdap: "ntviet2", stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
             { id: 5183, taskKey: "BP-5183", approvalStepId: 8448, ldap: "nvtung2", departmentName: "DU3.1", processStatus: "APPROVED", history: [{ id: 3406, approvalPersonId: 5183, ldap: "nbtduy", previousLdap: "nvtung2", stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
             { id: 5184, taskKey: "BP-5184", approvalStepId: 8448, ldap: "vttung3", departmentName: "BU3",   processStatus: "APPROVED", history: [{ id: 3407, approvalPersonId: 5184, ldap: "nbtduy", previousLdap: "vttung3",  stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
-          ],
-          GKR: [{ id: 5311, taskKey: "BP-5311", approvalStepId: 8579, ldap: "nngiang", departmentName: "BKR1", processStatus: "APPROVED", history: [{ id: 3480, approvalPersonId: 5311, ldap: "ltlinh7", previousLdap: "nngiang", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }]
+          ]
         }
       },
-      // G Lead — combines G1 (G1 dept), G3 (G3 dept), GKR (GKR dept)
-      "g_lead": {
-        stepName: "G Lead Pending Approval",
-        stateName: "Verification",
-        stateOrder: 100,
-        stateHidden: false,
-        order: 2,
+      "8450": {
+        stepName: "G Lead Pending Approval", stateName: "Verification",
+        stateOrder: 100, stateHidden: false, order: 2,
+        map: {
+          G3: [
+            { id: 5185, taskKey: "BP-5185", approvalStepId: 8450, ldap: "ltoanh", departmentName: "G3", processStatus: "APPROVED", history: [{ id: 3491, approvalPersonId: 5185, ldap: "nbtduy", previousLdap: "ltoanh", stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
+            { id: 5186, taskKey: "BP-5186", approvalStepId: 8450, ldap: "nbtduy", departmentName: "G3", processStatus: "APPROVED", history: [{ id: 3492, approvalPersonId: 5186, ldap: "nbtduy", previousLdap: "nbtduy", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
+          ]
+        }
+      },
+      "8451": {
+        stepName: "FC Pending Approval", stateName: "Peer Review",
+        stateOrder: 1000, stateHidden: false, order: 1,
+        map: {
+          None: [
+            { id: 5322, taskKey: "BP-5322", approvalStepId: 8451, ldap: "ttmy", departmentName: null, processStatus: "APPROVED", history: [{ id: 3408, approvalPersonId: 5322, ldap: "nbtduy", previousLdap: "ttmy", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
+          ]
+        }
+      },
+      "8452": {
+        stepName: "BOM Pending Approval", stateName: "Peer Review",
+        stateOrder: 1000, stateHidden: false, order: 2,
+        map: {
+          None: [
+            { id: 5323, taskKey: "BP-5323", approvalStepId: 8452, ldap: "htthoa",  departmentName: null, processStatus: "APPROVED", history: [{ id: 3409, approvalPersonId: 5323, ldap: "nbtduy", previousLdap: "htthoa",  stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
+            { id: 5324, taskKey: "BP-5324", approvalStepId: 8452, ldap: "nvbach",   departmentName: null, processStatus: "APPROVED", history: [{ id: 3410, approvalPersonId: 5324, ldap: "nbtduy", previousLdap: "nvbach",   stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
+            { id: 5325, taskKey: "BP-5325", approvalStepId: 8452, ldap: "mthuong",  departmentName: null, processStatus: "APPROVED", history: [{ id: 3411, approvalPersonId: 5325, ldap: "nbtduy", previousLdap: "mthuong",  stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
+          ]
+        }
+      },
+      "8453": {
+        stepName: "CEO Pending Approval", stateName: "Peer Review",
+        stateOrder: 1000, stateHidden: false, order: 3,
+        map: {
+          None: [
+            { id: 5326, taskKey: "BP-5326", approvalStepId: 8453, ldap: "dnbao", departmentName: null, processStatus: "APPROVED", history: [{ id: 3412, approvalPersonId: 5326, ldap: "nbtduy", previousLdap: "dnbao", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
+          ]
+        }
+      },
+      "8449": {
+        stepName: "Approved", stateName: "Approved",
+        stateOrder: 10000, stateHidden: false, order: 1,
+        map: { None: [] }
+      },
+
+      // ── G1 + GKR workflow ────────────────────────────────────────────────────
+      "8578": {
+        stepName: "Draft", stateName: "Draft",
+        stateOrder: 10, stateHidden: false, order: 1,
+        map: { None: [] }
+      },
+      "8579": {
+        stepName: "BU/DU Lead Pending Approval", stateName: "Verification",
+        stateOrder: 100, stateHidden: false, order: 1,
+        map: {
+          G1:  [{ id: 5310, taskKey: "BP-5310", approvalStepId: 8579, ldap: "nvthang9", departmentName: "DU1.12", processStatus: "APPROVED", history: [{ id: 3479, approvalPersonId: 5310, ldap: "ltlinh7", previousLdap: "nvthang9", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }],
+          GKR: [{ id: 5311, taskKey: "BP-5311", approvalStepId: 8579, ldap: "nngiang",  departmentName: "BKR1",   processStatus: "APPROVED", history: [{ id: 3480, approvalPersonId: 5311, ldap: "ltlinh7", previousLdap: "nngiang",  stepAction: "APPROVED", lastProcessStatus: "TODO" }] }]
+        }
+      },
+      "8581": {
+        stepName: "G Lead Pending Approval", stateName: "Verification",
+        stateOrder: 100, stateHidden: false, order: 2,
         map: {
           G1: [
             { id: 5312, taskKey: "BP-5312", approvalStepId: 8581, ldap: "btdon",   departmentName: "G1", processStatus: "APPROVED", history: [{ id: 3481, approvalPersonId: 5312, ldap: "ltlinh7", previousLdap: "btdon",   stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
@@ -2772,59 +2823,43 @@ export const mockApprovalSteps = {
             { id: 5314, taskKey: "BP-5314", approvalStepId: 8581, ldap: "lvdung2", departmentName: "G1", processStatus: "APPROVED", history: [{ id: 3484, approvalPersonId: 5314, ldap: "ltlinh7", previousLdap: "lvdung2", stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
             { id: 5315, taskKey: "BP-5315", approvalStepId: 8581, ldap: "ptdung2", departmentName: "G1", processStatus: "APPROVED", history: [{ id: 3483, approvalPersonId: 5315, ldap: "ltlinh7", previousLdap: "ptdung2", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
           ],
-          G3: [
-            { id: 5185, taskKey: "BP-5185", approvalStepId: 8450, ldap: "ltoanh", departmentName: "G3", processStatus: "APPROVED", history: [{ id: 3491, approvalPersonId: 5185, ldap: "nbtduy", previousLdap: "ltoanh", stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
-            { id: 5186, taskKey: "BP-5186", approvalStepId: 8450, ldap: "nbtduy", departmentName: "G3", processStatus: "APPROVED", history: [{ id: 3492, approvalPersonId: 5186, ldap: "nbtduy", previousLdap: "nbtduy", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
-          ],
           GKR: [
             { id: 5316, taskKey: "BP-5316", approvalStepId: 8581, ldap: "nngiang", departmentName: "GKR", processStatus: "APPROVED", history: [{ id: 3485, approvalPersonId: 5316, ldap: "ltlinh7", previousLdap: "nngiang", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
           ]
         }
       },
-      "fc": {
-        stepName: "FC Pending Approval",
-        stateName: "Peer Review",
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 1,
+      "8582": {
+        stepName: "FC Pending Approval", stateName: "Peer Review",
+        stateOrder: 1000, stateHidden: false, order: 1,
         map: {
           None: [
             { id: 5317, taskKey: "BP-5317", approvalStepId: 8582, ldap: "ttmy", departmentName: null, processStatus: "APPROVED", history: [{ id: 3486, approvalPersonId: 5317, ldap: "ltlinh7", previousLdap: "ttmy", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
           ]
         }
       },
-      "bom": {
-        stepName: "BOM Pending Approval",
-        stateName: "Peer Review",
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 2,
+      "8583": {
+        stepName: "BOM Pending Approval", stateName: "Peer Review",
+        stateOrder: 1000, stateHidden: false, order: 2,
         map: {
           None: [
             { id: 5318, taskKey: "BP-5318", approvalStepId: 8583, ldap: "htthoa",  departmentName: null, processStatus: "APPROVED", history: [{ id: 3487, approvalPersonId: 5318, ldap: "ltlinh7", previousLdap: "htthoa",  stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
             { id: 5319, taskKey: "BP-5319", approvalStepId: 8583, ldap: "nvbach",   departmentName: null, processStatus: "APPROVED", history: [{ id: 3488, approvalPersonId: 5319, ldap: "ltlinh7", previousLdap: "nvbach",   stepAction: "APPROVED", lastProcessStatus: "TODO" }] },
-            { id: 5320, taskKey: "BP-5320", approvalStepId: 8583, ldap: "mthuong", departmentName: null, processStatus: "APPROVED", history: [{ id: 3489, approvalPersonId: 5320, ldap: "ltlinh7", previousLdap: "mthuong", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
+            { id: 5320, taskKey: "BP-5320", approvalStepId: 8583, ldap: "mthuong",  departmentName: null, processStatus: "APPROVED", history: [{ id: 3489, approvalPersonId: 5320, ldap: "ltlinh7", previousLdap: "mthuong",  stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
           ]
         }
       },
-      "ceo": {
-        stepName: "CEO Pending Approval",
-        stateName: "Peer Review",
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 3,
+      "8584": {
+        stepName: "CEO Pending Approval", stateName: "Peer Review",
+        stateOrder: 1000, stateHidden: false, order: 3,
         map: {
           None: [
-            { id: 5321, taskKey: "BP-5321", approvalStepId: 8584, ldap: "dnbao", departmentName: null, processStatus: "APPROVED", history: [{ id: 3490, approvalPersonId: 5321, ldap: "ltlinh7", previousLdap: "dnbao", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
+            { id: 5327, taskKey: "BP-5327", approvalStepId: 8584, ldap: "dnbao", departmentName: null, processStatus: "APPROVED", history: [{ id: 3490, approvalPersonId: 5327, ldap: "ltlinh7", previousLdap: "dnbao", stepAction: "APPROVED", lastProcessStatus: "TODO" }] }
           ]
         }
       },
-      "approved": {
-        stepName: "Approved",
-        stateName: "Approved",
-        stateOrder: 10000,
-        stateHidden: false,
-        order: 1,
+      "8580": {
+        stepName: "Approved", stateName: "Approved",
+        stateOrder: 10000, stateHidden: false, order: 1,
         map: { None: [] }
       }
     },
