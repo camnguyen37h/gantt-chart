@@ -2,9 +2,9 @@ import moment from 'moment'
 import Decimal from 'decimal.js'
 
 export const formatNumber = (value, percent) => {
-  return value === null || value === undefined
-    ? null
-    : value === 0
+  if (value === null || value === undefined || !isFinite(value) || isNaN(value))
+    return null
+  return value === 0
       ? '-'
       : value < 0
         ? `(${new Decimal(parseFloat(-value))
@@ -14,14 +14,12 @@ export const formatNumber = (value, percent) => {
         : `${new Decimal(parseFloat(value))
             .toFixed(3)
             .replace(/\.+0*$/, '')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-      ${percent ? '%' : ''}`
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
 }
 
 export const formatNumberCompare = (value, percent) => {
-  return !value
-    ? null
-    : `${new Decimal(parseFloat(Math.abs(value)))
+  if (!value || !isFinite(value) || isNaN(value)) return null
+  return `${new Decimal(parseFloat(Math.abs(value)))
         .toFixed(3)
         .replace(/\.+0*$/, '')
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`

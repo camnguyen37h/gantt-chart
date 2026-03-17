@@ -297,7 +297,7 @@ const MetricHeaderRow = ({
     '(Total) ' +
     tooltipLabel +
     ' norm = ' +
-    (normConfig ? formatNumber(normConfig) : '') +
+    (normConfig ? formatNumber(normConfig) || '' : '') +
     (isPercent ? ' %' : '')
 
   return (
@@ -346,7 +346,7 @@ const MetricHeaderRow = ({
               ') ' +
               tooltipLabel +
               ' norm = ' +
-              (colNorm ? formatNumber(colNorm) : '') +
+              (colNorm ? formatNumber(colNorm) || '' : '') +
               (isPercent ? ' %' : '')
 
         return (
@@ -683,45 +683,45 @@ function BusinessPlanFormSection({
 
   function renderTableBody() {
     return Object.keys(businessPlanItems).map(function (sectionKey) {
-      var sectionItem = businessPlanItems[sectionKey]
-      var config = sectionConfig[sectionKey] || {}
-      var isMarginSection = sectionKey === 'MARGIN'
-      var collapsible = !!config.collapsible
-      var isExpanded = !collapsible || activePanel.includes(sectionKey)
+      const sectionItem = businessPlanItems[sectionKey]
+      const config = sectionConfig[sectionKey] || {}
+      const isMarginSection = sectionKey === 'MARGIN'
+      const collapsible = !!config.collapsible
+      const isExpanded = !collapsible || activePanel.includes(sectionKey)
 
-      var sectionTotalRowData = sectionItem.data[sectionKey + '_TOTAL']
-      var sectionTotalCell = sectionTotalRowData
+      const sectionTotalRowData = sectionItem.data[sectionKey + '_TOTAL']
+      const sectionTotalCell = sectionTotalRowData
         ? sectionTotalRowData.data.find(function (d) {
             return d.columnKey === 'TOTAL'
           })
         : null
-      var sectionTotalValue = getSectionTotalValue(sectionTotalCell, sectionKey)
-      var sectionTitleTooltip = (getRowConfig()[sectionKey + '_TOTAL'] || {})
+      const sectionTotalValue = getSectionTotalValue(sectionTotalCell, sectionKey)
+      const sectionTitleTooltip = (getRowConfig()[sectionKey + '_TOTAL'] || {})
         .tooltip
 
-      var compareSection =
+      const compareSection =
         compareBusinessPlanItems && compareBusinessPlanItems[sectionKey]
           ? compareBusinessPlanItems[sectionKey].data
           : null
-      var compareSectionTotalRow = compareSection
+      const compareSectionTotalRow = compareSection
         ? compareSection[sectionKey + '_TOTAL']
         : null
-      var compareSectionTotalCell = compareSectionTotalRow
+      const compareSectionTotalCell = compareSectionTotalRow
         ? compareSectionTotalRow.data.find(function (d) {
             return d.columnKey === 'TOTAL'
           })
         : null
-      var compareSectionTotalValue = compareSectionTotalCell
+      const compareSectionTotalValue = compareSectionTotalCell
         ? compareSectionTotalCell.value
         : null
 
-      var resCompareSectionTotal = getResultCompare(
+      const resCompareSectionTotal = getResultCompare(
         sectionTotalValue,
         compareSectionTotalValue,
         isCompare
       )
 
-      var sectionHeaderRow = config.hiddenTitle ? null : (
+      const sectionHeaderRow = config.hiddenTitle ? null : (
         <tr
           key={sectionKey + '-header'}
           className={
@@ -786,9 +786,9 @@ function BusinessPlanFormSection({
               return c.columnKey !== 'TOTAL'
             })
             .map(function (mergedCol) {
-              var currentCell = null
+              let currentCell = null
               if (!mergedCol.isCompareOnly && sectionTotalRowData) {
-                for (var i = 0; i < sectionTotalRowData.data.length; i++) {
+                for (let i = 0; i < sectionTotalRowData.data.length; i++) {
                   if (
                     sectionTotalRowData.data[i].columnKey ===
                     mergedCol.currentColumnKey
@@ -799,9 +799,9 @@ function BusinessPlanFormSection({
                 }
               }
 
-              var compareCellValue = null
+              let compareCellValue = null
               if (!mergedCol.isCurrentOnly && compareSectionTotalRow) {
-                for (var j = 0; j < compareSectionTotalRow.data.length; j++) {
+                for (let j = 0; j < compareSectionTotalRow.data.length; j++) {
                   if (
                     compareSectionTotalRow.data[j].columnKey ===
                     mergedCol.compareColumnKey
@@ -812,11 +812,11 @@ function BusinessPlanFormSection({
                 }
               }
 
-              var displayValue
+              let displayValue
               if (mergedCol.isCompareOnly) {
                 displayValue = compareCellValue
               } else if (currentCell) {
-                var f = getFormula({
+                const f = getFormula({
                   item: currentCell,
                   columnKey: currentCell.columnKey,
                   sectionKey: sectionKey,
@@ -831,10 +831,10 @@ function BusinessPlanFormSection({
                 displayValue = null
               }
 
-              var compareForDiff = mergedCol.isCompareOnly
+              const compareForDiff = mergedCol.isCompareOnly
                 ? null
                 : compareCellValue
-              var resCompare = getResultCompare(
+              const resCompare = getResultCompare(
                 displayValue,
                 compareForDiff,
                 isCompare
@@ -859,45 +859,45 @@ function BusinessPlanFormSection({
         </tr>
       )
 
-      var dataRows = Object.keys(sectionItem.data)
+      const dataRows = Object.keys(sectionItem.data)
         .filter(function (rowKey) {
           return rowKey !== sectionKey + '_TOTAL'
         })
         .map(function (rowKey, index) {
-          var rowData = sectionItem.data[rowKey]
-          var totalItem = rowData.data.find(function (d) {
+          const rowData = sectionItem.data[rowKey]
+          const totalItem = rowData.data.find(function (d) {
             return d.columnKey === 'TOTAL'
           })
 
-          var newRowKeyRegex = (config.newRowKey || sectionKey) + '_\\d+'
-          var isService = !!rowKey.match(new RegExp(newRowKeyRegex))
-          var rowConfigKey = isService ? config.newRowKey + '_SERVICE' : rowKey
-          var rowCfg = getRowConfig()[rowConfigKey] || {}
-          var percent = rowCfg.percent
-          var rowTooltip = rowCfg.tooltip
-          var canEditInternal = rowCfg.canEditInternal
+          const newRowKeyRegex = (config.newRowKey || sectionKey) + '_\\d+'
+          const isService = !!rowKey.match(new RegExp(newRowKeyRegex))
+          const rowConfigKey = isService ? config.newRowKey + '_SERVICE' : rowKey
+          const rowCfg = getRowConfig()[rowConfigKey] || {}
+          const percent = rowCfg.percent
+          const rowTooltip = rowCfg.tooltip
+          const canEditInternal = rowCfg.canEditInternal
 
-          var totalItemValue = getCellDisplayValue(
+          const totalItemValue = getCellDisplayValue(
             totalItem,
             sectionKey,
             rowKey,
             isService
           )
 
-          var compareRowData =
+          const compareRowData =
             compareSection && compareSection[rowKey]
               ? compareSection[rowKey].data
               : null
-          var compareTotalItem = compareRowData
+          const compareTotalItem = compareRowData
             ? compareRowData.find(function (d) {
                 return d.columnKey === 'TOTAL'
               })
             : null
-          var compareTotalValue = compareTotalItem
+          const compareTotalValue = compareTotalItem
             ? compareTotalItem.value
             : null
 
-          var resCompareTotalRow = getResultCompare(
+          const resCompareTotalRow = getResultCompare(
             totalItemValue,
             compareTotalValue,
             isCompare
@@ -984,9 +984,9 @@ function BusinessPlanFormSection({
                   return c.columnKey !== 'TOTAL'
                 })
                 .map(function (mergedCol) {
-                  var currentItem = null
+                  let currentItem = null
                   if (!mergedCol.isCompareOnly) {
-                    for (var ri = 0; ri < rowData.data.length; ri++) {
+                    for (let ri = 0; ri < rowData.data.length; ri++) {
                       if (
                         rowData.data[ri].columnKey ===
                         mergedCol.currentColumnKey
@@ -997,9 +997,9 @@ function BusinessPlanFormSection({
                     }
                   }
 
-                  var compareItem = null
+                  let compareItem = null
                   if (!mergedCol.isCurrentOnly && compareRowData) {
-                    for (var ci = 0; ci < compareRowData.length; ci++) {
+                    for (let ci = 0; ci < compareRowData.length; ci++) {
                       if (
                         compareRowData[ci].columnKey ===
                         mergedCol.compareColumnKey
@@ -1010,8 +1010,8 @@ function BusinessPlanFormSection({
                     }
                   }
 
-                  var compareValue = compareItem ? compareItem.value : null
-                  var cellFormula = currentItem
+                  const compareValue = compareItem ? compareItem.value : null
+                  const cellFormula = currentItem
                     ? getFormula({
                         item: currentItem,
                         columnKey: currentItem.columnKey,
@@ -1020,7 +1020,7 @@ function BusinessPlanFormSection({
                         isService,
                       })
                     : undefined
-                  var cellValue
+                  let cellValue
                   if (mergedCol.isCompareOnly) {
                     cellValue = compareValue
                   } else if (currentItem) {
@@ -1033,16 +1033,16 @@ function BusinessPlanFormSection({
                     cellValue = null
                   }
 
-                  var compareForDiff = mergedCol.isCompareOnly
+                  const compareForDiff = mergedCol.isCompareOnly
                     ? null
                     : compareValue
-                  var resCompareCell = getResultCompare(
+                  const resCompareCell = getResultCompare(
                     cellValue,
                     compareForDiff,
                     isCompare
                   )
 
-                  var internalAllowed =
+                  const internalAllowed =
                     !currentItem ||
                     canEditInternal === undefined ||
                     (canEditInternal && currentItem.columnKey === 'INTERNAL') ||

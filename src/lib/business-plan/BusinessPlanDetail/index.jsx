@@ -196,57 +196,13 @@ function BusinessPlanDetail({ match, history }) {
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
 
-    const buildMvvPayload = (info, isActive) => {
-      const {
-        id,
-        listAM = [],
-        listTeamLead = [],
-        listPreSale = [],
-        listPreparator = [],
-        listAdviser = [],
-        listPM = [],
-        currency,
-        exchangeRate,
-        totalContractPrice,
-        softwareDevelopmentFee,
-        otherFees,
-        industry,
-        businessPlanKpiDTO,
-      } = info
-      return {
-        businessPlanVersionId: id,
-        generalInformation: isActive
-          ? generalInformationParams
-          : {
-              listAM,
-              listTeamLead,
-              listPreSale,
-              listPreparator,
-              listAdviser,
-              listPM,
-              currency,
-              exchangeRate,
-              totalContractPrice,
-              softwareDevelopmentFee,
-              otherFees,
-              industry,
-              businessPlanKpiDTO,
-            },
-        columnLabels: isActive ? columnLabels : null,
-        sectionList: isActive ? originalBusinessPlanItems : null,
-      }
-    }
-
-    const params = [
-      { key: 'offshore', locationType: 'Offshore' },
-      { key: 'onsite', locationType: 'Onsite' },
-    ].reduce((acc, { key, locationType }) => {
-      const info = generalInfos.find(
-        item => item.mvvLocationType === locationType
-      )
-      if (info) acc[key] = buildMvvPayload(info, viewMode === locationType)
-      return acc
-    }, {})
+    const params = generalInfos
+      .filter(info => info.mvvLocationType && info.mvvLocationType !== 'Total')
+      .reduce((acc, info) => {
+        const key = info.mvvLocationType.toLowerCase() // 'offshore' | 'onsite'
+        acc[key] = { businessPlanVersionId: info.id }
+        return acc
+      }, {})
 
     const isSubmit = await submit(params)
 

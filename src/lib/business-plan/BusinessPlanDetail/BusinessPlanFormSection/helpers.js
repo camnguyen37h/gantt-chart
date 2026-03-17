@@ -49,9 +49,13 @@ const resolveValue = (item, formulaValue, isSpecialSectionFormula) => {
 
 const getResultCompare = (current, compare, isCompare) => {
   if (!isCompare) return null
-  if (!current && !compare) return null
-  if (!compare) return parseFloat(current.toFixed(2))
-  if (!current) return -parseFloat(compare.toFixed(2))
+  const validCurrent =
+    current !== null && current !== undefined && isFinite(current) && !isNaN(current)
+  const validCompare =
+    compare !== null && compare !== undefined && isFinite(compare) && !isNaN(compare)
+  if (!validCurrent && !validCompare) return null
+  if (!validCompare) return parseFloat(current.toFixed(2))
+  if (!validCurrent) return -parseFloat(compare.toFixed(2))
   return parseFloat(current.toFixed(2)) - parseFloat(compare.toFixed(2))
 }
 

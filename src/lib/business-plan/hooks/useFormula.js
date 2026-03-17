@@ -1,16 +1,10 @@
 import { useSelector } from 'react-redux'
-import useBusinessPlanForm from './useBusinessPlanForm'
 import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
 
 const useFormula = () => {
-  const { setBusinessPlanItem } = useBusinessPlanForm()
-  const {
-    totalContractPrice,
-    exchangeRate,
-    businessPlanItems,
-    softwareDevelopmentFee,
-  } = useSelector(state => state.businessPlanDetails)
+  const { exchangeRate, businessPlanItems, softwareDevelopmentFee } =
+    useSelector(state => state.businessPlanDetails)
 
   const getSum = (...rest) => {
     if (rest.every(item => item === null || item === undefined)) return null
@@ -18,7 +12,7 @@ const useFormula = () => {
     return rest
       .reduce((total, cur) => {
         const value =
-          isNaN(cur) || cur === null || cur === undefined
+          cur === null || cur === undefined || isNaN(cur) || !isFinite(cur)
             ? new Decimal(0)
             : new Decimal(cur)
         return total.plus(value)
@@ -38,12 +32,6 @@ const useFormula = () => {
         return prod.times(new Decimal(cur))
       }, new Decimal(1))
       .toNumber()
-  }
-
-  const conditionsetBusinessPlanItem = ({ targetItem, value }) => {
-    if (value !== targetItem.value) {
-      setBusinessPlanItem({ item: { ...targetItem, value } })
-    }
   }
 
   const getItem = ({ sectionKey, rowKey, columnKey }) => {
@@ -128,14 +116,8 @@ const useFormula = () => {
   const getSumItemValues = ({ sectionKey, rowKey, filterCallback }) =>
     getSum(...getItemValues({ sectionKey, rowKey, filterCallback }))
 
-  const getSumItemsValuesAndSet = ({
-    targetItem,
-    sectionKey,
-    rowKey,
-    filterCallback,
-  }) => {
-    const value = getSumItemValues({ sectionKey, rowKey, filterCallback })
-    return value
+  const getSumItemsValuesAndSet = ({ sectionKey, rowKey, filterCallback }) => {
+    return getSumItemValues({ sectionKey, rowKey, filterCallback })
   }
 
   const getSumDUValuesAndSet = ({ targetItem, sectionKey, rowKey }) => {
@@ -213,8 +195,7 @@ const useFormula = () => {
           : childItem.value || null
       })
 
-      const value = getSum(...values)
-      return value
+      return getSum(...values)
     } catch (error) {
       return null
     }
@@ -228,36 +209,15 @@ const useFormula = () => {
     })
   }
 
-  const getUnitPriceSale = () => {
-    const softwareProductionRevenuesSale = getSoftwareProductionSale()
-
-    const mmBillSale = getMMBillSale()
-
-    const value =
-      softwareProductionRevenuesSale !== null &&
-      mmBillSale !== null &&
-      softwareProductionRevenuesSale !== undefined &&
-      mmBillSale !== undefined &&
-      mmBillSale !== 0
-        ? new Decimal(softwareProductionRevenuesSale)
-            .dividedBy(new Decimal(mmBillSale))
-            .toNumber()
-        : null
-
-    return value
-  }
-
   const getMMManufactureTotal = () => {
-    const value = getSumDUValuesAndSet({
+    return getSumDUValuesAndSet({
       rowKey: 'MM_PRODUCTION',
       sectionKey: 'MAN_MONTH',
     })
-    return value
   }
 
   const getMMManufactureSale = () => {
-    const value = getMMBillSale()
-    return value
+    return getMMBillSale()
   }
 
   const getMMBillSale = () => {
@@ -367,35 +327,14 @@ const useFormula = () => {
 
   const getSoftwareProductionDU = ({ targetItem }) => {
     try {
-      const unitPriceDUItem = getItem({
-        sectionKey: 'MAN_MONTH',
-        rowKey: 'UNIT_PRICE',
-        columnKey: targetItem.columnKey,
-      })
-      const unitPriceDU =
-        unitPriceDUItem && unitPriceDUItem.value !== undefined
-          ? unitPriceDUItem.value
-          : null
-
       const revenuesItem = getItem({
         sectionKey: 'REVENUES',
         rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
         columnKey: targetItem.columnKey,
       })
-      const revenuesFromWorkDUFromBackend =
-        revenuesItem && revenuesItem.value !== undefined
-          ? revenuesItem.value
-          : null
-
-      const mmBillDUItem = getItem({
-        sectionKey: 'MAN_MONTH',
-        rowKey: 'MM_BILL',
-        columnKey: targetItem.columnKey,
-      })
-
-      const mmbillDU = getMMBillDU({ targetItem: mmBillDUItem })
-
-      return revenuesFromWorkDUFromBackend
+      return revenuesItem && revenuesItem.value !== undefined
+        ? revenuesItem.value
+        : null
     } catch (error) {
       return null
     }
@@ -407,18 +346,6 @@ const useFormula = () => {
 
   const getDeductionSale = () => {
     try {
-      const unitPrice = getItemValue(
-        {
-          sectionKey: 'MAN_MONTH',
-          rowKey: 'UNIT_PRICE',
-          columnKey: 'SALE',
-        },
-        0
-      )
-
-      const mmBill = getMMBillSale()
-      const softwareProductionRevenues = getSoftwareProductionSale()
-
       const deductionFromBackend = getItemValue(
         {
           sectionKey: 'REVENUES',
@@ -479,10 +406,6 @@ const useFormula = () => {
 
   const getDUCostInternal = () => {
     return getSoftwareProductionInternal()
-  }
-
-  const getDUCostTotal = () => {
-    return getSum(getDUCostInternal(), getDUCostSale())
   }
 
   const getIncentiveTotal = () => {
@@ -711,7 +634,8 @@ const useFormula = () => {
     return directLabor !== null &&
       billrateNorm !== null &&
       directLabor !== undefined &&
-      billrateNorm !== undefined
+      billrateNorm !== undefined &&
+      billrateNorm !== 0
       ? new Decimal(directLabor)
           .times(100)
           .dividedBy(new Decimal(billrateNorm))
@@ -761,16 +685,14 @@ const useFormula = () => {
       targetItem: allocationOfPoolItem,
     })
 
-    const value =
-      directMarginValue !== null &&
+    return directMarginValue !== null &&
       allocationOfPool !== null &&
       directMarginValue !== undefined &&
       allocationOfPool !== undefined
-        ? new Decimal(directMarginValue)
-            .minus(new Decimal(allocationOfPool))
-            .toNumber()
-        : null
-    return value
+      ? new Decimal(directMarginValue)
+          .minus(new Decimal(allocationOfPool))
+          .toNumber()
+      : null
   }
 
   const getIndirectMarginTotal = () => {
@@ -867,7 +789,7 @@ const useFormula = () => {
   }
 
   const getDirectMarginBonusRateSaleInternal = ({ targetItem }) => {
-    let directMarginBonus = null
+    let directMarginBonus
     const directMarginBonusItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN_BONUS',
@@ -898,7 +820,7 @@ const useFormula = () => {
   }
 
   const getDirectMarginBonusRateDU = ({ targetItem }) => {
-    let directMarginBonus = null
+    let directMarginBonus
     const directMarginBonusItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN_BONUS',
@@ -920,18 +842,16 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    const value =
-      directMarginBonus && revenuesValue
-        ? new Decimal(directMarginBonus)
-            .dividedBy(new Decimal(revenuesValue))
-            .times(100)
-            .toNumber()
-        : null
-    return value
+    return directMarginBonus && revenuesValue
+      ? new Decimal(directMarginBonus)
+          .dividedBy(new Decimal(revenuesValue))
+          .times(100)
+          .toNumber()
+      : null
   }
 
   const getIndirectMarginRateDU = ({ targetItem }) => {
-    let indirectMargin = null
+    let indirectMargin
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
@@ -962,7 +882,7 @@ const useFormula = () => {
   }
 
   const getIndirectMarginRateSaleInternal = ({ targetItem }) => {
-    let indirectMargin = null
+    let indirectMargin
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
@@ -993,7 +913,7 @@ const useFormula = () => {
   }
 
   const getIndirectMarginRateTotal = () => {
-    let indirectMargin = null
+    let indirectMargin
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
@@ -1036,13 +956,11 @@ const useFormula = () => {
     })
 
     const mmManufacture = getMMManufactureTotal()
-    const value =
-      deliveryExpenses && mmManufacture
-        ? new Decimal(deliveryExpenses)
-            .dividedBy(new Decimal(mmManufacture))
-            .toNumber()
-        : null
-    return value
+    return deliveryExpenses && mmManufacture
+      ? new Decimal(deliveryExpenses)
+          .dividedBy(new Decimal(mmManufacture))
+          .toNumber()
+      : null
   }
 
   const getDeliveryAverageExpensesSale = () => {
@@ -1113,7 +1031,7 @@ const useFormula = () => {
       : null
   }
 
-  const getSalaryAverageExpensesTotal = ({ targetItem }) => {
+  const getSalaryAverageExpensesTotal = () => {
     const laborCost = getDirectLaborCostTotal({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
