@@ -237,8 +237,11 @@ const useFormula = () => {
       softwareProductionRevenuesSale !== null &&
       mmBillSale !== null &&
       softwareProductionRevenuesSale !== undefined &&
-      mmBillSale !== undefined
-        ? softwareProductionRevenuesSale / mmBillSale
+      mmBillSale !== undefined &&
+      mmBillSale !== 0
+        ? new Decimal(softwareProductionRevenuesSale)
+            .dividedBy(new Decimal(mmBillSale))
+            .toNumber()
         : null
 
     return value

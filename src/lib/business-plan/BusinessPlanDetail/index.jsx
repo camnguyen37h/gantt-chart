@@ -347,6 +347,7 @@ function BusinessPlanDetail({ match, history }) {
   }
 
   const onSaveDraft = async () => {
+    if (loadingSave) return
     setLoadingSave(true)
     // Capture current MVV code before any reload resets state
     const savedProjectCode = projectCode
@@ -438,6 +439,11 @@ function BusinessPlanDetail({ match, history }) {
 
   const handleChangeTab = activeKey => {
     setActiveTab(activeKey)
+    // Revenue Plan (tab 2) and Delivery Plan (tab 3) require a valid sub-version.
+    // If currently on Total/OB mode, auto-select the first available mode (Onsite/Offshore).
+    if (activeKey !== '1' && availableModes.length > 0 && !availableModes.includes(viewMode)) {
+      setViewMode(availableModes[0])
+    }
     dispatch(
       setActiveBusinessPlanPanel({
         activeKey,

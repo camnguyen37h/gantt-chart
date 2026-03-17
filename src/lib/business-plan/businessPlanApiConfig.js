@@ -63,8 +63,8 @@ export const postListBusinessPlanList = api.postListBusinessPlanList;
 // ========== Business Plan Detail ==========
 export const getBusinessPlanDetail = api.getBusinessPlanDetail;
 export const getBusinessPlanDetailByViewMode = api.getBusinessPlanDetailByViewMode;
-export const saveDraft = api.saveDraft;
-export const saveBusinessPlan = api.saveDraft; // Alias
+export const saveDraft = api.saveBusinessPlan;
+export const saveBusinessPlan = api.saveBusinessPlan;
 export const submit = api.submit;
 export const createNewVersion = api.createNewVersion;
 
