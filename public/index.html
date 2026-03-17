@@ -23,29 +23,100 @@
       
       // ==================== MOCK STORAGE INITIALIZATION ====================
       (function initializeMockData() {
+
+        // ----------------------------------------------------------------
+        // 🔧 ĐỔI ROLE ĐỂ TEST: thay giá trị MOCK_ROLE bằng một trong các key sau
+        //   'ADMIN'    – FC/Admin: xem + sửa tất cả, thấy Total & tất cả DU cols
+        //   'DU_LEAD'  – DU Lead:  chỉ thấy DU Onsite cols, không thấy Total
+        //   'AM'       – AM/Preparator: sửa được (draft), không thấy Total, không thấy DU cols
+        //   'VIEWER'   – Viewer:   chỉ đọc, không thấy Total, không thấy DU cols
+        // ----------------------------------------------------------------
+        const MOCK_ROLE = 'ADMIN';
+
+        const ROLE_PROFILES = {
+          ADMIN: {
+            ldap: 'ttlam1',
+            userName: 'Lam. Tran Tung',
+            email: 'ttlam1@cmcglobal.vn',
+            role: 'FC',
+            roles: ['USER', 'FC', 'BUSINESS_PLAN_ADMIN'],
+            bpActivities: [
+              'EDIT_BUSINESS_PLAN',
+              'EDIT_BUSINESS_PLAN_ALL',
+              'EDIT_DOCUMENT_ALL',
+              'EDIT_DOCUMENT_DU',
+              'CREATE_NEW_VERSION',
+              'EXPORT_BUSINESS_PLAN',
+              'SUBMIT_BUSINESS_PLAN',
+              'EDIT_REVENUE_PLAN_ALL_STATUS',
+              'EDIT_DELIVERY_PLAN_ALL_STATUS',
+              'VIEW_BUSINESS_PLAN_TOTAL',
+              'DB_SPECIAL_VIEW_DU_ONSITE',
+              'DB_SPECIAL_VIEW_DU_OFFSHORE',
+              'DB_SPECIAL_VIEW_MARGIN_OFFSHORE',
+            ],
+          },
+          DU_LEAD: {
+            ldap: 'nvanh',
+            userName: 'Anh. Nguyen Van',
+            email: 'nvanh@cmcglobal.vn',
+            role: 'DU_LEAD',
+            roles: ['USER', 'DU_LEAD'],
+            bpActivities: [
+              'EDIT_BUSINESS_PLAN',
+              'EXPORT_BUSINESS_PLAN',
+              'DB_SPECIAL_VIEW_DU_ONSITE',
+            ],
+          },
+          AM: {
+            ldap: 'pthuong',
+            userName: 'Thuong. Pham',
+            email: 'pthuong@cmcglobal.vn',
+            role: 'AM',
+            roles: ['USER', 'AM'],
+            bpActivities: [
+              'EDIT_BUSINESS_PLAN',
+              'EXPORT_BUSINESS_PLAN',
+              'SUBMIT_BUSINESS_PLAN',
+            ],
+          },
+          VIEWER: {
+            ldap: 'vviewer',
+            userName: 'Viewer User',
+            email: 'vviewer@cmcglobal.vn',
+            role: 'VIEWER',
+            roles: ['USER'],
+            bpActivities: [
+              'EXPORT_BUSINESS_PLAN',
+            ],
+          },
+        };
+
+        const profile = ROLE_PROFILES[MOCK_ROLE] || ROLE_PROFILES['ADMIN'];
+
         // Mock User Data
         const mockUser = {
           id: 3860,
           userId: 3860,
-          ldap: 'ttlam1',
-          userName: 'Lam. Tran Tung',
-          fullName: 'Lam. Tran Tung',
-          email: 'ttlam1@cmcglobal.vn',
-          firstName: 'Tung',
-          lastName: 'Lam',
+          ldap: profile.ldap,
+          userName: profile.userName,
+          fullName: profile.userName,
+          email: profile.email,
+          firstName: profile.userName.split('.')[1] ? profile.userName.split('.')[1].trim() : profile.userName,
+          lastName: profile.userName.split('.')[0].trim(),
           departmentId: 2,
           departmentName: 'DJ2',
           departmentCode: 'DJ2',
           position: 'SE02',
           positionId: 803,
-          role: 'PM',
-          roles: ['USER', 'PM', 'BUSINESS_PLAN_ADMIN'],
+          role: profile.role,
+          roles: profile.roles,
           isActive: true,
           location: 'Vietnam',
           employeeType: 'In-house',
           grossSalary: 5000000
         };
-        
+
         // Mock User POA (Power of Attorney)
         const mockUserPOA = {
           userName: mockUser.userName,
@@ -56,7 +127,7 @@
           departmentName: mockUser.departmentName,
           roles: mockUser.roles
         };
-        
+
         // Mock Permissions - structured format required by checkRolePermission()
         // Format: [{ key: SourceConstants.xxx, activities: [{ name: ActivityKeyConstants.xxx }] }]
         const mockPermissions = [
@@ -68,17 +139,7 @@
           },
           {
             key: '/delivery/business-plan-list/{buId}/business-plan-detail',
-            activities: [
-              { name: 'EDIT_BUSINESS_PLAN' },
-              { name: 'EDIT_BUSINESS_PLAN_ALL' },
-              { name: 'EDIT_DOCUMENT_ALL' },
-              { name: 'EDIT_DOCUMENT_DU' },
-              { name: 'CREATE_NEW_VERSION' },
-              { name: 'EXPORT_BUSINESS_PLAN' },
-              { name: 'SUBMIT_BUSINESS_PLAN' },
-              { name: 'EDIT_REVENUE_PLAN_ALL_STATUS' },
-              { name: 'EDIT_DELIVERY_PLAN_ALL_STATUS' },
-            ]
+            activities: profile.bpActivities.map(function(name) { return { name: name }; }),
           },
         ];
         
@@ -106,7 +167,7 @@
         
         // Always overwrite permissions to ensure the correct structured format is used
         localStorage.setItem('permissions', JSON.stringify(mockPermissions));
-        console.log('✅ Mock permissions initialized:', mockPermissions.length, 'entries');
+        console.log('✅ Mock permissions initialized [MOCK_ROLE=' + MOCK_ROLE + ']:', mockPermissions.length, 'entries,', profile.bpActivities.length, 'BP activities');
         
         if (!localStorage.getItem('access_token')) {
           localStorage.setItem('access_token', mockAccessToken);

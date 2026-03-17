@@ -108,7 +108,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
         if (value === null) return value
         if (value === '-') return null
         if (value === '') return value
-        var res = value.toString().match(pattern)
+        const res = value.toString().match(pattern)
         if (rowConfig.negative) {
           return res
             ? '(' + res[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + suffix + ')'
@@ -147,15 +147,15 @@ const ServiceControl = ({
   const isManMonth = sectionKey === 'MAN_MONTH'
 
   const resolveMMBillTitle = () => {
-    var childIndex = -1
-    var parentIndex = mmBillService.findIndex(function (parent) {
+    let childIndex = -1
+    const parentIndex = mmBillService.findIndex(function (parent) {
       if (parent.id.toString() === row.title.toString()) return true
       childIndex = parent.data.findIndex(function (item) {
         return item.id.toString() === row.title.toString()
       })
       return childIndex > -1
     })
-    var str = parentIndex > -1 ? mmBillService[parentIndex].name : ''
+    let str = parentIndex > -1 ? mmBillService[parentIndex].name : ''
     if (childIndex > -1) {
       str = str + ' / ' + mmBillService[parentIndex].data[childIndex].name
     }
@@ -166,11 +166,11 @@ const ServiceControl = ({
     return <Fragment>{isManMonth ? resolveMMBillTitle() : row.title} </Fragment>
   }
 
-  var options = mmBillService.map(function (item) {
-    var children = item.data
+  const options = mmBillService.map(function (item) {
+    const children = item.data
       ? item.data
           .filter(function (child) {
-            var usedTitles = Object.keys(businessPlanItems.MAN_MONTH.data)
+            const usedTitles = Object.keys(businessPlanItems.MAN_MONTH.data)
               .filter(function (k) {
                 return k !== rowKey && k.match(/MM_BILL_\d+/)
               })
@@ -186,15 +186,15 @@ const ServiceControl = ({
     return { label: item.name, value: item.id, children: children }
   })
 
-  var childIndex = -1
-  var parentIndex = mmBillService.findIndex(function (parent) {
+  let childIndex = -1
+  const parentIndex = mmBillService.findIndex(function (parent) {
     if (parent.id.toString() === row.title.toString()) return true
     childIndex = parent.data.findIndex(function (item) {
       return item.id.toString() === row.title.toString()
     })
     return childIndex > -1
   })
-  var selectedValue =
+  const selectedValue =
     parentIndex > -1 && childIndex > -1
       ? [
           mmBillService[parentIndex].id,
@@ -202,19 +202,19 @@ const ServiceControl = ({
         ]
       : []
 
-  var labelKey = rowKey + '-label'
-  var hasError = !!validation[labelKey]
+  const labelKey = rowKey + '-label'
+  const hasError = !!validation[labelKey]
 
-  var onChangeCascader = function (value) {
-    var cloneRow = cloneDeep(row)
+  const onChangeCascader = function (value) {
+    const cloneRow = cloneDeep(row)
     cloneRow.title = value[1] || ''
     if (validation[labelKey]) setValidation({ [labelKey]: false })
     updateIsSaveShowed({ businessPlan: true })
     updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
   }
 
-  var onChangeInput = function (value) {
-    var cloneRow = cloneDeep(row)
+  const onChangeInput = function (value) {
+    const cloneRow = cloneDeep(row)
     cloneRow.title = value
     if (validation[labelKey]) setValidation({ [labelKey]: false })
     updateIsSaveShowed({ businessPlan: true })
@@ -278,22 +278,23 @@ const MetricHeaderRow = ({
   tooltipLabel,
   dataArray,
   mergedColumns,
+  canViewColumn,
 }) => {
-  var useFloorCeiling = normFloor !== undefined && normFloor !== null
+  const useFloorCeiling = normFloor !== undefined && normFloor !== null
 
-  var buildNormProps = function (value, floor, ceiling, percentage) {
+  const buildNormProps = function (value, floor, ceiling, percentage) {
     return useFloorCeiling
       ? { value: value, rowKey: rowKey, normFloor: floor, normCeiling: ceiling }
       : { value: value, rowKey: rowKey, normPercentage: percentage }
   }
 
-  var totalColor = !normConfig
+  const totalColor = !normConfig
     ? '#525559'
     : renderColorCompareNorm(
         buildNormProps(totalValue, normFloor, normCeiling, normPercentage)
       )
 
-  var totalTooltip =
+  const totalTooltip =
     '(Total) ' +
     tooltipLabel +
     ' norm = ' +
@@ -310,12 +311,14 @@ const MetricHeaderRow = ({
           className="text-center text-wrap"
           style={{ color: totalColor, fontWeight: 500 }}>
           <Tooltip title={totalTooltip}>
-            {formatNumber(totalValue, isPercent)}
+            {canViewColumn('TOTAL')
+              ? formatNumber(totalValue, isPercent)
+              : '****'}
           </Tooltip>
         </span>
       </th>
       {(mergedColumns || []).slice(1).map(function (col) {
-        var colKey =
+        const colKey =
           'metric-' +
           rowKey +
           '-' +
@@ -325,20 +328,20 @@ const MetricHeaderRow = ({
           return <th key={colKey} style={{ backgroundColor: '#fff' }} />
         }
 
-        var colValue = getCellValue(dataArray, col.columnKey)
-        var colFloor = getCellFloor(dataArray, col.columnKey)
-        var colCeiling = getCellCeiling(dataArray, col.columnKey)
-        var colNormConfig = getCellNormConfig(dataArray, col.columnKey)
-        var colPercentage = getCellPercentage(dataArray, col.columnKey)
-        var colNorm = useFloorCeiling ? colNormConfig : colPercentage
+        const colValue = getCellValue(dataArray, col.columnKey)
+        const colFloor = getCellFloor(dataArray, col.columnKey)
+        const colCeiling = getCellCeiling(dataArray, col.columnKey)
+        const colNormConfig = getCellNormConfig(dataArray, col.columnKey)
+        const colPercentage = getCellPercentage(dataArray, col.columnKey)
+        const colNorm = useFloorCeiling ? colNormConfig : colPercentage
 
-        var colColor = !colNorm
+        const colColor = !colNorm
           ? '#525559'
           : renderColorCompareNorm(
               buildNormProps(colValue, colFloor, colCeiling, colPercentage)
             )
 
-        var colTooltip =
+        const colTooltip =
           col.columnKey === 'INTERNAL'
             ? null
             : '(' +
@@ -355,7 +358,9 @@ const MetricHeaderRow = ({
               className="text-center text-wrap"
               style={{ color: colColor, fontWeight: 500 }}>
               <Tooltip title={colTooltip}>
-                {formatNumber(colValue, isPercent)}
+                {canViewColumn(col.columnKey)
+                  ? formatNumber(colValue, isPercent)
+                  : '****'}
               </Tooltip>
             </span>
           </th>
@@ -366,7 +371,7 @@ const MetricHeaderRow = ({
 }
 
 const ColumnHeaderRow = ({ mergedColumns, isApproved }) => {
-  var bg = isApproved ? 'unset' : '#fff'
+  const bg = isApproved ? 'unset' : '#fff'
   return (
     <tr>
       <th style={{ backgroundColor: bg }}>
@@ -428,25 +433,39 @@ function BusinessPlanFormSection({
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
 
-  var userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
     userName: 'Demo User',
     userId: 1,
   }
-  var userName = userPOA.userName
+  const userName = userPOA.userName
 
-  var isDraft = status === statusBusinessPlanDetail.draft
-  var isApproved = status === statusBusinessPlanDetail.approved
+  const isDraft = status === statusBusinessPlanDetail.draft
+  const isApproved = status === statusBusinessPlanDetail.approved
 
-  var isFin = checkRolePermission(
-    SourceConstants.BUSINESS_PLAN_DETAIL,
-    ActivityKeyConstants.EDIT_BUSINESS_PLAN_ALL
-  )
+  // Parse permissions once on mount — one JSON.parse, one array scan, stored as a plain
+  // object for O(1) activity lookups on every render.
+  const bpActivities = useMemo(function () {
+    const perms = JSON.parse(localStorage.getItem('permissions'))
+    if (!Array.isArray(perms)) return {}
+    for (let i = 0; i < perms.length; i++) {
+      if (
+        perms[i].key === SourceConstants.BUSINESS_PLAN_DETAIL &&
+        Array.isArray(perms[i].activities)
+      ) {
+        const result = {}
+        for (let j = 0; j < perms[i].activities.length; j++) {
+          result[perms[i].activities[j].name] = true
+        }
+        return result
+      }
+    }
+    return {}
+  }, [])
 
-  var isOtherRole =
-    checkRolePermission(
-      SourceConstants.BUSINESS_PLAN_DETAIL,
-      ActivityKeyConstants.EDIT_BUSINESS_PLAN
-    ) ||
+  const isFin = bpActivities[ActivityKeyConstants.EDIT_BUSINESS_PLAN_ALL] === true
+
+  const isOtherRole =
+    bpActivities[ActivityKeyConstants.EDIT_BUSINESS_PLAN] === true ||
     listAM.some(function (p) {
       return p.ldap === userName
     }) ||
@@ -454,7 +473,23 @@ function BusinessPlanFormSection({
       return p.ldap === userName
     })
 
-  var canEdit = (isDraft && isOtherRole) || (isFin && !isApproved)
+  const canEdit = (isDraft && isOtherRole) || (isFin && !isApproved)
+
+  // isFin already implies EDIT_BUSINESS_PLAN_ALL, so reuse it instead of a second lookup.
+  const canViewTotal =
+    isFin || bpActivities[ActivityKeyConstants.VIEW_BUSINESS_PLAN_TOTAL] === true
+
+  const canViewDuColumns =
+    bpActivities[ActivityKeyConstants.DB_SPECIAL_VIEW_DU_ONSITE] === true ||
+    bpActivities[ActivityKeyConstants.DB_SPECIAL_VIEW_DU_OFFSHORE] === true ||
+    bpActivities[ActivityKeyConstants.DB_SPECIAL_VIEW_MARGIN_OFFSHORE] === true
+
+  // Centralised column-visibility check used by all table render paths.
+  const canViewColumn = function (columnKey) {
+    if (columnKey === 'TOTAL') return canViewTotal
+    if (columnKey === 'INTERNAL') return true
+    return canViewDuColumns
+  }
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
@@ -489,10 +524,10 @@ function BusinessPlanFormSection({
 
   useEffect(
     function () {
-      var manMonth = businessPlanItems.MAN_MONTH
+      const manMonth = businessPlanItems.MAN_MONTH
       if (!mmBillService.length || !manMonth || !manMonth.data) return
 
-      var allServiceIds = mmBillService.reduce(function (acc, item) {
+      const allServiceIds = mmBillService.reduce(function (acc, item) {
         if (item.data && item.data.length > 0) {
           return acc.concat(
             item.data.map(function (c) {
@@ -503,11 +538,11 @@ function BusinessPlanFormSection({
         return acc.concat([item.id])
       }, [])
 
-      var allServiceKeys = Object.keys(manMonth.data).filter(function (k) {
+      const allServiceKeys = Object.keys(manMonth.data).filter(function (k) {
         return k.match(/MM_BILL_\d+/)
       })
 
-      var usedIds = allServiceKeys
+      const usedIds = allServiceKeys
         .filter(function (k) {
           return manMonth.data[k].title
         })
@@ -515,7 +550,7 @@ function BusinessPlanFormSection({
           return +manMonth.data[k].title
         })
 
-      var availableIds = allServiceIds.filter(function (id) {
+      const availableIds = allServiceIds.filter(function (id) {
         return !usedIds.includes(id)
       })
 
@@ -524,7 +559,7 @@ function BusinessPlanFormSection({
           return !manMonth.data[k].title
         })
         .forEach(function (k, i) {
-          var row = cloneDeep(manMonth.data[k])
+          const row = cloneDeep(manMonth.data[k])
           updateBusinessPlanRow({
             sectionKey: 'MAN_MONTH',
             rowKey: k,
@@ -559,21 +594,21 @@ function BusinessPlanFormSection({
   }
 
   function addRow(sectionKey, newRowKey) {
-    var regex = newRowKey + '_\\d+'
-    var sectionData = businessPlanItems[sectionKey].data
-    var serviceKeys = Object.keys(sectionData).filter(function (k) {
+    const regex = newRowKey + '_\\d+'
+    const sectionData = businessPlanItems[sectionKey].data
+    const serviceKeys = Object.keys(sectionData).filter(function (k) {
       return k.match(new RegExp(regex))
     })
-    var clone = cloneDeep(Object.values(sectionData)[0])
+    const clone = cloneDeep(Object.values(sectionData)[0])
 
-    var generatedKey =
+    const generatedKey =
       serviceKeys.length > 0
         ? newRowKey +
           '_' +
           (+serviceKeys[serviceKeys.length - 1].match(/\d+/)[0] + 1)
         : newRowKey + '_1'
 
-    var newItems = clone.data.map(function (item) {
+    const newItems = clone.data.map(function (item) {
       return {
         ...item,
         value: null,
@@ -595,7 +630,7 @@ function BusinessPlanFormSection({
 
   function getCellDisplayValue(item, sectionKey, rowKey, isService) {
     if (!item) return null
-    var formula = getFormula({
+    const formula = getFormula({
       item,
       columnKey: item.columnKey,
       sectionKey,
@@ -607,7 +642,7 @@ function BusinessPlanFormSection({
 
   function getSectionTotalValue(sectionTotalItem, sectionKey) {
     if (!sectionTotalItem) return null
-    var formula = getFormula({
+    const formula = getFormula({
       item: sectionTotalItem,
       columnKey: 'TOTAL',
       sectionKey: sectionKey,
@@ -617,7 +652,7 @@ function BusinessPlanFormSection({
   }
 
   function renderSectionTitle(title) {
-    var tabMap = {
+    const tabMap = {
       'Unit price & MM Bill': '2',
       Revenues: '2',
       'Delivery expenses': '3',
@@ -638,44 +673,44 @@ function BusinessPlanFormSection({
     return title
   }
 
-  var mergedColumns = getMergedColumns(
+  const mergedColumns = getMergedColumns(
     columns,
     compareColumnLabels,
     compareBusinessPlanItems
   )
-  var isCompare = !!compareBusinessPlanItems
+  const isCompare = !!compareBusinessPlanItems
 
-  var unitPriceCell = findCellIn(
+  const unitPriceCell = findCellIn(
     businessPlanItems,
     'MAN_MONTH',
     'UNIT_PRICE',
     'TOTAL'
   )
-  var billableRateCell = findCellIn(
+  const billableRateCell = findCellIn(
     businessPlanItems,
     'REFERENCE',
     'BILLABLE_RATE',
     'TOTAL'
   )
-  var directMarginCell = findCellIn(
+  const directMarginCell = findCellIn(
     businessPlanItems,
     'MARGIN',
     'DIRECT_MARGIN_BONUS_RATE',
     'TOTAL'
   )
 
-  var unitPriceArray =
+  const unitPriceArray =
     businessPlanItems.MAN_MONTH && businessPlanItems.MAN_MONTH.data.UNIT_PRICE
       ? businessPlanItems.MAN_MONTH.data.UNIT_PRICE.data
       : null
 
-  var billableRateArray =
+  const billableRateArray =
     businessPlanItems.REFERENCE &&
     businessPlanItems.REFERENCE.data.BILLABLE_RATE
       ? businessPlanItems.REFERENCE.data.BILLABLE_RATE.data
       : null
 
-  var directMarginArray =
+  const directMarginArray =
     businessPlanItems.MARGIN &&
     businessPlanItems.MARGIN.data.DIRECT_MARGIN_BONUS_RATE
       ? businessPlanItems.MARGIN.data.DIRECT_MARGIN_BONUS_RATE.data
@@ -683,45 +718,45 @@ function BusinessPlanFormSection({
 
   function renderTableBody() {
     return Object.keys(businessPlanItems).map(function (sectionKey) {
-      var sectionItem = businessPlanItems[sectionKey]
-      var config = sectionConfig[sectionKey] || {}
-      var isMarginSection = sectionKey === 'MARGIN'
-      var collapsible = !!config.collapsible
-      var isExpanded = !collapsible || activePanel.includes(sectionKey)
+      const sectionItem = businessPlanItems[sectionKey]
+      const config = sectionConfig[sectionKey] || {}
+      const isMarginSection = sectionKey === 'MARGIN'
+      const collapsible = !!config.collapsible
+      const isExpanded = !collapsible || activePanel.includes(sectionKey)
 
-      var sectionTotalRowData = sectionItem.data[sectionKey + '_TOTAL']
-      var sectionTotalCell = sectionTotalRowData
+      const sectionTotalRowData = sectionItem.data[sectionKey + '_TOTAL']
+      const sectionTotalCell = sectionTotalRowData
         ? sectionTotalRowData.data.find(function (d) {
             return d.columnKey === 'TOTAL'
           })
         : null
-      var sectionTotalValue = getSectionTotalValue(sectionTotalCell, sectionKey)
-      var sectionTitleTooltip = (getRowConfig()[sectionKey + '_TOTAL'] || {})
+      const sectionTotalValue = getSectionTotalValue(sectionTotalCell, sectionKey)
+      const sectionTitleTooltip = (getRowConfig()[sectionKey + '_TOTAL'] || {})
         .tooltip
 
-      var compareSection =
+      const compareSection =
         compareBusinessPlanItems && compareBusinessPlanItems[sectionKey]
           ? compareBusinessPlanItems[sectionKey].data
           : null
-      var compareSectionTotalRow = compareSection
+      const compareSectionTotalRow = compareSection
         ? compareSection[sectionKey + '_TOTAL']
         : null
-      var compareSectionTotalCell = compareSectionTotalRow
+      const compareSectionTotalCell = compareSectionTotalRow
         ? compareSectionTotalRow.data.find(function (d) {
             return d.columnKey === 'TOTAL'
           })
         : null
-      var compareSectionTotalValue = compareSectionTotalCell
+      const compareSectionTotalValue = compareSectionTotalCell
         ? compareSectionTotalCell.value
         : null
 
-      var resCompareSectionTotal = getResultCompare(
+      const resCompareSectionTotal = getResultCompare(
         sectionTotalValue,
         compareSectionTotalValue,
         isCompare
       )
 
-      var sectionHeaderRow = config.hiddenTitle ? null : (
+      const sectionHeaderRow = config.hiddenTitle ? null : (
         <tr
           key={sectionKey + '-header'}
           className={
@@ -774,7 +809,11 @@ function BusinessPlanFormSection({
             <div className="d-flex flex-column">
               {sectionTotalCell && (
                 <Fragment>
-                  <div className="total">{formatNumber(sectionTotalValue)}</div>
+                  <div className="total">
+                    {canViewColumn('TOTAL')
+                      ? formatNumber(sectionTotalValue)
+                      : '****'}
+                  </div>
                   <CompareText value={resCompareSectionTotal} />
                 </Fragment>
               )}
@@ -786,9 +825,9 @@ function BusinessPlanFormSection({
               return c.columnKey !== 'TOTAL'
             })
             .map(function (mergedCol) {
-              var currentCell = null
+              let currentCell = null
               if (!mergedCol.isCompareOnly && sectionTotalRowData) {
-                for (var i = 0; i < sectionTotalRowData.data.length; i++) {
+                for (let i = 0; i < sectionTotalRowData.data.length; i++) {
                   if (
                     sectionTotalRowData.data[i].columnKey ===
                     mergedCol.currentColumnKey
@@ -799,9 +838,9 @@ function BusinessPlanFormSection({
                 }
               }
 
-              var compareCellValue = null
+              let compareCellValue = null
               if (!mergedCol.isCurrentOnly && compareSectionTotalRow) {
-                for (var j = 0; j < compareSectionTotalRow.data.length; j++) {
+                for (let j = 0; j < compareSectionTotalRow.data.length; j++) {
                   if (
                     compareSectionTotalRow.data[j].columnKey ===
                     mergedCol.compareColumnKey
@@ -812,11 +851,11 @@ function BusinessPlanFormSection({
                 }
               }
 
-              var displayValue
+              let displayValue
               if (mergedCol.isCompareOnly) {
                 displayValue = compareCellValue
               } else if (currentCell) {
-                var f = getFormula({
+                const f = getFormula({
                   item: currentCell,
                   columnKey: currentCell.columnKey,
                   sectionKey: sectionKey,
@@ -831,10 +870,10 @@ function BusinessPlanFormSection({
                 displayValue = null
               }
 
-              var compareForDiff = mergedCol.isCompareOnly
+              const compareForDiff = mergedCol.isCompareOnly
                 ? null
                 : compareCellValue
-              var resCompare = getResultCompare(
+              const resCompare = getResultCompare(
                 displayValue,
                 compareForDiff,
                 isCompare
@@ -849,7 +888,9 @@ function BusinessPlanFormSection({
                     canEdit ? (
                       <BusinessPlanInput item={currentCell} />
                     ) : (
-                      formatNumber(displayValue)
+                      canViewColumn(mergedCol.columnKey)
+                        ? formatNumber(displayValue)
+                        : '****'
                     )}
                     <CompareText value={resCompare} />
                   </div>
@@ -859,45 +900,45 @@ function BusinessPlanFormSection({
         </tr>
       )
 
-      var dataRows = Object.keys(sectionItem.data)
+      const dataRows = Object.keys(sectionItem.data)
         .filter(function (rowKey) {
           return rowKey !== sectionKey + '_TOTAL'
         })
         .map(function (rowKey, index) {
-          var rowData = sectionItem.data[rowKey]
-          var totalItem = rowData.data.find(function (d) {
+          const rowData = sectionItem.data[rowKey]
+          const totalItem = rowData.data.find(function (d) {
             return d.columnKey === 'TOTAL'
           })
 
-          var newRowKeyRegex = (config.newRowKey || sectionKey) + '_\\d+'
-          var isService = !!rowKey.match(new RegExp(newRowKeyRegex))
-          var rowConfigKey = isService ? config.newRowKey + '_SERVICE' : rowKey
-          var rowCfg = getRowConfig()[rowConfigKey] || {}
-          var percent = rowCfg.percent
-          var rowTooltip = rowCfg.tooltip
-          var canEditInternal = rowCfg.canEditInternal
+          const newRowKeyRegex = (config.newRowKey || sectionKey) + '_\\d+'
+          const isService = !!rowKey.match(new RegExp(newRowKeyRegex))
+          const rowConfigKey = isService ? config.newRowKey + '_SERVICE' : rowKey
+          const rowCfg = getRowConfig()[rowConfigKey] || {}
+          const percent = rowCfg.percent
+          const rowTooltip = rowCfg.tooltip
+          const canEditInternal = rowCfg.canEditInternal
 
-          var totalItemValue = getCellDisplayValue(
+          const totalItemValue = getCellDisplayValue(
             totalItem,
             sectionKey,
             rowKey,
             isService
           )
 
-          var compareRowData =
+          const compareRowData =
             compareSection && compareSection[rowKey]
               ? compareSection[rowKey].data
               : null
-          var compareTotalItem = compareRowData
+          const compareTotalItem = compareRowData
             ? compareRowData.find(function (d) {
                 return d.columnKey === 'TOTAL'
               })
             : null
-          var compareTotalValue = compareTotalItem
+          const compareTotalValue = compareTotalItem
             ? compareTotalItem.value
             : null
 
-          var resCompareTotalRow = getResultCompare(
+          const resCompareTotalRow = getResultCompare(
             totalItemValue,
             compareTotalValue,
             isCompare
@@ -972,7 +1013,9 @@ function BusinessPlanFormSection({
                     />
                   ) : (
                     <div className="total">
-                      {formatNumber(totalItemValue, percent)}
+                      {canViewColumn('TOTAL')
+                        ? formatNumber(totalItemValue, percent)
+                        : '****'}
                     </div>
                   )}
                   <CompareText value={resCompareTotalRow} />
@@ -984,9 +1027,9 @@ function BusinessPlanFormSection({
                   return c.columnKey !== 'TOTAL'
                 })
                 .map(function (mergedCol) {
-                  var currentItem = null
+                  let currentItem = null
                   if (!mergedCol.isCompareOnly) {
-                    for (var ri = 0; ri < rowData.data.length; ri++) {
+                    for (let ri = 0; ri < rowData.data.length; ri++) {
                       if (
                         rowData.data[ri].columnKey ===
                         mergedCol.currentColumnKey
@@ -997,9 +1040,9 @@ function BusinessPlanFormSection({
                     }
                   }
 
-                  var compareItem = null
+                  let compareItem = null
                   if (!mergedCol.isCurrentOnly && compareRowData) {
-                    for (var ci = 0; ci < compareRowData.length; ci++) {
+                    for (let ci = 0; ci < compareRowData.length; ci++) {
                       if (
                         compareRowData[ci].columnKey ===
                         mergedCol.compareColumnKey
@@ -1010,8 +1053,8 @@ function BusinessPlanFormSection({
                     }
                   }
 
-                  var compareValue = compareItem ? compareItem.value : null
-                  var cellFormula = currentItem
+                  const compareValue = compareItem ? compareItem.value : null
+                  const cellFormula = currentItem
                     ? getFormula({
                         item: currentItem,
                         columnKey: currentItem.columnKey,
@@ -1020,7 +1063,7 @@ function BusinessPlanFormSection({
                         isService,
                       })
                     : undefined
-                  var cellValue
+                  let cellValue
                   if (mergedCol.isCompareOnly) {
                     cellValue = compareValue
                   } else if (currentItem) {
@@ -1033,16 +1076,16 @@ function BusinessPlanFormSection({
                     cellValue = null
                   }
 
-                  var compareForDiff = mergedCol.isCompareOnly
+                  const compareForDiff = mergedCol.isCompareOnly
                     ? null
                     : compareValue
-                  var resCompareCell = getResultCompare(
+                  const resCompareCell = getResultCompare(
                     cellValue,
                     compareForDiff,
                     isCompare
                   )
 
-                  var internalAllowed =
+                  const internalAllowed =
                     !currentItem ||
                     canEditInternal === undefined ||
                     (canEditInternal && currentItem.columnKey === 'INTERNAL') ||
@@ -1061,7 +1104,9 @@ function BusinessPlanFormSection({
                             suffix={percent ? '%' : ''}
                           />
                         ) : (
-                          formatNumber(cellValue, percent)
+                          canViewColumn(mergedCol.columnKey)
+                            ? formatNumber(cellValue, percent)
+                            : '****'
                         )}
                         <CompareText value={resCompareCell} />
                       </div>
@@ -1138,6 +1183,7 @@ function BusinessPlanFormSection({
                   tooltipLabel="Unit price"
                   dataArray={unitPriceArray}
                   mergedColumns={mergedColumns}
+                  canViewColumn={canViewColumn}
                 />
                 <MetricHeaderRow
                   label="Billable rate"
@@ -1159,6 +1205,7 @@ function BusinessPlanFormSection({
                   tooltipLabel="Billable rate"
                   dataArray={billableRateArray}
                   mergedColumns={mergedColumns}
+                  canViewColumn={canViewColumn}
                 />
                 <MetricHeaderRow
                   label="Direct margin before incentives and project bonus rate"
@@ -1180,6 +1227,7 @@ function BusinessPlanFormSection({
                   tooltipLabel="Direct margin before incentives and project bonus rate"
                   dataArray={directMarginArray}
                   mergedColumns={mergedColumns}
+                  canViewColumn={canViewColumn}
                 />
               </Fragment>
             )}
