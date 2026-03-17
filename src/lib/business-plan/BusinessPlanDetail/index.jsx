@@ -115,8 +115,10 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap } =
+  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap, selectedMvvCode } =
     useSelector(state => state.businessGeneralInformation)
+
+  console.log('mvvLocationTypeIdMap = ', mvvLocationTypeIdMap)
 
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
 
@@ -440,9 +442,20 @@ function BusinessPlanDetail({ match, history }) {
   const handleChangeTab = activeKey => {
     setActiveTab(activeKey)
     // Revenue Plan (tab 2) and Delivery Plan (tab 3) require a valid sub-version.
-    // If currently on Total/OB mode, auto-select the first available mode (Onsite/Offshore).
-    if (activeKey !== '1' && availableModes.length > 0 && !availableModes.includes(viewMode)) {
-      setViewMode(availableModes[0])
+    // If currently on Total/OB mode, resolve the correct mode from selectedMvvCode.
+    if (
+      activeKey !== '1' &&
+      availableModes.length > 0 &&
+      !availableModes.includes(viewMode)
+    ) {
+      const matchedInfo = generalInfos.find(
+        info => info.projectCode === selectedMvvCode
+      )
+      const targetMode =
+        matchedInfo && availableModes.includes(matchedInfo.mvvLocationType)
+          ? matchedInfo.mvvLocationType
+          : availableModes[0]
+      setViewMode(targetMode)
     }
     dispatch(
       setActiveBusinessPlanPanel({
