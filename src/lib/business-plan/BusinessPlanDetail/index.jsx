@@ -200,9 +200,38 @@ function BusinessPlanDetail({ match, history }) {
       .filter(info => info.mvvLocationType && info.mvvLocationType !== 'Total')
       .reduce((acc, info) => {
         const key = info.mvvLocationType.toLowerCase() // 'offshore' | 'onsite'
+        const {
+          listAM = [],
+          listTeamLead = [],
+          listPreSale = [],
+          listPreparator = [],
+          listAdviser = [],
+          listPM = [],
+          currency,
+          exchangeRate,
+          totalContractPrice,
+          softwareDevelopmentFee,
+          otherFees,
+          industry,
+          businessPlanKpiDTO,
+        } = info
         acc[key] = {
           businessPlanVersionId: info.id,
-          generalInformation: info,
+          generalInformation: {
+            listAM,
+            listTeamLead,
+            listPreSale,
+            listPreparator,
+            listAdviser,
+            listPM,
+            currency,
+            exchangeRate,
+            totalContractPrice,
+            softwareDevelopmentFee,
+            otherFees,
+            industry,
+            businessPlanKpiDTO,
+          },
         }
         return acc
       }, {})
