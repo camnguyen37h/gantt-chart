@@ -165,6 +165,10 @@ const businessDetailsSlice = createSlice({
       state.validation = { ...state.validation, ...payload }
     },
 
+    resetValidation: state => {
+      state.validation = {}
+    },
+
     clearCompareBusinessPlan: (state, { payload }) => {
       state.compareBusinessPlanItems = null
       state.compareColumnLabels = null
@@ -354,6 +358,7 @@ export const {
   setBusinessPlanItems,
   setContractPriceData,
   setValidation,
+  resetValidation,
   addBusinessPlanRow,
   updateBusinessPlanRow,
   deleteBusinessPlanRow,

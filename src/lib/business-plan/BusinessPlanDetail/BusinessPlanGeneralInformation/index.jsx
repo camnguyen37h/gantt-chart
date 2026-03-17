@@ -12,6 +12,7 @@ import {
   getIndustryCurrency,
   getIndustryDomain,
   setValidation,
+  resetValidation,
 } from '../../redux'
 import {
   handleChangeDateGeneralInfo,
@@ -167,6 +168,7 @@ const BusinessPlanGeneralInformation = () => {
 
   const handleMvvChange = value => {
     dispatch(setSelectedMvvCode(value))
+    dispatch(resetValidation())
     const selectedInfo = generalInfos.find(info => info.projectCode === value)
     if (selectedInfo) {
       setContractPriceData({

@@ -21,6 +21,8 @@ import {
   setActiveBusinessPlanPanel,
   setIsSaveShowedDeliveryPlan,
   setValidation,
+  setSelectedMvvCode,
+  setContractPriceData,
 } from '../redux'
 import BusinessPlanDelivery from './BusinessPlanDelivery'
 import BusinessPlanFormSection from './BusinessPlanFormSection'
@@ -346,6 +348,10 @@ function BusinessPlanDetail({ match, history }) {
 
   const onSaveDraft = async () => {
     setLoadingSave(true)
+    // Capture current MVV code before any reload resets state
+    const savedProjectCode = projectCode
+    const savedViewMode = viewMode
+
     const params = {
       generalInformation: {
         ...generalInformationParams,
@@ -377,7 +383,41 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    await saveDraft(params)
+    const saved = await saveDraft(params)
+    if (saved) {
+      // Refresh General Information
+      const res = await getBusinessPlanDetail(match.params.buId)
+
+      // Restore the MVV the user was on before reload (getBusinessPlanDetail
+      // resets selectedMvvCode to the API default projectCode)
+      if (res && res.payload && res.payload.data) {
+        const defaultProjectCode = res.payload.data.projectCode
+        if (savedProjectCode && savedProjectCode !== defaultProjectCode) {
+          const infos = res.payload.data.generalInfos || []
+          const restoredInfo = infos.find(
+            info => info.projectCode === savedProjectCode
+          )
+          if (restoredInfo) {
+            dispatch(setSelectedMvvCode(savedProjectCode))
+            dispatch(
+              setContractPriceData({
+                exchangeRate: restoredInfo.exchangeRate,
+                softwareDevelopmentFee: restoredInfo.softwareDevelopmentFee,
+                otherFees: restoredInfo.otherFees,
+              })
+            )
+          }
+        }
+      }
+
+      // Refresh Business Plan form data
+      if (businessPlanVersionId && savedViewMode !== 'Total') {
+        await getBusinessPlanDetailByViewMode(match.params.buId, {
+          view: savedViewMode,
+        })
+      }
+    }
+
     await dispatch(getBusinessPlanHistory(match.params.buId))
     setLoadingSave(false)
   }

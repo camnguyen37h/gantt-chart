@@ -8,16 +8,16 @@ const initialState = {
 }
 
 // Merge two approver arrays for the same gKey.
-// Every approver entry gets a referenceIds[] that collects all referenceId values
-// it was involved in across workflows.
-// "None" keys (FC/BOM/CEO): deduplicate by ldap and accumulate referenceIds.
-// DU-level keys (G1/G3/GKR): concat (distinct DUs) and initialise referenceIds.
+// `referenceId` is extracted from each raw approver and collected into `referenceIds[]`.
+// The singular `referenceId` field is dropped so only `referenceIds` is stored.
+// "None" keys (FC/BOM/CEO): deduplicate by ldap and accumulate into referenceIds.
+// DU-level keys (G1/G3/GKR): concat (distinct DUs), each with its own referenceIds.
 function mergeApprovers(existing, incoming, gKey) {
   if (gKey !== 'None') {
     return existing.concat(
-      incoming.map(a => ({
+      incoming.map(({ referenceId, ...a }) => ({
         ...a,
-        referenceIds: a.referenceId != null ? [a.referenceId] : [],
+        referenceIds: referenceId != null ? [referenceId] : [],
       }))
     )
   }
@@ -26,19 +26,19 @@ function mergeApprovers(existing, incoming, gKey) {
   const ldapIndexMap = {}
   result.forEach((a, i) => { ldapIndexMap[a.ldap] = i })
 
-  incoming.forEach(a => {
+  incoming.forEach(({ referenceId, ...a }) => {
     const idx = ldapIndexMap[a.ldap]
     if (idx !== undefined) {
       // Same ldap seen again from another workflow — accumulate referenceId
-      if (a.referenceId != null && result[idx].referenceIds.indexOf(a.referenceId) === -1) {
+      if (referenceId != null && result[idx].referenceIds.indexOf(referenceId) === -1) {
         result[idx] = {
           ...result[idx],
-          referenceIds: result[idx].referenceIds.concat([a.referenceId]),
+          referenceIds: result[idx].referenceIds.concat([referenceId]),
         }
       }
     } else {
       ldapIndexMap[a.ldap] = result.length
-      result.push({ ...a, referenceIds: a.referenceId != null ? [a.referenceId] : [] })
+      result.push({ ...a, referenceIds: referenceId != null ? [referenceId] : [] })
     }
   })
   return result
