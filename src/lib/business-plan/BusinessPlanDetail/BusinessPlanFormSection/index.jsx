@@ -1,19 +1,16 @@
-import React, { Fragment, useEffect, useMemo, useState, memo } from 'react'
+import React, { Fragment, useEffect, useState, memo } from 'react'
 import styled from 'styled-components'
 import {
   useBusinessPlanDetails,
   useBusinessPlanForm,
   useFormula,
+  useBusinessPlanPermission,
 } from '../../hooks'
 import { Cascader, Icon, Input, InputNumber, Select, Tooltip } from 'antd'
 import cloneDeep from 'lodash/cloneDeep'
 import { SwapSVG } from '../SVGIcon'
 import { getRowConfig, sectionConfig } from '../../constants'
-import { checkRolePermission } from '../../../../components/common/checkRolePermission'
-import {
-  ActivityKeyConstants,
-  SourceConstants,
-} from '../../../constants/ActivityKeyConstants'
+import { ActivityKeyConstants } from '../../../constants/ActivityKeyConstants'
 import {
   formatNumber,
   formatNumberCompare,
@@ -432,6 +429,7 @@ function BusinessPlanFormSection({
   } = useBusinessPlanDetails()
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
+  const { hasActivity, canViewColumn, canViewCell } = useBusinessPlanPermission()
 
   const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
     userName: 'Demo User',
@@ -442,30 +440,10 @@ function BusinessPlanFormSection({
   const isDraft = status === statusBusinessPlanDetail.draft
   const isApproved = status === statusBusinessPlanDetail.approved
 
-  // Parse permissions once on mount — one JSON.parse, one array scan, stored as a plain
-  // object for O(1) activity lookups on every render.
-  const bpActivities = useMemo(function () {
-    const perms = JSON.parse(localStorage.getItem('permissions'))
-    if (!Array.isArray(perms)) return {}
-    for (let i = 0; i < perms.length; i++) {
-      if (
-        perms[i].key === SourceConstants.BUSINESS_PLAN_DETAIL &&
-        Array.isArray(perms[i].activities)
-      ) {
-        const result = {}
-        for (let j = 0; j < perms[i].activities.length; j++) {
-          result[perms[i].activities[j].name] = true
-        }
-        return result
-      }
-    }
-    return {}
-  }, [])
-
-  const isFin = bpActivities[ActivityKeyConstants.EDIT_BUSINESS_PLAN_ALL] === true
+  const isFin = hasActivity(ActivityKeyConstants.EDIT_BUSINESS_PLAN_ALL)
 
   const isOtherRole =
-    bpActivities[ActivityKeyConstants.EDIT_BUSINESS_PLAN] === true ||
+    hasActivity(ActivityKeyConstants.EDIT_BUSINESS_PLAN) ||
     listAM.some(function (p) {
       return p.ldap === userName
     }) ||
@@ -474,22 +452,6 @@ function BusinessPlanFormSection({
     })
 
   const canEdit = (isDraft && isOtherRole) || (isFin && !isApproved)
-
-  // isFin already implies EDIT_BUSINESS_PLAN_ALL, so reuse it instead of a second lookup.
-  const canViewTotal =
-    isFin || bpActivities[ActivityKeyConstants.VIEW_BUSINESS_PLAN_TOTAL] === true
-
-  const canViewDuColumns =
-    bpActivities[ActivityKeyConstants.DB_SPECIAL_VIEW_DU_ONSITE] === true ||
-    bpActivities[ActivityKeyConstants.DB_SPECIAL_VIEW_DU_OFFSHORE] === true ||
-    bpActivities[ActivityKeyConstants.DB_SPECIAL_VIEW_MARGIN_OFFSHORE] === true
-
-  // Centralised column-visibility check used by all table render paths.
-  const canViewColumn = function (columnKey) {
-    if (columnKey === 'TOTAL') return canViewTotal
-    if (columnKey === 'INTERNAL') return true
-    return canViewDuColumns
-  }
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
@@ -1013,7 +975,7 @@ function BusinessPlanFormSection({
                     />
                   ) : (
                     <div className="total">
-                      {canViewColumn('TOTAL')
+                      {canViewCell(rowKey, 'TOTAL')
                         ? formatNumber(totalItemValue, percent)
                         : '****'}
                     </div>
@@ -1104,7 +1066,7 @@ function BusinessPlanFormSection({
                             suffix={percent ? '%' : ''}
                           />
                         ) : (
-                          canViewColumn(mergedCol.columnKey)
+                          canViewCell(rowKey, mergedCol.columnKey)
                             ? formatNumber(cellValue, percent)
                             : '****'
                         )}
