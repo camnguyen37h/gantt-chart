@@ -1,3 +1,5 @@
+import Decimal from 'decimal.js'
+
 const findCell = (dataArray, columnKey) => {
   if (!dataArray) return null
   for (var i = 0; i < dataArray.length; i++) {
@@ -54,9 +56,9 @@ const getResultCompare = (current, compare, isCompare) => {
   const validCompare =
     compare !== null && compare !== undefined && isFinite(compare) && !isNaN(compare)
   if (!validCurrent && !validCompare) return null
-  if (!validCompare) return parseFloat(current.toFixed(2))
-  if (!validCurrent) return -parseFloat(compare.toFixed(2))
-  return parseFloat(current.toFixed(2)) - parseFloat(compare.toFixed(2))
+  if (!validCompare) return new Decimal(current).toNumber()
+  if (!validCurrent) return new Decimal(compare).negated().toNumber()
+  return new Decimal(current).minus(new Decimal(compare)).toNumber()
 }
 
 const makeCellKey = mergedCol => {

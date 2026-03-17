@@ -2445,6 +2445,133 @@ export const mockBusinessPlanDetail437 = {
   "errorMessage": ""
 };
 
+// ==================== EDGE-CASE DETAIL (NaN / Infinity test) ====================
+// Use business plan ID 500 to navigate to this scenario.
+// Sub-version 501 → Onsite, 502 → Offshore.
+// getBusinessPlanDataByViewMode returns patched data for IDs 501/502 via EDGE_CASE_BP_IDS.
+export const mockBusinessPlanEdgeCaseDetail = {
+  "httpStatus": 200,
+  "data": {
+    "id": 500,
+    "projectCode": "GLBTM_EDGE_CASE",
+    "status": "Draft",
+    "version": 1,
+    "startDate": 1770915600000,
+    "endDate": 1784134800000,
+    "warningMessage": [],
+    "versions": [
+      { "versionId": 500, "versionName": "Version 1 (Edge Case)", "status": "DRAFT", "statusName": "Draft" }
+    ],
+    "generalInfos": [
+      {
+        "listAM": [],
+        "listTeamLead": [],
+        "listPreSale": [],
+        "listPreparator": [],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": 19501,
+            "businessPlanVersionId": 501,
+            "memberType": "PM",
+            "userId": 3860,
+            "ldap": "ttlam1",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "Edge Case Onsite",
+        "customerName": "EdgeCaseCustomer",
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "orderType": "Commercial",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 0,
+        "industry": 18,
+        "customerMarket": "US",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 0,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 501,
+          "businessPlanVersionId": 501,
+          "kpiPm": 30,
+          "kpiQa": 3,
+          "kpiMember": 67
+        },
+        "projectCode": "GLBTM_EDGE_ONSITE",
+        "mvvLocationType": "Onsite",
+        "id": 501
+      },
+      {
+        "listAM": [],
+        "listTeamLead": [],
+        "listPreSale": [],
+        "listPreparator": [],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": 19502,
+            "businessPlanVersionId": 502,
+            "memberType": "PM",
+            "userId": 7873,
+            "ldap": "nvthai3",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1770915600000,
+            "endDate": 1784134800000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "Edge Case Offshore",
+        "customerName": "EdgeCaseCustomer",
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": null,
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 0,
+        "industry": 18,
+        "customerMarket": "Korea",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 0,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 502,
+          "businessPlanVersionId": 502,
+          "kpiPm": 25,
+          "kpiQa": 2,
+          "kpiMember": 50
+        },
+        "projectCode": "GLBOD_EDGE_OFFSHORE",
+        "mvvLocationType": "Offshore",
+        "id": 502
+      }
+    ],
+    "columnLabels": [
+      { "id": null, "label": "Total", "index": 1, "columnKey": "TOTAL" },
+      { "id": 169, "label": "BKR1", "index": 2, "columnKey": "SALE" },
+      { "id": null, "label": "Internal", "index": 3, "columnKey": "INTERNAL" },
+      { "id": 39, "label": "DU1.12", "index": 4, "columnKey": "DELIVERY_UNIT_39" }
+    ],
+    "sectionList": []
+  },
+  "messageId": "Success",
+  "errorMessage": ""
+};
+
 // ==================== PRODUCTION REVENUE ====================
 export const mockProductionRevenue = {
   httpStatus: 200,
@@ -3025,7 +3152,8 @@ export const mockUserAndDepartment = {
 // ==================== IN-MEMORY STORAGE ====================
 let businessPlanStore = {
   436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data)),
-  437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data))
+  437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data)),
+  500: JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail.data)),
 };
 
 // Future use for delivery and revenue plan storage
@@ -3057,7 +3185,9 @@ export const createBusinessPlanVersion = (baseId) => {
 
 export const resetMockData = () => {
   businessPlanStore = {
-    436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data))
+    436: JSON.parse(JSON.stringify(mockBusinessPlanDetail.data)),
+    437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data)),
+    500: JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail.data)),
   };
   deliveryPlanStore = {};
   revenuePlanStore = {};
@@ -3113,10 +3243,77 @@ const filterDataByViewMode = (data, viewMode) => {
 // V2 business plan IDs: 437 (Onsite), 438 (Offshore)
 var V2_BUSINESS_PLAN_IDS = [437, 438]
 
+// Edge-case business plan IDs: 501 (Offshore), 502 (Onsite)
+// Use these IDs to verify NaN / Infinity guards are working correctly.
+var EDGE_CASE_BP_IDS = [501, 502]
+
+/**
+ * Patch a deep-cloned BP section data object with zero-denominator values so
+ * every division inside useFormula.js that can produce NaN or Infinity is
+ * exercised.  Numerators are kept non-zero so the result is Infinity (not NaN)
+ * — the guards must reduce it to null before display.
+ *
+ * Triggered division paths covered:
+ *  1. getUnitPriceSale      — MM_BILL[SALE]=0,  SOFTWARE_PRODUCTION_REVENUES[SALE]>0
+ *  2. getBillableRate*      — MM_PRODUCTION[TOTAL|DU]=0, MM_BILL>0
+ *  3. getProductivity*      — MM_PRODUCTION[TOTAL|DU]=0, SOFTWARE_PRODUCTION_REVENUES>0
+ *  4. getEfficiency*        — MM_PRODUCTION[TOTAL|DU]=0, DIRECT_MARGIN>0
+ *  5. getDeliveryAvgExp.*   — MM_PRODUCTION[TOTAL|DU]=0, DELIVERY_EXPENSES_TOTAL>0
+ *  6. getSalaryAvgExp.*     — MM_PRODUCTION[TOTAL|DU]=0, DIRECT_LABOR_COST>0
+ *  7. getDirectMarginRate   — REVENUES_TOTAL=0, DIRECT_MARGIN>0
+ *  8. getDirectMarginBonusRate — REVENUES_TOTAL=0, DIRECT_MARGIN_BONUS>0
+ *  9. getIndirectMarginRate — REVENUES_TOTAL=0, INDIRECT_MARGIN>0
+ * 10. getAllocationOfPoolDU — BILL_RATE_NORM[DU]=0, DIRECT_LABOR_COST[DU]>0
+ */
+var applyEdgeCasePatches = function (cloned) {
+  var setCell = function (sectionKey, rowKey, columnKey, value) {
+    var sectionList = cloned.data && cloned.data.sectionList
+    if (!sectionList) return
+    var section = sectionList.find(function (s) { return s.sectionKey === sectionKey })
+    if (!section) return
+    var row = section.rowLabels.find(function (r) { return r.rowKey === rowKey })
+    if (!row) return
+    var cell = row.cellList.find(function (c) { return c.columnKey === columnKey })
+    if (cell) cell.value = value
+  }
+
+  // Case 1 – unit price sale: MM_BILL[SALE]=0, revenue>0
+  setCell('MAN_MONTH', 'MM_BILL', 'SALE', 0)
+
+  // Cases 2-6 – all per-MM averages and rates: MM_PRODUCTION=0 for TOTAL and DU
+  setCell('MAN_MONTH', 'MM_PRODUCTION', 'TOTAL', 0)
+  setCell('MAN_MONTH', 'MM_PRODUCTION', 'DELIVERY_UNIT_39', 0)
+
+  // Ensure non-zero numerators for cases 3-6
+  setCell('REVENUES', 'SOFTWARE_PRODUCTION_REVENUES', 'TOTAL', 50000000)
+  setCell('REVENUES', 'SOFTWARE_PRODUCTION_REVENUES', 'DELIVERY_UNIT_39', 50000000)
+  setCell('DELIVERY_EXPENSES', 'DELIVERY_EXPENSES_TOTAL', 'TOTAL', 5000000)
+  setCell('DELIVERY_EXPENSES', 'DELIVERY_EXPENSES_TOTAL', 'DELIVERY_UNIT_39', 5000000)
+  setCell('DELIVERY_EXPENSES', 'DIRECT_LABOR_COST', 'TOTAL', 5000000)
+  setCell('DELIVERY_EXPENSES', 'DIRECT_LABOR_COST', 'DELIVERY_UNIT_39', 5000000)
+
+  // Cases 7-9 – margin rates: REVENUES_TOTAL=0, margins>0
+  setCell('REVENUES', 'REVENUES_TOTAL', 'TOTAL', 0)
+  setCell('REVENUES', 'REVENUES_TOTAL', 'SALE', 0)
+  setCell('REVENUES', 'REVENUES_TOTAL', 'DELIVERY_UNIT_39', 0)
+  setCell('MARGIN', 'DIRECT_MARGIN', 'TOTAL', 1000000)
+  setCell('MARGIN', 'DIRECT_MARGIN', 'DELIVERY_UNIT_39', 1000000)
+  setCell('MARGIN', 'DIRECT_MARGIN_BONUS', 'TOTAL', 1000000)
+  setCell('MARGIN', 'DIRECT_MARGIN_BONUS', 'DELIVERY_UNIT_39', 1000000)
+  setCell('MARGIN', 'INDIRECT_MARGIN', 'TOTAL', 1000000)
+  setCell('MARGIN', 'INDIRECT_MARGIN', 'DELIVERY_UNIT_39', 1000000)
+
+  // Case 10 – allocation pool: BILL_RATE_NORM[DU]=0, DIRECT_LABOR_COST[DU]>0
+  setCell('REFERENCE', 'BILL_RATE_NORM', 'DELIVERY_UNIT_39', 0)
+
+  return cloned
+}
+
 export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
   viewMode = viewMode || 'Total'
   var id = Number(businessPlanId)
   var isV2 = V2_BUSINESS_PLAN_IDS.indexOf(id) !== -1
+  var isEdgeCase = EDGE_CASE_BP_IDS.indexOf(id) !== -1
 
   var offshoreData = isV2 ? mockBusinessPlanByViewOffshoreV2 : mockBusinessPlanByViewOffshore
 
@@ -3128,7 +3325,13 @@ export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
   }
 
   var data = dataMap[viewMode] || mockBusinessPlanByViewTotal
-  return JSON.parse(JSON.stringify(data))
+  var cloned = JSON.parse(JSON.stringify(data))
+
+  if (isEdgeCase && (viewMode === 'Offshore' || viewMode === 'Onsite')) {
+    cloned = applyEdgeCasePatches(cloned)
+  }
+
+  return cloned
 };
 
 

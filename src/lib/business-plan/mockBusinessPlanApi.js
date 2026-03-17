@@ -6,6 +6,7 @@
 import {
   mockBusinessPlanDetail,
   mockBusinessPlanDetail437,
+  mockBusinessPlanEdgeCaseDetail,
   mockProductionRevenue,
   mockOtherRevenue,
   mockSellingPlan,
@@ -42,6 +43,7 @@ const businessPlansStore = new Map([
   [436, JSON.parse(JSON.stringify(mockBusinessPlanDetail))],
   [437, JSON.parse(JSON.stringify(mockBusinessPlanDetail437))],
   [438, JSON.parse(JSON.stringify(mockBusinessPlanDetail438))],
+  [500, JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail))],
 ]);
 
 // In-memory storage for production revenue
