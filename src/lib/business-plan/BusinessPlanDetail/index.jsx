@@ -200,7 +200,10 @@ function BusinessPlanDetail({ match, history }) {
       .filter(info => info.mvvLocationType && info.mvvLocationType !== 'Total')
       .reduce((acc, info) => {
         const key = info.mvvLocationType.toLowerCase() // 'offshore' | 'onsite'
-        acc[key] = { businessPlanVersionId: info.id }
+        acc[key] = {
+          businessPlanVersionId: info.id,
+          generalInformation: info,
+        }
         return acc
       }, {})
 
