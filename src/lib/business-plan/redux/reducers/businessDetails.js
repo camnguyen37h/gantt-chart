@@ -169,7 +169,7 @@ const businessDetailsSlice = createSlice({
       state.validation = {}
     },
 
-    clearCompareBusinessPlan: (state, { payload }) => {
+    clearCompareBusinessPlan: state => {
       state.compareBusinessPlanItems = null
       state.compareColumnLabels = null
     },

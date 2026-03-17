@@ -424,7 +424,8 @@ const BusinessPlanDelivery = forwardRef(
               canEdit={
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
-                  canEditDeliveryPlanAllStatus)
+                  canEditDeliveryPlanAllStatus) &&
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
               }
             />
           </Panel>

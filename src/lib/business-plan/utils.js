@@ -4,25 +4,26 @@ import Decimal from 'decimal.js'
 export const formatNumber = (value, percent) => {
   if (value === null || value === undefined || !isFinite(value) || isNaN(value))
     return null
+
   return value === 0
-      ? '-'
-      : value < 0
-        ? `(${new Decimal(parseFloat(-value))
-            .toFixed(3)
-            .replace(/\.+0*$/, '')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
-        : `${new Decimal(parseFloat(value))
-            .toFixed(3)
-            .replace(/\.+0*$/, '')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
+    ? '-'
+    : value < 0
+      ? `(${new Decimal(parseFloat(-value))
+          .toFixed(3)
+          .replace(/\.+0*$/, '')
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
+      : `${new Decimal(parseFloat(value))
+          .toFixed(3)
+          .replace(/\.+0*$/, '')
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
 }
 
 export const formatNumberCompare = (value, percent) => {
   if (!value || !isFinite(value) || isNaN(value)) return null
   return `${new Decimal(parseFloat(Math.abs(value)))
-        .toFixed(3)
-        .replace(/\.+0*$/, '')
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
+    .toFixed(3)
+    .replace(/\.+0*$/, '')
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
 }
 
 export const renderColorCompareNorm = data => {
@@ -108,4 +109,67 @@ const getProjectCodeByViewMode = (viewMode, arrayMap) => {
     return arrayMap[viewMode]
   }
   return viewMode
+}
+
+const mergeApprovers = (existing, incoming, gKey) => {
+  if (gKey !== 'None') {
+    return existing.concat(
+      incoming.map(({ referenceId, ...a }) => ({
+        ...a,
+        referenceIds: referenceId != null ? [referenceId] : [],
+      }))
+    )
+  }
+
+  const result = existing.slice()
+  const ldapIndexMap = {}
+  result.forEach((a, i) => {
+    ldapIndexMap[a.ldap] = i
+  })
+
+  incoming.forEach(({ referenceId, ...a }) => {
+    const idx = ldapIndexMap[a.ldap]
+    if (idx !== undefined) {
+      if (
+        referenceId != null &&
+        result[idx].referenceIds.indexOf(referenceId) === -1
+      ) {
+        result[idx] = {
+          ...result[idx],
+          referenceIds: result[idx].referenceIds.concat([referenceId]),
+        }
+      }
+    } else {
+      ldapIndexMap[a.ldap] = result.length
+      result.push({
+        ...a,
+        referenceIds: referenceId != null ? [referenceId] : [],
+      })
+    }
+  })
+
+  return result
+}
+
+export const mergeStepsByPosition = steps => {
+  const positionMap = {}
+  steps.forEach(step => {
+    const posKey = `${step.stateOrder}|${step.order}`
+    if (!positionMap[posKey]) {
+      positionMap[posKey] = { ...step, map: {} }
+    }
+    const target = positionMap[posKey]
+    Object.keys(step.map).forEach(gKey => {
+      target.map[gKey] = mergeApprovers(
+        target.map[gKey] || [],
+        step.map[gKey],
+        gKey
+      )
+    })
+  })
+  return Object.values(positionMap).sort((a, b) =>
+    a.stateOrder !== b.stateOrder
+      ? a.stateOrder - b.stateOrder
+      : a.order - b.order
+  )
 }

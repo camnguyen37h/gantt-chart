@@ -52,9 +52,15 @@ const resolveValue = (item, formulaValue, isSpecialSectionFormula) => {
 const getResultCompare = (current, compare, isCompare) => {
   if (!isCompare) return null
   const validCurrent =
-    current !== null && current !== undefined && isFinite(current) && !isNaN(current)
+    current !== null &&
+    current !== undefined &&
+    isFinite(current) &&
+    !isNaN(current)
   const validCompare =
-    compare !== null && compare !== undefined && isFinite(compare) && !isNaN(compare)
+    compare !== null &&
+    compare !== undefined &&
+    isFinite(compare) &&
+    !isNaN(compare)
   if (!validCurrent && !validCompare) return null
   if (!validCompare) return new Decimal(current).toNumber()
   if (!validCurrent) return new Decimal(compare).negated().toNumber()

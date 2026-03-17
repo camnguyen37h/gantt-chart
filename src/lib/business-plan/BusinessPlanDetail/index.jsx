@@ -115,10 +115,12 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const { loadingCollaborator, generalInfos, mvvLocationTypeIdMap, selectedMvvCode } =
-    useSelector(state => state.businessGeneralInformation)
-
-  console.log('mvvLocationTypeIdMap = ', mvvLocationTypeIdMap)
+  const {
+    loadingCollaborator,
+    listGeneralInformation,
+    generalInfos,
+    mvvLocationTypeIdMap,
+  } = useSelector(state => state.businessGeneralInformation)
 
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
 
@@ -135,6 +137,7 @@ function BusinessPlanDetail({ match, history }) {
     dataUpdateRequest,
     dataDeleteRequest,
   } = useSelector(state => state.businessPlanDelivery)
+
   useEffect(() => {
     ;(async () => {
       if (match.params.buId) {
@@ -142,7 +145,6 @@ function BusinessPlanDetail({ match, history }) {
         if (res.type.includes('fulfilled'))
           await getBusinessPlanWorkflow({
             referenceId: match.params.buId,
-            mvv: res.payload ? res.payload.projectCode : null,
           })
       }
     })()
@@ -199,7 +201,7 @@ function BusinessPlanDetail({ match, history }) {
     const params = generalInfos
       .filter(info => info.mvvLocationType && info.mvvLocationType !== 'Total')
       .reduce((acc, info) => {
-        const key = info.mvvLocationType.toLowerCase() // 'offshore' | 'onsite'
+        const key = info.mvvLocationType.toLowerCase()
         const {
           listAM = [],
           listTeamLead = [],
@@ -242,10 +244,10 @@ function BusinessPlanDetail({ match, history }) {
       await getBusinessPlanDetail(match.params.buId)
       await getBusinessPlanWorkflow({
         referenceId: match.params.buId,
-        mvv: projectCode,
       })
       await dispatch(getBusinessPlanHistory(match.params.buId))
     }
+
     setLoadingSubmit(false)
   }
 
@@ -338,17 +340,19 @@ function BusinessPlanDetail({ match, history }) {
 
   const onSaveDraft = async () => {
     if (loadingSave) return
+
     setLoadingSave(true)
-    // Capture current MVV code before any reload resets state
     const savedProjectCode = projectCode
     const savedViewMode = viewMode
 
-    const params = {
-      generalInformation: {
+    const params = {}
+
+    if (isSaveShowed.generalInformation && listGeneralInformation) {
+      params.generalInformation = {
         ...generalInformationParams,
-        businessPlanVersionId: businessPlanVersionId,
-        projectCode: projectCode,
-      },
+        businessPlanVersionId: listGeneralInformation.id || undefined,
+        projectCode: listGeneralInformation.projectCode || undefined,
+      }
     }
 
     if (
@@ -376,11 +380,8 @@ function BusinessPlanDetail({ match, history }) {
 
     const saved = await saveDraft(params)
     if (saved) {
-      // Refresh General Information
       const res = await getBusinessPlanDetail(match.params.buId)
 
-      // Restore the MVV the user was on before reload (getBusinessPlanDetail
-      // resets selectedMvvCode to the API default projectCode)
       if (res && res.payload && res.payload.data) {
         const defaultProjectCode = res.payload.data.projectCode
         if (savedProjectCode && savedProjectCode !== defaultProjectCode) {
@@ -401,14 +402,12 @@ function BusinessPlanDetail({ match, history }) {
         }
       }
 
-      // Refresh Business Plan form data
       if (businessPlanVersionId && savedViewMode !== 'Total') {
         await getBusinessPlanDetailByViewMode(match.params.buId, {
           view: savedViewMode,
         })
       }
     }
-
     await dispatch(getBusinessPlanHistory(match.params.buId))
     setLoadingSave(false)
   }
@@ -428,16 +427,9 @@ function BusinessPlanDetail({ match, history }) {
   }
 
   const handleChangeTab = activeKey => {
-    setActiveTab(activeKey)
-    // Revenue Plan (tab 2) and Delivery Plan (tab 3) require a valid sub-version.
-    // If currently on Total/OB mode, resolve the correct mode from selectedMvvCode.
-    if (
-      activeKey !== '1' &&
-      availableModes.length > 0 &&
-      !availableModes.includes(viewMode)
-    ) {
+    if (availableModes.length > 0 && !availableModes.includes(viewMode)) {
       const matchedInfo = generalInfos.find(
-        info => info.projectCode === selectedMvvCode
+        info => info.projectCode === match.params.buId
       )
       const targetMode =
         matchedInfo && availableModes.includes(matchedInfo.mvvLocationType)
@@ -445,6 +437,8 @@ function BusinessPlanDetail({ match, history }) {
           : availableModes[0]
       setViewMode(targetMode)
     }
+
+    setActiveTab(activeKey)
     dispatch(
       setActiveBusinessPlanPanel({
         activeKey,

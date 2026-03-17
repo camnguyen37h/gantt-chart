@@ -1,67 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchBusinessPlanWorkflow } from '../asyncThunks'
+import { cloneDeep } from 'lodash'
+import { mergeStepsByPosition } from '../../utils'
 
 const initialState = {
   listWorkOrder: [],
   listStep: [],
   loading: false,
 }
-
-// Merge two approver arrays for the same gKey.
-// `referenceId` is extracted from each raw approver and collected into `referenceIds[]`.
-// The singular `referenceId` field is dropped so only `referenceIds` is stored.
-// "None" keys (FC/BOM/CEO): deduplicate by ldap and accumulate into referenceIds.
-// DU-level keys (G1/G3/GKR): concat (distinct DUs), each with its own referenceIds.
-function mergeApprovers(existing, incoming, gKey) {
-  if (gKey !== 'None') {
-    return existing.concat(
-      incoming.map(({ referenceId, ...a }) => ({
-        ...a,
-        referenceIds: referenceId != null ? [referenceId] : [],
-      }))
-    )
-  }
-
-  const result = existing.slice()
-  const ldapIndexMap = {}
-  result.forEach((a, i) => { ldapIndexMap[a.ldap] = i })
-
-  incoming.forEach(({ referenceId, ...a }) => {
-    const idx = ldapIndexMap[a.ldap]
-    if (idx !== undefined) {
-      // Same ldap seen again from another workflow — accumulate referenceId
-      if (referenceId != null && result[idx].referenceIds.indexOf(referenceId) === -1) {
-        result[idx] = {
-          ...result[idx],
-          referenceIds: result[idx].referenceIds.concat([referenceId]),
-        }
-      }
-    } else {
-      ldapIndexMap[a.ldap] = result.length
-      result.push({ ...a, referenceIds: referenceId != null ? [referenceId] : [] })
-    }
-  })
-  return result
-}
-
-// Group steps sharing the same (stateOrder, order) position into one merged step.
-function mergeStepsByPosition(steps) {
-  const positionMap = {}
-  steps.forEach(step => {
-    const posKey = `${step.stateOrder}|${step.order}`
-    if (!positionMap[posKey]) {
-      positionMap[posKey] = { ...step, map: {} }
-    }
-    const target = positionMap[posKey]
-    Object.keys(step.map).forEach(gKey => {
-      target.map[gKey] = mergeApprovers(target.map[gKey] || [], step.map[gKey], gKey)
-    })
-  })
-  return Object.values(positionMap).sort((a, b) =>
-    a.stateOrder !== b.stateOrder ? a.stateOrder - b.stateOrder : a.order - b.order
-  )
-}
-
 const businessApprovalSlice = createSlice({
   name: 'businessApproval',
   initialState,
@@ -72,54 +18,59 @@ const businessApprovalSlice = createSlice({
     builder.addCase(fetchBusinessPlanWorkflow.rejected, state => {
       state.loading = false
     })
-    builder.addCase(fetchBusinessPlanWorkflow.fulfilled, (state, { payload }) => {
-      if (!payload || !payload.data) return
+    builder.addCase(
+      fetchBusinessPlanWorkflow.fulfilled,
+      (state, { payload }) => {
+        if (!payload || !payload.data) return
 
-      const activeSteps = Object.values(payload.data).filter(
-        item => !item.stateName.match(/Draft|Approved/)
-      )
-
-      const mergedSteps = mergeStepsByPosition(activeSteps)
-
-      const lastActiveIndex = mergedSteps.reduceRight(
-        (found, item, i) =>
-          found === -1 && Object.values(item.map).some(arr => arr.length > 0) ? i : found,
-        -1
-      )
-
-      const listStep = mergedSteps.map((item, index) =>
-        index > lastActiveIndex ? { ...item, status: 'wait' } : item
-      )
-
-      // First step with DU-scoped approvers (departmentName ≠ gKey → DU level, not G level)
-      const duStep = listStep.find(step =>
-        Object.keys(step.map).some(
-          gKey =>
-            gKey !== 'None' &&
-            step.map[gKey].length > 0 &&
-            step.map[gKey][0].departmentName !== gKey
+        const activeSteps = Object.values(payload.data).filter(
+          item => !item.stateName.match(/Draft|Approved/)
         )
-      )
 
-      const listWorkOrder = Object.fromEntries(
-        Object.entries(payload.workOrder).map(([gKey, wos]) => {
-          const approvers = duStep && duStep.map[gKey]
-          return [
-            gKey,
-            wos.map(wo => ({
-              ...wo,
-              length: approvers
-                ? approvers.filter(a => a.departmentName === wo.duName).length - 1
-                : 0,
-            })),
-          ]
-        })
-      )
+        const mergedSteps = mergeStepsByPosition(activeSteps)
 
-      state.listStep = listStep
-      state.listWorkOrder = listWorkOrder
-      state.loading = false
-    })
+        const lastActiveIndex = mergedSteps.reduceRight(
+          (found, item, i) =>
+            found === -1 && Object.values(item.map).some(arr => arr.length > 0)
+              ? i
+              : found,
+          -1
+        )
+
+        const listStep = mergedSteps.map((item, index) =>
+          index > lastActiveIndex ? { ...item, status: 'wait' } : item
+        )
+
+        const duStep = listStep.find(step =>
+          Object.keys(step.map).some(
+            gKey =>
+              gKey !== 'None' &&
+              step.map[gKey].length > 0 &&
+              step.map[gKey][0].departmentName !== gKey
+          )
+        )
+
+        const listWorkOrder = Object.fromEntries(
+          Object.entries(payload.workOrder).map(([gKey, wos]) => {
+            const approvers = duStep && duStep.map[gKey]
+            return [
+              gKey,
+              wos.map(wo => ({
+                ...wo,
+                length: approvers
+                  ? approvers.filter(a => a.departmentName === wo.duName)
+                      .length - 1
+                  : 0,
+              })),
+            ]
+          })
+        )
+
+        state.listStep = listStep
+        state.listWorkOrder = listWorkOrder
+        state.loading = false
+      }
+    )
   },
 })
 

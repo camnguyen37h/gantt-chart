@@ -695,7 +695,10 @@ function BusinessPlanFormSection({
             return d.columnKey === 'TOTAL'
           })
         : null
-      const sectionTotalValue = getSectionTotalValue(sectionTotalCell, sectionKey)
+      const sectionTotalValue = getSectionTotalValue(
+        sectionTotalCell,
+        sectionKey
+      )
       const sectionTitleTooltip = (getRowConfig()[sectionKey + '_TOTAL'] || {})
         .tooltip
 
@@ -871,7 +874,9 @@ function BusinessPlanFormSection({
 
           const newRowKeyRegex = (config.newRowKey || sectionKey) + '_\\d+'
           const isService = !!rowKey.match(new RegExp(newRowKeyRegex))
-          const rowConfigKey = isService ? config.newRowKey + '_SERVICE' : rowKey
+          const rowConfigKey = isService
+            ? config.newRowKey + '_SERVICE'
+            : rowKey
           const rowCfg = getRowConfig()[rowConfigKey] || {}
           const percent = rowCfg.percent
           const rowTooltip = rowCfg.tooltip

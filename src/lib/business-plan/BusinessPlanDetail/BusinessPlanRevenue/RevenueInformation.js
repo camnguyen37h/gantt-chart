@@ -189,9 +189,6 @@ const RevenueInformation = ({
   const filterRef = useRef()
   const isInitialRender = useRef(true)
   const prevVersionRef = useRef(businessVersion)
-  // Prevents duplicate fetch when groupId change triggers a filter reset (setFiltersRevenue)
-  // which would otherwise cause the fetch effect to fire a second time.
-  const skipNextFetchRef = useRef(false)
 
   const handleSearchPosition = useCallback(
     text => {
@@ -562,11 +559,6 @@ const RevenueInformation = ({
     if (!isExpandPanel) return
     if (isVersionChanged) return
 
-    if (skipNextFetchRef.current) {
-      skipNextFetchRef.current = false
-      return
-    }
-
     fetchProductionRevenuePlan(PAGE_INDEX_START, PAGE_SIZE, {
       switchValue,
       ...filters,
@@ -627,8 +619,6 @@ const RevenueInformation = ({
         )
       )
     }
-    // Flag the fetch effect to skip the upcoming re-run caused by this filter reset
-    skipNextFetchRef.current = true
     dispatch(setFiltersRevenue({}))
   }, [deliveryUnitDataRevenue.groupId])
 

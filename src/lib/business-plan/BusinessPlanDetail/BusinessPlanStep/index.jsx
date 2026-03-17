@@ -61,35 +61,36 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   const businessPlanId = match.params.buId
 
   const handleAssign = async params => {
-    const { ldap, departmentName, stepName, taskKey } = params || {}
+    const { ldap, departmentName, stepName, taskKey, referenceIds } =
+      params || {}
+
     await approveRejectWO({
       ldap,
       department: departmentName,
       stepName,
-      referenceId: businessPlanId,
+      referenceIds,
       action: 'REASSIGN',
       taskKey,
     })
     await getBusinessPlanWorkflow({
       referenceId: businessPlanId,
-      mvv: projectCode,
     })
     await getBusinessPlanDetail(businessPlanId)
   }
 
   const handleApprove = async params => {
-    const { ldap, departmentName, stepName, taskKey } = params || {}
+    const { departmentName, stepName, taskKey, referenceIds } = params || {}
+
     await approveRejectWO({
       ldap: userName,
       department: departmentName,
       stepName,
-      referenceId: businessPlanId,
+      referenceIds,
       action: 'APPROVED',
       taskKey,
     })
     await getBusinessPlanWorkflow({
       referenceId: businessPlanId,
-      mvv: projectCode,
     })
     await getBusinessPlanDetail(businessPlanId)
   }
@@ -98,18 +99,22 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
     try {
       setRejectLoading(true)
       const res = await commentRef.current.form.validateFields()
-      const { ldap, departmentName, stepName } = rejectPerson || {}
+      const { departmentName, stepName, taskKey, referenceIds } =
+        rejectPerson || {}
+
       await dispatch(
         postBusinessPlanComment({
-          referenceId: businessPlanId,
+          referenceIds,
           commentContent: res.comment,
           moduleTypeEnum: MODULE_COMMENT_TYPE.BUSINESS_PLAN_DETAIL,
         })
       )
-
       await dispatch(
         getBusinessPlanDetailComment({
-          referenceId: businessPlanId,
+          referenceIds:
+            referenceIds && referenceIds.length > 0
+              ? referenceIds.join(',')
+              : undefined,
           module: MODULE_COMMENT_TYPE.BUSINESS_PLAN_DETAIL,
         })
       )
@@ -117,9 +122,9 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
         ldap: userName,
         department: departmentName,
         stepName,
-        referenceId: businessPlanId,
+        referenceIds,
         action: 'REJECTED',
-        taskKey: rejectPerson.taskKey,
+        taskKey: taskKey,
       })
       setRejectModalVisible(false)
     } catch (e) {
@@ -128,7 +133,6 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
       setRejectLoading(false)
       await getBusinessPlanWorkflow({
         referenceId: businessPlanId,
-        mvv: projectCode,
       })
       await getBusinessPlanDetail(businessPlanId)
     }
