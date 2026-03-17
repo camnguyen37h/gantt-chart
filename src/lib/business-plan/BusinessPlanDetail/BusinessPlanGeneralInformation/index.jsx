@@ -165,7 +165,17 @@ const BusinessPlanGeneralInformation = () => {
     updateIsSaveShowed({ generalInformation: true })
   }
 
-  const handleMvvChange = value => dispatch(setSelectedMvvCode(value))
+  const handleMvvChange = value => {
+    dispatch(setSelectedMvvCode(value))
+    const selectedInfo = generalInfos.find(info => info.projectCode === value)
+    if (selectedInfo) {
+      setContractPriceData({
+        exchangeRate: selectedInfo.exchangeRate,
+        softwareDevelopmentFee: selectedInfo.softwareDevelopmentFee,
+        otherFees: selectedInfo.otherFees,
+      })
+    }
+  }
 
   const collaboratorData = [
     {

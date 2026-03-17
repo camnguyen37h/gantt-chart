@@ -8,13 +8,40 @@ const initialState = {
 }
 
 // Merge two approver arrays for the same gKey.
-// "None" keys (FC/BOM/CEO) are shared across workflows — deduplicate by ldap.
-// DU-level keys (G1/G3/GKR) are distinct workflows — always concat.
+// Every approver entry gets a referenceIds[] that collects all referenceId values
+// it was involved in across workflows.
+// "None" keys (FC/BOM/CEO): deduplicate by ldap and accumulate referenceIds.
+// DU-level keys (G1/G3/GKR): concat (distinct DUs) and initialise referenceIds.
 function mergeApprovers(existing, incoming, gKey) {
-  if (gKey !== 'None') return existing.concat(incoming)
-  const seen = new Set(existing.map(a => a.ldap))
-  const deduped = incoming.filter(a => !seen.has(a.ldap))
-  return deduped.length ? existing.concat(deduped) : existing
+  if (gKey !== 'None') {
+    return existing.concat(
+      incoming.map(a => ({
+        ...a,
+        referenceIds: a.referenceId != null ? [a.referenceId] : [],
+      }))
+    )
+  }
+
+  const result = existing.slice()
+  const ldapIndexMap = {}
+  result.forEach((a, i) => { ldapIndexMap[a.ldap] = i })
+
+  incoming.forEach(a => {
+    const idx = ldapIndexMap[a.ldap]
+    if (idx !== undefined) {
+      // Same ldap seen again from another workflow — accumulate referenceId
+      if (a.referenceId != null && result[idx].referenceIds.indexOf(a.referenceId) === -1) {
+        result[idx] = {
+          ...result[idx],
+          referenceIds: result[idx].referenceIds.concat([a.referenceId]),
+        }
+      }
+    } else {
+      ldapIndexMap[a.ldap] = result.length
+      result.push({ ...a, referenceIds: a.referenceId != null ? [a.referenceId] : [] })
+    }
+  })
+  return result
 }
 
 // Group steps sharing the same (stateOrder, order) position into one merged step.
@@ -27,7 +54,7 @@ function mergeStepsByPosition(steps) {
     }
     const target = positionMap[posKey]
     Object.keys(step.map).forEach(gKey => {
-      target.map[gKey] = mergeApprovers(target.map[gKey] ?? [], step.map[gKey], gKey)
+      target.map[gKey] = mergeApprovers(target.map[gKey] || [], step.map[gKey], gKey)
     })
   })
   return Object.values(positionMap).sort((a, b) =>
@@ -46,7 +73,7 @@ const businessApprovalSlice = createSlice({
       state.loading = false
     })
     builder.addCase(fetchBusinessPlanWorkflow.fulfilled, (state, { payload }) => {
-      if (!payload?.data) return
+      if (!payload || !payload.data) return
 
       const activeSteps = Object.values(payload.data).filter(
         item => !item.stateName.match(/Draft|Approved/)
@@ -76,7 +103,7 @@ const businessApprovalSlice = createSlice({
 
       const listWorkOrder = Object.fromEntries(
         Object.entries(payload.workOrder).map(([gKey, wos]) => {
-          const approvers = duStep?.map[gKey]
+          const approvers = duStep && duStep.map[gKey]
           return [
             gKey,
             wos.map(wo => ({
