@@ -8,14 +8,14 @@ export const formatNumber = (value, percent) => {
   return value === 0
     ? '-'
     : value < 0
-      ? `(${new Decimal(parseFloat(-value))
-          .toFixed(3)
-          .replace(/\.+0*$/, '')
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
-      : `${new Decimal(parseFloat(value))
-          .toFixed(3)
-          .replace(/\.+0*$/, '')
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
+    ? `(${new Decimal(parseFloat(-value))
+        .toFixed(3)
+        .replace(/\.+0*$/, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
+    : `${new Decimal(parseFloat(value))
+        .toFixed(3)
+        .replace(/\.+0*$/, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
 }
 
 export const formatNumberCompare = (value, percent) => {

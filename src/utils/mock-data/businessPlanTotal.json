@@ -1669,7 +1669,7 @@
                                 "permissionView": true
                             },
                             {
-                                "value": 38550000,
+                                "value": 300000000000,
                                 "columnKey": "DELIVERY_UNIT_176",
                                 "rowKey": "DIRECT_LABOR_COST",
                                 "normUnitPriceConfig": null,
@@ -2767,7 +2767,7 @@
                                 "permissionView": true
                             },
                             {
-                                "value": 0,
+                                "value": 150000000000,
                                 "columnKey": "SALE_1",
                                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                                 "normUnitPriceConfig": null,
@@ -2778,7 +2778,7 @@
                                 "permissionView": true
                             },
                             {
-                                "value": 0,
+                                "value": 200000000000,
                                 "columnKey": "SALE_45",
                                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                                 "normUnitPriceConfig": null,
@@ -2789,7 +2789,7 @@
                                 "permissionView": true
                             },
                             {
-                                "value": 0,
+                                "value": 80000000000,
                                 "columnKey": "INTERNAL",
                                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                                 "normUnitPriceConfig": null,
@@ -3946,7 +3946,7 @@
                                 "permissionView": true
                             },
                             {
-                                "value": 0,
+                                "value": 50,
                                 "columnKey": "DELIVERY_UNIT_176",
                                 "rowKey": "BILL_RATE_NORM",
                                 "normUnitPriceConfig": null,

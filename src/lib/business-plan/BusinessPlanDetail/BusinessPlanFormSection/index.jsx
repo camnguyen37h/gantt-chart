@@ -454,7 +454,8 @@ function BusinessPlanFormSection({
       return p.ldap === userName
     })
 
-  var canEdit = (isDraft && isOtherRole) || (isFin && !isApproved)
+  var isEditableViewMode = viewMode === 'Onsite' || viewMode === 'Offshore'
+  var canEdit = isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
