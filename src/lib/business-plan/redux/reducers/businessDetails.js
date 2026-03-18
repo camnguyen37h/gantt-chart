@@ -30,6 +30,7 @@ const initialState = {
   activePanel: '',
   deliveryUnitDataDelivery: {},
   loadingBusinessPlan: false,
+  userRoles: [],
 }
 const businessDetailsSlice = createSlice({
   name: 'businessDetails',
@@ -296,6 +297,7 @@ const businessDetailsSlice = createSlice({
         state.version = data.version
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
+        state.userRoles = data.userRoles || []
       }
     )
 

@@ -15,6 +15,7 @@ export const businessGeneralInformationSlice = createSlice({
     generalInfos: [],
     mvvLocationTypeIdMap: {},
     selectedMvvCode: null,
+    userRoles: [],
     listDomain: [],
     listCurrency: [],
     listUsername: [],
@@ -101,6 +102,7 @@ export const businessGeneralInformationSlice = createSlice({
         return
       }
 
+      state.userRoles = data.userRoles || []
       state.generalInfos = data.generalInfos.filter(item => !!item.id) || []
       state.selectedMvvCode = data.projectCode
       state.mvvLocationTypeIdMap = (state.generalInfos || []).reduce(

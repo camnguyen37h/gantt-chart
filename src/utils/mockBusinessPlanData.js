@@ -23,6 +23,9 @@ export const mockBusinessPlanDetail = {
     "version": 1,
     "startDate": 1770915600000,
     "endDate": 1784134800000,
+    "userRoles": [
+      "DB-BUL-Onsite"
+    ],
     "warningMessage": [],
     "versions": [
       {
@@ -2254,6 +2257,9 @@ export const mockBusinessPlanDetail437 = {
     "version": 2,
     "startDate": 1770915600000,
     "endDate": 1784134800000,
+    "userRoles": [
+      "DB-BUL-Onsite"
+    ],
     "warningMessage": [],
     "versions": [
       {
@@ -2458,6 +2464,9 @@ export const mockBusinessPlanDetailReal = {
     "version": 1,
     "startDate": 1767200400000,
     "endDate": 1798736400000,
+    "userRoles": [
+      "DB-BUL-Onsite"
+    ],
     "warningMessage": [],
     "versions": [
       {

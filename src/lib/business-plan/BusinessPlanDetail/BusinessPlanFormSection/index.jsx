@@ -4,6 +4,7 @@ import {
   useBusinessPlanDetails,
   useBusinessPlanForm,
   useFormula,
+  useBusinessPlanPermission,
 } from '../../hooks'
 import { Cascader, Icon, Input, InputNumber, Select, Tooltip } from 'antd'
 import cloneDeep from 'lodash/cloneDeep'
@@ -457,6 +458,8 @@ function BusinessPlanFormSection({
   var isEditableViewMode = viewMode === 'Onsite' || viewMode === 'Offshore'
   var canEdit = isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
+  var perms = useBusinessPlanPermission()
+
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
     Object.keys(sectionConfig).filter(function (key) {
@@ -778,7 +781,11 @@ function BusinessPlanFormSection({
             <div className="d-flex flex-column">
               {sectionTotalCell && (
                 <Fragment>
-                  <div className="total">{formatNumber(sectionTotalValue)}</div>
+                  <div className="total">
+                    {perms.checkColumnVisible('TOTAL', true)
+                      ? formatNumber(sectionTotalValue)
+                      : perms.MASKED_VALUE}
+                  </div>
                   <CompareText value={resCompareSectionTotal} />
                 </Fragment>
               )}
@@ -852,8 +859,10 @@ function BusinessPlanFormSection({
                     currentCell.editable &&
                     canEdit ? (
                       <BusinessPlanInput item={currentCell} />
-                    ) : (
+                    ) : perms.canViewCell(currentCell, mergedCol.currentColumnKey, true) ? (
                       formatNumber(displayValue)
+                    ) : (
+                      perms.MASKED_VALUE
                     )}
                     <CompareText value={resCompare} />
                   </div>
@@ -976,10 +985,12 @@ function BusinessPlanFormSection({
                       item={totalItem}
                       suffix={percent ? '%' : ''}
                     />
-                  ) : (
+                  ) : perms.canViewCell(totalItem, 'TOTAL', false) ? (
                     <div className="total">
                       {formatNumber(totalItemValue, percent)}
                     </div>
+                  ) : (
+                    <div className="total">{perms.MASKED_VALUE}</div>
                   )}
                   <CompareText value={resCompareTotalRow} />
                 </div>
@@ -1066,8 +1077,10 @@ function BusinessPlanFormSection({
                             item={currentItem}
                             suffix={percent ? '%' : ''}
                           />
-                        ) : (
+                        ) : perms.canViewCell(currentItem, mergedCol.currentColumnKey, false) ? (
                           formatNumber(cellValue, percent)
+                        ) : (
+                          perms.MASKED_VALUE
                         )}
                         <CompareText value={resCompareCell} />
                       </div>
