@@ -459,7 +459,13 @@ function BusinessPlanFormSection({
   var isEditableViewMode = viewMode === 'Onsite' || viewMode === 'Offshore'
   var canEdit = isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
-  const perms = useBusinessPlanPermission(SCOPE.TOTAL)
+  const VIEW_MODE_SCOPE = {
+    Total:   SCOPE.TOTAL,
+    OB:      SCOPE.OB,
+    Onsite:  SCOPE.ONSITE,
+    Offshore: SCOPE.OFFSHORE,
+  }
+  const perms = useBusinessPlanPermission(VIEW_MODE_SCOPE[viewMode] || SCOPE.TOTAL)
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
