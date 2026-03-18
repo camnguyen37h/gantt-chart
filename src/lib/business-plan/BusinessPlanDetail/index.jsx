@@ -170,17 +170,36 @@ function BusinessPlanDetail({ match, history }) {
 
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
-  }, [viewMode])
+  }, [viewMode, mvvLocationTypeIdMap])
 
   const projectCode = useMemo(() => {
-    return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
+    return (generalInfos.find(item => +item.id === businessPlanVersionId) || {})
       .projectCode
-  }, [viewMode])
+  }, [businessPlanVersionId, generalInfos])
 
   const statusProjectCode = useMemo(() => {
-    return (generalInfos.find(item => item.id === businessPlanVersionId) || [])
+    return (generalInfos.find(item => item.id === businessPlanVersionId) || {})
       .status
-  }, [viewMode])
+  }, [businessPlanVersionId, generalInfos])
+
+  // Sync contract price data (exchangeRate, softwareDevelopmentFee, otherFees)
+  // from the view-mode-specific generalInfos entry whenever viewMode changes.
+  // Without this, useFormula always uses values from the initial load (wrong MVV).
+  useEffect(() => {
+    if (!viewMode || !generalInfos || generalInfos.length === 0) return
+    const matchingInfo = generalInfos.find(
+      info => info.mvvLocationType === viewMode
+    )
+    if (matchingInfo) {
+      dispatch(
+        setContractPriceData({
+          exchangeRate: matchingInfo.exchangeRate,
+          softwareDevelopmentFee: matchingInfo.softwareDevelopmentFee,
+          otherFees: matchingInfo.otherFees,
+        })
+      )
+    }
+  }, [viewMode, generalInfos])
 
   const availableModes = useMemo(() => {
     const modes = []
