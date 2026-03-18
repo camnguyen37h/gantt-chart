@@ -9,48 +9,50 @@ import {
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
 
-/**
- * Ensures unique columnKeys when the API returns duplicates (e.g. DELIVERY_UNIT_7
- * appearing for both an Onsite and an OB delivery unit).
- * Renames the n-th duplicate column to `<key>_<index>` and matches the n-th
- * occurrence of that key in each row's cellList to the same new key.
- */
+/** Deduplicates columnKeys by appending `_index` to each occurrence (e.g. DELIVERY_UNIT_7_5, DELIVERY_UNIT_7_7). */
 const normalizeColumnKeys = (columnLabels, sectionList) => {
-  const keyCount = {}
-  for (const col of columnLabels) {
-    keyCount[col.columnKey] = (keyCount[col.columnKey] || 0) + 1
+  // Pass 1: group each columnKey's positions to detect duplicates
+  const positionsByKey = new Map()
+  for (let ci = 0; ci < columnLabels.length; ci++) {
+    const colKey = columnLabels[ci].columnKey
+    const positions = positionsByKey.get(colKey)
+    if (positions) positions.push(ci)
+    else positionsByKey.set(colKey, [ci])
   }
 
-  const duplicates = new Set(Object.keys(keyCount).filter(k => keyCount[k] > 1))
-  if (duplicates.size === 0) return { columnLabels, sectionList }
-
-  // Build ordered list of new keys per duplicate original key
-  const newKeysByOriginal = {}
-  const normalizedColumns = columnLabels.map(col => {
-    if (!duplicates.has(col.columnKey)) return col
-    const newKey = `${col.columnKey}_${col.index}`
-    ;(newKeysByOriginal[col.columnKey] = newKeysByOriginal[col.columnKey] || []).push(newKey)
-    return { ...col, columnKey: newKey }
+  // Build renamedKeysByOriginal and patch resultColumns only for duplicate keys (copy-on-write)
+  const renamedKeysByOriginal = new Map()
+  let resultColumns = columnLabels
+  positionsByKey.forEach((positions, colKey) => {
+    if (positions.length < 2) return
+    if (resultColumns === columnLabels) resultColumns = columnLabels.slice()
+    const renamedKeys = positions.map(pos => colKey + '_' + columnLabels[pos].index)
+    renamedKeysByOriginal.set(colKey, renamedKeys)
+    for (let pi = 0; pi < positions.length; pi++) {
+      resultColumns[positions[pi]] = { ...columnLabels[positions[pi]], columnKey: renamedKeys[pi] }
+    }
   })
 
-  // Remap cells: n-th occurrence of a duplicate key → n-th new key
-  const normalizedSections = sectionList.map(section => ({
+  if (renamedKeysByOriginal.size === 0) return { columnLabels, sectionList }
+
+  // Pass 2: remap each cell's columnKey by occurrence order within the row
+  const resultSections = sectionList.map(section => ({
     ...section,
     rowLabels: section.rowLabels.map(row => {
-      const seen = {}
+      const occurrenceCount = {}
       return {
         ...row,
         cellList: row.cellList.map(cell => {
-          if (!duplicates.has(cell.columnKey)) return cell
-          const n = (seen[cell.columnKey] = (seen[cell.columnKey] || 0) + 1)
-          const newKey = newKeysByOriginal[cell.columnKey]?.[n - 1]
-          return newKey ? { ...cell, columnKey: newKey } : cell
+          const renamedKeys = renamedKeysByOriginal.get(cell.columnKey)
+          if (!renamedKeys) return cell
+          const occurrence = (occurrenceCount[cell.columnKey] = (occurrenceCount[cell.columnKey] || 0) + 1)
+          return { ...cell, columnKey: renamedKeys[occurrence - 1] }
         }),
       }
     }),
   }))
 
-  return { columnLabels: normalizedColumns, sectionList: normalizedSections }
+  return { columnLabels: resultColumns, sectionList: resultSections }
 }
 
 const initialState = {
