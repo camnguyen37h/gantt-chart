@@ -8,6 +8,7 @@ import {
   getSummaryRevenuePlan,
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
+import { normalizeColumnKeys } from '../../utils'
 
 const initialState = {
   isSaveShowed: { generalInformation: false, businessPlan: false },
@@ -30,8 +31,8 @@ const initialState = {
   activePanel: '',
   deliveryUnitDataDelivery: {},
   loadingBusinessPlan: false,
-  userRoles: [],
 }
+
 const businessDetailsSlice = createSlice({
   name: 'businessDetails',
   initialState,
@@ -223,7 +224,11 @@ const businessDetailsSlice = createSlice({
         const { data, errorMessage } = payload || {}
 
         if (!data) return
-        const mmBill = data.sectionList.reduce((res, section) => {
+        const { columnLabels, sectionList } = normalizeColumnKeys(
+          data.columnLabels || [],
+          data.sectionList || []
+        )
+        const mmBill = sectionList.reduce((res, section) => {
           if (!res)
             return section.rowLabels.find(item => item.rowKey === 'MM_BILL')
           return res
@@ -242,62 +247,57 @@ const businessDetailsSlice = createSlice({
           })),
         }
 
-        const originalBusinessPlanItems = cloneDeep(data.sectionList || [])
-
-        state.businessPlanItems = (data.sectionList || []).reduce(
-          (res, cur, index) => {
-            const cloneRowLabels = cloneDeep(cur.rowLabels)
-            cloneRowLabels.sort((a, b) => {
+        const originalBusinessPlanItems = cloneDeep(sectionList)
+        state.businessPlanItems = sectionList.reduce((res, cur, index) => {
+          const cloneRowLabels = cloneDeep(cur.rowLabels)
+          cloneRowLabels.sort((a, b) => {
+            if (
+              a.rowKey.match(
+                /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
+              )
+            ) {
               if (
-                a.rowKey.match(
+                !b.rowKey.match(
                   /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
                 )
-              ) {
-                if (
-                  !b.rowKey.match(
-                    /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
-                  )
+              )
+                return 1
+              else {
+                return (
+                  parseInt(a.rowKey.match(/\d+/)[0]) -
+                  parseInt(b.rowKey.match(/\d+/)[0])
                 )
-                  return 1
-                else {
-                  return (
-                    parseInt(a.rowKey.match(/\d+/)[0]) -
-                    parseInt(b.rowKey.match(/\d+/)[0])
-                  )
-                }
               }
-            })
+            }
+          })
 
-            if (
-              cur.sectionKey === 'MAN_MONTH' &&
-              !cloneRowLabels.some(item => item.rowKey === 'MM_BILL_1')
-            ) {
-              cloneRowLabels.push(mmBillService)
-              originalBusinessPlanItems[index].rowLabels = cloneRowLabels
-            }
-            res[cur.sectionKey] = {
-              title: cur.sectionTitle,
-              data: cloneRowLabels.reduce((rowRes, rowCur) => {
-                rowRes[rowCur.rowKey] = {
-                  title: rowCur.label,
-                  data: rowCur.cellList.map(item => ({
-                    ...item,
-                    sectionKey: cur.sectionKey,
-                  })),
-                }
-                return rowRes
-              }, {}),
-            }
-            return res
-          },
-          {}
-        )
+          if (
+            cur.sectionKey === 'MAN_MONTH' &&
+            !cloneRowLabels.some(item => item.rowKey === 'MM_BILL_1')
+          ) {
+            cloneRowLabels.push(mmBillService)
+            originalBusinessPlanItems[index].rowLabels = cloneRowLabels
+          }
+          res[cur.sectionKey] = {
+            title: cur.sectionTitle,
+            data: cloneRowLabels.reduce((rowRes, rowCur) => {
+              rowRes[rowCur.rowKey] = {
+                title: rowCur.label,
+                data: rowCur.cellList.map(item => ({
+                  ...item,
+                  sectionKey: cur.sectionKey,
+                })),
+              }
+              return rowRes
+            }, {}),
+          }
+          return res
+        }, {})
         state.originalBusinessPlanItems = originalBusinessPlanItems
-        state.columns = data.columnLabels
+        state.columns = columnLabels
         state.version = data.version
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
-        state.userRoles = data.userRoles || []
       }
     )
 
@@ -313,8 +313,15 @@ const businessDetailsSlice = createSlice({
       getCompareBusinessPlanDetail.fulfilled,
       (state, { payload }) => {
         state.loadingBusinessPlan = false
-        state.compareColumnLabels = payload.columnLabels || null
-        state.compareBusinessPlanItems = (payload.sectionList || []).reduce(
+        const {
+          columnLabels: compareColumnLabels,
+          sectionList: compareSectionList,
+        } = normalizeColumnKeys(
+          payload.columnLabels || [],
+          payload.sectionList || []
+        )
+        state.compareColumnLabels = compareColumnLabels || null
+        state.compareBusinessPlanItems = compareSectionList.reduce(
           (res, cur) => {
             res[cur.sectionKey] = {
               title: cur.sectionTitle,

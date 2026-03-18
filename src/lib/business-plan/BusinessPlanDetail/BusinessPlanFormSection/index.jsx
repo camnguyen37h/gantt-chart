@@ -6,7 +6,6 @@ import {
   useFormula,
   useBusinessPlanPermission,
 } from '../../hooks'
-import { SCOPE } from '../../permissions/viewPermissions'
 import { Cascader, Icon, Input, InputNumber, Select, Tooltip } from 'antd'
 import cloneDeep from 'lodash/cloneDeep'
 import { SwapSVG } from '../SVGIcon'
@@ -37,6 +36,7 @@ import {
   getMergedColumns,
 } from './helpers'
 import { useSelector } from 'react-redux'
+import { SCOPE } from '../../permissions/policyMatrix'
 
 const CompareText = ({ value }) => {
   if (value === 0 || value === null) return null
@@ -456,16 +456,11 @@ function BusinessPlanFormSection({
       return p.ldap === userName
     })
 
-  var isEditableViewMode = viewMode === 'Onsite' || viewMode === 'Offshore'
-  var canEdit = isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
+  const isEditableViewMode = viewMode === 'Onsite' || viewMode === 'Offshore'
+  const canEdit =
+    isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
-  const VIEW_MODE_SCOPE = {
-    Total:   SCOPE.TOTAL,
-    OB:      SCOPE.OB,
-    Onsite:  SCOPE.ONSITE,
-    Offshore: SCOPE.OFFSHORE,
-  }
-  const perms = useBusinessPlanPermission(VIEW_MODE_SCOPE[viewMode] || SCOPE.TOTAL)
+  const perms = useBusinessPlanPermission(viewMode.toLowerCase())
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
@@ -788,9 +783,7 @@ function BusinessPlanFormSection({
             <div className="d-flex flex-column">
               {sectionTotalCell && (
                 <Fragment>
-                  <div className="total">
-                    {perms.renderColumn('TOTAL', sectionTotalValue, false, true)}
-                  </div>
+                  <div className="total">{formatNumber(sectionTotalValue)}</div>
                   <CompareText value={resCompareSectionTotal} />
                 </Fragment>
               )}
@@ -865,7 +858,13 @@ function BusinessPlanFormSection({
                     canEdit ? (
                       <BusinessPlanInput item={currentCell} />
                     ) : (
-                      perms.renderCell(currentCell, mergedCol.currentColumnKey, displayValue, false, true)
+                      perms.renderCell(
+                        currentCell,
+                        mergedCol.currentColumnKey,
+                        displayValue,
+                        false,
+                        true
+                      )
                     )}
                     <CompareText value={resCompare} />
                   </div>
@@ -990,7 +989,13 @@ function BusinessPlanFormSection({
                     />
                   ) : (
                     <div className="total">
-                      {perms.renderCell(totalItem, 'TOTAL', totalItemValue, percent, false)}
+                      {perms.renderCell(
+                        totalItem,
+                        'TOTAL',
+                        totalItemValue,
+                        percent,
+                        false
+                      )}
                     </div>
                   )}
                   <CompareText value={resCompareTotalRow} />
@@ -1079,7 +1084,13 @@ function BusinessPlanFormSection({
                             suffix={percent ? '%' : ''}
                           />
                         ) : (
-                          perms.renderCell(currentItem, mergedCol.currentColumnKey, cellValue, percent, false)
+                          perms.renderCell(
+                            currentItem,
+                            mergedCol.currentColumnKey,
+                            cellValue,
+                            percent,
+                            false
+                          )
                         )}
                         <CompareText value={resCompareCell} />
                       </div>

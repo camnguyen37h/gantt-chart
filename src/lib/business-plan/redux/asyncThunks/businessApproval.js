@@ -10,7 +10,9 @@ export const fetchBusinessPlanWorkflow = createAsyncThunk(
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
-      return NotificationManager.error(result.message)
+      return NotificationManager.error(
+        result.message || 'An unexpected error occurred.'
+      )
     }
   }
 )

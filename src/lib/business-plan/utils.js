@@ -8,14 +8,14 @@ export const formatNumber = (value, percent) => {
   return value === 0
     ? '-'
     : value < 0
-    ? `(${new Decimal(parseFloat(-value))
-        .toFixed(3)
-        .replace(/\.+0*$/, '')
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
-    : `${new Decimal(parseFloat(value))
-        .toFixed(3)
-        .replace(/\.+0*$/, '')
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
+      ? `(${new Decimal(parseFloat(-value))
+          .toFixed(3)
+          .replace(/\.+0*$/, '')
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
+      : `${new Decimal(parseFloat(value))
+          .toFixed(3)
+          .replace(/\.+0*$/, '')
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
 }
 
 export const formatNumberCompare = (value, percent) => {
@@ -172,4 +172,52 @@ export const mergeStepsByPosition = steps => {
       ? a.stateOrder - b.stateOrder
       : a.order - b.order
   )
+}
+
+export const normalizeColumnKeys = (columnLabels, sectionList) => {
+  const positionsByKey = new Map()
+  for (let ci = 0; ci < columnLabels.length; ci++) {
+    const colKey = columnLabels[ci].columnKey
+    const positions = positionsByKey.get(colKey)
+    if (positions) positions.push(ci)
+    else positionsByKey.set(colKey, [ci])
+  }
+
+  const renamedKeysByOriginal = new Map()
+  let resultColumns = columnLabels
+  positionsByKey.forEach((positions, colKey) => {
+    if (positions.length < 2) return
+    if (resultColumns === columnLabels) resultColumns = columnLabels.slice()
+    const renamedKeys = positions.map(
+      pos => colKey + '_' + columnLabels[pos].index
+    )
+    renamedKeysByOriginal.set(colKey, renamedKeys)
+    for (let pi = 0; pi < positions.length; pi++) {
+      resultColumns[positions[pi]] = {
+        ...columnLabels[positions[pi]],
+        columnKey: renamedKeys[pi],
+      }
+    }
+  })
+
+  if (renamedKeysByOriginal.size === 0) return { columnLabels, sectionList }
+
+  const resultSections = sectionList.map(section => ({
+    ...section,
+    rowLabels: section.rowLabels.map(row => {
+      const occurrenceCount = {}
+      return {
+        ...row,
+        cellList: row.cellList.map(cell => {
+          const renamedKeys = renamedKeysByOriginal.get(cell.columnKey)
+          if (!renamedKeys) return cell
+          const occurrence = (occurrenceCount[cell.columnKey] =
+            (occurrenceCount[cell.columnKey] || 0) + 1)
+          return { ...cell, columnKey: renamedKeys[occurrence - 1] }
+        }),
+      }
+    }),
+  }))
+
+  return { columnLabels: resultColumns, sectionList: resultSections }
 }

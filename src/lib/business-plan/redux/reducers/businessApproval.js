@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchBusinessPlanWorkflow } from '../asyncThunks'
-import { cloneDeep } from 'lodash'
 import { mergeStepsByPosition } from '../../utils'
 
 const initialState = {
@@ -8,6 +7,7 @@ const initialState = {
   listStep: [],
   loading: false,
 }
+
 const businessApprovalSlice = createSlice({
   name: 'businessApproval',
   initialState,
@@ -15,12 +15,10 @@ const businessApprovalSlice = createSlice({
     builder.addCase(fetchBusinessPlanWorkflow.pending, state => {
       state.loading = true
     })
-    builder.addCase(fetchBusinessPlanWorkflow.rejected, state => {
-      state.loading = false
-    })
     builder.addCase(
       fetchBusinessPlanWorkflow.fulfilled,
       (state, { payload }) => {
+        state.loading = false
         if (!payload || !payload.data) return
 
         const activeSteps = Object.values(payload.data).filter(
@@ -68,9 +66,11 @@ const businessApprovalSlice = createSlice({
 
         state.listStep = listStep
         state.listWorkOrder = listWorkOrder
-        state.loading = false
       }
     )
+    builder.addCase(fetchBusinessPlanWorkflow.rejected, state => {
+      state.loading = false
+    })
   },
 })
 

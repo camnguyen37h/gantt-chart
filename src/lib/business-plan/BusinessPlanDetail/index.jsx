@@ -21,8 +21,6 @@ import {
   setActiveBusinessPlanPanel,
   setIsSaveShowedDeliveryPlan,
   setValidation,
-  setSelectedMvvCode,
-  setContractPriceData,
 } from '../redux'
 import BusinessPlanDelivery from './BusinessPlanDelivery'
 import BusinessPlanFormSection from './BusinessPlanFormSection'
@@ -142,10 +140,11 @@ function BusinessPlanDetail({ match, history }) {
     ;(async () => {
       if (match.params.buId) {
         const res = await getBusinessPlanDetail(match.params.buId)
-        if (res.type.includes('fulfilled'))
+        if (res.type.includes('fulfilled')) {
           await getBusinessPlanWorkflow({
             referenceId: match.params.buId,
           })
+        }
       }
     })()
   }, [match.params.buId])
@@ -175,12 +174,12 @@ function BusinessPlanDetail({ match, history }) {
   const projectCode = useMemo(() => {
     return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
       .projectCode
-  }, [viewMode])
+  }, [businessPlanVersionId])
 
   const statusProjectCode = useMemo(() => {
     return (generalInfos.find(item => item.id === businessPlanVersionId) || [])
       .status
-  }, [viewMode])
+  }, [businessPlanVersionId])
 
   const availableModes = useMemo(() => {
     const modes = []
