@@ -31,6 +31,12 @@ function useBusinessPlanPermission(scope, columnTypeMap) {
   // Merge api roles + system roles once; recomputed only when userRoles changes
   const allRoles = useMemo(() => {
     const apiRoles = Array.isArray(userRoles) ? userRoles : []
+
+    // [DEV MOCK] — xóa dòng này sau khi test xong
+    // Thay 'DB-DUL-Onsite' bằng role muốn test, hoặc truyền nhiều role:
+    // return ['DB-DU-Onsite', 'DB-Margin-Offshore']
+    return ['DB-DUL-Onsite']
+
     return [...apiRoles, ...getSystemRoles()]
   }, [userRoles])
 
