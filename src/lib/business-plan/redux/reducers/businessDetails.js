@@ -9,6 +9,50 @@ import {
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
 
+/**
+ * Ensures unique columnKeys when the API returns duplicates (e.g. DELIVERY_UNIT_7
+ * appearing for both an Onsite and an OB delivery unit).
+ * Renames the n-th duplicate column to `<key>_<index>` and matches the n-th
+ * occurrence of that key in each row's cellList to the same new key.
+ */
+const normalizeColumnKeys = (columnLabels, sectionList) => {
+  const keyCount = {}
+  for (const col of columnLabels) {
+    keyCount[col.columnKey] = (keyCount[col.columnKey] || 0) + 1
+  }
+
+  const duplicates = new Set(Object.keys(keyCount).filter(k => keyCount[k] > 1))
+  if (duplicates.size === 0) return { columnLabels, sectionList }
+
+  // Build ordered list of new keys per duplicate original key
+  const newKeysByOriginal = {}
+  const normalizedColumns = columnLabels.map(col => {
+    if (!duplicates.has(col.columnKey)) return col
+    const newKey = `${col.columnKey}_${col.index}`
+    ;(newKeysByOriginal[col.columnKey] = newKeysByOriginal[col.columnKey] || []).push(newKey)
+    return { ...col, columnKey: newKey }
+  })
+
+  // Remap cells: n-th occurrence of a duplicate key → n-th new key
+  const normalizedSections = sectionList.map(section => ({
+    ...section,
+    rowLabels: section.rowLabels.map(row => {
+      const seen = {}
+      return {
+        ...row,
+        cellList: row.cellList.map(cell => {
+          if (!duplicates.has(cell.columnKey)) return cell
+          const n = (seen[cell.columnKey] = (seen[cell.columnKey] || 0) + 1)
+          const newKey = newKeysByOriginal[cell.columnKey]?.[n - 1]
+          return newKey ? { ...cell, columnKey: newKey } : cell
+        }),
+      }
+    }),
+  }))
+
+  return { columnLabels: normalizedColumns, sectionList: normalizedSections }
+}
+
 const initialState = {
   isSaveShowed: { generalInformation: false, businessPlan: false },
   businessPlanItems: {},
@@ -222,7 +266,11 @@ const businessDetailsSlice = createSlice({
         const { data, errorMessage } = payload || {}
 
         if (!data) return
-        const mmBill = data.sectionList.reduce((res, section) => {
+        const { columnLabels, sectionList } = normalizeColumnKeys(
+          data.columnLabels || [],
+          data.sectionList || []
+        )
+        const mmBill = sectionList.reduce((res, section) => {
           if (!res)
             return section.rowLabels.find(item => item.rowKey === 'MM_BILL')
           return res
@@ -241,9 +289,9 @@ const businessDetailsSlice = createSlice({
           })),
         }
 
-        const originalBusinessPlanItems = cloneDeep(data.sectionList || [])
+        const originalBusinessPlanItems = cloneDeep(sectionList)
 
-        state.businessPlanItems = (data.sectionList || []).reduce(
+        state.businessPlanItems = sectionList.reduce(
           (res, cur, index) => {
             const cloneRowLabels = cloneDeep(cur.rowLabels)
             cloneRowLabels.sort((a, b) => {
@@ -292,7 +340,7 @@ const businessDetailsSlice = createSlice({
           {}
         )
         state.originalBusinessPlanItems = originalBusinessPlanItems
-        state.columns = data.columnLabels
+        state.columns = columnLabels
         state.version = data.version
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
@@ -311,8 +359,12 @@ const businessDetailsSlice = createSlice({
       getCompareBusinessPlanDetail.fulfilled,
       (state, { payload }) => {
         state.loadingBusinessPlan = false
-        state.compareColumnLabels = payload.columnLabels || null
-        state.compareBusinessPlanItems = (payload.sectionList || []).reduce(
+        const { columnLabels: compareColumnLabels, sectionList: compareSectionList } = normalizeColumnKeys(
+          payload.columnLabels || [],
+          payload.sectionList || []
+        )
+        state.compareColumnLabels = compareColumnLabels || null
+        state.compareBusinessPlanItems = compareSectionList.reduce(
           (res, cur) => {
             res[cur.sectionKey] = {
               title: cur.sectionTitle,
