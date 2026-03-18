@@ -1,108 +1,93 @@
-import { BP_ROLES } from './roles'
+import { PERMISSION_MATRIX, COL_CAT } from './policyMatrix'
 
-/** Placeholder shown instead of real data when user lacks view permission */
+export { SCOPE, COL_CAT } from './policyMatrix'
+
+/** Placeholder shown instead of real data when user lacks view permission. */
 export const MASKED_VALUE = '*****'
-
-// ─── Role groups — edit here only; downstream logic auto-updates ───────────
-
-const GLOBAL_ADMIN_ROLES    = new Set([BP_ROLES.DB_ADMIN, BP_ROLES.DB_BOM, BP_ROLES.DB_FC])
-const TOTAL_ONLY_ROLES      = new Set([BP_ROLES.SALE_ONSITE, BP_ROLES.BUL_ONSITE, BP_ROLES.DUL_ONSITE, BP_ROLES.G_LEAD_OB, BP_ROLES.G_LEAD_ONSITE])
-const DU_ONSITE_ROLES       = new Set([BP_ROLES.DU_ONSITE])
-const DU_OFFSHORE_ROLES     = new Set([BP_ROLES.DU_OFFSHORE])
-const MARGIN_OFFSHORE_ROLES = new Set([BP_ROLES.MARGIN_OFFSHORE])
-
-// ─── Helpers ───────────────────────────────────────────────────────────────
-
-/** @param {string[]} userRoles @param {Set<string>} roleSet @returns {boolean} */
-const hasAnyRole = (userRoles, roleSet) => userRoles.some(r => roleSet.has(r))
-
-/** Checks system roles stored in localStorage; flattened to a single `.some` pass */
-const hasSystemRole = (roleSet) => {
-  try {
-    const permissions = JSON.parse(localStorage.getItem('permissions')) || []
-    return permissions.flatMap(p => p.activities || []).some(a => roleSet.has(a.name))
-  } catch {
-    return false
-  }
-}
-
-// ─── Column category ───────────────────────────────────────────────────────
 
 /**
  * Maps a columnKey to its display category.
  * @param {string} columnKey
- * @param {Object|null} columnTypeMap  explicit override e.g. `{ DELIVERY_UNIT_34: 'onsite' }`
+ * @param {Object|null} columnTypeMap  optional override e.g. { DELIVERY_UNIT_34: 'onsite' }
  * @returns {'total'|'internal'|'onsite'|'offshore'|'unknown'}
  */
 export const getColumnCategory = (columnKey, columnTypeMap) => {
-  if (columnTypeMap?.[columnKey]) return columnTypeMap[columnKey]
-  if (columnKey === 'TOTAL')                return 'total'
-  if (columnKey === 'INTERNAL')             return 'internal'
-  if (columnKey.startsWith('SALE'))         return 'onsite'
-  if (columnKey.startsWith('DELIVERY_UNIT')) return 'offshore'
+  if (columnTypeMap && columnTypeMap[columnKey]) return columnTypeMap[columnKey]
+  if (columnKey === 'TOTAL')                 return COL_CAT.TOTAL
+  if (columnKey === 'INTERNAL')              return COL_CAT.INTERNAL
+  if (columnKey.startsWith('SALE'))          return COL_CAT.ONSITE
+  if (columnKey.startsWith('DELIVERY_UNIT')) return COL_CAT.OFFSHORE
   return 'unknown'
 }
 
-// ─── Permission computation ────────────────────────────────────────────────
-
 /**
- * Derives Total-tab permission flags from API roles + localStorage system roles.
- * Priority: canViewAll > canViewTotalOnly > canViewDU* > canViewMarginOffshore
- * @param {string[]} apiUserRoles  from `data.userRoles` in Redux state
- * @returns {TotalTabPermissions}
+ * Merges two policies, keeping the most permissive value for each field.
+ * Full access ('*') short-circuits immediately.
  */
-const computeTotalTabPermissions = (apiUserRoles) => {
-  const roles = Array.isArray(apiUserRoles) ? apiUserRoles : []
-  const canViewAll = hasAnyRole(roles, GLOBAL_ADMIN_ROLES) || hasSystemRole(GLOBAL_ADMIN_ROLES)
-
+const mergePolicies = (a, b) => {
+  if (a.columns === COL_CAT.ALL || b.columns === COL_CAT.ALL) return { columns: COL_CAT.ALL }
   return {
-    canViewAll,
-    canViewTotalOnly:      !canViewAll && hasAnyRole(roles, TOTAL_ONLY_ROLES),
-    canViewDUOnsite:       !canViewAll && hasAnyRole(roles, DU_ONSITE_ROLES),
-    canViewDUOffshore:     !canViewAll && hasAnyRole(roles, DU_OFFSHORE_ROLES),
-    canViewMarginOffshore: !canViewAll && hasAnyRole(roles, MARGIN_OFFSHORE_ROLES),
+    columns:           [...new Set([...(a.columns || []), ...(b.columns || [])])],
+    // null means "no section restriction" — if either policy is unrestricted, result is unrestricted
+    sections:          (a.sections == null || b.sections == null)
+                         ? null
+                         : [...new Set([...(a.sections || []), ...(b.sections || [])])],
+    // sectionHeaderOnly only applies when ALL matching roles require it
+    sectionHeaderOnly: !!(a.sectionHeaderOnly && b.sectionHeaderOnly),
   }
 }
 
 /**
- * Returns true if the column should show real data; false → render MASKED_VALUE.
- * `isSectionHeader`: canViewTotalOnly users see TOTAL only on section header rows, not data rows.
- * @param {string} columnKey
- * @param {TotalTabPermissions} totalPerms
- * @param {Object|null} columnTypeMap
- * @param {boolean} [isSectionHeader=false]
- * @returns {boolean}
+ * Resolves the effective merged policy for a list of roles in a given scope.
+ * Returns null when no role matches — default is to mask everything.
+ * @param {string[]} allRoles
+ * @param {string} scope
+ * @returns {Object|null}
  */
-export const isColumnVisible = (columnKey, totalPerms, columnTypeMap, isSectionHeader) => {
-  if (totalPerms.canViewAll) return true
-
-  const cat = getColumnCategory(columnKey, columnTypeMap)
-
-  if (totalPerms.canViewTotalOnly)      return isSectionHeader === true && cat === 'total'
-  if (totalPerms.canViewDUOnsite)       return cat === 'total' || cat === 'onsite' || cat === 'internal'
-  if (totalPerms.canViewDUOffshore)     return cat === 'total' || cat === 'offshore'
-  if (totalPerms.canViewMarginOffshore) return cat === 'total' || cat === 'offshore'
-
-  return false
+const resolvePolicy = (allRoles, scope) => {
+  let resolved = null
+  for (let i = 0; i < allRoles.length; i++) {
+    const rolePolicy = PERMISSION_MATRIX[allRoles[i]]
+    if (!rolePolicy) continue
+    const scopePolicy = rolePolicy[scope] || rolePolicy['*']
+    if (!scopePolicy) continue
+    resolved = resolved ? mergePolicies(resolved, scopePolicy) : scopePolicy
+    if (resolved.columns === COL_CAT.ALL) break // max privilege reached
+  }
+  return resolved
 }
 
 /**
- * Returns restricted section keys, or null = all sections visible.
- * @param {TotalTabPermissions} totalPerms
- * @returns {string[]|null}
+ * Returns true if this column should display real data for the given roles in a scope.
+ * @param {string[]} allRoles      pre-merged api roles + system roles
+ * @param {string}   scope         e.g. SCOPE.TOTAL, SCOPE.REVENUE
+ * @param {string}   columnKey
+ * @param {Object|null} columnTypeMap
+ * @param {boolean}  [isSectionHeader=false]
+ * @returns {boolean}
  */
-export const getAllowedSections = (totalPerms) =>
-  totalPerms.canViewMarginOffshore ? ['MARGIN'] : null
+export const canViewColumn = (allRoles, scope, columnKey, columnTypeMap, isSectionHeader) => {
+  const policy = resolvePolicy(allRoles, scope)
+  if (!policy) return false
+  if (policy.columns === COL_CAT.ALL) return true
+  const cat = getColumnCategory(columnKey, columnTypeMap)
+  if (!policy.columns.includes(cat)) return false
+  if (policy.sectionHeaderOnly && isSectionHeader !== true) return false
+  return true
+}
 
 /**
- * Entry point — extend with OB / Onsite / Offshore tab permissions when ready.
- * @param {string[]} apiUserRoles
- * @returns {{ total: TotalTabPermissions }}
+ * Returns true if this section is visible for the given roles in a scope.
+ * @param {string[]} allRoles
+ * @param {string}   scope
+ * @param {string}   sectionKey
+ * @returns {boolean}
  */
-export const computeViewPermissions = (apiUserRoles) => ({
-  total: computeTotalTabPermissions(apiUserRoles),
-  // ob:       computeOBTabPermissions(apiUserRoles),
-  // onsite:   computeOnsiteTabPermissions(apiUserRoles),
-  // offshore: computeOffshoreTabPermissions(apiUserRoles),
-})
+export const canViewSection = (allRoles, scope, sectionKey) => {
+  const policy = resolvePolicy(allRoles, scope)
+  if (!policy) return false
+  if (!policy.sections || policy.columns === COL_CAT.ALL) return true
+  return policy.sections.includes(sectionKey)
+}
+
 
