@@ -328,6 +328,10 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionSale = () => {
+    // In Total/OB: SALE column is merged (1 column representing all sub-plans) → return the sum
+    if (viewMode === 'Total' || viewMode === 'OB') {
+      return getSoftwareProductionTotal()
+    }
     return getSoftwareProductionSaleByLocationType(viewMode)
   }
 
