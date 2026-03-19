@@ -106,14 +106,15 @@ const ApprovalList = ({
 
   return (
     <StyledApprovalList>
-      {Object.values(listStep).map(step => {
+      {Object.values(listStep).map((step, stepIndex) => {
         if (isEmptyListDu) {
           return (
-            <div className="grid-list">
+            <div key={step.stepName || stepIndex} className="grid-list">
               {step && step.approvalList.length > 0 && (
                 <div className="grid-group">
-                  {step.approvalList.map(approver => (
+                  {step.approvalList.map((approver, approverIndex) => (
                     <ApprovalItem
+                      key={approver.ldap || approver.userId || approverIndex}
                       approver={approver}
                       enableActions={enableActions}
                       onClickAssign={approver =>
@@ -139,11 +140,12 @@ const ApprovalList = ({
           }, allWO.length)
 
           return (
-            <div className="grid-list">
+            <div key={step.stepName || stepIndex} className="grid-list">
               {step.map.None && step.map.None.length > 0 && (
                 <div className="grid-group">
-                  {step.map.None.map(approver => (
+                  {step.map.None.map((approver, approverIndex) => (
                     <ApprovalItem
+                      key={approver.ldap || approver.userId || approverIndex}
                       approver={approver}
                       enableActions={enableActions}
                       onClickAssign={approver =>
@@ -168,7 +170,7 @@ const ApprovalList = ({
         }
 
         return (
-          <div className="grid-list">
+          <div key={step.stepName || stepIndex} className="grid-list">
             {Object.keys(listDU).map((gKey, gKeyIndex) => {
               const isDU = step.map[gKey]
                 ? step.map[gKey][0].departmentName !== gKey

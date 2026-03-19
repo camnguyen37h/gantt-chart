@@ -69,7 +69,7 @@ const KpiBonusBodyItem = Form.create(
         ? (getFieldDecorator(record.field)
           (<div>
             <StyledInputNumber
-              defaultValue={record.kpi}
+              value={record.kpi}
               className={
                 `${validation[record.field] && 'input-error'} industry-input-number`
               }

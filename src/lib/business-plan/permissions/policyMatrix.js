@@ -15,12 +15,12 @@ export const COL_CAT = {
   ALL: '*',
   TOTAL: 'total',
   INTERNAL: 'internal',
-  ONSITE: 'onsite', // SALE_* fallback khi không có columnTypeMap
-  OFFSHORE: 'offshore', // DELIVERY_UNIT_* fallback khi không có columnTypeMap
-  BU_ONSITE: 'bu_onsite', // SALE_XX thuộc Onsite sub-plan — cần columnTypeMap
-  BU_OFFSHORE: 'bu_offshore', // SALE_XX thuộc Offshore sub-plan — cần columnTypeMap
-  DU_ONSITE: 'du_onsite', // DELIVERY_UNIT_XX thuộc Onsite — cần composite key map
-  DU_OFFSHORE: 'du_offshore', // DELIVERY_UNIT_XX thuộc Offshore — cần composite key map
+  ONSITE: 'onsite',
+  OFFSHORE: 'offshore',
+  BU_ONSITE: 'bu_onsite',
+  BU_OFFSHORE: 'bu_offshore',
+  DU_ONSITE: 'du_onsite',
+  DU_OFFSHORE: 'du_offshore',
 }
 
 export const PERMISSION_MATRIX = {
@@ -29,7 +29,6 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE]: { columns: COL_CAT.ALL },
   },
 
   [BP_ROLES.DB_BOM]: {
@@ -37,7 +36,6 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE]: { columns: COL_CAT.ALL },
   },
 
   [BP_ROLES.DB_FCL]: {
@@ -45,7 +43,6 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE]: { columns: COL_CAT.ALL },
   },
 
   [BP_ROLES.DB_FC]: {
@@ -53,16 +50,13 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE]: { columns: COL_CAT.ALL },
   },
 
-  // ONSITE
   [BP_ROLES.SALE_ONSITE]: {
     [SCOPE.TOTAL]: {
       sectionColumns: [COL_CAT.TOTAL],
       dataColumns: [],
     },
-    [SCOPE.REVENUE]: { columns: COL_CAT.ALL },
   },
 
   [BP_ROLES.BUL_ONSITE]: {
@@ -74,7 +68,8 @@ export const PERMISSION_MATRIX = {
 
   [BP_ROLES.DUL_ONSITE]: {
     [SCOPE.TOTAL]: {
-      columns: [COL_CAT.BU_ONSITE, COL_CAT.DU_ONSITE],
+      sectionColumns: [COL_CAT.TOTAL],
+      dataColumns: [],
     },
   },
 
@@ -92,7 +87,6 @@ export const PERMISSION_MATRIX = {
     },
   },
 
-  // OFFSHORE
   [BP_ROLES.DUL_OFFSHORE]: {},
 
   [BP_ROLES.SPECIAL_VIEW_DU_ONSITE]: {

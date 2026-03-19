@@ -18,17 +18,7 @@ const initialState = {
   totalContractPrice: null,
   softwareDevelopmentFee: null,
   otherFees: null,
-  /**
-   * Current view mode: 'Onsite' | 'Offshore' | 'Total' | 'OB'
-   */
   viewMode: null,
-  /**
-   * Map of mvvLocationType -> { exchangeRate, softwareDevelopmentFee, otherFees }
-   * Built from generalInfos on getBusinessPlanDetail.fulfilled.
-   * Used by formula engine to compute per-sub-plan revenues in any view mode.
-   * Example: { Onsite: { exchangeRate: 1.5, softwareDevelopmentFee: 12000000 },
-   *            Offshore: { exchangeRate: 0, softwareDevelopmentFee: 8000000 } }
-   */
   ratesByLocationType: {},
   generalInfos: [],
   validation: {},
@@ -210,8 +200,6 @@ const businessDetailsSlice = createSlice({
 
       state.generalInfos = data.generalInfos || []
 
-      // Build ratesByLocationType from all sub-plans so the formula engine can
-      // look up the correct rates for any view mode (Onsite, Offshore, Total, OB)
       const ratesByLocationType = {}
       if (data.generalInfos && data.generalInfos.length > 0) {
         data.generalInfos.forEach(function (info) {
@@ -308,18 +296,20 @@ const businessDetailsSlice = createSlice({
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
 
-        // Persist the current view mode so the formula engine can query it
-        var incomingView = action.payload && action.payload.data && action.payload.data.view
-        // params.view is set by the dispatch caller: { id, params: { view: 'Onsite' } }
-        var viewModeFromAction = action.meta && action.meta.arg && action.meta.arg.params && action.meta.arg.params.view
+        const viewModeFromAction =
+          action.meta &&
+          action.meta.arg &&
+          action.meta.arg.params &&
+          action.meta.arg.params.view
         if (viewModeFromAction) {
           state.viewMode = viewModeFromAction
         }
 
-        // For Onsite / Offshore single-view: keep legacy single-rate fields in sync
-        // so any code outside useFormula that reads them directly still works correctly
-        if (viewModeFromAction && state.ratesByLocationType[viewModeFromAction]) {
-          var rates = state.ratesByLocationType[viewModeFromAction]
+        if (
+          viewModeFromAction &&
+          state.ratesByLocationType[viewModeFromAction]
+        ) {
+          const rates = state.ratesByLocationType[viewModeFromAction]
           state.exchangeRate = rates.exchangeRate
           state.softwareDevelopmentFee = rates.softwareDevelopmentFee
           if (rates.otherFees != null) state.otherFees = rates.otherFees

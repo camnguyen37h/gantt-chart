@@ -2,10 +2,8 @@ import { PERMISSION_MATRIX, COL_CAT } from './policyMatrix'
 
 export const MASKED_VALUE = '*****'
 
-// columnKey is already unique after normalizeColumnKeys (duplicates renamed e.g. DELIVERY_UNIT_7_5).
-// columnTypeMap keys are those normalized keys, values are colCategory strings from col.colCategory.
 const getColumnCategory = (columnKey, columnTypeMap) => {
-  if (columnTypeMap?.[columnKey]) return columnTypeMap[columnKey]
+  if (columnTypeMap && columnTypeMap[columnKey]) return columnTypeMap[columnKey]
   if (columnKey === 'TOTAL') return COL_CAT.TOTAL
   if (columnKey === 'INTERNAL') return COL_CAT.INTERNAL
   if (columnKey.startsWith('SALE')) return COL_CAT.ONSITE
@@ -50,7 +48,14 @@ const resolvePolicy = (allRoles, scope) => {
   return resolved
 }
 
-export const canViewColumn = (allRoles, scope, columnKey, columnTypeMap, isSectionHeader, sectionKey) => {
+export const canViewColumn = (
+  allRoles,
+  scope,
+  columnKey,
+  columnTypeMap,
+  isSectionHeader,
+  sectionKey
+) => {
   const policy = resolvePolicy(allRoles, scope)
   if (!policy) return false
 
@@ -58,7 +63,6 @@ export const canViewColumn = (allRoles, scope, columnKey, columnTypeMap, isSecti
   if (columns === COL_CAT.ALL) return true
   if (!columns || columns.length === 0) return false
 
-  // If the policy restricts to specific sections, mask cells outside those sections
   if (policy.sections && sectionKey && !policy.sections.includes(sectionKey)) {
     return false
   }

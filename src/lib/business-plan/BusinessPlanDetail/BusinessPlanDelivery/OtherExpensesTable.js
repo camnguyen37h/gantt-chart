@@ -36,6 +36,9 @@ const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
     display: none;
   }
+  .ant-input-number-input {
+    text-align: center;
+  }
 `
 const StyledDisabledIcon = styled(Icon)`
   svg {

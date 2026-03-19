@@ -3,25 +3,31 @@ import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
 
 const useFormula = () => {
-  const { exchangeRate, businessPlanItems, softwareDevelopmentFee, viewMode, ratesByLocationType } =
-    useSelector(state => state.businessPlanDetails)
+  const {
+    exchangeRate,
+    businessPlanItems,
+    softwareDevelopmentFee,
+    viewMode,
+    ratesByLocationType,
+  } = useSelector(state => state.businessPlanDetails)
 
-  // ---------------------------------------------------------------------------
-  // Per-locationType rate resolver
-  // For single-view (Onsite / Offshore): returns that sub-plan's rates directly.
-  // For multi-view (Total / OB): accepts a locationType and returns its rates.
-  // Falls back to the global state values when ratesByLocationType is not ready.
-  // ---------------------------------------------------------------------------
-  const getRatesByLocationType = (locationType) => {
-    if (locationType && ratesByLocationType && ratesByLocationType[locationType]) {
+  const getRatesByLocationType = locationType => {
+    if (
+      locationType &&
+      ratesByLocationType &&
+      ratesByLocationType[locationType]
+    ) {
       return ratesByLocationType[locationType]
     }
-    return { exchangeRate: exchangeRate, softwareDevelopmentFee: softwareDevelopmentFee }
+    return {
+      exchangeRate: exchangeRate,
+      softwareDevelopmentFee: softwareDevelopmentFee,
+    }
   }
 
-  // List of all known sub-plan location types (Onsite, Offshore).
-  // Used by Total/OB formulas to sum across all sub-plans.
-  const allLocationTypes = ratesByLocationType ? Object.keys(ratesByLocationType) : []
+  const allLocationTypes = ratesByLocationType
+    ? Object.keys(ratesByLocationType)
+    : []
 
   const getSum = (...rest) => {
     if (rest.every(item => item === null || item === undefined)) return null
@@ -311,27 +317,28 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionTotal = () => {
-    // Multi-view (Total / OB): sum Revenues from work delivered across each sub-plan
     if (allLocationTypes.length > 1) {
-      const values = allLocationTypes.map(lt => getSoftwareProductionSaleByLocationType(lt))
+      const values = allLocationTypes.map(lt =>
+        getSoftwareProductionSaleByLocationType(lt)
+      )
       return getSum.apply(null, values)
     }
-    // Single-view (Onsite / Offshore): single sub-plan value
     return getSoftwareProductionSaleByLocationType(viewMode)
   }
 
-  // Returns exchangeRate * softwareDevelopmentFee for a specific sub-plan locationType.
-  // This is the single source of truth for all "Revenues from work delivered" calculations.
-  const getSoftwareProductionSaleByLocationType = (locationType) => {
+  const getSoftwareProductionSaleByLocationType = locationType => {
     const rates = getRatesByLocationType(locationType)
-    return getMultiplicationRes(rates.exchangeRate, rates.softwareDevelopmentFee)
+    return getMultiplicationRes(
+      rates.exchangeRate,
+      rates.softwareDevelopmentFee
+    )
   }
 
   const getSoftwareProductionSale = () => {
-    // In Total/OB: SALE column is merged (1 column representing all sub-plans) → return the sum
     if (viewMode === 'Total' || viewMode === 'OB') {
       return getSoftwareProductionTotal()
     }
+
     return getSoftwareProductionSaleByLocationType(viewMode)
   }
 
@@ -380,7 +387,8 @@ const useFormula = () => {
 
   const getDeductionSale = () => {
     try {
-      const resolvedColumnKey = viewMode === 'Total' || viewMode === 'OB' ? 'TOTAL' : 'SALE'
+      const resolvedColumnKey =
+        viewMode === 'Total' || viewMode === 'OB' ? 'TOTAL' : 'SALE'
 
       const deductionFromBackend = getItemValue(
         {
@@ -406,10 +414,10 @@ const useFormula = () => {
         .plus(new Decimal(deductionFromBackend))
         .toNumber()
 
-      // For Total/OB: sum all sub-plans. For Onsite/Offshore: use only that sub-plan's revenue.
-      const softProdSale = viewMode === 'Total' || viewMode === 'OB'
-        ? getSoftwareProductionTotal()
-        : getSoftwareProductionSale()
+      const softProdSale =
+        viewMode === 'Total' || viewMode === 'OB'
+          ? getSoftwareProductionTotal()
+          : getSoftwareProductionSale()
       const revenuesFromUserTyping =
         softProdSale !== null && softProdSale !== undefined ? softProdSale : 0
 
@@ -1235,10 +1243,7 @@ const useFormula = () => {
     let lowerCaseColumnKey = columnKey.toLowerCase()
     if (lowerCaseColumnKey.includes('delivery_unit'))
       lowerCaseColumnKey = 'delivery_unit'
-    // SALE_45, SALE_40, etc. (multi-view columns) → normalize to 'sale' for config lookup.
-    // The full original columnKey is passed as arg to handlers that need it.
-    if (/^sale_\d+$/.test(lowerCaseColumnKey))
-      lowerCaseColumnKey = 'sale'
+    if (/^sale_\d+$/.test(lowerCaseColumnKey)) lowerCaseColumnKey = 'sale'
     let newRowkey = rowKey
     if (isService) {
       newRowkey = 'SERVICE'

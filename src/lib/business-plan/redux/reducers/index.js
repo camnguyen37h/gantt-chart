@@ -7,3 +7,5 @@ export { default as businessGeneralInformationReducer } from './businessGeneralI
 export { default as businessDocumentsReducer } from './businessDocuments'
 export { default as businessPlanRevenueReducer } from './businessPlanRevenue'
 export { default as businessPlanDeliveryReducer } from './businessPlanDelivery'
+export { default as businessCommentsReducer } from './businessComments'
+export { default as bussinessPlanHistoryReducer } from './bussinessPlanHistoryReducers'

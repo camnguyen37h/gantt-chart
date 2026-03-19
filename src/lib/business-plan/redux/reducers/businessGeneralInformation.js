@@ -84,10 +84,6 @@ export const businessGeneralInformationSlice = createSlice({
         state.planningEndDate = selectedInfo.planningEndDate
       }
     },
-
-    setMvvLocationTypeIdMap: (state, { payload }) => {
-      state.mvvLocationTypeIdMap = payload
-    },
   },
   extraReducers: builder => {
     builder.addCase(getBusinessPlanDetail.pending, (state, action) => {
@@ -175,7 +171,6 @@ export const {
   handleChangeDateGeneralInfo,
   setKpiBonusData,
   setSelectedMvvCode,
-  setMvvLocationTypeIdMap,
 } = businessGeneralInformationSlice.actions
 
 export default businessGeneralInformationSlice.reducer

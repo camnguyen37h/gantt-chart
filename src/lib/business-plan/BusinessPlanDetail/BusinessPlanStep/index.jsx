@@ -2,7 +2,13 @@ import Tag from '../../../../components/common/Tag'
 import { DateFormat } from '../../../constants/DateFormat'
 import { Form, Icon, Input, Modal } from 'antd'
 import moment from 'moment'
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import {
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+  useMemo,
+} from 'react'
 import { withRouter } from 'react-router-dom'
 import { STATUS_COLOR_DETAIL, STATUS_COLOR_PROJECT_TYPE } from '../../constants'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../../hooks'
@@ -15,6 +21,7 @@ import {
   postBusinessPlanComment,
 } from '../../redux'
 import { MODULE_COMMENT_TYPE } from '../../../constants/CommentConstant'
+import { isEmpty } from 'lodash'
 
 const CommentForm = Form.create()(
   forwardRef(({ form }, ref) => {
@@ -54,11 +61,15 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   const { userName } = userPOA
 
   const { getBusinessPlanDetail } = useBusinessPlanDetails()
-  const { generalInfos = [] } = useSelector(
+  const { generalInfos, mvvLocationTypeIdMap } = useSelector(
     state => state.businessGeneralInformation
   )
 
   const businessPlanId = match.params.buId
+
+  const projectReferenceIds = useMemo(() => {
+    return !isEmpty(mvvLocationTypeIdMap) && Object.values(mvvLocationTypeIdMap)
+  }, [mvvLocationTypeIdMap])
 
   const handleAssign = async params => {
     const { ldap, departmentName, stepName, taskKey, referenceIds } =
@@ -99,12 +110,11 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
     try {
       setRejectLoading(true)
       const res = await commentRef.current.form.validateFields()
-      const { departmentName, stepName, taskKey, referenceIds } =
-        rejectPerson || {}
+      const { departmentName, stepName, taskKey } = rejectPerson || {}
 
       await dispatch(
         postBusinessPlanComment({
-          referenceIds,
+          referenceIds: projectReferenceIds,
           commentContent: res.comment,
           moduleTypeEnum: MODULE_COMMENT_TYPE.BUSINESS_PLAN_DETAIL,
         })
@@ -112,8 +122,8 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
       await dispatch(
         getBusinessPlanDetailComment({
           referenceIds:
-            referenceIds && referenceIds.length > 0
-              ? referenceIds.join(',')
+            projectReferenceIds && projectReferenceIds.length > 0
+              ? projectReferenceIds.join(',')
               : undefined,
           module: MODULE_COMMENT_TYPE.BUSINESS_PLAN_DETAIL,
         })
@@ -122,7 +132,7 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
         ldap: userName,
         department: departmentName,
         stepName,
-        referenceIds,
+        referenceIds: projectReferenceIds,
         action: 'REJECTED',
         taskKey: taskKey,
       })

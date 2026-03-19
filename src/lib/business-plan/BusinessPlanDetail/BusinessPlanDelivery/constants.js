@@ -6,7 +6,7 @@ export default RESOURCE_INFORMATION_TYPE
 
 export const DU_MEMBER_WARNING_MESSAGE = "This person does not belong to this delivery plan's delivery unit"
 
-export const REVIEWING_WARNING_MESSAGE = "This delivery plan is being reviewed"
+export const REVIEWING_WARNING_MESSAGE = "You cannot edit when filter is All, please change the filter to a single unit"
 
 export const DUPLICATED_COSTNAMES_MESSAGE = "Cost name is duplicated in other expenses section"
 

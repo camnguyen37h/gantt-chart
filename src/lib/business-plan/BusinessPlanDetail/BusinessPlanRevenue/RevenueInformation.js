@@ -245,13 +245,27 @@ const RevenueInformation = ({
       })
 
       if (result.status === ResponseStatusCode.success) {
-        setDataSourceTable(prevData => ({
-          ...prevData,
-          avgPrice: result.data.avgPrice,
-          startDate: result.data.startDate,
-          endDate: result.data.endDate,
-          revenueInfos: [...prevData.revenueInfos, ...result.data.revenueInfos],
-        }))
+        setDataSourceTable(prevData => {
+          const existingKeys = new Set(
+            prevData.revenueInfos.map(
+              item =>
+                `${item.position}-${item.unitPrice}-${item.department}-${item.saleWorkOrderId}`
+            )
+          )
+          const newUniqueInfos = result.data.revenueInfos.filter(
+            item =>
+              !existingKeys.has(
+                `${item.position}-${item.unitPrice}-${item.department}-${item.saleWorkOrderId}`
+              )
+          )
+          return {
+            ...prevData,
+            avgPrice: result.data.avgPrice,
+            startDate: result.data.startDate,
+            endDate: result.data.endDate,
+            revenueInfos: [...prevData.revenueInfos, ...newUniqueInfos],
+          }
+        })
         if (start + pageSize > result.data.revenueInfos.length) {
           setHasMore(false)
         }

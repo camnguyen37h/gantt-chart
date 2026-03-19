@@ -35,6 +35,7 @@ import {
   makeCellKey,
   getMergedColumns,
 } from './helpers'
+import { useSelector } from 'react-redux'
 
 const CompareText = ({ value }) => {
   if (value === 0 || value === null) return null
@@ -398,11 +399,7 @@ const ColumnHeaderRow = ({ mergedColumns, isApproved }) => {
   )
 }
 
-function BusinessPlanFormSection({
-  handleChangeTab,
-  activeTab,
-  viewMode = 'Total',
-}) {
+function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
   const {
     businessPlanItems,
     columns,
@@ -429,20 +426,34 @@ function BusinessPlanFormSection({
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
 
-  // columnTypeMap reads colCategory tagged by normalizeColumnKeys at API load time — O(n) one-liner
+  const { generalInfos } = useSelector(
+    state => state.businessGeneralInformation
+  )
+
   const columnTypeMap = useMemo(
-    () => columns.reduce((map, col) => (col.colCategory ? { ...map, [col.columnKey]: col.colCategory } : map), {}),
+    () =>
+      columns.reduce(
+        (map, col) =>
+          col.colCategory ? { ...map, [col.columnKey]: col.colCategory } : map,
+        {}
+      ),
     [columns]
   )
 
-  var userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
-    userName: 'Demo User',
-    userId: 1,
-  }
-  var userName = userPOA.userName
+  const { userName } = JSON.parse(localStorage.getItem('userPOA'))
 
-  var isDraft = status === statusBusinessPlanDetail.draft
-  var isApproved = status === statusBusinessPlanDetail.approved
+  const isDraft =
+    (generalInfos.length > 0 &&
+      generalInfos.every(
+        item => item.status === statusBusinessPlanDetail.draft
+      )) ||
+    ''
+  const isApproved =
+    (generalInfos.length > 0 &&
+      generalInfos.every(
+        item => item.status === statusBusinessPlanDetail.approved
+      )) ||
+    ''
 
   var isFin = checkRolePermission(
     SourceConstants.BUSINESS_PLAN_DETAIL,
@@ -465,7 +476,10 @@ function BusinessPlanFormSection({
   const canEdit =
     isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
-  const perms = useBusinessPlanPermission(loadingBusinessPlan ? null : viewMode, columnTypeMap)
+  const perms = useBusinessPlanPermission(
+    loadingBusinessPlan ? null : viewMode,
+    columnTypeMap
+  )
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
