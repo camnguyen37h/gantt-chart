@@ -3,6 +3,7 @@ import { Col, Icon, Row, Spin, Tooltip } from 'antd'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getSummaryRevenuePlan } from '../../redux'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
 import './style.css'
 import { RevenueSummaryTooltip } from './constant'
 
@@ -37,6 +38,7 @@ const CustomDescription = ({ title, value }) => {
 
 const RevenueSummary = ({ businessVersion }) => {
   const dispatch = useDispatch()
+  const perms = useBusinessPlanPermission('revenuePlan', null)
   const {
     summaryRevenuePlan,
     deliveryUnitDataRevenue,
@@ -69,10 +71,13 @@ const RevenueSummary = ({ businessVersion }) => {
     loading,
   } = summaryRevenuePlan
 
+  const canView = perms.canViewSection('SUMMARY')
+
   return (
     <div>
       <Spin spinning={loading} />
       {!loading && (
+        canView ? (
         <div>
           <CustomDescription title="MM bill" value={mmBill} />
           <CustomDescription
@@ -92,6 +97,11 @@ const RevenueSummary = ({ businessVersion }) => {
             <CustomDescription title="Agency expenses" value={agencyExpenses} />
           )}
         </div>
+        ) : (
+          <div style={{ padding: '12px', color: '#999', textAlign: 'center' }}>
+            Bạn không có quyền xem phần này.
+          </div>
+        )
       )}
     </div>
   )

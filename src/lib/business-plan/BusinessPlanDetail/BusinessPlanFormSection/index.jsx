@@ -35,8 +35,6 @@ import {
   makeCellKey,
   getMergedColumns,
 } from './helpers'
-import { useSelector } from 'react-redux'
-import { SCOPE } from '../../permissions/policyMatrix'
 
 const CompareText = ({ value }) => {
   if (value === 0 || value === null) return null
@@ -430,6 +428,12 @@ function BusinessPlanFormSection({
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
 
+  // columnTypeMap reads colCategory tagged by normalizeColumnKeys at API load time — O(n) one-liner
+  const columnTypeMap = useMemo(
+    () => columns.reduce((map, col) => (col.colCategory ? { ...map, [col.columnKey]: col.colCategory } : map), {}),
+    [columns]
+  )
+
   var userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
     userName: 'Demo User',
     userId: 1,
@@ -460,7 +464,7 @@ function BusinessPlanFormSection({
   const canEdit =
     isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
-  const perms = useBusinessPlanPermission(viewMode.toLowerCase())
+  const perms = useBusinessPlanPermission(viewMode, columnTypeMap)
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
@@ -783,7 +787,15 @@ function BusinessPlanFormSection({
             <div className="d-flex flex-column">
               {sectionTotalCell && (
                 <Fragment>
-                  <div className="total">{formatNumber(sectionTotalValue)}</div>
+                  <div className="total">
+                    {perms.renderColumn(
+                      'TOTAL',
+                      sectionTotalValue,
+                      false,
+                      true,
+                      sectionKey
+                    )}
+                  </div>
                   <CompareText value={resCompareSectionTotal} />
                 </Fragment>
               )}
@@ -863,7 +875,8 @@ function BusinessPlanFormSection({
                         mergedCol.currentColumnKey,
                         displayValue,
                         false,
-                        true
+                        true,
+                        sectionKey
                       )
                     )}
                     <CompareText value={resCompare} />
@@ -994,7 +1007,8 @@ function BusinessPlanFormSection({
                         'TOTAL',
                         totalItemValue,
                         percent,
-                        false
+                        false,
+                        sectionKey
                       )}
                     </div>
                   )}
@@ -1089,7 +1103,8 @@ function BusinessPlanFormSection({
                             mergedCol.currentColumnKey,
                             cellValue,
                             percent,
-                            false
+                            false,
+                            sectionKey
                           )
                         )}
                         <CompareText value={resCompareCell} />

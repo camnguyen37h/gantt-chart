@@ -8,14 +8,14 @@ export const formatNumber = (value, percent) => {
   return value === 0
     ? '-'
     : value < 0
-      ? `(${new Decimal(parseFloat(-value))
-          .toFixed(3)
-          .replace(/\.+0*$/, '')
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
-      : `${new Decimal(parseFloat(value))
-          .toFixed(3)
-          .replace(/\.+0*$/, '')
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
+    ? `(${new Decimal(parseFloat(-value))
+        .toFixed(3)
+        .replace(/\.+0*$/, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')})${percent ? '%' : ''}`
+    : `${new Decimal(parseFloat(value))
+        .toFixed(3)
+        .replace(/\.+0*$/, '')
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${percent ? '%' : ''}`
 }
 
 export const formatNumberCompare = (value, percent) => {
@@ -175,45 +175,69 @@ export const mergeStepsByPosition = steps => {
 }
 
 export const normalizeColumnKeys = (columnLabels, sectionList) => {
-  const positionsByKey = new Map()
-  for (let ci = 0; ci < columnLabels.length; ci++) {
-    const colKey = columnLabels[ci].columnKey
-    const positions = positionsByKey.get(colKey)
-    if (positions) positions.push(ci)
-    else positionsByKey.set(colKey, [ci])
+  const keyCounts = {}
+  for (const col of columnLabels) {
+    keyCounts[col.columnKey] = (keyCounts[col.columnKey] || 0) + 1
   }
 
-  const renamedKeysByOriginal = new Map()
-  let resultColumns = columnLabels
-  positionsByKey.forEach((positions, colKey) => {
-    if (positions.length < 2) return
-    if (resultColumns === columnLabels) resultColumns = columnLabels.slice()
-    const renamedKeys = positions.map(
-      pos => colKey + '_' + columnLabels[pos].index
-    )
-    renamedKeysByOriginal.set(colKey, renamedKeys)
-    for (let pi = 0; pi < positions.length; pi++) {
-      resultColumns[positions[pi]] = {
-        ...columnLabels[positions[pi]],
-        columnKey: renamedKeys[pi],
+  let saleCount = 0
+  const duOccurrence = {}
+  let hasRenames = false
+
+  const resultColumns = columnLabels.map(col => {
+    const isDuplicate = keyCounts[col.columnKey] > 1
+    if (isDuplicate) hasRenames = true
+    const newKey = isDuplicate ? `${col.columnKey}_${col.index}` : col.columnKey
+
+    let colCategory
+    if (col.id != null) {
+      if (col.columnKey.startsWith('SALE_')) {
+        colCategory = saleCount++ === 0 ? 'bu_onsite' : 'bu_offshore'
+      } else if (col.columnKey.startsWith('DELIVERY_UNIT')) {
+        if (isDuplicate) {
+          const occ = (duOccurrence[col.columnKey] =
+            (duOccurrence[col.columnKey] || 0) + 1)
+          colCategory =
+            occ === keyCounts[col.columnKey] ? 'du_offshore' : 'du_onsite'
+        } else {
+          colCategory = 'du_onsite'
+        }
       }
+    }
+
+    if (newKey === col.columnKey && !colCategory) return col
+    return {
+      ...col,
+      ...(newKey !== col.columnKey && { columnKey: newKey }),
+      ...(colCategory && { colCategory }),
     }
   })
 
-  if (renamedKeysByOriginal.size === 0) return { columnLabels, sectionList }
+  if (!hasRenames) return { columnLabels: resultColumns, sectionList }
+
+  const renamedKeysByOriginal = new Map()
+  for (let i = 0; i < columnLabels.length; i++) {
+    const orig = columnLabels[i].columnKey
+    const renamed = resultColumns[i].columnKey
+    if (orig !== renamed) {
+      const arr = renamedKeysByOriginal.get(orig)
+      if (arr) arr.push(renamed)
+      else renamedKeysByOriginal.set(orig, [renamed])
+    }
+  }
 
   const resultSections = sectionList.map(section => ({
     ...section,
     rowLabels: section.rowLabels.map(row => {
-      const occurrenceCount = {}
+      const cellOcc = {}
       return {
         ...row,
         cellList: row.cellList.map(cell => {
           const renamedKeys = renamedKeysByOriginal.get(cell.columnKey)
           if (!renamedKeys) return cell
-          const occurrence = (occurrenceCount[cell.columnKey] =
-            (occurrenceCount[cell.columnKey] || 0) + 1)
-          return { ...cell, columnKey: renamedKeys[occurrence - 1] }
+          const occ = (cellOcc[cell.columnKey] =
+            (cellOcc[cell.columnKey] || 0) + 1)
+          return { ...cell, columnKey: renamedKeys[occ - 1] }
         }),
       }
     }),
