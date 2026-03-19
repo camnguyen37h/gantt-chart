@@ -74,8 +74,7 @@ export const PERMISSION_MATRIX = {
 
   [BP_ROLES.DUL_ONSITE]: {
     [SCOPE.TOTAL]: {
-      sectionColumns: [COL_CAT.TOTAL],
-      dataColumns: [],
+      columns: [COL_CAT.BU_ONSITE, COL_CAT.DU_ONSITE],
     },
   },
 

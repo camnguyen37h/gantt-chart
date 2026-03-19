@@ -7,9 +7,7 @@
     "version": 1,
     "startDate": 1767200400000,
     "endDate": 1835456400000,
-    "userRoles": [
-      "DB-FC"
-    ],
+    "userRoles": ["DB-ADMIN"],
     "warningMessage": [],
     "versions": [
       {
@@ -31,13 +29,19 @@
         "id": 62,
         "label": "BJ1",
         "index": 2,
-        "columnKey": "SALE_62"
+        "columnKey": "SALE"
       },
       {
         "id": null,
         "label": "Internal",
         "index": 3,
         "columnKey": "INTERNAL"
+      },
+      {
+        "id": 2,
+        "label": "DJ2",
+        "index": 4,
+        "columnKey": "DELIVERY_UNIT_2"
       },
       {
         "id": 39,
@@ -69,7 +73,7 @@
               },
               {
                 "value": 100000000,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -88,6 +92,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": null
+              },
+              {
+                "value": 400000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "UNIT_PRICE",
+                "normUnitPriceConfig": 12,
+                "normUnitPriceFloor": 10.56,
+                "normUnitPriceCeiling": 13.44,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
               },
               {
                 "value": 300000,
@@ -119,7 +134,7 @@
               },
               {
                 "value": 50,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -138,6 +153,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": null
+              },
+              {
+                "value": 68,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "MM_PRODUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
               },
               {
                 "value": 4,
@@ -169,7 +195,7 @@
               },
               {
                 "value": 50,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -188,6 +214,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": null
+              },
+              {
+                "value": 15,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "MM_BILL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
               },
               {
                 "value": 35,
@@ -219,7 +256,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -238,6 +275,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": null
+              },
+              {
+                "value": 15,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "MM_BILL_1",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
               },
               {
                 "value": 35,
@@ -264,7 +312,7 @@
             "rowKey": "REVENUES_TOTAL",
             "cellList": [
               {
-                "value": 5000000000,
+                "value": 5001812000,
                 "columnKey": "TOTAL",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -275,8 +323,8 @@
                 "permissionView": true
               },
               {
-                "value": 5000000000,
-                "columnKey": "SALE_62",
+                "value": 5000612000,
+                "columnKey": "SALE",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -297,7 +345,18 @@
                 "permissionView": true
               },
               {
-                "value": 10500000,
+                "value": 6600000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "REVENUES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 11100000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -326,7 +385,7 @@
               },
               {
                 "value": 340000000,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -338,6 +397,17 @@
               {
                 "value": -16500000,
                 "columnKey": "INTERNAL",
+                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 6000000,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -376,7 +446,7 @@
               },
               {
                 "value": 4660000000,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -388,6 +458,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "DEDUCTION",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -414,7 +495,7 @@
             "rowKey": "ONSITE_FEE",
             "cellList": [
               {
-                "value": 0,
+                "value": 603000,
                 "columnKey": "TOTAL",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
@@ -425,8 +506,8 @@
                 "permissionView": true
               },
               {
-                "value": 0,
-                "columnKey": "SALE_62",
+                "value": 203000,
+                "columnKey": "SALE",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -447,7 +528,18 @@
                 "permissionView": null
               },
               {
-                "value": 0,
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "ONSITE_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
@@ -464,7 +556,7 @@
             "rowKey": "EQUIPMENT_FEE",
             "cellList": [
               {
-                "value": 0,
+                "value": 604000,
                 "columnKey": "TOTAL",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
@@ -475,8 +567,8 @@
                 "permissionView": true
               },
               {
-                "value": 0,
-                "columnKey": "SALE_62",
+                "value": 204000,
+                "columnKey": "SALE",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -497,7 +589,18 @@
                 "permissionView": null
               },
               {
-                "value": 0,
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "EQUIPMENT_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
@@ -514,7 +617,7 @@
             "rowKey": "OTHER_FEE",
             "cellList": [
               {
-                "value": 0,
+                "value": 605000,
                 "columnKey": "TOTAL",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
@@ -525,8 +628,8 @@
                 "permissionView": true
               },
               {
-                "value": 0,
-                "columnKey": "SALE_62",
+                "value": 205000,
+                "columnKey": "SALE",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -547,7 +650,18 @@
                 "permissionView": null
               },
               {
-                "value": 0,
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "OTHER_FEE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
@@ -583,7 +697,7 @@
               },
               {
                 "value": 16500000,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -602,6 +716,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": true
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "COST_PRICE_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
               },
               {
                 "value": null,
@@ -633,7 +758,7 @@
               },
               {
                 "value": 16500000,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -652,6 +777,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": true
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "COST_OF_DU_SOLD",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
               },
               {
                 "value": null,
@@ -678,7 +814,7 @@
             "rowKey": "SELLING_EXPENSES_TOTAL",
             "cellList": [
               {
-                "value": 0,
+                "value": 110000,
                 "columnKey": "TOTAL",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -689,8 +825,8 @@
                 "permissionView": true
               },
               {
-                "value": 0,
-                "columnKey": "SALE_62",
+                "value": 110000,
+                "columnKey": "SALE",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -702,6 +838,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "SELLING_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -740,7 +887,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -752,6 +899,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "INCENTIVES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -778,7 +936,7 @@
             "rowKey": "AGENCY_EXPENSE",
             "cellList": [
               {
-                "value": 0,
+                "value": 110000,
                 "columnKey": "TOTAL",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
@@ -789,8 +947,8 @@
                 "permissionView": true
               },
               {
-                "value": 0,
-                "columnKey": "SALE_62",
+                "value": 110000,
+                "columnKey": "SALE",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -802,6 +960,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "AGENCY_EXPENSE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -835,7 +1004,7 @@
             "rowKey": "DELIVERY_EXPENSES_TOTAL",
             "cellList": [
               {
-                "value": 654426560,
+                "value": 613686560,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -847,7 +1016,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -868,7 +1037,18 @@
                 "permissionView": true
               },
               {
-                "value": 41520000,
+                "value": 574106560,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DELIVERY_EXPENSES_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 39580000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -885,7 +1065,7 @@
             "rowKey": "DIRECT_LABOR_COST",
             "cellList": [
               {
-                "value": 653426560,
+                "value": 612686560,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -897,7 +1077,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -918,7 +1098,18 @@
                 "permissionView": true
               },
               {
-                "value": 41520000,
+                "value": 573106560,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DIRECT_LABOR_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 39580000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -947,7 +1138,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -965,6 +1156,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": true,
+                "permissionView": true
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "OUTSOURCING_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
                 "permissionView": true
               },
               {
@@ -997,7 +1199,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1015,6 +1217,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": true,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
                 "permissionView": true
               },
               {
@@ -1047,7 +1260,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1065,6 +1278,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": true,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "ONSITE_DEVELOPMENT_COST",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
                 "permissionView": true
               },
               {
@@ -1097,7 +1321,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1109,6 +1333,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "PROJECT_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1147,7 +1382,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1165,6 +1400,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": true,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "OVERTIME",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
                 "permissionView": true
               },
               {
@@ -1197,7 +1443,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1215,6 +1461,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": true,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "NON_DEDUCTION_VAT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
                 "permissionView": true
               },
               {
@@ -1247,7 +1504,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1265,6 +1522,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": true,
+                "permissionView": true
+              },
+              {
+                "value": 200000,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "OTHER_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
                 "permissionView": true
               },
               {
@@ -1304,7 +1572,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1316,6 +1584,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "TAX_TOTAL",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1354,7 +1633,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1366,6 +1645,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "PIC_CIT",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1399,7 +1689,7 @@
             "rowKey": "DIRECT_MARGIN",
             "cellList": [
               {
-                "value": 4345573440,
+                "value": 4388015440,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -1410,8 +1700,8 @@
                 "permissionView": true
               },
               {
-                "value": 4983500000,
-                "columnKey": "SALE_62",
+                "value": 4984002000,
+                "columnKey": "SALE",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1432,7 +1722,18 @@
                 "permissionView": true
               },
               {
-                "value": -31020000,
+                "value": -567506560,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -28480000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -1449,7 +1750,7 @@
             "rowKey": "DIRECT_MARGIN_BONUS",
             "cellList": [
               {
-                "value": 4345573440,
+                "value": 4388015440,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -1460,8 +1761,8 @@
                 "permissionView": true
               },
               {
-                "value": 4983500000,
-                "columnKey": "SALE_62",
+                "value": 4984002000,
+                "columnKey": "SALE",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1482,7 +1783,18 @@
                 "permissionView": true
               },
               {
-                "value": -31020000,
+                "value": -567506560,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DIRECT_MARGIN_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -28480000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -1511,7 +1823,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1523,6 +1835,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1549,7 +1872,7 @@
             "rowKey": "INDIRECT_MARGIN",
             "cellList": [
               {
-                "value": 4345573440,
+                "value": 4388015440,
                 "columnKey": "TOTAL",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -1560,8 +1883,8 @@
                 "permissionView": true
               },
               {
-                "value": 4983500000,
-                "columnKey": "SALE_62",
+                "value": 4984002000,
+                "columnKey": "SALE",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1582,7 +1905,18 @@
                 "permissionView": true
               },
               {
-                "value": -31020000,
+                "value": -567506560,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "INDIRECT_MARGIN",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -28480000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -1599,7 +1933,7 @@
             "rowKey": "DIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": 86.911,
+                "value": 87.729,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -1610,8 +1944,8 @@
                 "permissionView": true
               },
               {
-                "value": 99.67,
-                "columnKey": "SALE_62",
+                "value": 99.668,
+                "columnKey": "SALE",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1632,7 +1966,18 @@
                 "permissionView": true
               },
               {
-                "value": -295.429,
+                "value": -8598.584,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -256.577,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -1649,7 +1994,7 @@
             "rowKey": "DIRECT_MARGIN_BONUS_RATE",
             "cellList": [
               {
-                "value": 86.911,
+                "value": 87.729,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -1660,8 +2005,8 @@
                 "permissionView": true
               },
               {
-                "value": 99.67,
-                "columnKey": "SALE_62",
+                "value": 99.668,
+                "columnKey": "SALE",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1682,7 +2027,18 @@
                 "permissionView": true
               },
               {
-                "value": -295.429,
+                "value": -8598.584,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DIRECT_MARGIN_BONUS_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 50.66,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -256.577,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -1699,7 +2055,7 @@
             "rowKey": "INDIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": 86.911,
+                "value": 87.729,
                 "columnKey": "TOTAL",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -1710,8 +2066,8 @@
                 "permissionView": true
               },
               {
-                "value": 99.67,
-                "columnKey": "SALE_62",
+                "value": 99.668,
+                "columnKey": "SALE",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1732,7 +2088,18 @@
                 "permissionView": true
               },
               {
-                "value": -295.429,
+                "value": -8598.584,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "INDIRECT_MARGIN_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -256.577,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -1756,7 +2123,7 @@
             "rowKey": "DELIVERY_AVERAGE_EXPENSES",
             "cellList": [
               {
-                "value": 9089257.778,
+                "value": 8523424.444,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -1768,7 +2135,7 @@
               },
               {
                 "value": 330000,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1789,7 +2156,18 @@
                 "permissionView": null
               },
               {
-                "value": 10380000,
+                "value": 8442743.529,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "DELIVERY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 9895000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -1806,7 +2184,7 @@
             "rowKey": "SALARY_AVERAGE_EXPENSES",
             "cellList": [
               {
-                "value": 9075368.889,
+                "value": 8509535.556,
                 "columnKey": "TOTAL",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -1818,7 +2196,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1839,7 +2217,18 @@
                 "permissionView": null
               },
               {
-                "value": 10380000,
+                "value": 8428037.647,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "SALARY_AVERAGE_EXPENSES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": 9895000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -1868,7 +2257,7 @@
               },
               {
                 "value": 100,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1887,6 +2276,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": null
+              },
+              {
+                "value": 22.059,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "BILLABLE_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": 0,
+                "editable": false,
+                "permissionView": true
               },
               {
                 "value": 875,
@@ -1918,7 +2318,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1937,6 +2337,17 @@
                 "normBusinessPlanConfig": null,
                 "editable": false,
                 "permissionView": null
+              },
+              {
+                "value": 88235.294,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "PRODUCTIVITY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
               },
               {
                 "value": 2625000,
@@ -1956,7 +2367,7 @@
             "rowKey": "EFFICIENCY",
             "cellList": [
               {
-                "value": 60355186.667,
+                "value": 60944658.889,
                 "columnKey": "TOTAL",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -1968,7 +2379,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1989,7 +2400,18 @@
                 "permissionView": null
               },
               {
-                "value": -7755000,
+                "value": -8345684.706,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "EFFICIENCY",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": true
+              },
+              {
+                "value": -7120000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -2018,7 +2440,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2030,6 +2452,17 @@
               {
                 "value": null,
                 "columnKey": "INTERNAL",
+                "rowKey": "INCENTIVES_RATE",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2068,7 +2501,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2086,6 +2519,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "PRODUCTION_MM_BONUS",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true,
                 "permissionView": null
               },
               {
@@ -2118,7 +2562,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE_62",
+                "columnKey": "SALE",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2136,6 +2580,17 @@
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
                 "editable": false,
+                "permissionView": null
+              },
+              {
+                "value": null,
+                "columnKey": "DELIVERY_UNIT_2",
+                "rowKey": "BILL_RATE_NORM",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": true,
                 "permissionView": null
               },
               {

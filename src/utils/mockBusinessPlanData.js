@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ========================================
  * MOCK BUSINESS PLAN DATA - COMPREHENSIVE
  * ========================================
@@ -17,26 +17,20 @@ import mockBusinessPlanByViewOffshoreV2 from './mock-data/businessPlanOffshoreV2
 export const mockBusinessPlanDetail = {
   httpStatus: 200,
   data: {
-    id: 436,
-    projectCode: 'GLBTM2500093',
-    status: 'Draft',
+    id: 448,
+    projectCode: 'GLBOD2500102',
+    status: 'Verification',
     version: 1,
-    startDate: 1770915600000,
-    endDate: 1784134800000,
+    startDate: 1772298000000,
+    endDate: 1801328400000,
     userRoles: ['DB-DUL-Onsite'],
     warningMessage: [],
     versions: [
       {
-        versionId: 436,
+        versionId: 448,
         versionName: 'Version 1',
-        status: 'APPROVED',
-        statusName: 'Approved',
-      },
-      {
-        versionId: 437,
-        versionName: 'Version 2',
-        status: 'DRAFT',
-        statusName: 'Draft',
+        status: 'VERIFICATION',
+        statusName: 'Verification',
       },
     ],
     generalInfos: [
@@ -44,7 +38,7 @@ export const mockBusinessPlanDetail = {
         listAM: [
           {
             id: 11233,
-            businessPlanVersionId: 436,
+            businessPlanVersionId: 448,
             memberType: 'AM',
             userId: 3744,
             ldap: 'ntmanh6',
@@ -58,7 +52,7 @@ export const mockBusinessPlanDetail = {
         listTeamLead: [
           {
             id: 11247,
-            businessPlanVersionId: 436,
+            businessPlanVersionId: 448,
             memberType: 'TEAM_LEAD',
             userId: 136,
             ldap: 'lcnguyen',
@@ -73,7 +67,7 @@ export const mockBusinessPlanDetail = {
         listPreparator: [
           {
             id: 11246,
-            businessPlanVersionId: 436,
+            businessPlanVersionId: 448,
             memberType: 'PREPARATOR',
             userId: 3,
             ldap: 'bhduc',
@@ -88,7 +82,7 @@ export const mockBusinessPlanDetail = {
         listPM: [
           {
             id: 11232,
-            businessPlanVersionId: 436,
+            businessPlanVersionId: 448,
             memberType: 'PM',
             userId: 3860,
             ldap: 'ttlam1',
@@ -99,10 +93,10 @@ export const mockBusinessPlanDetail = {
             isDefault: true,
           },
         ],
-        businessPlanName: 'Myfirstmillion Onsite',
+        businessPlanName: 'GLBOD2500102 Onsite',
         customerName: 'MyFirstMillion',
-        startDate: 1770915600000,
-        endDate: 1784134800000,
+        startDate: 1772298000000,
+        endDate: 1801328400000,
         orderType: 'Commercial',
         recurringNew: 'New',
         pm: null,
@@ -118,101 +112,14 @@ export const mockBusinessPlanDetail = {
         planningEndDate: null,
         businessPlanKpiDTO: {
           id: 68,
-          businessPlanVersionId: 436,
+          businessPlanVersionId: 448,
           kpiPm: 30,
           kpiQa: 3,
           kpiMember: 67,
         },
-        projectCode: 'GLBTM2500093',
+        projectCode: 'GLBOD2500102',
         mvvLocationType: 'Onsite',
-        id: 436,
-      },
-      {
-        listAM: [
-          {
-            id: 11234,
-            businessPlanVersionId: 437,
-            memberType: 'AM',
-            userId: 624,
-            ldap: 'hmy',
-            departmentId: 169,
-            departmentName: 'BKR1',
-            startDate: 1770915600000,
-            endDate: 1784134800000,
-            isDefault: true,
-          },
-        ],
-        listTeamLead: [
-          {
-            id: 11248,
-            businessPlanVersionId: 437,
-            memberType: 'TEAM_LEAD',
-            userId: 10561,
-            ldap: 'ltlinh7',
-            departmentId: 107,
-            departmentName: 'DU3.21',
-            startDate: 1770915600000,
-            endDate: 1784134800000,
-            isDefault: false,
-          },
-        ],
-        listPreSale: [],
-        listPreparator: [
-          {
-            id: 11249,
-            businessPlanVersionId: 437,
-            memberType: 'PREPARATOR',
-            userId: 3,
-            ldap: 'bhduc',
-            departmentId: 6,
-            departmentName: 'DU1.6',
-            startDate: 1770915600000,
-            endDate: 1784134800000,
-            isDefault: false,
-          },
-        ],
-        listAdviser: [],
-        listPM: [
-          {
-            id: 11235,
-            businessPlanVersionId: 437,
-            memberType: 'PM',
-            userId: 6,
-            ldap: 'bmthin',
-            departmentId: 203,
-            departmentName: 'HNO',
-            startDate: 1770915600000,
-            endDate: 1784134800000,
-            isDefault: true,
-          },
-        ],
-        businessPlanName: 'GLBOD2500047 Offshore',
-        customerName: 'MyFirstMillion',
-        startDate: 1770915600000,
-        endDate: 1784134800000,
-        orderType: 'T&M',
-        recurringNew: 'New',
-        pm: null,
-        currency: 778,
-        exchangeRate: 25000,
-        totalContractPrice: 8000000,
-        industry: 18,
-        customerMarket: 'Korea',
-        cooperationPeriod: 'Less than 12 months',
-        softwareDevelopmentFee: 8000000,
-        otherFees: 0,
-        planningStartDate: null,
-        planningEndDate: null,
-        businessPlanKpiDTO: {
-          id: 69,
-          businessPlanVersionId: 437,
-          kpiPm: 25,
-          kpiQa: 2,
-          kpiMember: 50,
-        },
-        projectCode: 'GLBOD2500047',
-        mvvLocationType: 'Offshore',
-        id: 437,
+        id: 448,
       },
     ],
     columnLabels: [
@@ -3035,29 +2942,8 @@ export const mockOtherExpensesTable = {
 export const mockDepartmentsByVersion = {
   httpStatus: 200,
   data: [
-    // Revenue departments (groupSale: true)
-    { groupName: 'BU3', groupId: 220, groupSale: true, locationType: 'Onsite' },
-    {
-      groupName: 'BU5',
-      groupId: 40,
-      groupSale: true,
-      locationType: 'Offshore',
-    },
-
-    // Delivery departments (groupSale: false)
-    {
-      groupName: 'BJ3',
-      groupId: 66,
-      groupSale: false,
-      locationType: 'Offshore',
-    },
-    {
-      groupName: 'DJ2',
-      groupId: 39,
-      groupSale: false,
-      locationType: 'Offshore',
-    },
-    { groupName: 'DU1', groupId: 1, groupSale: false, locationType: 'Onsite' },
+    { groupName: 'BU3', groupId: 220, groupSale: true },
+    { groupName: 'BJ3', groupId: 66, groupSale: false },
   ],
   messageId: 'Success',
   errorMessage: '',
@@ -3155,18 +3041,13 @@ export const mockMaxKPISetting = {
   errorMessage: '',
 }
 
-// Single combined workflow — both G3 (offshore) and G1+GKR (onsite) groups in one flow
-// Mirrors response get all approval.json: steps share the same workOrder {G1, G3, GKR}
+// Approval workflow from BE get-all-approval-steps (id=448, GLBOD2500102)
+// Groups: G3 (BU3) and CJP (BJ3)
 export const mockApprovalSteps = {
   httpStatus: 200,
   data: {
-    // Flat dict of step objects keyed by step ID — mirrors the real API response.
-    // Two separate workflow groups (G3 and G1+GKR) each have their own Draft,
-    // BU/DU Lead, G Lead, FC, BOM, CEO and Approved steps.
-    // The reducer merges steps at the same (stateOrder, order) position.
     data: {
-      // ── G3 workflow ──────────────────────────────────────────────────────────
-      8447: {
+      9130: {
         stepName: 'Draft',
         stateName: 'Draft',
         stateOrder: 10,
@@ -3174,119 +3055,117 @@ export const mockApprovalSteps = {
         order: 1,
         map: { None: [] },
       },
-      8448: {
+      9131: {
         stepName: 'BU/DU Lead Pending Approval',
         stateName: 'Verification',
         stateOrder: 100,
         stateHidden: false,
         order: 1,
         map: {
+          CJP: [
+            {
+              id: 5832,
+              taskKey: 'BP-5832',
+              approvalStepId: 9131,
+              ldap: 'nxcanh',
+              departmentName: 'BJ3',
+              processStatus: 'APPROVED',
+              history: [{ id: 3959, approvalPersonId: 5832, ldap: 'nbtduy', previousLdap: 'nxcanh', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
+            },
+          ],
           G3: [
             {
-              id: 5182,
-              taskKey: 'BP-5182',
-              approvalStepId: 8448,
-              ldap: 'ntviet2',
-              departmentName: 'DU3.1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3405,
-                  approvalPersonId: 5182,
-                  ldap: 'nbtduy',
-                  previousLdap: 'ntviet2',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5183,
-              taskKey: 'BP-5183',
-              approvalStepId: 8448,
-              ldap: 'nvtung2',
-              departmentName: 'DU3.1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3406,
-                  approvalPersonId: 5183,
-                  ldap: 'nbtduy',
-                  previousLdap: 'nvtung2',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5184,
-              taskKey: 'BP-5184',
-              approvalStepId: 8448,
+              id: 5831,
+              taskKey: 'BP-5831',
+              approvalStepId: 9131,
               ldap: 'vttung3',
               departmentName: 'BU3',
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3407,
-                  approvalPersonId: 5184,
-                  ldap: 'nbtduy',
-                  previousLdap: 'vttung3',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3960, approvalPersonId: 5831, ldap: 'nbtduy', previousLdap: 'vttung3', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
           ],
         },
       },
-      8450: {
+      9132: {
+        stepName: 'Approved',
+        stateName: 'Approved',
+        stateOrder: 10000,
+        stateHidden: false,
+        order: 1,
+        map: { None: [] },
+      },
+      9133: {
         stepName: 'G Lead Pending Approval',
         stateName: 'Verification',
         stateOrder: 100,
         stateHidden: false,
         order: 2,
         map: {
+          CJP: [
+            {
+              id: 5833,
+              taskKey: 'BP-5833',
+              approvalStepId: 9133,
+              ldap: 'ncchinh1',
+              departmentName: 'CJP',
+              processStatus: 'APPROVED',
+              history: [{ id: 3961, approvalPersonId: 5833, ldap: 'nbtduy', previousLdap: 'ncchinh1', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
+            },
+            {
+              id: 5834,
+              taskKey: 'BP-5834',
+              approvalStepId: 9133,
+              ldap: 'ndtoi',
+              departmentName: 'CJP',
+              processStatus: 'APPROVED',
+              history: [{ id: 3962, approvalPersonId: 5834, ldap: 'nbtduy', previousLdap: 'ndtoi', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
+            },
+          ],
           G3: [
             {
-              id: 5185,
-              taskKey: 'BP-5185',
-              approvalStepId: 8450,
+              id: 5835,
+              taskKey: 'BP-5835',
+              approvalStepId: 9133,
               ldap: 'ltoanh',
               departmentName: 'G3',
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3491,
-                  approvalPersonId: 5185,
-                  ldap: 'nbtduy',
-                  previousLdap: 'ltoanh',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3963, approvalPersonId: 5835, ldap: 'nbtduy', previousLdap: 'ltoanh', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
             {
-              id: 5186,
-              taskKey: 'BP-5186',
-              approvalStepId: 8450,
-              ldap: 'nbtduy',
+              id: 5836,
+              taskKey: 'BP-5836',
+              approvalStepId: 9133,
+              ldap: 'ttlam1',
               departmentName: 'G3',
               processStatus: 'APPROVED',
               history: [
-                {
-                  id: 3492,
-                  approvalPersonId: 5186,
-                  ldap: 'nbtduy',
-                  previousLdap: 'nbtduy',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
+                { id: 3964, approvalPersonId: 5836, ldap: 'nbtduy', previousLdap: 'nbtduy', stepAction: 'APPROVED', lastProcessStatus: 'TODO' },
+                { id: 3967, approvalPersonId: 5836, ldap: 'ttlam1', previousLdap: 'nbtduy', stepAction: 'REASSIGN', lastProcessStatus: 'APPROVED' },
+                { id: 3968, approvalPersonId: 5836, ldap: 'nbtduy', previousLdap: 'ttlam1', stepAction: 'APPROVED', lastProcessStatus: 'TODO' },
               ],
+            },
+            {
+              id: 5837,
+              taskKey: 'BP-5837',
+              approvalStepId: 9133,
+              ldap: 'nhanh16',
+              departmentName: 'G3',
+              processStatus: 'APPROVED',
+              history: [{ id: 3969, approvalPersonId: 5837, ldap: 'nbtduy', previousLdap: 'nhanh16', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
+            },
+            {
+              id: 5838,
+              taskKey: 'BP-5838',
+              approvalStepId: 9133,
+              ldap: 'vttung3',
+              departmentName: 'G3',
+              processStatus: 'APPROVED',
+              history: [{ id: 3970, approvalPersonId: 5838, ldap: 'nbtduy', previousLdap: 'vttung3', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
           ],
         },
       },
-      8451: {
+      9134: {
         stepName: 'FC Pending Approval',
         stateName: 'Peer Review',
         stateOrder: 1000,
@@ -3295,27 +3174,18 @@ export const mockApprovalSteps = {
         map: {
           None: [
             {
-              id: 5322,
-              taskKey: 'BP-5322',
-              approvalStepId: 8451,
+              id: 5839,
+              taskKey: 'BP-5839',
+              approvalStepId: 9134,
               ldap: 'ttmy',
               departmentName: null,
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3408,
-                  approvalPersonId: 5322,
-                  ldap: 'nbtduy',
-                  previousLdap: 'ttmy',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3971, approvalPersonId: 5839, ldap: 'nbtduy', previousLdap: 'ttmy', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
           ],
         },
       },
-      8452: {
+      9135: {
         stepName: 'BOM Pending Approval',
         stateName: 'Peer Review',
         stateOrder: 1000,
@@ -3324,63 +3194,36 @@ export const mockApprovalSteps = {
         map: {
           None: [
             {
-              id: 5323,
-              taskKey: 'BP-5323',
-              approvalStepId: 8452,
+              id: 5840,
+              taskKey: 'BP-5840',
+              approvalStepId: 9135,
               ldap: 'htthoa',
               departmentName: null,
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3409,
-                  approvalPersonId: 5323,
-                  ldap: 'nbtduy',
-                  previousLdap: 'htthoa',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3972, approvalPersonId: 5840, ldap: 'nbtduy', previousLdap: 'htthoa', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
             {
-              id: 5324,
-              taskKey: 'BP-5324',
-              approvalStepId: 8452,
+              id: 5841,
+              taskKey: 'BP-5841',
+              approvalStepId: 9135,
               ldap: 'nvbach',
               departmentName: null,
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3410,
-                  approvalPersonId: 5324,
-                  ldap: 'nbtduy',
-                  previousLdap: 'nvbach',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3973, approvalPersonId: 5841, ldap: 'nbtduy', previousLdap: 'nvbach', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
             {
-              id: 5325,
-              taskKey: 'BP-5325',
-              approvalStepId: 8452,
+              id: 5842,
+              taskKey: 'BP-5842',
+              approvalStepId: 9135,
               ldap: 'mthuong',
               departmentName: null,
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3411,
-                  approvalPersonId: 5325,
-                  ldap: 'nbtduy',
-                  previousLdap: 'mthuong',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3974, approvalPersonId: 5842, ldap: 'nbtduy', previousLdap: 'mthuong', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
           ],
         },
       },
-      8453: {
+      9136: {
         stepName: 'CEO Pending Approval',
         stateName: 'Peer Review',
         stateOrder: 1000,
@@ -3389,337 +3232,27 @@ export const mockApprovalSteps = {
         map: {
           None: [
             {
-              id: 5326,
-              taskKey: 'BP-5326',
-              approvalStepId: 8453,
+              id: 5843,
+              taskKey: 'BP-5843',
+              approvalStepId: 9136,
               ldap: 'dnbao',
               departmentName: null,
               processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3412,
-                  approvalPersonId: 5326,
-                  ldap: 'nbtduy',
-                  previousLdap: 'dnbao',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
+              history: [{ id: 3975, approvalPersonId: 5843, ldap: 'nbtduy', previousLdap: 'dnbao', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
             },
           ],
         },
-      },
-      8449: {
-        stepName: 'Approved',
-        stateName: 'Approved',
-        stateOrder: 10000,
-        stateHidden: false,
-        order: 1,
-        map: { None: [] },
-      },
-
-      // ── G1 + GKR workflow ────────────────────────────────────────────────────
-      8578: {
-        stepName: 'Draft',
-        stateName: 'Draft',
-        stateOrder: 10,
-        stateHidden: false,
-        order: 1,
-        map: { None: [] },
-      },
-      8579: {
-        stepName: 'BU/DU Lead Pending Approval',
-        stateName: 'Verification',
-        stateOrder: 100,
-        stateHidden: false,
-        order: 1,
-        map: {
-          G1: [
-            {
-              id: 5310,
-              taskKey: 'BP-5310',
-              approvalStepId: 8579,
-              ldap: 'nvthang9',
-              departmentName: 'DU1.12',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3479,
-                  approvalPersonId: 5310,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'nvthang9',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-          GKR: [
-            {
-              id: 5311,
-              taskKey: 'BP-5311',
-              approvalStepId: 8579,
-              ldap: 'nngiang',
-              departmentName: 'BKR1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3480,
-                  approvalPersonId: 5311,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'nngiang',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-        },
-      },
-      8581: {
-        stepName: 'G Lead Pending Approval',
-        stateName: 'Verification',
-        stateOrder: 100,
-        stateHidden: false,
-        order: 2,
-        map: {
-          G1: [
-            {
-              id: 5312,
-              taskKey: 'BP-5312',
-              approvalStepId: 8581,
-              ldap: 'btdon',
-              departmentName: 'G1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3481,
-                  approvalPersonId: 5312,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'btdon',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5313,
-              taskKey: 'BP-5313',
-              approvalStepId: 8581,
-              ldap: 'ddhung',
-              departmentName: 'G1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3482,
-                  approvalPersonId: 5313,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'ddhung',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5314,
-              taskKey: 'BP-5314',
-              approvalStepId: 8581,
-              ldap: 'lvdung2',
-              departmentName: 'G1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3484,
-                  approvalPersonId: 5314,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'lvdung2',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5315,
-              taskKey: 'BP-5315',
-              approvalStepId: 8581,
-              ldap: 'ptdung2',
-              departmentName: 'G1',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3483,
-                  approvalPersonId: 5315,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'ptdung2',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-          GKR: [
-            {
-              id: 5316,
-              taskKey: 'BP-5316',
-              approvalStepId: 8581,
-              ldap: 'nngiang',
-              departmentName: 'GKR',
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3485,
-                  approvalPersonId: 5316,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'nngiang',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-        },
-      },
-      8582: {
-        stepName: 'FC Pending Approval',
-        stateName: 'Peer Review',
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 1,
-        map: {
-          None: [
-            {
-              id: 5317,
-              taskKey: 'BP-5317',
-              approvalStepId: 8582,
-              ldap: 'ttmy',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3486,
-                  approvalPersonId: 5317,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'ttmy',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-        },
-      },
-      8583: {
-        stepName: 'BOM Pending Approval',
-        stateName: 'Peer Review',
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 2,
-        map: {
-          None: [
-            {
-              id: 5318,
-              taskKey: 'BP-5318',
-              approvalStepId: 8583,
-              ldap: 'htthoa',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3487,
-                  approvalPersonId: 5318,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'htthoa',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5319,
-              taskKey: 'BP-5319',
-              approvalStepId: 8583,
-              ldap: 'nvbach',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3488,
-                  approvalPersonId: 5319,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'nvbach',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-            {
-              id: 5320,
-              taskKey: 'BP-5320',
-              approvalStepId: 8583,
-              ldap: 'mthuong',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3489,
-                  approvalPersonId: 5320,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'mthuong',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-        },
-      },
-      8584: {
-        stepName: 'CEO Pending Approval',
-        stateName: 'Peer Review',
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 3,
-        map: {
-          None: [
-            {
-              id: 5327,
-              taskKey: 'BP-5327',
-              approvalStepId: 8584,
-              ldap: 'dnbao',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [
-                {
-                  id: 3490,
-                  approvalPersonId: 5327,
-                  ldap: 'ltlinh7',
-                  previousLdap: 'dnbao',
-                  stepAction: 'APPROVED',
-                  lastProcessStatus: 'TODO',
-                },
-              ],
-            },
-          ],
-        },
-      },
-      8580: {
-        stepName: 'Approved',
-        stateName: 'Approved',
-        stateOrder: 10000,
-        stateHidden: false,
-        order: 1,
-        map: { None: [] },
       },
     },
     workOrder: {
-      G1: [{ duName: 'DU1.12' }],
-      G3: [{ duName: 'DU3.1' }, { duName: 'BU3' }],
-      GKR: [{ duName: 'BKR1' }],
+      CJP: [{ duName: 'BJ3' }],
+      G3: [{ duName: 'BU3' }],
     },
   },
   messageId: 'Success',
   errorMessage: '',
 }
+
 
 export const mockUserActionHistory = {
   httpStatus: 200,
@@ -3735,6 +3268,16 @@ export const mockUserActionHistory = {
           oldValueString: '{"id":1000110,"items":{}}',
           newValueString:
             '{"id":1000110,"items":{"04-2026":1.0,"05-2026":1.0,"06-2026":1.0,"07-2026":1.0}}',
+          entity: 'Resource Info - ttlam1',
+        },
+        {
+          id: 116572,
+          actionTime: '10/Feb/26 14:30 PM',
+          author: 'ttlam1',
+          historyType: 'DELIVERY_PLAN',
+          oldValueString: null,
+          newValueString:
+            '{"employeeType":"In-house","grossSalaryVnd":5000000.0,"role":"Member","location":"Vietnam","id":1000110,"position":"SE02","userName":"ttlam1","items":{"02-2026":1.0,"03-2026":1.0},"originalGrossSalary":5000000.0,"resourceType":"User"}',
           entity: 'Resource Info - ttlam1',
         },
       ],
@@ -4019,19 +3562,19 @@ var EDGE_CASE_BP_IDS = [501, 502]
  * Patch a deep-cloned BP section data object with zero-denominator values so
  * every division inside useFormula.js that can produce NaN or Infinity is
  * exercised.  Numerators are kept non-zero so the result is Infinity (not NaN)
- * — the guards must reduce it to null before display.
+ * ΓÇö the guards must reduce it to null before display.
  *
  * Triggered division paths covered:
- *  1. getUnitPriceSale      — MM_BILL[SALE]=0,  SOFTWARE_PRODUCTION_REVENUES[SALE]>0
- *  2. getBillableRate*      — MM_PRODUCTION[TOTAL|DU]=0, MM_BILL>0
- *  3. getProductivity*      — MM_PRODUCTION[TOTAL|DU]=0, SOFTWARE_PRODUCTION_REVENUES>0
- *  4. getEfficiency*        — MM_PRODUCTION[TOTAL|DU]=0, DIRECT_MARGIN>0
- *  5. getDeliveryAvgExp.*   — MM_PRODUCTION[TOTAL|DU]=0, DELIVERY_EXPENSES_TOTAL>0
- *  6. getSalaryAvgExp.*     — MM_PRODUCTION[TOTAL|DU]=0, DIRECT_LABOR_COST>0
- *  7. getDirectMarginRate   — REVENUES_TOTAL=0, DIRECT_MARGIN>0
- *  8. getDirectMarginBonusRate — REVENUES_TOTAL=0, DIRECT_MARGIN_BONUS>0
- *  9. getIndirectMarginRate — REVENUES_TOTAL=0, INDIRECT_MARGIN>0
- * 10. getAllocationOfPoolDU — BILL_RATE_NORM[DU]=0, DIRECT_LABOR_COST[DU]>0
+ *  1. getUnitPriceSale      ΓÇö MM_BILL[SALE]=0,  SOFTWARE_PRODUCTION_REVENUES[SALE]>0
+ *  2. getBillableRate*      ΓÇö MM_PRODUCTION[TOTAL|DU]=0, MM_BILL>0
+ *  3. getProductivity*      ΓÇö MM_PRODUCTION[TOTAL|DU]=0, SOFTWARE_PRODUCTION_REVENUES>0
+ *  4. getEfficiency*        ΓÇö MM_PRODUCTION[TOTAL|DU]=0, DIRECT_MARGIN>0
+ *  5. getDeliveryAvgExp.*   ΓÇö MM_PRODUCTION[TOTAL|DU]=0, DELIVERY_EXPENSES_TOTAL>0
+ *  6. getSalaryAvgExp.*     ΓÇö MM_PRODUCTION[TOTAL|DU]=0, DIRECT_LABOR_COST>0
+ *  7. getDirectMarginRate   ΓÇö REVENUES_TOTAL=0, DIRECT_MARGIN>0
+ *  8. getDirectMarginBonusRate ΓÇö REVENUES_TOTAL=0, DIRECT_MARGIN_BONUS>0
+ *  9. getIndirectMarginRate ΓÇö REVENUES_TOTAL=0, INDIRECT_MARGIN>0
+ * 10. getAllocationOfPoolDU ΓÇö BILL_RATE_NORM[DU]=0, DIRECT_LABOR_COST[DU]>0
  */
 var applyEdgeCasePatches = function (cloned) {
   var setCell = function (sectionKey, rowKey, columnKey, value) {
@@ -4051,10 +3594,10 @@ var applyEdgeCasePatches = function (cloned) {
     if (cell) cell.value = value
   }
 
-  // Case 1 – unit price sale: MM_BILL[SALE]=0, revenue>0
+  // Case 1 ΓÇô unit price sale: MM_BILL[SALE]=0, revenue>0
   setCell('MAN_MONTH', 'MM_BILL', 'SALE', 0)
 
-  // Cases 2-6 – all per-MM averages and rates: MM_PRODUCTION=0 for TOTAL and DU
+  // Cases 2-6 ΓÇô all per-MM averages and rates: MM_PRODUCTION=0 for TOTAL and DU
   setCell('MAN_MONTH', 'MM_PRODUCTION', 'TOTAL', 0)
   setCell('MAN_MONTH', 'MM_PRODUCTION', 'DELIVERY_UNIT_39', 0)
 
@@ -4076,7 +3619,7 @@ var applyEdgeCasePatches = function (cloned) {
   setCell('DELIVERY_EXPENSES', 'DIRECT_LABOR_COST', 'TOTAL', 5000000)
   setCell('DELIVERY_EXPENSES', 'DIRECT_LABOR_COST', 'DELIVERY_UNIT_39', 5000000)
 
-  // Cases 7-9 – margin rates: REVENUES_TOTAL=0, margins>0
+  // Cases 7-9 ΓÇô margin rates: REVENUES_TOTAL=0, margins>0
   setCell('REVENUES', 'REVENUES_TOTAL', 'TOTAL', 0)
   setCell('REVENUES', 'REVENUES_TOTAL', 'SALE', 0)
   setCell('REVENUES', 'REVENUES_TOTAL', 'DELIVERY_UNIT_39', 0)
@@ -4087,7 +3630,7 @@ var applyEdgeCasePatches = function (cloned) {
   setCell('MARGIN', 'INDIRECT_MARGIN', 'TOTAL', 1000000)
   setCell('MARGIN', 'INDIRECT_MARGIN', 'DELIVERY_UNIT_39', 1000000)
 
-  // Case 10 – allocation pool: BILL_RATE_NORM[DU]=0, DIRECT_LABOR_COST[DU]>0
+  // Case 10 ΓÇô allocation pool: BILL_RATE_NORM[DU]=0, DIRECT_LABOR_COST[DU]>0
   setCell('REFERENCE', 'BILL_RATE_NORM', 'DELIVERY_UNIT_39', 0)
 
   return cloned

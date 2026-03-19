@@ -1,213 +1,122 @@
 {
     "httpStatus": 200,
     "data": {
-        "id": 381,
-        "projectCode": "GLBOD2500020",
-        "status": "Approved",
+        "id": 448,
+        "projectCode": "GLBOD2500102",
+        "status": "Verification",
         "version": 1,
-        "startDate": 1751302800000,
-        "endDate": 1816966800000,
+        "startDate": 1772298000000,
+        "endDate": 1801328400000,
+        "userRoles": [
+            "DB-DUL-Onsite"
+        ],
         "warningMessage": [],
         "versions": [
             {
-                "versionId": 381,
+                "versionId": 448,
                 "versionName": "Version 1",
-                "status": "APPROVED",
-                "statusName": "Approved"
-            },
-            {
-                "versionId": 402,
-                "versionName": "Version 2",
-                "status": "APPROVED",
-                "statusName": "Approved"
-            },
-            {
-                "versionId": 405,
-                "versionName": "Version 3",
-                "status": "APPROVED",
-                "statusName": "Approved"
-            },
-            {
-                "versionId": 406,
-                "versionName": "Version 4",
-                "status": "DRAFT",
-                "statusName": "Draft"
+                "status": "VERIFICATION",
+                "statusName": "Verification"
             }
         ],
         "generalInfos": [
             {
                 "listAM": [
                     {
-                        "id": 9738,
-                        "businessPlanVersionId": 381,
+                        "id": 11399,
+                        "businessPlanVersionId": 448,
                         "memberType": "AM",
                         "userId": 3744,
                         "ldap": "ntmanh6",
                         "departmentId": 40,
                         "departmentName": "BU3",
-                        "startDate": 1751302800000,
-                        "endDate": 1816966800000,
+                        "startDate": 1772298000000,
+                        "endDate": 1801328400000,
                         "isDefault": true
                     }
                 ],
-                "listTeamLead": [
-                    {
-                        "id": 10411,
-                        "businessPlanVersionId": 381,
-                        "memberType": "TEAM_LEAD",
-                        "userId": 9133,
-                        "ldap": "tdhoang4",
-                        "departmentId": 51,
-                        "departmentName": "DU3.9",
-                        "startDate": 1751302800000,
-                        "endDate": 1816966800000,
-                        "isDefault": false
-                    }
-                ],
+                "listTeamLead": [],
                 "listPreSale": [],
-                "listPreparator": [
-                    {
-                        "id": 10410,
-                        "businessPlanVersionId": 381,
-                        "memberType": "PREPARATOR",
-                        "userId": 9133,
-                        "ldap": "tdhoang4",
-                        "departmentId": 51,
-                        "departmentName": "DU3.9",
-                        "startDate": 1751302800000,
-                        "endDate": 1816966800000,
-                        "isDefault": false
-                    }
-                ],
+                "listPreparator": [],
                 "listAdviser": [],
                 "listPM": [
                     {
-                        "id": 9737,
-                        "businessPlanVersionId": 381,
+                        "id": 11398,
+                        "businessPlanVersionId": 448,
                         "memberType": "PM",
-                        "userId": 4367,
-                        "ldap": "ntson4",
-                        "departmentId": 69,
-                        "departmentName": "TDX",
-                        "startDate": 1751302800000,
-                        "endDate": 1816966800000,
+                        "userId": 3860,
+                        "ldap": "ttlam1",
+                        "departmentId": 2,
+                        "departmentName": "DJ2",
+                        "startDate": 1772298000000,
+                        "endDate": 1801328400000,
                         "isDefault": true
                     }
                 ],
-                "businessPlanName": "Local Host",
-                "customerName": "Local Host Customer",
-                "startDate": 1751302800000,
-                "endDate": 1816966800000,
+                "businessPlanName": "mi test mvv offshore",
+                "customerName": "MUJI",
+                "startDate": 1772298000000,
+                "endDate": 1801328400000,
                 "orderType": "T&M",
                 "recurringNew": "New",
                 "pm": null,
-                "currency": 778,
-                "exchangeRate": 1,
-                "totalContractPrice": 500000000,
-                "industry": 53,
-                "customerMarket": "Viet Nam",
+                "currency": 777,
+                "exchangeRate": 175,
+                "totalContractPrice": 5000000200,
+                "industry": null,
+                "customerMarket": "Japan",
                 "cooperationPeriod": "Less than 12 months",
-                "softwareDevelopmentFee": 500000000,
-                "otherFees": 0,
+                "softwareDevelopmentFee": 5000000000,
+                "otherFees": 200,
                 "planningStartDate": null,
                 "planningEndDate": null,
                 "businessPlanKpiDTO": {
-                    "id": null,
-                    "businessPlanVersionId": null,
-                    "kpiPm": null,
-                    "kpiQa": null,
-                    "kpiMember": null
+                    "id": 90,
+                    "businessPlanVersionId": 448,
+                    "kpiPm": 30,
+                    "kpiQa": 3,
+                    "kpiMember": 67
                 },
-                "projectCode": "GLBOD2500020",
-                "mvvLocationType": "Offshore",
-                "id": 381
+                "projectCode": "GLBOD2500102",
+                "mvvLocationType": "Onsite",
+                "id": 448,
+                "version": 1,
+                "versionName": "Version 1",
+                "status": "Verification",
+                "permissionView": true
             },
             {
-                "listAM": [
-                    {
-                        "id": 9734,
-                        "businessPlanVersionId": 379,
-                        "memberType": "AM",
-                        "userId": 624,
-                        "ldap": "hmy",
-                        "departmentId": 169,
-                        "departmentName": "BKR1",
-                        "startDate": 1753376400000,
-                        "endDate": 1816880400000,
-                        "isDefault": true
-                    }
-                ],
-                "listTeamLead": [
-                    {
-                        "id": 10379,
-                        "businessPlanVersionId": 379,
-                        "memberType": "TEAM_LEAD",
-                        "userId": 10561,
-                        "ldap": "ltlinh7",
-                        "departmentId": 107,
-                        "departmentName": "DU3.21",
-                        "startDate": 1753376400000,
-                        "endDate": 1816880400000,
-                        "isDefault": false
-                    }
-                ],
-                "listPreSale": [],
-                "listPreparator": [
-                    {
-                        "id": 10378,
-                        "businessPlanVersionId": 379,
-                        "memberType": "PREPARATOR",
-                        "userId": 3,
-                        "ldap": "bhduc",
-                        "departmentId": 6,
-                        "departmentName": "DU1.6",
-                        "startDate": 1753376400000,
-                        "endDate": 1816880400000,
-                        "isDefault": false
-                    }
-                ],
-                "listAdviser": [],
-                "listPM": [
-                    {
-                        "id": 9733,
-                        "businessPlanVersionId": 379,
-                        "memberType": "PM",
-                        "userId": 6,
-                        "ldap": "bmthin",
-                        "departmentId": 203,
-                        "departmentName": "HNO",
-                        "startDate": 1753376400000,
-                        "endDate": 1816880400000,
-                        "isDefault": true
-                    }
-                ],
-                "businessPlanName": "HTHANG1_MVV_2",
-                "customerName": "HTHANG",
-                "startDate": 1753376400000,
-                "endDate": 1816880400000,
-                "orderType": "T&M",
-                "recurringNew": "New",
+                "listAM": null,
+                "listTeamLead": null,
+                "listPreSale": null,
+                "listPreparator": null,
+                "listAdviser": null,
+                "listPM": null,
+                "businessPlanName": null,
+                "customerName": null,
+                "startDate": null,
+                "endDate": null,
+                "orderType": null,
+                "recurringNew": null,
                 "pm": null,
-                "currency": 778,
-                "exchangeRate": 1,
-                "totalContractPrice": 50000000,
-                "industry": 53,
-                "customerMarket": "Korea",
-                "cooperationPeriod": "Less than 12 months",
-                "softwareDevelopmentFee": 50000000,
-                "otherFees": 0,
+                "currency": null,
+                "exchangeRate": null,
+                "totalContractPrice": null,
+                "industry": null,
+                "customerMarket": null,
+                "cooperationPeriod": null,
+                "softwareDevelopmentFee": null,
+                "otherFees": null,
                 "planningStartDate": null,
                 "planningEndDate": null,
-                "businessPlanKpiDTO": {
-                    "id": null,
-                    "businessPlanVersionId": null,
-                    "kpiPm": null,
-                    "kpiQa": null,
-                    "kpiMember": null
-                },
-                "projectCode": "GLBOD2500019",
-                "mvvLocationType": "Onsite",
-                "id": 379
+                "businessPlanKpiDTO": null,
+                "projectCode": null,
+                "mvvLocationType": null,
+                "id": null,
+                "version": null,
+                "versionName": null,
+                "status": null,
+                "permissionView": false
             }
         ],
         "columnLabels": null,

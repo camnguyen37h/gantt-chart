@@ -21,8 +21,8 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
   const { userRoles } = useSelector(state => state.businessGeneralInformation)
 
   const allRoles = useMemo(() => {
-    const apiRoles = Array.isArray(userRoles) ? userRoles : []
-    return [...apiRoles, ...getSystemRoles()]
+    // const apiRoles = Array.isArray(userRoles) ? userRoles : []
+    return ['DB-DUL-Onsite']
   }, [userRoles])
 
   const resolvedMap = columnTypeMap || null
@@ -34,14 +34,29 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
   return useMemo(
     () => ({
       canViewColumn: (columnKey, isSectionHeader, sectionKey) =>
-        canViewColumn(allRoles, normalizedScope, columnKey, resolvedMap, isSectionHeader, sectionKey),
+        canViewColumn(
+          allRoles,
+          normalizedScope,
+          columnKey,
+          resolvedMap,
+          isSectionHeader,
+          sectionKey
+        ),
 
       canViewCell: (item, columnKey, isSectionHeader, sectionKey) => {
         if (item && item.permissionView === false) return false
-        return canViewColumn(allRoles, normalizedScope, columnKey, resolvedMap, isSectionHeader, sectionKey)
+        return canViewColumn(
+          allRoles,
+          normalizedScope,
+          columnKey,
+          resolvedMap,
+          isSectionHeader,
+          sectionKey
+        )
       },
 
-      canViewSection: sectionKey => canViewSection(allRoles, normalizedScope, sectionKey),
+      canViewSection: sectionKey =>
+        canViewSection(allRoles, normalizedScope, sectionKey),
 
       filterSections: sectionList => {
         if (!sectionList) return []
@@ -53,13 +68,34 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
       maskedValue: MASKED_VALUE,
 
       renderColumn: (columnKey, value, percent, isSectionHeader, sectionKey) =>
-        canViewColumn(allRoles, normalizedScope, columnKey, resolvedMap, isSectionHeader, sectionKey)
+        canViewColumn(
+          allRoles,
+          normalizedScope,
+          columnKey,
+          resolvedMap,
+          isSectionHeader,
+          sectionKey
+        )
           ? formatNumber(value, percent)
           : MASKED_VALUE,
 
-      renderCell: (item, columnKey, value, percent, isSectionHeader, sectionKey) => {
+      renderCell: (
+        item,
+        columnKey,
+        value,
+        percent,
+        isSectionHeader,
+        sectionKey
+      ) => {
         if (item && item.permissionView === false) return MASKED_VALUE
-        return canViewColumn(allRoles, normalizedScope, columnKey, resolvedMap, isSectionHeader, sectionKey)
+        return canViewColumn(
+          allRoles,
+          normalizedScope,
+          columnKey,
+          resolvedMap,
+          isSectionHeader,
+          sectionKey
+        )
           ? formatNumber(value, percent)
           : MASKED_VALUE
       },

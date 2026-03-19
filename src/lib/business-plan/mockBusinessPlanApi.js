@@ -6,6 +6,7 @@
 import {
   mockBusinessPlanDetail,
   mockBusinessPlanDetail437,
+  mockBusinessPlanDetail448,
   mockBusinessPlanDetailReal,
   mockBusinessPlanEdgeCaseDetail,
   mockProductionRevenue,
@@ -28,7 +29,7 @@ const delay = (ms = NETWORK_DELAY_MS) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 // In-memory storage for business plans
-// 436 = Version 1: GLBTM2500093 (Onsite) side
+// 448 = Version 1: GLBOD2500102 (Onsite) side - DB-DUL-Onsite
 // 437 = Version 2: GLBTM2500093 (Onsite) side  
 // 438 = Version 2: GLBOD2500087 (Offshore, DJ2+BJ2) side
 const mockBusinessPlanDetail438 = JSON.parse(JSON.stringify({
@@ -41,7 +42,7 @@ const mockBusinessPlanDetail438 = JSON.parse(JSON.stringify({
 }));
 
 const businessPlansStore = new Map([
-  [436, JSON.parse(JSON.stringify(mockBusinessPlanDetail))],
+  [448, JSON.parse(JSON.stringify(mockBusinessPlanDetail))],
   [437, JSON.parse(JSON.stringify(mockBusinessPlanDetail437))],
   [438, JSON.parse(JSON.stringify(mockBusinessPlanDetail438))],
   [454, JSON.parse(JSON.stringify(mockBusinessPlanDetailReal))],
@@ -51,22 +52,22 @@ const businessPlansStore = new Map([
 
 // In-memory storage for production revenue
 const productionRevenueStore = new Map([
-  [436, JSON.parse(JSON.stringify(mockProductionRevenue))]
+  [448, JSON.parse(JSON.stringify(mockProductionRevenue))]
 ]);
 
 // In-memory storage for other revenue
 const otherRevenueStore = new Map([
-  [436, JSON.parse(JSON.stringify(mockOtherRevenue))]
+  [448, JSON.parse(JSON.stringify(mockOtherRevenue))]
 ]);
 
 // In-memory storage for selling plan
 const sellingPlanStore = new Map([
-  [436, JSON.parse(JSON.stringify(mockSellingPlan))]
+  [448, JSON.parse(JSON.stringify(mockSellingPlan))]
 ]);
 
 // In-memory storage for revenue summary
 const revenueSummaryStore = new Map([
-  [436, JSON.parse(JSON.stringify(mockRevenueSummary))]
+  [448, JSON.parse(JSON.stringify(mockRevenueSummary))]
 ]);
 
 // Counter for generating new IDs
@@ -606,7 +607,7 @@ export const getLocationExchangeRate = async (params) => {
 // In-memory store for delivery plan resources (headcount table)
 const deliveryPlanResourcesStore = new Map([
   [
-    436,
+    448,
     {
       total: 1,
       body: {
@@ -822,7 +823,7 @@ export const getEmployeeRole = async () => {
 // In-memory store for other expenses
 const otherExpensesStore = new Map([
   [
-    436,
+    448,
     {
       total: 5,
       body: {
@@ -929,7 +930,7 @@ export const getResourcesInformationReference = async (params) => {
 // In-memory store for delivery plan history
 const deliveryHistoryStore = new Map([
   [
-    436,
+    448,
     {
       total: 2,
       body: {
