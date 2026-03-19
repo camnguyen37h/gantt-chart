@@ -7,9 +7,7 @@
     "version": 1,
     "startDate": 1767200400000,
     "endDate": 1835456400000,
-    "userRoles": [
-      "DB-ADMIN"
-    ],
+    "userRoles": ["DB-DUL-Onsite"],
     "warningMessage": null,
     "versions": [
       {

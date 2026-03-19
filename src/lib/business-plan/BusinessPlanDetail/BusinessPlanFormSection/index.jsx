@@ -424,6 +424,7 @@ function BusinessPlanFormSection({
     setValidation,
     listAM,
     listPreparator,
+    loadingBusinessPlan,
   } = useBusinessPlanDetails()
 
   const { getFormula, isSpecialSectionFormula } = useFormula()
@@ -464,7 +465,7 @@ function BusinessPlanFormSection({
   const canEdit =
     isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
-  const perms = useBusinessPlanPermission(viewMode, columnTypeMap)
+  const perms = useBusinessPlanPermission(loadingBusinessPlan ? null : viewMode, columnTypeMap)
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
