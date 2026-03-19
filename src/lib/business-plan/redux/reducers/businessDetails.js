@@ -18,6 +18,19 @@ const initialState = {
   totalContractPrice: null,
   softwareDevelopmentFee: null,
   otherFees: null,
+  /**
+   * Current view mode: 'Onsite' | 'Offshore' | 'Total' | 'OB'
+   */
+  viewMode: null,
+  /**
+   * Map of mvvLocationType -> { exchangeRate, softwareDevelopmentFee, otherFees }
+   * Built from generalInfos on getBusinessPlanDetail.fulfilled.
+   * Used by formula engine to compute per-sub-plan revenues in any view mode.
+   * Example: { Onsite: { exchangeRate: 1.5, softwareDevelopmentFee: 12000000 },
+   *            Offshore: { exchangeRate: 0, softwareDevelopmentFee: 8000000 } }
+   */
+  ratesByLocationType: {},
+  generalInfos: [],
   validation: {},
   version: null,
   originalBusinessPlanItems: [],
@@ -197,6 +210,22 @@ const businessDetailsSlice = createSlice({
 
       state.generalInfos = data.generalInfos || []
 
+      // Build ratesByLocationType from all sub-plans so the formula engine can
+      // look up the correct rates for any view mode (Onsite, Offshore, Total, OB)
+      const ratesByLocationType = {}
+      if (data.generalInfos && data.generalInfos.length > 0) {
+        data.generalInfos.forEach(function (info) {
+          if (info.mvvLocationType) {
+            ratesByLocationType[info.mvvLocationType] = {
+              exchangeRate: info.exchangeRate,
+              softwareDevelopmentFee: info.softwareDevelopmentFee,
+              otherFees: info.otherFees,
+            }
+          }
+        })
+      }
+      state.ratesByLocationType = ratesByLocationType
+
       const selectedGeneralInfo =
         data.generalInfos && data.generalInfos.length > 0
           ? data.generalInfos.find(
@@ -219,9 +248,9 @@ const businessDetailsSlice = createSlice({
 
     builder.addCase(
       getBusinessPlanDetailByViewMode.fulfilled,
-      (state, { payload }) => {
+      (state, action) => {
         state.loadingBusinessPlan = false
-        const { data, errorMessage } = payload || {}
+        const { data, errorMessage } = action.payload || {}
 
         if (!data) return
         const { columnLabels, sectionList } = normalizeColumnKeys(
@@ -250,26 +279,6 @@ const businessDetailsSlice = createSlice({
         const originalBusinessPlanItems = cloneDeep(sectionList)
         state.businessPlanItems = sectionList.reduce((res, cur, index) => {
           const cloneRowLabels = cloneDeep(cur.rowLabels)
-          cloneRowLabels.sort((a, b) => {
-            if (
-              a.rowKey.match(
-                /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
-              )
-            ) {
-              if (
-                !b.rowKey.match(
-                  /(MM_BILL_\d+)|(OTHER_EXPENSES_\d+)|(OTHER_FEE_\d+)/
-                )
-              )
-                return 1
-              else {
-                return (
-                  parseInt(a.rowKey.match(/\d+/)[0]) -
-                  parseInt(b.rowKey.match(/\d+/)[0])
-                )
-              }
-            }
-          })
 
           if (
             cur.sectionKey === 'MAN_MONTH' &&
@@ -298,6 +307,23 @@ const businessDetailsSlice = createSlice({
         state.version = data.version
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
+
+        // Persist the current view mode so the formula engine can query it
+        var incomingView = action.payload && action.payload.data && action.payload.data.view
+        // params.view is set by the dispatch caller: { id, params: { view: 'Onsite' } }
+        var viewModeFromAction = action.meta && action.meta.arg && action.meta.arg.params && action.meta.arg.params.view
+        if (viewModeFromAction) {
+          state.viewMode = viewModeFromAction
+        }
+
+        // For Onsite / Offshore single-view: keep legacy single-rate fields in sync
+        // so any code outside useFormula that reads them directly still works correctly
+        if (viewModeFromAction && state.ratesByLocationType[viewModeFromAction]) {
+          var rates = state.ratesByLocationType[viewModeFromAction]
+          state.exchangeRate = rates.exchangeRate
+          state.softwareDevelopmentFee = rates.softwareDevelopmentFee
+          if (rates.otherFees != null) state.otherFees = rates.otherFees
+        }
       }
     )
 

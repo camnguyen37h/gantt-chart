@@ -364,7 +364,7 @@
             "rowKey": "DEDUCTION",
             "cellList": [
               {
-                "value": null,
+                "value": -5000000,
                 "columnKey": "TOTAL",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
@@ -375,7 +375,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": -5000000,
                 "columnKey": "SALE",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,

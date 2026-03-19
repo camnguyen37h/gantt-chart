@@ -685,7 +685,7 @@
                 "permissionView": null
               },
               {
-                "value": null,
+                "value": -2000000,
                 "columnKey": "SALE_45",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
@@ -696,7 +696,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": -5000000,
                 "columnKey": "SALE_40",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
@@ -707,7 +707,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": -7000000,
                 "columnKey": "TOTAL",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
@@ -768,7 +768,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": 18000000,
                 "columnKey": "SALE_45",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -790,7 +790,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": 18000000,
                 "columnKey": "TOTAL",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,

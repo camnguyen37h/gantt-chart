@@ -375,7 +375,7 @@
             "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
             "cellList": [
               {
-                "value": null,
+                "value": 18000000,
                 "columnKey": "TOTAL",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -386,7 +386,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": 18000000,
                 "columnKey": "SALE",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -436,7 +436,7 @@
             "rowKey": "DEDUCTION",
             "cellList": [
               {
-                "value": null,
+                "value": -2000000,
                 "columnKey": "TOTAL",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
@@ -447,7 +447,7 @@
                 "permissionView": true
               },
               {
-                "value": null,
+                "value": -2000000,
                 "columnKey": "SALE",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
