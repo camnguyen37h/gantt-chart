@@ -7,7 +7,7 @@
     "version": 1,
     "startDate": 1767200400000,
     "endDate": 1835456400000,
-    "userRoles": ["DB_SPECIAL_VIEW_MARGIN_OFFSHORE"],
+    "userRoles": ["DB-ADMIN"],
     "warningMessage": [],
     "versions": [
       {

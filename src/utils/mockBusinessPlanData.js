@@ -23,7 +23,7 @@ export const mockBusinessPlanDetail = {
     version: 1,
     startDate: 1770915600000,
     endDate: 1784134800000,
-    userRoles: ['DB_SPECIAL_VIEW_MARGIN_OFFSHORE'],
+    userRoles: ['DB-ADMIN'],
     warningMessage: [],
     versions: [
       {
@@ -194,7 +194,7 @@ export const mockBusinessPlanDetail = {
         recurringNew: 'New',
         pm: null,
         currency: 778,
-        exchangeRate: 0,
+        exchangeRate: 25000,
         totalContractPrice: 8000000,
         industry: 18,
         customerMarket: 'Korea',
@@ -2256,7 +2256,7 @@ export const mockBusinessPlanDetail437 = {
     version: 2,
     startDate: 1770915600000,
     endDate: 1784134800000,
-    userRoles: ['DB_SPECIAL_VIEW_MARGIN_OFFSHORE'],
+    userRoles: ['DB-ADMIN'],
     warningMessage: [],
     versions: [
       {
@@ -2473,7 +2473,7 @@ export const mockBusinessPlanDetailReal = {
     version: 1,
     startDate: 1767200400000,
     endDate: 1798736400000,
-    userRoles: ['DB_SPECIAL_VIEW_MARGIN_OFFSHORE'],
+    userRoles: ['DB-ADMIN'],
     warningMessage: [],
     versions: [
       {
