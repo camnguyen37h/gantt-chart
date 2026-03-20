@@ -152,15 +152,11 @@ function BusinessPlanDetail({ match, history }) {
   }, [match.params.buId])
 
   useEffect(() => {
-    if (
-      generalInfos &&
-      generalInfos.length > 0 &&
-      match.params.buId &&
-      viewMode
-    ) {
-      const currentMVV = generalInfos.find(
+    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+      const matchedMVV = generalInfos.find(
         info => info.id === Number(match.params.buId)
       )
+      const currentMVV = matchedMVV || generalInfos[0]
 
       if (currentMVV && currentMVV.mvvLocationType) {
         const locationType = currentMVV.mvvLocationType

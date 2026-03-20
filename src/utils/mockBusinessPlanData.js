@@ -12,6 +12,9 @@ import mockBusinessPlanByViewOB from './mock-data/businessPlanOB.json'
 import mockBusinessPlanByViewOnsite from './mock-data/businessPlanOnsite.json'
 import mockBusinessPlanByViewOffshore from './mock-data/businessPlanOffshore.json'
 import mockBusinessPlanByViewOffshoreV2 from './mock-data/businessPlanOffshoreV2.json'
+import mockBusinessPlanDetail464Raw from './mock-data/businessPlanDetail464.json'
+
+export const mockBusinessPlanDetail464 = mockBusinessPlanDetail464Raw
 
 // ==================== BUSINESS PLAN DETAIL ====================
 export const mockBusinessPlanDetail = {
@@ -101,12 +104,12 @@ export const mockBusinessPlanDetail = {
         recurringNew: 'New',
         pm: null,
         currency: 778,
-        exchangeRate: 1.5,
-        totalContractPrice: 12000000,
+        exchangeRate: 25000,
+        totalContractPrice: 1726116,
         industry: 18,
         customerMarket: 'US',
         cooperationPeriod: 'Less than 12 months',
-        softwareDevelopmentFee: 12000000,
+        softwareDevelopmentFee: 1726116,
         otherFees: 0,
         planningStartDate: null,
         planningEndDate: null,
@@ -120,6 +123,7 @@ export const mockBusinessPlanDetail = {
         projectCode: 'GLBOD2500102',
         mvvLocationType: 'Onsite',
         id: 448,
+        status: 'Draft',
       },
     ],
     columnLabels: [
