@@ -29,6 +29,8 @@ import {
   setIsSaveConfirmShowed,
   setListRevenueInvalid,
 } from '../../redux'
+import { SCOPE } from '../../permissions/policyMatrix'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
 import BusinessPlanDropdownDu from '../BusinessPlanDropdownDu'
 import BusinessPlanHistoryTable from './BusinessPlanHistoryTable'
 import OtherRevenueTable from './OtherRevenueTable'
@@ -74,13 +76,17 @@ const customPanelStyle = {
 }
 
 const BusinessPlanRevenue = forwardRef(
-  ({ businessVersion, projectCode, status, dataDu }, ref) => {
+  ({ businessVersion, projectCode, status, dataDu, viewMode }, ref) => {
     const [expandPanel, setExpandPanel] = useState([REVENUE_PLAN_TAB.SUMMARY])
     const [visible, setVisible] = useState(false)
     const [loadingSave, setLoadingSave] = useState(false)
     const [keyReset, setKeyReset] = useState(0)
     const affixRef = useRef(null)
     const prevVersionRef = useRef(businessVersion)
+    const revenueScope = viewMode === 'Offshore' ? SCOPE.REVENUE_OFFSHORE : SCOPE.REVENUE_ONSITE
+    const revenuePerms = useBusinessPlanPermission(revenueScope)
+    const canViewRevenue = revenuePerms.canViewScope
+    const canViewRevenueDetails = revenuePerms.canViewDetails
     const {
       isSaveConfirmShowed: isSaveShowed,
       updateOtherRevenuesData: updateOtherRevenues,
@@ -375,7 +381,7 @@ const BusinessPlanRevenue = forwardRef(
             style={customPanelStyle}
             header={REVENUE_PLAN_TAB.SUMMARY}
             key={REVENUE_PLAN_TAB.SUMMARY}>
-            <RevenueSummary businessVersion={businessVersion} />
+            <RevenueSummary businessVersion={businessVersion} canViewRevenue={canViewRevenue} />
           </Panel>
           <Panel
             style={customPanelStyle}
@@ -390,6 +396,7 @@ const BusinessPlanRevenue = forwardRef(
               status={status}
               deliveryUnitDataRevenue={deliveryUnitDataRevenue}
               setExpandPanel={setExpandPanel}
+              canView={canViewRevenueDetails}
             />
           </Panel>
           <Panel
@@ -406,6 +413,7 @@ const BusinessPlanRevenue = forwardRef(
                 status={status}
                 deliveryUnitDataRevenue={deliveryUnitDataRevenue}
                 keyReset={keyReset}
+                canView={canViewRevenueDetails}
               />
             </div>
           </Panel>
@@ -424,11 +432,11 @@ const BusinessPlanRevenue = forwardRef(
                   status={status}
                   deliveryUnitDataRevenue={deliveryUnitDataRevenue}
                   keyReset={keyReset}
+                  canView={canViewRevenue}
                 />
               </div>
             </Panel>
           ) : null}
-
           <Panel
             style={customPanelStyle}
             header={REVENUE_PLAN_TAB.HISTORY}
@@ -438,6 +446,7 @@ const BusinessPlanRevenue = forwardRef(
               BusinessPlanVersionId={businessVersion}
               DeliveryUnit={deliveryUnitDataRevenue.groupName}
               isSale={deliveryUnitDataRevenue.groupSale ? 1 : 0}
+              canView={canViewRevenueDetails}
             />
           </Panel>
         </Collapse>

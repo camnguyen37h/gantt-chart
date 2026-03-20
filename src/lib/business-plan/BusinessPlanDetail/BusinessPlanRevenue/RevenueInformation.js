@@ -165,6 +165,7 @@ const RevenueInformation = ({
   status,
   deliveryUnitDataRevenue,
   setExpandPanel,
+  canView,
 }) => {
   const [switchValue, setSwitchValue] = useState(SWITCH_LABEL.HEADCOUNT)
   const [columnConfig, setColumnConfig] = useState(columns)
@@ -562,6 +563,7 @@ const RevenueInformation = ({
   }, [switchValue, dataSourceTable])
 
   useEffect(() => {
+    if (!canView) return
     if (!isExpandPanel) return
     dispatch(getPositionRevenuePlan({ projectCode }))
   }, [isExpandPanel, projectCode])
@@ -570,6 +572,7 @@ const RevenueInformation = ({
     const isVersionChanged = prevVersionRef.current !== businessVersion
     prevVersionRef.current = businessVersion
 
+    if (!canView) return
     if (!isExpandPanel) return
     if (isVersionChanged) return
 
@@ -684,7 +687,7 @@ const RevenueInformation = ({
         ref={tableRef}
         pagination={false}
         columns={columnConfig}
-        dataSource={dataSourceTable ? dataSourceTable.revenueInfos : []}
+        dataSource={canView && dataSourceTable ? dataSourceTable.revenueInfos : []}
         loading={loadingTable}
         scroll={{ x: 'max-content', y: 400 }}
       />

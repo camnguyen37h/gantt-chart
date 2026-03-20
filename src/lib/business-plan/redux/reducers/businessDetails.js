@@ -240,10 +240,17 @@ const businessDetailsSlice = createSlice({
         state.loadingBusinessPlan = false
         const { data, errorMessage } = action.payload || {}
 
+        const viewModeFromAction =
+          action.meta &&
+          action.meta.arg &&
+          action.meta.arg.params &&
+          action.meta.arg.params.view
+
         if (!data) return
         const { columnLabels, sectionList } = normalizeColumnKeys(
           data.columnLabels || [],
-          data.sectionList || []
+          data.sectionList || [],
+          viewModeFromAction
         )
         const mmBill = sectionList.reduce((res, section) => {
           if (!res)
@@ -296,11 +303,6 @@ const businessDetailsSlice = createSlice({
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
 
-        const viewModeFromAction =
-          action.meta &&
-          action.meta.arg &&
-          action.meta.arg.params &&
-          action.meta.arg.params.view
         if (viewModeFromAction) {
           state.viewMode = viewModeFromAction
         }

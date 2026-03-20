@@ -75,6 +75,7 @@ const buildFilterSelectConfig = (name, options, title) => {
 const ResourcesInformation = forwardRef((props, ref) => {
   const {
     canEdit,
+    canView,
     buId,
     deliveryUnitDataDelivery,
     isExpandPanel,
@@ -285,6 +286,7 @@ const ResourcesInformation = forwardRef((props, ref) => {
     const isVersionChanged = prevBuIdRef.current !== buId
     prevBuIdRef.current = buId
 
+    if (!canView) return
     if (!isExpandPanel || !buId) return
     if (!deliveryUnitDataDelivery) return
     if (

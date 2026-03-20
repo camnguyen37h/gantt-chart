@@ -11,6 +11,7 @@ const BusinessPlanHistoryTable = ({
   DeliveryUnit,
   BusinessPlanVersionId,
   isSale,
+  canView,
 }) => {
   const [expandedKeys, setExpandedKeys] = useState([])
   const [expandAll, setExpandAll] = useState(false)
@@ -31,6 +32,7 @@ const BusinessPlanHistoryTable = ({
     prevVersionRef.current = BusinessPlanVersionId
 
     if (isVersionChanged) return
+    if (!canView) return
 
     if (activePanel === 'Delivery') {
       fetchUserActionHistory(
@@ -335,7 +337,7 @@ const BusinessPlanHistoryTable = ({
     <Table
       className="revenue-history-table"
       columns={columns(expandedKeys, toggleExpand)}
-      dataSource={mapDataDetails() || []}
+      dataSource={canView ? (mapDataDetails() || []) : []}
       onChange={handleChangePage}
       expandedRowKeys={expandedKeys}
       onExpand={(expanded, record) => {

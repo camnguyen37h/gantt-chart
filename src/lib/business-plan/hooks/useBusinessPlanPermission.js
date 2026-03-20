@@ -1,20 +1,12 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import {
+  resolvePolicy,
   canViewColumn,
   canViewSection,
   MASKED_VALUE,
 } from '../permissions/viewPermissions'
 import { formatNumber } from '../utils'
-
-const getSystemRoles = () => {
-  try {
-    const permissions = JSON.parse(localStorage.getItem('LoginRole')) || []
-    return permissions.flatMap(p => p.activities || []).map(a => a.name)
-  } catch (error) {
-    return []
-  }
-}
 
 const useBusinessPlanPermission = (scope, columnTypeMap) => {
   const normalizedScope = scope ? scope.toLowerCase() : scope
@@ -27,9 +19,10 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
 
   const resolvedMap = columnTypeMap || null
 
-  useEffect(() => {
-    console.log('allRoles = ', allRoles)
-  }, [])
+  const policy = useMemo(
+    () => resolvePolicy(allRoles, normalizedScope),
+    [allRoles, normalizedScope]
+  )
 
   return useMemo(
     () => ({
@@ -64,6 +57,13 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
           canViewSection(allRoles, normalizedScope, s.sectionKey || s)
         )
       },
+
+      // Pre-computed boolean — O(1), no extra traversal
+      canEditScope: !!(policy && policy.edit),
+
+      canViewScope: policy !== null,
+
+      canViewDetails: !!(policy && !policy.summaryOnly),
 
       maskedValue: MASKED_VALUE,
 
@@ -100,7 +100,7 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
           : MASKED_VALUE
       },
     }),
-    [allRoles, normalizedScope, resolvedMap]
+    [allRoles, normalizedScope, resolvedMap, policy]
   )
 }
 

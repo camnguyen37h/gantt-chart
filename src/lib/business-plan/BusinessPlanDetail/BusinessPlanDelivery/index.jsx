@@ -49,6 +49,9 @@ import OtherExpensesTable from './OtherExpensesTable'
 import ResourcesInformation from './ResourcesInformation'
 import './style.css'
 import useBusinessPlanHistoryService from '../../hooks/useBusinessPlanHistoryService'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
+import { SCOPE } from '../../permissions/policyMatrix'
+import { MASKED_VALUE } from '../../permissions/viewPermissions'
 import { DeliverySummaryTooltip } from '../BusinessPlanRevenue/constant'
 import { ResponseStatusCode } from '../../../service/constant'
 import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
@@ -117,7 +120,7 @@ const CustomDescription = ({ title, value }) => {
   )
 }
 
-const DeliverySummary = () => {
+const DeliverySummary = ({ canViewDelivery }) => {
   const { summaryDeliveryPlan, loadingSummaryDeliveryPlan } = useSelector(
     state => state.businessPlanDelivery
   )
@@ -139,23 +142,23 @@ const DeliverySummary = () => {
         <Spin spinning={loadingSummaryDeliveryPlan} />
       ) : (
         <div>
-          <CustomDescription title="MM effort" value={mmEffort} />
+          <CustomDescription title="MM effort" value={canViewDelivery ? mmEffort : MASKED_VALUE} />
           <CustomDescription
             title="Direct labor cost"
-            value={directLaborCost}
+            value={canViewDelivery ? directLaborCost : MASKED_VALUE}
           />
-          <CustomDescription title="Outsourcing cost" value={outsourcingCost} />
+          <CustomDescription title="Outsourcing cost" value={canViewDelivery ? outsourcingCost : MASKED_VALUE} />
           <CustomDescription
             title="Equipment, Internet, Server cost"
-            value={equipmentExpense}
+            value={canViewDelivery ? equipmentExpense : MASKED_VALUE}
           />
-          <CustomDescription title="Onsite expense" value={onsiteExpense} />
-          <CustomDescription title="Overtime" value={overtime} />
+          <CustomDescription title="Onsite expense" value={canViewDelivery ? onsiteExpense : MASKED_VALUE} />
+          <CustomDescription title="Overtime" value={canViewDelivery ? overtime : MASKED_VALUE} />
           <CustomDescription
             title="Non-deductible input VAT"
-            value={nonDeductibleInputVAT}
+            value={canViewDelivery ? nonDeductibleInputVAT : MASKED_VALUE}
           />
-          <CustomDescription title="Other expenses" value={other} />
+          <CustomDescription title="Other expenses" value={canViewDelivery ? other : MASKED_VALUE} />
         </div>
       )}
     </div>
@@ -163,13 +166,17 @@ const DeliverySummary = () => {
 }
 
 const BusinessPlanDelivery = forwardRef(
-  ({ buId, status, dataDu, mvv }, ref) => {
+  ({ buId, status, dataDu, mvv, viewMode }, ref) => {
     const dispatch = useDispatch()
 
     const affixRef = useRef(null)
     const deliveryPlanReferenceRef = useRef(null)
     const deliveryPlanOtherExpensesRef = useRef(null)
     const resourcesInformationRef = useRef(null)
+
+    const deliveryScope = viewMode === 'Offshore' ? SCOPE.DELIVERY_OFFSHORE : SCOPE.DELIVERY_ONSITE
+    const deliveryPerms = useBusinessPlanPermission(deliveryScope)
+    const canViewDelivery = deliveryPerms.canViewScope
 
     const [visible, setVisible] = useState(false)
     const [activePanelList, setActivePanelList] = useState(DEFAULT_PANELS)
@@ -382,7 +389,7 @@ const BusinessPlanDelivery = forwardRef(
             showAllOption
           />
           <Panel style={customPanelStyle} header="Summary" key="1">
-            <DeliverySummary buId={buId} />
+            <DeliverySummary buId={buId} canViewDelivery={canViewDelivery} />
           </Panel>
           <Panel
             style={customPanelStyle}
@@ -401,6 +408,7 @@ const BusinessPlanDelivery = forwardRef(
                   canEditDeliveryPlanAllStatus) &&
                 deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
               }
+              canView={canViewDelivery}
             />
           </Panel>
           <Panel style={customPanelStyle} header="Other expenses" key="3">
@@ -415,6 +423,7 @@ const BusinessPlanDelivery = forwardRef(
                   canEditDeliveryPlanAllStatus) &&
                 deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
               }
+              canView={canViewDelivery}
             />
           </Panel>
           <Panel style={customPanelStyle} header="Reference" key="4">
@@ -427,6 +436,7 @@ const BusinessPlanDelivery = forwardRef(
                   canEditDeliveryPlanAllStatus) &&
                 deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
               }
+              canView={canViewDelivery}
             />
           </Panel>
           <Panel style={customPanelStyle} header="History" key="5">
@@ -439,6 +449,7 @@ const BusinessPlanDelivery = forwardRef(
                   : deliveryUnitDataDelivery.groupName
               }
               isSale={deliveryUnitDataDelivery.groupSale ? 1 : 0}
+              canView={canViewDelivery}
             />
           </Panel>
         </Collapse>

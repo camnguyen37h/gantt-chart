@@ -174,7 +174,7 @@ export const mergeStepsByPosition = steps => {
   )
 }
 
-export const normalizeColumnKeys = (columnLabels, sectionList) => {
+export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   const keyCounts = {}
   for (const col of columnLabels) {
     keyCounts[col.columnKey] = (keyCounts[col.columnKey] || 0) + 1
@@ -184,6 +184,8 @@ export const normalizeColumnKeys = (columnLabels, sectionList) => {
   const duOccurrence = {}
   let hasRenames = false
 
+  const normalizedView = viewMode ? viewMode.toLowerCase() : null
+
   const resultColumns = columnLabels.map(col => {
     const isDuplicate = keyCounts[col.columnKey] > 1
     if (isDuplicate) hasRenames = true
@@ -191,10 +193,20 @@ export const normalizeColumnKeys = (columnLabels, sectionList) => {
 
     let colCategory
     if (col.id != null) {
-      if (col.columnKey.startsWith('SALE_')) {
-        colCategory = saleCount++ === 0 ? 'bu_onsite' : 'bu_offshore'
+      if (col.columnKey.startsWith('SALE')) {
+        if (normalizedView === 'offshore') {
+          colCategory = 'bu_offshore'
+        } else if (normalizedView === 'onsite') {
+          colCategory = 'bu_onsite'
+        } else {
+          colCategory = saleCount++ === 0 ? 'bu_onsite' : 'bu_offshore'
+        }
       } else if (col.columnKey.startsWith('DELIVERY_UNIT')) {
-        if (isDuplicate) {
+        if (normalizedView === 'offshore') {
+          colCategory = 'du_offshore'
+        } else if (normalizedView === 'onsite') {
+          colCategory = 'du_onsite'
+        } else if (isDuplicate) {
           const occ = (duOccurrence[col.columnKey] =
             (duOccurrence[col.columnKey] || 0) + 1)
           colCategory =

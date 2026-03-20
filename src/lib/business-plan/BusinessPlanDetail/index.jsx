@@ -590,6 +590,7 @@ function BusinessPlanDetail({ match, history }) {
                           projectCode={projectCode}
                           status={statusProjectCode}
                           dataDu={listDuRevenue}
+                          viewMode={viewMode}
                         />
                       )}
                     </BusinessPlanTabWrapper>
@@ -629,6 +630,7 @@ function BusinessPlanDetail({ match, history }) {
                         mvv={projectCode}
                         status={statusProjectCode}
                         dataDu={listDUDelivery}
+                        viewMode={viewMode}
                       />
                     </BusinessPlanTabWrapper>
                   )}

@@ -44,6 +44,7 @@ const SellingExpenses = ({
   status,
   deliveryUnitDataRevenue,
   keyReset,
+  canView,
 }) => {
   const [dataSourceTable, setDataSourceTable] = useState([])
   const [expandedKeys, setExpandedKeys] = useState([])
@@ -582,6 +583,7 @@ const SellingExpenses = ({
   }
 
   useEffect(() => {
+    if (!canView) return
     if (mainData) {
       const formatRowData = mainData.revenues.flatMap(revenue =>
         revenue.additionalItems.map(item => ({
@@ -611,6 +613,7 @@ const SellingExpenses = ({
     const isVersionChanged = prevVersionRef.current !== businessVersion
     prevVersionRef.current = businessVersion
 
+    if (!canView) return
     if (!isExpandPanel) return
     if (isVersionChanged) return
 
@@ -649,7 +652,7 @@ const SellingExpenses = ({
   return (
     <Table
       columns={columns(expandedKeys, toggleExpand)}
-      dataSource={dataSourceTable ? dataSourceTable : []}
+      dataSource={canView && dataSourceTable ? dataSourceTable : []}
       loading={isLoading}
       pagination={false}
       expandedRowKeys={expandedKeys}

@@ -24,7 +24,7 @@ const StyledInputNumber = styled(InputNumber)`
 
 const DeliveryPlanReference = forwardRef((props, ref) => {
   const dispatch = useDispatch()
-  const { isExpandPanel, canEdit } = props
+  const { isExpandPanel, canEdit, canView } = props
   const [listInvalid, setListInvalid] = useState({})
 
   const {
@@ -171,7 +171,7 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
             pagination={false}
             bordered
             columns={columnsInput}
-            dataSource={listLocationExchangeRateData}
+            dataSource={canView ? listLocationExchangeRateData : []}
             rowKey={record => record.location}
             loading={loadingGetReferenceTable}
           />
@@ -182,7 +182,7 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
             pagination={false}
             bordered
             columns={columnsView}
-            dataSource={listLaborRateData}
+            dataSource={canView ? listLaborRateData : []}
             rowKey={record => record.location}
           />
         </Col>

@@ -10,10 +10,12 @@ function IndustryItemInput({
   validation,
   handleRenderTooltip,
   disabled,
-  isSubItem
+  isSubItem,
+  masked
 }) {
   const [visible, setVisible] = useState(false)
   const handleFormatInput = value => {
+    if (masked) return '*****'
     if (value === null) return ''
     if (value === '-') return value
     const res = value.toString().match(/^-{0,1}\d+\.{0,1}\d{0,2}/)
@@ -51,7 +53,7 @@ function IndustryItemInput({
               onChange={value => {
                 if (!isNaN(value)) handleChangeInputValue(value, name)
               }}
-              disabled={disabled || !isEditInput}
+              disabled={disabled || !isEditInput || masked}
               formatter={handleFormatInput}
               className={`${
                 validation[name] && 'input-error'

@@ -15,6 +15,8 @@ const normalizePolicy = p => ({
   sectionColumns: p.sectionColumns !== undefined ? p.sectionColumns : p.columns,
   dataColumns: p.dataColumns !== undefined ? p.dataColumns : p.columns,
   sections: p.sections,
+  edit: p.edit === true,
+  summaryOnly: p.summaryOnly === true,
 })
 
 const mergeColArrays = (x, y) => {
@@ -29,12 +31,14 @@ const mergePolicies = (a, b) => ({
     a.sections == null || b.sections == null
       ? null
       : [...new Set([...(a.sections || []), ...(b.sections || [])])],
+  edit: a.edit || b.edit,
+  summaryOnly: a.summaryOnly && b.summaryOnly,
 })
 
 const isFullAccess = p =>
   p.sectionColumns === COL_CAT.ALL && p.dataColumns === COL_CAT.ALL
 
-const resolvePolicy = (allRoles, scope) => {
+export const resolvePolicy = (allRoles, scope) => {
   let resolved = null
   for (let i = 0; i < allRoles.length; i++) {
     const rolePolicy = PERMISSION_MATRIX[allRoles[i]]

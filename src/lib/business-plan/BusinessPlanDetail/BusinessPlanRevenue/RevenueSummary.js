@@ -3,9 +3,16 @@ import { Col, Icon, Row, Spin, Tooltip } from 'antd'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getSummaryRevenuePlan } from '../../redux'
-import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
+import { MASKED_VALUE } from '../../permissions/viewPermissions'
 import './style.css'
 import { RevenueSummaryTooltip } from './constant'
+
+const formatNumericValue = value => {
+  if (typeof value !== 'number') return value
+  return value < 0
+    ? '(' + formatFloatNumber(Math.abs(value), 0, 3) + ')'
+    : formatFloatNumber(value, 0, 3)
+}
 
 const CustomDescription = ({ title, value }) => {
   return (
@@ -25,9 +32,7 @@ const CustomDescription = ({ title, value }) => {
           </Col>
           <Col span={7}>
             <div style={{ textAlign: 'left' }}>
-              {value < 0
-                ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
-                : formatFloatNumber(value, 0, 3)}
+              {formatNumericValue(value)}
             </div>
           </Col>
         </Row>
@@ -36,7 +41,7 @@ const CustomDescription = ({ title, value }) => {
   )
 }
 
-const RevenueSummary = ({ businessVersion }) => {
+const RevenueSummary = ({ businessVersion, canViewRevenue }) => {
   const dispatch = useDispatch()
   const {
     summaryRevenuePlan,
@@ -75,22 +80,22 @@ const RevenueSummary = ({ businessVersion }) => {
       <Spin spinning={loading} />
       {!loading && (
         <div>
-          <CustomDescription title="MM bill" value={mmBill} />
+          <CustomDescription title="MM bill" value={canViewRevenue ? mmBill : MASKED_VALUE} />
           <CustomDescription
             title="Software production revenues"
-            value={softwareProductionRevenues}
+            value={canViewRevenue ? softwareProductionRevenues : MASKED_VALUE}
           />
           {deliveryUnitDataRevenue.groupSale && (
-            <CustomDescription title="Deduction" value={deduction} />
+            <CustomDescription title="Deduction" value={canViewRevenue ? deduction : MASKED_VALUE} />
           )}
-          <CustomDescription title="Onsite fee" value={onsiteFee} />
+          <CustomDescription title="Onsite fee" value={canViewRevenue ? onsiteFee : MASKED_VALUE} />
           <CustomDescription
             title="Revenues from Equipment, Internet, Server, ..."
-            value={equipmentRevenue}
+            value={canViewRevenue ? equipmentRevenue : MASKED_VALUE}
           />
-          <CustomDescription title="Other revenues" value={otherRevenues} />
+          <CustomDescription title="Other revenues" value={canViewRevenue ? otherRevenues : MASKED_VALUE} />
           {deliveryUnitDataRevenue.groupSale && (
-            <CustomDescription title="Agency expenses" value={agencyExpenses} />
+            <CustomDescription title="Agency expenses" value={canViewRevenue ? agencyExpenses : MASKED_VALUE} />
           )}
         </div>
       )}

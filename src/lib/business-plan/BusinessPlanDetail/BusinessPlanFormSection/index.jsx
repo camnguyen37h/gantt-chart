@@ -473,13 +473,16 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     })
 
   const isEditableViewMode = viewMode === 'Onsite' || viewMode === 'Offshore'
-  const canEdit =
-    isEditableViewMode && ((isDraft && isOtherRole) || (isFin && !isApproved))
 
   const perms = useBusinessPlanPermission(
     loadingBusinessPlan ? null : viewMode,
     columnTypeMap
   )
+
+  const canEdit =
+    isEditableViewMode &&
+    perms.canEditScope &&
+    ((isDraft && isOtherRole) || (isFin && !isApproved))
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(
@@ -882,7 +885,13 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                     {currentCell &&
                     !mergedCol.isCompareOnly &&
                     currentCell.editable &&
-                    canEdit ? (
+                    canEdit &&
+                    perms.canViewCell(
+                      currentCell,
+                      mergedCol.currentColumnKey,
+                      false,
+                      sectionKey
+                    ) ? (
                       <BusinessPlanInput item={currentCell} />
                     ) : (
                       perms.renderCell(
@@ -1010,7 +1019,9 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
 
               <th>
                 <div className="d-flex flex-column">
-                  {totalItem.editable && canEdit ? (
+                  {totalItem.editable &&
+                  canEdit &&
+                  perms.canViewCell(totalItem, 'TOTAL', false, sectionKey) ? (
                     <BusinessPlanInput
                       item={totalItem}
                       suffix={percent ? '%' : ''}
@@ -1107,7 +1118,13 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                         !mergedCol.isCompareOnly &&
                         currentItem.editable &&
                         internalAllowed &&
-                        canEdit ? (
+                        canEdit &&
+                        perms.canViewCell(
+                          currentItem,
+                          mergedCol.currentColumnKey,
+                          false,
+                          sectionKey
+                        ) ? (
                           <BusinessPlanInput
                             item={currentItem}
                             suffix={percent ? '%' : ''}

@@ -30,6 +30,8 @@ import { statusBusinessPlanDetail } from '../constant'
 import moment from 'moment'
 import { DateFormat } from '../../../constants/DateFormat'
 import { isEmpty } from 'lodash'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
+import { SCOPE } from '../../permissions/policyMatrix'
 
 const { Option } = Select
 
@@ -78,6 +80,13 @@ const BusinessPlanGeneralInformation = () => {
     !isEmpty(listGeneralInformation) &&
     listGeneralInformation.status === statusBusinessPlanDetail.draft
 
+  const selectedInfo = generalInfos.find(function(info) { return info.projectCode === selectedMvvCode })
+  const selectedLocationType = selectedInfo ? selectedInfo.mvvLocationType : null
+  const generalScope = selectedLocationType === 'Offshore' ? SCOPE.GENERAL_OFFSHORE : SCOPE.GENERAL_ONSITE
+  const generalPerms = useBusinessPlanPermission(generalScope)
+  const canViewGeneral = generalPerms.canViewScope
+  const canEditGeneral = generalPerms.canEditScope
+
   const isEditInputDraft =
     (checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
@@ -86,6 +95,8 @@ const BusinessPlanGeneralInformation = () => {
       (listAM && listAM.some(p => p.ldap === userName)) ||
       (listPreparator && listPreparator.some(p => p.ldap === userName))) &&
     isDraft
+
+  const isEditGeneralField = isEditInputDraft && canEditGeneral
 
   const { validation } = useSelector(state => state.businessPlanDetails)
 
@@ -469,7 +480,7 @@ const BusinessPlanGeneralInformation = () => {
                   )}
                   <Tooltip title={handleRenderTooltip()}>
                     <Select
-                      value={industryDomain || undefined}
+                      value={canViewGeneral ? (industryDomain || undefined) : undefined}
                       onChange={e =>
                         handleChangeInputValue(e, 'industryDomain')
                       }
@@ -477,8 +488,8 @@ const BusinessPlanGeneralInformation = () => {
                         validation['industryDomain'] && 'select-error'
                       }`}
                       size="small"
-                      placeholder="Select industry"
-                      disabled={!isEditInputDraft}>
+                      placeholder={canViewGeneral ? 'Select industry' : '*****'}
+                      disabled={!isEditGeneralField}>
                       {listDomain.map(item => (
                         <Option value={item.id} key={item.id}>
                           <Tooltip title={item.industry} key={item.id}>
@@ -504,7 +515,7 @@ const BusinessPlanGeneralInformation = () => {
                   )}
                   <Tooltip title={handleRenderTooltip()}>
                     <Select
-                      value={industryCurrency || undefined}
+                      value={canViewGeneral ? (industryCurrency || undefined) : undefined}
                       onChange={e =>
                         handleChangeInputValue(e, 'industryCurrency')
                       }
@@ -512,8 +523,8 @@ const BusinessPlanGeneralInformation = () => {
                         validation['industryCurrency'] && 'select-error'
                       }`}
                       size="small"
-                      placeholder="Select currency"
-                      disabled={!isEditInputDraft}>
+                      placeholder={canViewGeneral ? 'Select currency' : '*****'}
+                      disabled={!isEditGeneralField}>
                       {listCurrency.map(item => (
                         <Option value={item.id} key={item.id}>
                           {item.currency}
@@ -531,10 +542,11 @@ const BusinessPlanGeneralInformation = () => {
                   handleChangeInputValue={item.onChange}
                   key={item.key}
                   name={item.key}
-                  isEditInput={isEditInputDraft}
+                  isEditInput={isEditGeneralField}
                   validation={validation}
                   handleRenderTooltip={handleRenderTooltip}
                   isSubItem={item.isSubItem}
+                  masked={!canViewGeneral}
                 />
               ))}
             </div>
