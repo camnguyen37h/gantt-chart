@@ -31,9 +31,7 @@ const CustomDescription = ({ title, value }) => {
             </Tooltip>
           </Col>
           <Col span={7}>
-            <div style={{ textAlign: 'left' }}>
-              {formatNumericValue(value)}
-            </div>
+            <div style={{ textAlign: 'left' }}>{formatNumericValue(value)}</div>
           </Col>
         </Row>
       </Col>
@@ -80,22 +78,37 @@ const RevenueSummary = ({ businessVersion, canViewRevenue }) => {
       <Spin spinning={loading} />
       {!loading && (
         <div>
-          <CustomDescription title="MM bill" value={canViewRevenue ? mmBill : MASKED_VALUE} />
+          <CustomDescription
+            title="MM bill"
+            value={canViewRevenue ? mmBill : MASKED_VALUE}
+          />
           <CustomDescription
             title="Software production revenues"
             value={canViewRevenue ? softwareProductionRevenues : MASKED_VALUE}
           />
           {deliveryUnitDataRevenue.groupSale && (
-            <CustomDescription title="Deduction" value={canViewRevenue ? deduction : MASKED_VALUE} />
+            <CustomDescription
+              title="Deduction"
+              value={canViewRevenue ? deduction : MASKED_VALUE}
+            />
           )}
-          <CustomDescription title="Onsite fee" value={canViewRevenue ? onsiteFee : MASKED_VALUE} />
+          <CustomDescription
+            title="Onsite fee"
+            value={canViewRevenue ? onsiteFee : MASKED_VALUE}
+          />
           <CustomDescription
             title="Revenues from Equipment, Internet, Server, ..."
             value={canViewRevenue ? equipmentRevenue : MASKED_VALUE}
           />
-          <CustomDescription title="Other revenues" value={canViewRevenue ? otherRevenues : MASKED_VALUE} />
+          <CustomDescription
+            title="Other revenues"
+            value={canViewRevenue ? otherRevenues : MASKED_VALUE}
+          />
           {deliveryUnitDataRevenue.groupSale && (
-            <CustomDescription title="Agency expenses" value={canViewRevenue ? agencyExpenses : MASKED_VALUE} />
+            <CustomDescription
+              title="Agency expenses"
+              value={canViewRevenue ? agencyExpenses : MASKED_VALUE}
+            />
           )}
         </div>
       )}

@@ -13,8 +13,14 @@ import mockBusinessPlanByViewOnsite from './mock-data/businessPlanOnsite.json'
 import mockBusinessPlanByViewOffshore from './mock-data/businessPlanOffshore.json'
 import mockBusinessPlanByViewOffshoreV2 from './mock-data/businessPlanOffshoreV2.json'
 import mockBusinessPlanDetail464Raw from './mock-data/businessPlanDetail464.json'
+import mockBusinessPlanDetail468Raw from './mock-data/businessPlanDetail468.json'
+import mockBusinessPlanTotal468Raw from './mock-data/businessPlanTotal468.json'
+import mockBusinessPlanOB468Raw from './mock-data/businessPlanOB468.json'
+import mockBusinessPlanOnsite468Raw from './mock-data/businessPlanOnsite468.json'
+import mockBusinessPlanOffshore468Raw from './mock-data/businessPlanOffshore468.json'
 
 export const mockBusinessPlanDetail464 = mockBusinessPlanDetail464Raw
+export const mockBusinessPlanDetail468 = mockBusinessPlanDetail468Raw
 
 // ==================== BUSINESS PLAN DETAIL ====================
 export const mockBusinessPlanDetail = {
@@ -3451,6 +3457,7 @@ let businessPlanStore = {
   437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data)),
   454: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
   455: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
+  468: JSON.parse(JSON.stringify(mockBusinessPlanDetail468Raw.data)),
   500: JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail.data)),
 }
 
@@ -3487,6 +3494,7 @@ export const resetMockData = () => {
     437: JSON.parse(JSON.stringify(mockBusinessPlanDetail437.data)),
     454: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
     455: JSON.parse(JSON.stringify(mockBusinessPlanDetailReal.data)),
+    468: JSON.parse(JSON.stringify(mockBusinessPlanDetail468Raw.data)),
     500: JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail.data)),
   }
   deliveryPlanStore = {}
@@ -3557,6 +3565,9 @@ const filterDataByViewMode = (data, viewMode) => {
  */
 // V2 business plan IDs: 437 (Onsite), 438 (Offshore)
 var V2_BUSINESS_PLAN_IDS = [437, 438]
+
+// Real API data business plan IDs: 468
+var REAL_BP_IDS = [468]
 
 // Edge-case business plan IDs: 501 (Offshore), 502 (Onsite)
 // Use these IDs to verify NaN / Infinity guards are working correctly.
@@ -3645,6 +3656,17 @@ export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
   var id = Number(businessPlanId)
   var isV2 = V2_BUSINESS_PLAN_IDS.indexOf(id) !== -1
   var isEdgeCase = EDGE_CASE_BP_IDS.indexOf(id) !== -1
+  var isReal = REAL_BP_IDS.indexOf(id) !== -1
+
+  if (isReal) {
+    var realDataMap = {
+      Total: mockBusinessPlanTotal468Raw,
+      OB: mockBusinessPlanOB468Raw,
+      Onsite: mockBusinessPlanOnsite468Raw,
+      Offshore: mockBusinessPlanOffshore468Raw,
+    }
+    return JSON.parse(JSON.stringify(realDataMap[viewMode] || mockBusinessPlanTotal468Raw))
+  }
 
   var offshoreData = isV2
     ? mockBusinessPlanByViewOffshoreV2

@@ -1,9 +1,15 @@
 import { checkRolePermission } from '../../../../components/common/checkRolePermission'
 import Loading from '../../../../components/common/Loading/Loading'
+import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
+import useBusinessPlanHistoryService from '../../hooks/useBusinessPlanHistoryService'
+import { SCOPE } from '../../permissions/policyMatrix'
+import { MASKED_VALUE } from '../../permissions/viewPermissions'
 import {
   ActivityKeyConstants,
   SourceConstants,
 } from '../../../constants/ActivityKeyConstants'
+import { ResponseStatusCode } from '../../../service/constant'
 import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import {
   Button,
@@ -33,28 +39,23 @@ import {
   getResourcesInformationDeliveryPlan,
   getSummaryDeliveryPlan,
   resetSaveDeliveryPlanParams,
-  saveDeliveryPlan,
-  setIsSaveShowedDeliveryPlan,
   resetSummaryDeliveryPlan,
+  saveDeliveryPlan,
   setDeliveryUnitDataDelivery,
   setDuValueDelivery,
-  setLoadDataFromValue,
   setErrorDataSubmitDeliveryPlan,
+  setIsSaveShowedDeliveryPlan,
+  setLoadDataFromValue,
 } from '../../redux'
 import BusinessPlanDropdownDu from '../BusinessPlanDropdownDu'
 import BusinessPlanHistoryTable from '../BusinessPlanRevenue/BusinessPlanHistoryTable'
+import { DeliverySummaryTooltip } from '../BusinessPlanRevenue/constant'
 import { statusBusinessPlanDetail } from '../constant'
 import DeliveryPlanReference from './DeliveryPlanReference'
 import OtherExpensesTable from './OtherExpensesTable'
 import ResourcesInformation from './ResourcesInformation'
 import './style.css'
-import useBusinessPlanHistoryService from '../../hooks/useBusinessPlanHistoryService'
-import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
-import { SCOPE } from '../../permissions/policyMatrix'
-import { MASKED_VALUE } from '../../permissions/viewPermissions'
-import { DeliverySummaryTooltip } from '../BusinessPlanRevenue/constant'
-import { ResponseStatusCode } from '../../../service/constant'
-import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
+
 const { Panel } = Collapse
 const DEFAULT_PANELS = ['1']
 const customPanelStyle = {
@@ -142,23 +143,38 @@ const DeliverySummary = ({ canViewDelivery }) => {
         <Spin spinning={loadingSummaryDeliveryPlan} />
       ) : (
         <div>
-          <CustomDescription title="MM effort" value={canViewDelivery ? mmEffort : MASKED_VALUE} />
+          <CustomDescription
+            title="MM effort"
+            value={canViewDelivery ? mmEffort : MASKED_VALUE}
+          />
           <CustomDescription
             title="Direct labor cost"
             value={canViewDelivery ? directLaborCost : MASKED_VALUE}
           />
-          <CustomDescription title="Outsourcing cost" value={canViewDelivery ? outsourcingCost : MASKED_VALUE} />
+          <CustomDescription
+            title="Outsourcing cost"
+            value={canViewDelivery ? outsourcingCost : MASKED_VALUE}
+          />
           <CustomDescription
             title="Equipment, Internet, Server cost"
             value={canViewDelivery ? equipmentExpense : MASKED_VALUE}
           />
-          <CustomDescription title="Onsite expense" value={canViewDelivery ? onsiteExpense : MASKED_VALUE} />
-          <CustomDescription title="Overtime" value={canViewDelivery ? overtime : MASKED_VALUE} />
+          <CustomDescription
+            title="Onsite expense"
+            value={canViewDelivery ? onsiteExpense : MASKED_VALUE}
+          />
+          <CustomDescription
+            title="Overtime"
+            value={canViewDelivery ? overtime : MASKED_VALUE}
+          />
           <CustomDescription
             title="Non-deductible input VAT"
             value={canViewDelivery ? nonDeductibleInputVAT : MASKED_VALUE}
           />
-          <CustomDescription title="Other expenses" value={canViewDelivery ? other : MASKED_VALUE} />
+          <CustomDescription
+            title="Other expenses"
+            value={canViewDelivery ? other : MASKED_VALUE}
+          />
         </div>
       )}
     </div>
@@ -174,7 +190,8 @@ const BusinessPlanDelivery = forwardRef(
     const deliveryPlanOtherExpensesRef = useRef(null)
     const resourcesInformationRef = useRef(null)
 
-    const deliveryScope = viewMode === 'Offshore' ? SCOPE.DELIVERY_OFFSHORE : SCOPE.DELIVERY_ONSITE
+    const deliveryScope =
+      viewMode === 'Offshore' ? SCOPE.DELIVERY_OFFSHORE : SCOPE.DELIVERY_ONSITE
     const deliveryPerms = useBusinessPlanPermission(deliveryScope)
     const canViewDelivery = deliveryPerms.canViewScope
 

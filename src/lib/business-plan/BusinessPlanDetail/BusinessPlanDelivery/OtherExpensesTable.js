@@ -48,7 +48,10 @@ const StyledDisabledIcon = styled(Icon)`
 `
 
 const OtherExpensesTable = forwardRef(
-  ({ isExpandPanel, canEdit, canView, buId, deliveryUnitDataDelivery }, ref) => {
+  (
+    { isExpandPanel, canEdit, canView, buId, deliveryUnitDataDelivery },
+    ref
+  ) => {
     const dispatch = useDispatch()
     const {
       dataListOtherExpenses,

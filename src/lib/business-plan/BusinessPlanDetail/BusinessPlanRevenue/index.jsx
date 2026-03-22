@@ -83,7 +83,8 @@ const BusinessPlanRevenue = forwardRef(
     const [keyReset, setKeyReset] = useState(0)
     const affixRef = useRef(null)
     const prevVersionRef = useRef(businessVersion)
-    const revenueScope = viewMode === 'Offshore' ? SCOPE.REVENUE_OFFSHORE : SCOPE.REVENUE_ONSITE
+    const revenueScope =
+      viewMode === 'Offshore' ? SCOPE.REVENUE_OFFSHORE : SCOPE.REVENUE_ONSITE
     const revenuePerms = useBusinessPlanPermission(revenueScope)
     const canViewRevenue = revenuePerms.canViewScope
     const canViewRevenueDetails = revenuePerms.canViewDetails
@@ -381,7 +382,10 @@ const BusinessPlanRevenue = forwardRef(
             style={customPanelStyle}
             header={REVENUE_PLAN_TAB.SUMMARY}
             key={REVENUE_PLAN_TAB.SUMMARY}>
-            <RevenueSummary businessVersion={businessVersion} canViewRevenue={canViewRevenue} />
+            <RevenueSummary
+              businessVersion={businessVersion}
+              canViewRevenue={canViewRevenue}
+            />
           </Panel>
           <Panel
             style={customPanelStyle}

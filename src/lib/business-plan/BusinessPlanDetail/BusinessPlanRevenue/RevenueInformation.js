@@ -687,7 +687,9 @@ const RevenueInformation = ({
         ref={tableRef}
         pagination={false}
         columns={columnConfig}
-        dataSource={canView && dataSourceTable ? dataSourceTable.revenueInfos : []}
+        dataSource={
+          canView && dataSourceTable ? dataSourceTable.revenueInfos : []
+        }
         loading={loadingTable}
         scroll={{ x: 'max-content', y: 400 }}
       />

@@ -8,13 +8,22 @@ import {
 } from '../permissions/viewPermissions'
 import { formatNumber } from '../utils'
 
+const getSystemRoles = () => {
+  try {
+    const permissions = JSON.parse(localStorage.getItem('LoginRole')) || []
+    return permissions.flatMap(p => p.activities || []).map(a => a.name)
+  } catch (error) {
+    return []
+  }
+}
+
 const useBusinessPlanPermission = (scope, columnTypeMap) => {
   const normalizedScope = scope ? scope.toLowerCase() : scope
   const { userRoles } = useSelector(state => state.businessGeneralInformation)
 
   const allRoles = useMemo(() => {
-    // const apiRoles = Array.isArray(userRoles) ? userRoles : []
-    return ['DB-DUL-Onsite']
+    const apiRoles = Array.isArray(userRoles) ? userRoles : []
+    return [...apiRoles, ...getSystemRoles()]
   }, [userRoles])
 
   const resolvedMap = columnTypeMap || null
@@ -58,7 +67,6 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
         )
       },
 
-      // Pre-computed boolean — O(1), no extra traversal
       canEditScope: !!(policy && policy.edit),
 
       canViewScope: policy !== null,

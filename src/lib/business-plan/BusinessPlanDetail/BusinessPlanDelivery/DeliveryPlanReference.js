@@ -24,7 +24,7 @@ const StyledInputNumber = styled(InputNumber)`
 
 const DeliveryPlanReference = forwardRef((props, ref) => {
   const dispatch = useDispatch()
-  const { isExpandPanel, canEdit, canView } = props
+  const { canEdit, canView } = props
   const [listInvalid, setListInvalid] = useState({})
 
   const {
@@ -73,7 +73,6 @@ const DeliveryPlanReference = forwardRef((props, ref) => {
   const validate = () => {
     const errors = {}
     let isValid = true
-    // if (!isExpandPanel) return allValid;
     listLocationExchangeRateData.forEach(row => {
       const rowErrors = {}
 

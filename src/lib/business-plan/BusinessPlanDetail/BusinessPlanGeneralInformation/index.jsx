@@ -30,8 +30,8 @@ import { statusBusinessPlanDetail } from '../constant'
 import moment from 'moment'
 import { DateFormat } from '../../../constants/DateFormat'
 import { isEmpty } from 'lodash'
-import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
 import { SCOPE } from '../../permissions/policyMatrix'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
 
 const { Option } = Select
 
@@ -80,9 +80,16 @@ const BusinessPlanGeneralInformation = () => {
     !isEmpty(listGeneralInformation) &&
     listGeneralInformation.status === statusBusinessPlanDetail.draft
 
-  const selectedInfo = generalInfos.find(function(info) { return info.projectCode === selectedMvvCode })
-  const selectedLocationType = selectedInfo ? selectedInfo.mvvLocationType : null
-  const generalScope = selectedLocationType === 'Offshore' ? SCOPE.GENERAL_OFFSHORE : SCOPE.GENERAL_ONSITE
+  const selectedInfo = generalInfos.find(function (info) {
+    return info.projectCode === selectedMvvCode
+  })
+  const selectedLocationType = selectedInfo
+    ? selectedInfo.mvvLocationType
+    : null
+  const generalScope =
+    selectedLocationType === 'Offshore'
+      ? SCOPE.GENERAL_OFFSHORE
+      : SCOPE.GENERAL_ONSITE
   const generalPerms = useBusinessPlanPermission(generalScope)
   const canViewGeneral = generalPerms.canViewScope
   const canEditGeneral = generalPerms.canEditScope
@@ -480,7 +487,9 @@ const BusinessPlanGeneralInformation = () => {
                   )}
                   <Tooltip title={handleRenderTooltip()}>
                     <Select
-                      value={canViewGeneral ? (industryDomain || undefined) : undefined}
+                      value={
+                        canViewGeneral ? industryDomain || undefined : undefined
+                      }
                       onChange={e =>
                         handleChangeInputValue(e, 'industryDomain')
                       }
@@ -515,7 +524,11 @@ const BusinessPlanGeneralInformation = () => {
                   )}
                   <Tooltip title={handleRenderTooltip()}>
                     <Select
-                      value={canViewGeneral ? (industryCurrency || undefined) : undefined}
+                      value={
+                        canViewGeneral
+                          ? industryCurrency || undefined
+                          : undefined
+                      }
                       onChange={e =>
                         handleChangeInputValue(e, 'industryCurrency')
                       }

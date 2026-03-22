@@ -8,6 +8,7 @@ import {
   mockBusinessPlanDetail437,
   mockBusinessPlanDetail448,
   mockBusinessPlanDetail464,
+  mockBusinessPlanDetail468,
   mockBusinessPlanDetailReal,
   mockBusinessPlanEdgeCaseDetail,
   mockProductionRevenue,
@@ -50,6 +51,7 @@ const businessPlansStore = new Map([
   [455, JSON.parse(JSON.stringify(mockBusinessPlanDetailReal))],
   [463, JSON.parse(JSON.stringify(mockBusinessPlanDetail464))],
   [464, JSON.parse(JSON.stringify(mockBusinessPlanDetail464))],
+  [468, JSON.parse(JSON.stringify(mockBusinessPlanDetail468))],
   [500, JSON.parse(JSON.stringify(mockBusinessPlanEdgeCaseDetail))],
 ]);
 

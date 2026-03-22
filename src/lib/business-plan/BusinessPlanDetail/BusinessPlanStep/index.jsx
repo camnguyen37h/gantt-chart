@@ -5,9 +5,9 @@ import moment from 'moment'
 import {
   forwardRef,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
-  useMemo,
 } from 'react'
 import { withRouter } from 'react-router-dom'
 import { STATUS_COLOR_DETAIL, STATUS_COLOR_PROJECT_TYPE } from '../../constants'
