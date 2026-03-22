@@ -18,9 +18,25 @@ import mockBusinessPlanTotal468Raw from './mock-data/businessPlanTotal468.json'
 import mockBusinessPlanOB468Raw from './mock-data/businessPlanOB468.json'
 import mockBusinessPlanOnsite468Raw from './mock-data/businessPlanOnsite468.json'
 import mockBusinessPlanOffshore468Raw from './mock-data/businessPlanOffshore468.json'
+import mockProductionRevenue468Raw from './mock-data/productionRevenue468.json'
+import mockOtherRevenue468Raw from './mock-data/otherRevenue468.json'
+import mockSellingPlan468Raw from './mock-data/sellingPlan468.json'
+import mockRevenueSummary468Raw from './mock-data/revenueSummary468.json'
+import mockOtherExpensesTable468Raw from './mock-data/otherExpensesTable468.json'
+import mockListDeliveryPlanMember468Raw from './mock-data/listDeliveryPlanMember468.json'
+import mockUserActionHistory468Raw from './mock-data/userActionHistory468.json'
 
 export const mockBusinessPlanDetail464 = mockBusinessPlanDetail464Raw
 export const mockBusinessPlanDetail468 = mockBusinessPlanDetail468Raw
+
+// ==================== REAL API DATA FOR ID 468 ====================
+export const mockProductionRevenue468 = mockProductionRevenue468Raw
+export const mockOtherRevenue468 = mockOtherRevenue468Raw
+export const mockSellingPlan468 = mockSellingPlan468Raw
+export const mockRevenueSummary468 = mockRevenueSummary468Raw
+export const mockOtherExpensesTable468 = mockOtherExpensesTable468Raw
+export const mockListDeliveryPlanMember468 = mockListDeliveryPlanMember468Raw
+export const mockUserActionHistory468 = mockUserActionHistory468Raw
 
 // ==================== BUSINESS PLAN DETAIL ====================
 export const mockBusinessPlanDetail = {

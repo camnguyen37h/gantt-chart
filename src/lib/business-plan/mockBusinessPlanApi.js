@@ -6,7 +6,6 @@
 import {
   mockBusinessPlanDetail,
   mockBusinessPlanDetail437,
-  mockBusinessPlanDetail448,
   mockBusinessPlanDetail464,
   mockBusinessPlanDetail468,
   mockBusinessPlanDetailReal,
@@ -23,6 +22,13 @@ import {
   mockIndustries,
   mockApprovalSteps,
   getBusinessPlanDataByViewMode,
+  mockProductionRevenue468,
+  mockOtherRevenue468,
+  mockSellingPlan468,
+  mockRevenueSummary468,
+  mockOtherExpensesTable468,
+  mockListDeliveryPlanMember468,
+  mockUserActionHistory468,
 } from '../../utils/mockBusinessPlanData';
 
 // Simulate network delay
@@ -57,22 +63,26 @@ const businessPlansStore = new Map([
 
 // In-memory storage for production revenue
 const productionRevenueStore = new Map([
-  [448, JSON.parse(JSON.stringify(mockProductionRevenue))]
+  [448, JSON.parse(JSON.stringify(mockProductionRevenue))],
+  [468, JSON.parse(JSON.stringify(mockProductionRevenue468))],
 ]);
 
 // In-memory storage for other revenue
 const otherRevenueStore = new Map([
-  [448, JSON.parse(JSON.stringify(mockOtherRevenue))]
+  [448, JSON.parse(JSON.stringify(mockOtherRevenue))],
+  [468, JSON.parse(JSON.stringify(mockOtherRevenue468))],
 ]);
 
 // In-memory storage for selling plan
 const sellingPlanStore = new Map([
-  [448, JSON.parse(JSON.stringify(mockSellingPlan))]
+  [448, JSON.parse(JSON.stringify(mockSellingPlan))],
+  [468, JSON.parse(JSON.stringify(mockSellingPlan468))],
 ]);
 
 // In-memory storage for revenue summary
 const revenueSummaryStore = new Map([
-  [448, JSON.parse(JSON.stringify(mockRevenueSummary))]
+  [448, JSON.parse(JSON.stringify(mockRevenueSummary))],
+  [468, JSON.parse(JSON.stringify(mockRevenueSummary468))],
 ]);
 
 // Counter for generating new IDs
@@ -653,6 +663,7 @@ const deliveryPlanResourcesStore = new Map([
       size: 20,
     },
   ],
+  [468, JSON.parse(JSON.stringify(mockListDeliveryPlanMember468.data))],
 ]);
 
 /**
@@ -846,6 +857,7 @@ const otherExpensesStore = new Map([
       size: 10,
     },
   ],
+  [468, JSON.parse(JSON.stringify(mockOtherExpensesTable468.data))],
 ]);
 
 /**
@@ -967,6 +979,7 @@ const deliveryHistoryStore = new Map([
       size: 10,
     },
   ],
+  [468, JSON.parse(JSON.stringify(mockUserActionHistory468.data))],
 ]);
 
 /**

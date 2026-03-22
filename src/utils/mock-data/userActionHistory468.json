@@ -1,0 +1,35 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 2,
+        "body": {
+            "userActionHistoryDtoList": [
+                {
+                    "id": 116603,
+                    "actionTime": "10/Feb/26 14:33 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": "{\"id\":1000110,\"items\":{}}",
+                    "newValueString": "{\"id\":1000110,\"items\":{\"04-2026\":1.0,\"05-2026\":1.0,\"06-2026\":1.0,\"07-2026\":1.0}}",
+                    "entity": "Resource Info - ttlam1"
+                },
+                {
+                    "id": 116572,
+                    "actionTime": "10/Feb/26 14:30 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":5000000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000110,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"02-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":5000000.0,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ttlam1"
+                }
+            ],
+            "total": 2,
+            "pageNum": 1,
+            "pageSize": 10
+        },
+        "page": 1,
+        "size": 10
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

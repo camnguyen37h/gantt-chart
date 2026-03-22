@@ -1,0 +1,92 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 1,
+        "body": {
+            "listLabelMonth": [
+                "Feb-26",
+                "Mar-26",
+                "Apr-26",
+                "May-26",
+                "Jun-26",
+                "Jul-26"
+            ],
+            "listBudgetMMForEachMonth": {
+                "Feb-26": 1,
+                "Mar-26": 1,
+                "Jun-26": 1,
+                "Apr-26": 1,
+                "Jul-26": 1,
+                "May-26": 1
+            },
+            "deliveryPlanByHeadCountList": [
+                {
+                    "deliveryMemberId": 1000110,
+                    "userId": 3860,
+                    "resourceType": "User",
+                    "resourceFullName": "Lam. Tran Tung  - CMCGlobal DJ2",
+                    "location": "Vietnam",
+                    "ldap": "ttlam1",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 5000000,
+                    "grossSalary": 5000000,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 6,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Feb-26": {
+                            "id": 1000283,
+                            "deliveryMemberId": 1000110,
+                            "month": 2,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "Mar-26": {
+                            "id": 1000284,
+                            "deliveryMemberId": 1000110,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "Jun-26": {
+                            "id": 1000287,
+                            "deliveryMemberId": 1000110,
+                            "month": 6,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "Apr-26": {
+                            "id": 1000285,
+                            "deliveryMemberId": 1000110,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "Jul-26": {
+                            "id": 1000288,
+                            "deliveryMemberId": 1000110,
+                            "month": 7,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "May-26": {
+                            "id": 1000286,
+                            "deliveryMemberId": 1000110,
+                            "month": 5,
+                            "year": 2026,
+                            "value": 1
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                }
+            ],
+            "totalRecord": 1
+        },
+        "page": 1,
+        "size": 20
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

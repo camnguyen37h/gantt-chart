@@ -1,0 +1,30 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "startDate": 1770915600000,
+        "endDate": 1784134800000,
+        "revenueInfos": [
+            {
+                "saleWorkOrderId": "271626",
+                "groupId": null,
+                "pipelineKey": "WO-7821",
+                "position": "",
+                "unitPrice": 5000000,
+                "rateCard": null,
+                "department": "BU3",
+                "exchangeRate": 1,
+                "pipeLineRatio": 100,
+                "totalManMonth": 1,
+                "totalRevenue": 5000000,
+                "revenue": {
+                    "03-2026": {
+                        "manMonth": 1,
+                        "revenue": 5000000
+                    }
+                }
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

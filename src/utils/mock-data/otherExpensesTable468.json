@@ -1,0 +1,53 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 5,
+        "body": {
+            "labelMonth": [
+                "Feb-26",
+                "Mar-26",
+                "Apr-26",
+                "May-26",
+                "Jun-26",
+                "Jul-26"
+            ],
+            "dataList": [
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Onsite",
+                    "categoriesDataList": null,
+                    "totalExpenseValue": null
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Equipment",
+                    "categoriesDataList": null,
+                    "totalExpenseValue": null
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Overtime",
+                    "categoriesDataList": null,
+                    "totalExpenseValue": null
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Non-deductible input VAT",
+                    "categoriesDataList": null,
+                    "totalExpenseValue": null
+                },
+                {
+                    "otherExpenseId": null,
+                    "expenseCategoriesEnum": "Others",
+                    "categoriesDataList": null,
+                    "totalExpenseValue": null
+                }
+            ],
+            "totalRecords": 5
+        },
+        "page": 1,
+        "size": 10
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
