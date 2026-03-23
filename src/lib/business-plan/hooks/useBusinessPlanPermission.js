@@ -22,8 +22,8 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
   const { userRoles } = useSelector(state => state.businessGeneralInformation)
 
   const allRoles = useMemo(() => {
-    const apiRoles = Array.isArray(userRoles) ? userRoles : []
-    return [...apiRoles, ...getSystemRoles()]
+    // const apiRoles = Array.isArray(userRoles) ? userRoles : []
+    return ['DB-Sale-Offshore']
   }, [userRoles])
 
   const resolvedMap = columnTypeMap || null

@@ -151,7 +151,12 @@ const businessDetailsSlice = createSlice({
     },
 
     setContractPriceData: (state, { payload }) => {
-      const { exchangeRate, softwareDevelopmentFee, otherFees } = payload
+      const {
+        exchangeRate,
+        softwareDevelopmentFee,
+        otherFees,
+        mvvLocationType,
+      } = payload
 
       if (exchangeRate !== undefined && exchangeRate !== null)
         state.exchangeRate = exchangeRate
@@ -164,6 +169,14 @@ const businessDetailsSlice = createSlice({
         state.otherFees = otherFees
       state.totalContractPrice =
         (state.softwareDevelopmentFee || 0) + (state.otherFees || 0)
+
+      if (mvvLocationType && state.ratesByLocationType[mvvLocationType]) {
+        const updates = { exchangeRate, softwareDevelopmentFee, otherFees }
+        Object.keys(updates).forEach(key => {
+          if (updates[key] !== undefined && updates[key] !== null)
+            state.ratesByLocationType[mvvLocationType][key] = updates[key]
+        })
+      }
     },
 
     setValidation: (state, { payload }) => {
