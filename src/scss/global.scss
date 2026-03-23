@@ -1,0 +1,689 @@
+// ============================================
+// GLOBAL STYLES FROM app/scss/client.scss
+// ============================================
+
+// CSS Variables
+:root {
+  --primary-blue: #338bf8;
+  --success-green: #4caf50;
+  --error-red: #f5222d;
+  --warning-yellow: #e5d166;
+  --disabled-gray: #8a8a8a;
+  --light-blue: #ebf3ff;
+  --sky-blue: #bed8f8;
+}
+
+// Body styles
+body {
+  font-weight: 400;
+  min-height: 100%;
+  background-color: #f2f3f8 !important;
+  color: #6a6c6f;
+}
+
+// Width & Height utilities
+.w-full {
+  display: block;
+  width: 100%;
+}
+
+div[aria-hidden='true'] {
+  display: none;
+}
+
+.width-10 { width: 10px; }
+.width-20 { width: 20px; }
+.width-30 { width: 30px; }
+.width-50 { width: 50px; }
+.width-90 { width: 90px; }
+.width-120 { width: 120px; }
+.width-150 { width: 150px; }
+.width-160 { width: 160px; }
+.width-250 { width: 250px; }
+.width-400 { width: 400px; }
+.height-50 { height: 50px; }
+
+// Table utilities
+.ant-table-row-level-0 {
+  text-align: center;
+}
+
+// Highlight utilities
+.highline-yellow,
+.highline-yellow:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: #f1d511;
+  font-weight: bold;
+}
+
+.highline-red,
+.highline-red:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.highline-black,
+.highline-black:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.highline-green,
+.highline-green:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: green;
+  font-weight: bold;
+}
+
+.highline-header-table-green,
+.highline-header-table-green:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  background-color: green;
+  text-align: center;
+}
+
+.header-table,
+.header-table:hover {
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bold;
+  background-color: white;
+  text-align: center;
+}
+
+// Cursor utilities
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+// Custom lightbox
+.custom-box {
+  z-index: 12;
+}
+
+.custom-light-box {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 12;
+  padding: 2% 2% 2% 2%;
+}
+
+// Custom card
+.custom-card {
+  border-radius: 0px;
+  height: 100%;
+
+  .custom-scrollable {
+    overflow-wrap: normal;
+    overflow: auto;
+
+    .head-section {
+      margin-bottom: 20px;
+      padding: 10px 0px 0px 20px;
+      color: black;
+
+      .selected-info {
+        font-weight: bold;
+        margin-right: 20px;
+        margin-left: 10px;
+      }
+
+      .ptype-option {
+        margin-right: 20px;
+
+        span {
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+// Table label utilities
+.lbl-table-header {
+  color: #ffffff;
+  font-weight: bold;
+  background-color: #1d99d5;
+  font-size: 13px;
+}
+
+.detail-plan-link {
+  color: #0275d8;
+  cursor: pointer;
+}
+
+.tbl-body {
+  color: black;
+  font-size: 13px;
+}
+
+.btn-close {
+  font-size: 30px;
+}
+
+.custom-card-header-addplan {
+  color: #ffffff;
+  padding: 10px;
+  background: #0b82e8;
+}
+
+.group-button {
+  display: -webkit-inline-box !important;
+}
+
+.padding-button {
+  padding-right: 0px;
+  padding-top: 10px;
+}
+
+.text-center-billable {
+  vertical-align: middle !important;
+}
+
+.card-block-add-plan {
+  overflow-y: scroll;
+}
+
+// Table cell utilities
+tbody.ant-table-tbody tr td,
+thead.ant-table-thead tr th {
+  max-width: 1px;
+}
+
+.ant-input-number {
+  width: 100% !important;
+}
+
+.required {
+  color: #ff0000;
+}
+
+// Ant Design Pagination
+.ant-pagination-prev,
+.ant-pagination-next {
+  .ant-pagination-item-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    .anticon {
+      margin: 0;
+    }
+  }
+}
+
+.ant-table-fixed-header .ant-table-scroll .ant-table-header {
+  min-width: unset !important;
+}
+
+// Event items
+.event-item {
+  border-bottom-width: 4px !important;
+}
+
+// Comment modal
+.comment-reject-modal {
+  .ant-modal-body {
+    .ant-form-item-label {
+      line-height: 1.5;
+    }
+  }
+
+  .ant-row {
+    margin-bottom: 0;
+  }
+}
+
+// Date picker
+.date-picker {
+  width: 100%;
+}
+
+#LogTimeSheetApprove,
+#LogTimeSheet {
+  .event-item {
+    opacity: 0.7 !important;
+  }
+}
+
+// Custom row
+.custom-row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.custom-row .ant-col:first-of-type {
+  padding-left: 0 !important;
+}
+
+.custom-row .ant-col:last-of-type {
+  padding-right: 0 !important;
+}
+
+// Flexbox utilities
+.flex {
+  display: flex;
+}
+
+.flex-items-center {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.flex-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.flex-between {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.flex-end {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.flex-start {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+.flex-wrap {
+  flex-flow: wrap !important;
+}
+
+.justify-center {
+  justify-content: center !important;
+}
+
+.justify-space-between,
+.justify-between {
+  justify-content: space-between !important;
+}
+
+.justify-end {
+  justify-content: flex-end !important;
+}
+
+// Font utilities
+.font-bold {
+  font-weight: 700 !important;
+}
+
+.font-weight-600 {
+  font-weight: 600 !important;
+}
+
+// Dynamic utilities (margins, paddings, gaps, heights, font-sizes)
+$length: 1000;
+
+@for $i from 1 through $length {
+  .font-#{$i} {
+    font-size: #{$i}px !important;
+  }
+
+  .gap-#{$i} {
+    gap: #{$i}px !important;
+  }
+
+  .mb-#{$i} {
+    margin-bottom: #{$i}px !important;
+  }
+
+  .mt-#{$i} {
+    margin-top: #{$i}px !important;
+  }
+
+  .ml-#{$i} {
+    margin-left: #{$i}px !important;
+  }
+
+  .mr-#{$i} {
+    margin-right: #{$i}px !important;
+  }
+
+  .m-#{$i} {
+    margin: #{$i}px !important;
+  }
+
+  .pb-#{$i} {
+    padding-bottom: #{$i}px !important;
+  }
+
+  .pt-#{$i} {
+    padding-top: #{$i}px !important;
+  }
+
+  .pl-#{$i} {
+    padding-left: #{$i}px !important;
+  }
+
+  .pr-#{$i} {
+    padding-right: #{$i}px !important;
+  }
+
+  .p-#{$i} {
+    padding: #{$i}px !important;
+  }
+
+  .h-#{$i} {
+    height: #{$i}px !important;
+  }
+}
+
+// ============================================
+// ANT DESIGN CUSTOMIZATIONS
+// ============================================
+
+// Blue header table
+.blue-header-table {
+  .ant-table-thead th {
+    background-color: var(--primary-blue);
+    color: #ffffff;
+  }
+
+  .ant-table-thead
+    > tr
+    > th.ant-table-column-has-actions.ant-table-column-has-sorters:hover {
+    background-color: var(--primary-blue);
+  }
+
+  .ant-table-thead
+    > tr
+    > th.ant-table-column-has-actions.ant-table-column-has-filters:hover
+    .anticon-filter:hover,
+  .ant-table-thead
+    > tr
+    > th.ant-table-column-has-actions.ant-table-column-has-filters:hover
+    .ant-table-filter-icon:hover {
+    background-color: var(--primary-blue);
+  }
+
+  .ant-table-thead
+    > tr
+    > th.ant-table-column-has-actions.ant-table-column-has-filters
+    .anticon-filter.ant-table-filter-open,
+  .ant-table-thead
+    > tr
+    > th.ant-table-column-has-actions.ant-table-column-has-filters
+    .ant-table-filter-icon.ant-table-filter-open {
+    background-color: var(--primary-blue);
+  }
+
+  .ant-table-thead
+    > tr
+    > th
+    .ant-table-column-sorter
+    .ant-table-column-sorter-inner {
+    color: #ffffff;
+  }
+
+  .ant-table-thead > tr > th.ant-table-column-sort {
+    background-color: var(--primary-blue);
+  }
+
+  .ant-table-thead
+    > tr
+    > th
+    .ant-table-column-sorter
+    .ant-table-column-sorter-inner
+    .ant-table-column-sorter-up.on,
+  .ant-table-thead
+    > tr
+    > th
+    .ant-table-column-sorter
+    .ant-table-column-sorter-inner
+    .ant-table-column-sorter-down.on {
+    color: #000000;
+  }
+
+  .ant-table-thead > tr > th .ant-table-filter-selected.anticon {
+    color: #000000;
+  }
+
+  .ant-table-thead > tr > th .anticon-filter,
+  .ant-table-thead > tr > th .ant-table-filter-icon {
+    color: #ffffff;
+  }
+}
+
+// Switch customizations
+.ant-switch-checked.checked-switch {
+  background-color: #3cb33d;
+}
+
+.ant-switch.disabled-switch {
+  background-color: var(--disabled-gray);
+}
+
+// Form customizations
+.ant-form-item-label > label.ant-form-item-required::after {
+  display: inline-block;
+  margin-right: 4px;
+  color: #f5222d;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*' !important;
+}
+
+.ant-form-item-required::before {
+  content: '' !important;
+}
+
+.ant-form-item-required {
+  margin-bottom: 0px;
+}
+
+.ant-table-scroll {
+  .ant-table-body {
+    overflow-x: auto !important;
+  }
+}
+
+.ant-form {
+  .ant-form-item {
+    margin-bottom: 12px;
+
+    &-label {
+      text-align: left;
+    }
+  }
+}
+
+.month-picker-label {
+  margin: 0;
+  line-height: 32px;
+}
+
+// Error styling
+.error {
+  color: #f5222d;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+// Button customizations
+.ant-btn.custom-disabled-btn,
+.ant-btn.custom-disabled-btn[disabled] {
+  &:not(.ant-btn-link) {
+    background-color: var(--disabled-gray);
+    color: #ffffff;
+    border-color: var(--disabled-gray);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--disabled-gray);
+      color: #ffffff;
+      border-color: var(--disabled-gray);
+    }
+  }
+}
+
+.ant-btn.custom-disabled-btn.ant-btn-link {
+  color: var(--disabled-gray);
+}
+
+.select-type-rate .select-dropdown {
+  width: 200px;
+  margin-bottom: 28px;
+}
+
+// Custom table
+.custom-table
+  .ant-table-small
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th {
+  background-color: #ebf3ff;
+}
+
+.custom-table .ant-table .ant-table-thead > tr > th,
+.custom-table .ant-table .ant-table-tbody > tr > td {
+  padding: 4px 8px !important;
+}
+
+.custom-table .ant-table .ant-table-thead > tr > th {
+  background-color: #ebf3ff;
+  border-right: 1px solid #e1e1e1;
+}
+
+.custom-table
+  .ant-table-small
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th.ant-table-column-has-filters,
+.custom-table
+  .ant-table-small
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th.ant-table-column-has-sorters,
+.custom-table
+  .ant-table-small
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th.ant-table-column-sort,
+.custom-table
+  .ant-table-small
+  > .ant-table-content
+  > .ant-table-scroll
+  > .ant-table-body
+  > table
+  > .ant-table-thead
+  > tr
+  > th.ant-table-row-cell-last,
+.custom-table td.cell-active.ant-table-row-cell-break-word,
+.custom-table
+  td.ant-table-column-has-actions.ant-table-column-has-sorters.ant-table-row-cell-break-word {
+  background-color: #fff5df;
+}
+
+.filters-tags {
+  margin: 16px 0;
+}
+
+// Tag customizations
+.ant-tag.custom-success-tag {
+  color: #000000;
+  background-color: #b7eb8f;
+}
+
+.ant-tag.custom-warning-tag {
+  color: #000000;
+  background-color: #ffe58f;
+}
+
+// Light blue header table
+.light-blue-header-table .ant-table-thead th {
+  background-color: var(--light-blue);
+
+  & > .ant-table-header-column {
+    width: 100%;
+    border-right: 1px solid #e1e1e1;
+  }
+
+  &:last-child > .ant-table-header-column {
+    border-right-color: transparent;
+  }
+}
+
+// Input error styling
+.input-error,
+.ant-input.input-error,
+.ant-input-number.input-error,
+.select-error .ant-select-selection {
+  border: 1px solid #f5222d;
+}
+
+.empty-table .ant-table-placeholder {
+  display: none;
+}
+
+// Tooltip customizations
+.full-tooltip {
+  .ant-tooltip-inner {
+    width: max-content;
+  }
+}
+
+// Calendar picker
+.ant-calendar-picker .ant-calendar-picker-icon {
+  color: #d0d0d0;
+}
+
+// Input number arrow removal
+.no-arrow-input::-webkit-outer-spin-button,
+.no-arrow-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrow-input {
+  -moz-appearance: textfield;
+}
+
+// Notification
+.notification-message .title {
+  color: #fff;
+}
+
+.d-none {
+  display: none !important;
+}

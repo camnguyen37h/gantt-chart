@@ -1,0 +1,18 @@
+// Import global CSS from app/scss/client.scss (CSS variables, utilities, Ant Design customizations)
+@import './global.scss';
+
+// Common components (from app/scss/common/)
+@import './common/common.scss';
+@import './common/sidebar.scss';
+@import './common/filter-v2.scss';
+// Note: workflow-approval uses styled-components, does not need SCSS file
+
+// Business Plan feature styles
+@import './business-plan/general-information.scss';
+@import './business-plan/documents.scss';
+@import './business-plan/activity.scss';
+@import './business-plan/request.scss';
+@import './business-plan/workflow-group.scss';
+@import './business-plan/workflow-permission.scss';
+@import './business-plan/workflow-email.scss';
+@import './business-plan/settings.scss';

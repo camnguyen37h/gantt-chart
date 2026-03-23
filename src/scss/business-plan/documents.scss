@@ -1,0 +1,49 @@
+.business-plan-documents {
+  display: flex;
+  gap: 32px;
+}
+.documents-left,
+.documents-right {
+  width: 50%;
+}
+.uploaded-documents-action {
+  display: flex;
+  gap: 16px;
+}
+.uploaded-documents-action .action-button {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+}
+.uploaded-documents-action .action-button:hover {
+  color: #338BF8;
+  cursor: pointer;
+}
+.uploaded-documents-name {
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.popover-document-upload .ant-popover-title{
+  min-width: 30px;
+  min-height: 32px;
+  padding: 6px 8px;
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  word-wrap: break-word;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-weight: 400;
+}
+.popover-document-upload .ant-popover-inner-content{
+  display: none;
+}
+.information-content {
+  margin-bottom: 0;
+}
+.documents-title {
+  font-weight: 600;
+}
