@@ -3,8 +3,40 @@ import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
 
 const useFormula = () => {
-  const { exchangeRate, businessPlanItems, softwareDevelopmentFee } =
-    useSelector(state => state.businessPlanDetails)
+  const {
+    exchangeRate,
+    businessPlanItems,
+    softwareDevelopmentFee,
+    ratesByLocationType,
+    columns,
+  } = useSelector(state => state.businessPlanDetails)
+
+  const getRatesForColumn = function (columnKey) {
+    const col =
+      columns &&
+      columns.find(function (c) {
+        return c.columnKey === columnKey
+      })
+    if (col && col.colCategory) {
+      const locationType =
+        col.colCategory === 'bu_onsite'
+          ? 'Onsite'
+          : col.colCategory === 'bu_offshore'
+          ? 'Offshore'
+          : null
+      if (
+        locationType &&
+        ratesByLocationType &&
+        ratesByLocationType[locationType]
+      ) {
+        return ratesByLocationType[locationType]
+      }
+    }
+    return {
+      exchangeRate: exchangeRate,
+      softwareDevelopmentFee: softwareDevelopmentFee,
+    }
+  }
 
   const getSum = (...rest) => {
     if (rest.every(item => item === null || item === undefined)) return null
@@ -177,11 +209,32 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionTotal = () => {
-    return getSoftwareProductionSale()
+    const saleColumns =
+      columns &&
+      columns.filter(function (c) {
+        return c.columnKey && /^sale_\d+$/i.test(c.columnKey)
+      })
+    if (!saleColumns || saleColumns.length === 0) {
+      return getSoftwareProductionSale()
+    }
+    const values = saleColumns.map(function (col) {
+      return getSoftwareProductionSale({ targetItem: col })
+    })
+    return getSum.apply(null, values)
   }
 
-  const getSoftwareProductionSale = () => {
-    return getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
+  const getSoftwareProductionSale = function ({ targetItem } = {}) {
+    const rates =
+      targetItem && targetItem.columnKey
+        ? getRatesForColumn(targetItem.columnKey)
+        : {
+            exchangeRate: exchangeRate,
+            softwareDevelopmentFee: softwareDevelopmentFee,
+          }
+    return getMultiplicationRes(
+      rates.exchangeRate,
+      rates.softwareDevelopmentFee
+    )
   }
 
   const getSoftwareProductionInternal = () => {
@@ -217,14 +270,11 @@ const useFormula = () => {
   }
 
   const getDeductionTotal = () => {
-    return getDeductionSale()
-  }
-
-  const getDeductionSale = () => {
+    // For TOTAL column, read the TOTAL values from backend directly.
     const deductionFromBackend =
       (
         businessPlanItems.REVENUES.data.DEDUCTION.data.find(function (item) {
-          return item.columnKey.toLowerCase().includes('sale')
+          return item.columnKey === 'TOTAL'
         }) || {}
       ).value || 0
 
@@ -232,7 +282,7 @@ const useFormula = () => {
       (
         businessPlanItems.REVENUES.data.SOFTWARE_PRODUCTION_REVENUES.data.find(
           function (item) {
-            return item.columnKey.toLowerCase().includes('sale')
+            return item.columnKey === 'TOTAL'
           }
         ) || {}
       ).value || 0
@@ -243,11 +293,50 @@ const useFormula = () => {
       .plus(new Decimal(deductionFromBackend))
       .toNumber()
 
+    const computedTotalSPR = getSoftwareProductionTotal()
     const revenuesFromUserTyping =
-      getSoftwareProductionSale() !== null &&
-      getSoftwareProductionSale() !== undefined
-        ? getSoftwareProductionSale()
+      computedTotalSPR !== null && computedTotalSPR !== undefined
+        ? computedTotalSPR
         : 0
+
+    return new Decimal(totalDeductionRevenueFromBackend)
+      .minus(new Decimal(revenuesFromUserTyping))
+      .toNumber()
+  }
+
+  // targetItem carries the exact SALE columnKey so we read/compute against the right column.
+  const getDeductionSale = function ({ targetItem } = {}) {
+    const saleColumnKey = targetItem && targetItem.columnKey
+
+    const deductionFromBackend =
+      (
+        businessPlanItems.REVENUES.data.DEDUCTION.data.find(function (item) {
+          return saleColumnKey
+            ? item.columnKey === saleColumnKey
+            : item.columnKey.toLowerCase().includes('sale')
+        }) || {}
+      ).value || 0
+
+    const revenuesSaleFromBackend =
+      (
+        businessPlanItems.REVENUES.data.SOFTWARE_PRODUCTION_REVENUES.data.find(
+          function (item) {
+            return saleColumnKey
+              ? item.columnKey === saleColumnKey
+              : item.columnKey.toLowerCase().includes('sale')
+          }
+        ) || {}
+      ).value || 0
+
+    const totalDeductionRevenueFromBackend = new Decimal(
+      revenuesSaleFromBackend
+    )
+      .plus(new Decimal(deductionFromBackend))
+      .toNumber()
+
+    const computedSPR = getSoftwareProductionSale({ targetItem: targetItem })
+    const revenuesFromUserTyping =
+      computedSPR !== null && computedSPR !== undefined ? computedSPR : 0
 
     return new Decimal(totalDeductionRevenueFromBackend)
       .minus(new Decimal(revenuesFromUserTyping))
@@ -281,11 +370,29 @@ const useFormula = () => {
   }
 
   const getIncentiveTotal = () => {
-    return getIncentiveSale()
+    const softwareProductionRevenuesTotal = getSoftwareProductionTotal()
+
+    const incentiveRate = getItem({
+      sectionKey: 'REFERENCE',
+      rowKey: 'INCENTIVES_RATE',
+      columnKey: 'SALE',
+    }).value
+
+    return softwareProductionRevenuesTotal !== null &&
+      softwareProductionRevenuesTotal !== undefined &&
+      incentiveRate !== null &&
+      incentiveRate !== undefined
+      ? new Decimal(softwareProductionRevenuesTotal)
+          .times(new Decimal(incentiveRate))
+          .dividedBy(100)
+          .toNumber()
+      : null
   }
 
-  const getIncentiveSale = () => {
-    const softwareProductionRevenuesSale = getSoftwareProductionSale()
+  const getIncentiveSale = function ({ targetItem } = {}) {
+    const softwareProductionRevenuesSale = getSoftwareProductionSale({
+      targetItem: targetItem,
+    })
 
     const incentiveRate = getItem({
       sectionKey: 'REFERENCE',
