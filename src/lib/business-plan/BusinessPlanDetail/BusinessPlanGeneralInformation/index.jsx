@@ -617,7 +617,8 @@ const BusinessPlanGeneralInformation = () => {
           <div className="d-flex gap-6 flex-wrap">
             <KpiBonusBodyItem
               businessPlanKpiDTO={businessPlanKpiDTO}
-              canEdit={isEditInputDraft}
+              canEdit={isEditInputDraft && canViewGeneral}
+              masked={!canViewGeneral}
               onChangeKpiBonusInput={onChangeKpiBonusInput}
             />
           </div>

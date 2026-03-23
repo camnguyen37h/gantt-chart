@@ -22,6 +22,7 @@ const KpiBonusBodyItem = Form.create(
     form,
     businessPlanKpiDTO,
     canEdit,
+    masked,
     onChangeKpiBonusInput,
   }
 ) => {
@@ -87,9 +88,11 @@ const KpiBonusBodyItem = Form.create(
           </div>
           )
         )
-        : (record.kpi !== null && record.kpi !== undefined && record.kpi !== '')
-          ? `${record.kpi}`
-          : ""
+        : masked
+          ? '*****'
+          : (record.kpi !== null && record.kpi !== undefined && record.kpi !== '')
+            ? `${record.kpi}`
+            : ""
     }
   ]
 
