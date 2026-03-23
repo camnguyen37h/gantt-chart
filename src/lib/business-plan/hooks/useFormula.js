@@ -22,8 +22,8 @@ const useFormula = () => {
         col.colCategory === 'bu_onsite'
           ? 'Onsite'
           : col.colCategory === 'bu_offshore'
-          ? 'Offshore'
-          : null
+            ? 'Offshore'
+            : null
       if (
         locationType &&
         ratesByLocationType &&

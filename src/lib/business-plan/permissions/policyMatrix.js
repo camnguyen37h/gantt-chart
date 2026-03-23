@@ -158,9 +158,7 @@ export const PERMISSION_MATRIX = {
 
   [BP_ROLES.DUL_OFFSHORE]: {
     [SCOPE.OFFSHORE]: {
-      sectionColumns: [COL_CAT.TOTAL, COL_CAT.DU_OFFSHORE],
-      dataColumns: [COL_CAT.DU_OFFSHORE],
-      sections: ['REVENUES', 'DELIVERY_EXPENSES'],
+      columns: COL_CAT.ALL,
       edit: true,
     },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },

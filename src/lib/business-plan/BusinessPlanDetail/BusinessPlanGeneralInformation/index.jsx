@@ -281,7 +281,10 @@ const BusinessPlanGeneralInformation = () => {
   }, [totalContractPrice])
 
   const onChangeContractPriceInput = (value, key) => {
-    setContractPriceData({ [key]: value, mvvLocationType: selectedLocationType })
+    setContractPriceData({
+      [key]: value,
+      mvvLocationType: selectedLocationType,
+    })
 
     const result = {
       [key]: false,
