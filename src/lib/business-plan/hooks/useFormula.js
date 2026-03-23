@@ -3,31 +3,8 @@ import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
 
 const useFormula = () => {
-  const {
-    exchangeRate,
-    businessPlanItems,
-    softwareDevelopmentFee,
-    viewMode,
-    ratesByLocationType,
-  } = useSelector(state => state.businessPlanDetails)
-
-  const getRatesByLocationType = locationType => {
-    if (
-      locationType &&
-      ratesByLocationType &&
-      ratesByLocationType[locationType]
-    ) {
-      return ratesByLocationType[locationType]
-    }
-    return {
-      exchangeRate: exchangeRate,
-      softwareDevelopmentFee: softwareDevelopmentFee,
-    }
-  }
-
-  const allLocationTypes = ratesByLocationType
-    ? Object.keys(ratesByLocationType)
-    : []
+  const { exchangeRate, businessPlanItems, softwareDevelopmentFee } =
+    useSelector(state => state.businessPlanDetails)
 
   const getSum = (...rest) => {
     if (rest.every(item => item === null || item === undefined)) return null
@@ -35,7 +12,7 @@ const useFormula = () => {
     return rest
       .reduce((total, cur) => {
         const value =
-          cur === null || cur === undefined || isNaN(cur) || !isFinite(cur)
+          isNaN(cur) || cur === null || cur === undefined
             ? new Decimal(0)
             : new Decimal(cur)
         return total.plus(value)
@@ -58,83 +35,27 @@ const useFormula = () => {
   }
 
   const getItem = ({ sectionKey, rowKey, columnKey }) => {
-    try {
-      if (!businessPlanItems || !businessPlanItems[sectionKey]) {
-        return {}
-      }
-
-      const section = businessPlanItems[sectionKey]
-      if (!section.data || !section.data[rowKey]) {
-        return {}
-      }
-
-      const row = section.data[rowKey]
-      if (!row.data || !Array.isArray(row.data)) {
-        return {}
-      }
-
-      const foundItem = row.data.find(function (item) {
-        return item && item.columnKey === columnKey
-      })
-
-      return foundItem || {}
-    } catch (error) {
-      return {}
-    }
+    return businessPlanItems[sectionKey] &&
+      businessPlanItems[sectionKey].data[rowKey] &&
+      businessPlanItems[sectionKey].data[rowKey].data.find(
+        item => item.columnKey === columnKey
+      )
+      ? businessPlanItems[sectionKey].data[rowKey].data.find(
+          item => item.columnKey === columnKey
+        )
+      : {}
   }
 
   const getItems = ({ sectionKey, rowKey, filterCallback }) => {
-    try {
-      if (!businessPlanItems || !businessPlanItems[sectionKey]) {
-        return []
-      }
-
-      const section = businessPlanItems[sectionKey]
-      if (!section.data || !section.data[rowKey]) {
-        return []
-      }
-
-      const row = section.data[rowKey]
-      if (!row.data || !Array.isArray(row.data)) {
-        return []
-      }
-
-      return row.data.filter(filterCallback) || []
-    } catch (error) {
-      return []
-    }
+    return businessPlanItems[sectionKey] &&
+      businessPlanItems[sectionKey].data[rowKey] &&
+      businessPlanItems[sectionKey].data[rowKey].data
+      ? businessPlanItems[sectionKey].data[rowKey].data.filter(filterCallback)
+      : []
   }
 
-  const getItemValue = function (params, fallback) {
-    const sectionKey = params.sectionKey
-    const rowKey = params.rowKey
-    const columnKey = params.columnKey
-
-    if (fallback === undefined) {
-      fallback = null
-    }
-
-    const item = getItem({
-      sectionKey: sectionKey,
-      rowKey: rowKey,
-      columnKey: columnKey,
-    })
-
-    if (!item || Object.keys(item).length === 0) {
-      return fallback
-    }
-
-    return item.value !== undefined && item.value !== null
-      ? item.value
-      : fallback
-  }
-
-  const getItemValues = ({ sectionKey, rowKey, filterCallback }) => {
-    const items = getItems({ sectionKey, rowKey, filterCallback })
-    return items.map(function (item) {
-      return item && item.value !== undefined ? item.value : null
-    })
-  }
+  const getItemValues = ({ sectionKey, rowKey, filterCallback }) =>
+    getItems({ sectionKey, rowKey, filterCallback }).map(item => item.value)
 
   const getSumItemValues = ({ sectionKey, rowKey, filterCallback }) =>
     getSum(...getItemValues({ sectionKey, rowKey, filterCallback }))
@@ -148,13 +69,8 @@ const useFormula = () => {
       targetItem,
       sectionKey,
       rowKey,
-      filterCallback: function (item) {
-        return (
-          item &&
-          item.columnKey &&
-          item.columnKey.toLowerCase().includes('delivery_unit')
-        )
-      },
+      filterCallback: item =>
+        item.columnKey.toLowerCase().includes('delivery_unit'),
     })
   }
 
@@ -163,73 +79,47 @@ const useFormula = () => {
       targetItem,
       sectionKey,
       rowKey,
-      filterCallback: function (item) {
-        return (
-          item && item.columnKey && item.columnKey.toLowerCase() !== 'total'
-        )
-      },
+      filterCallback: item =>
+        item && item.columnKey && item.columnKey.toLowerCase() !== 'total',
     })
   }
 
   const getTotalColumnAndSet = ({ targetItem, serviceRowKey }) => {
-    try {
-      const sectionKey = targetItem.sectionKey
-      const columnKey = targetItem.columnKey
-      const rowKey = targetItem.rowKey
+    const { sectionKey, columnKey, rowKey } = targetItem
 
-      if (
-        !businessPlanItems ||
-        !businessPlanItems[sectionKey] ||
-        !businessPlanItems[sectionKey].data
-      ) {
-        return null
-      }
-
-      const rowKeys = Object.keys(businessPlanItems[sectionKey].data).filter(
-        function (key) {
-          return key !== rowKey
-        }
+    const rowKeys = Object.keys(businessPlanItems[sectionKey].data).filter(
+      key => key !== rowKey
+    )
+    const values = rowKeys.map(key => {
+      const childItem = businessPlanItems[sectionKey].data[key].data.find(
+        item => item.columnKey === columnKey
       )
 
-      const values = rowKeys.map(function (key) {
-        const childItem = getItem({
-          sectionKey: sectionKey,
-          rowKey: key,
-          columnKey: columnKey,
-        })
+      if (!childItem) return null
 
-        if (!childItem || Object.keys(childItem).length === 0) {
-          return null
-        }
-
-        const regex = serviceRowKey + '_\\d+'
-        const isService = key.match(new RegExp(regex))
-
-        const formulaValue = getFormula({
-          item: childItem,
-          columnKey: columnKey,
-          rowKey: key,
-          sectionKey: sectionKey,
-          isService: isService,
-        })
-
-        return formulaValue !== undefined
-          ? formulaValue
-          : childItem.value || null
+      const regex = `${serviceRowKey}_\\d+`
+      const isService = key.match(new RegExp(regex))
+      const formulaResult = getFormula({
+        item: childItem,
+        columnKey,
+        rowKey: key,
+        sectionKey,
+        isService,
       })
+      return formulaResult !== undefined ? formulaResult : childItem.value
+    })
 
-      return getSum(...values)
-    } catch (error) {
-      return null
-    }
+    return getSum(...values)
   }
 
   const getUnitPriceTotal = () => {
-    return getItemValue({
+    const unitPriceSale = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'UNIT_PRICE',
       columnKey: 'SALE',
     })
+
+    return unitPriceSale.value
   }
 
   const getMMManufactureTotal = () => {
@@ -247,65 +137,35 @@ const useFormula = () => {
     const mmBillDUItems = getItems({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_BILL',
-      filterCallback: function (item) {
-        return (
-          item &&
-          item.columnKey &&
-          item.columnKey.toLowerCase().includes('delivery_unit')
-        )
-      },
+      filterCallback: item =>
+        item.columnKey.toLowerCase().includes('delivery_unit'),
     })
-    const mmBillDUValues = mmBillDUItems.map(function (item) {
-      return getMMBillDU({ targetItem: item })
-    })
+    const mmBillDUValues = mmBillDUItems.map(item =>
+      getMMBillDU({ targetItem: item })
+    )
 
     return getSum(...mmBillDUValues)
   }
 
   const getMMBillDU = ({ targetItem }) => {
-    try {
-      if (
-        !businessPlanItems ||
-        !businessPlanItems.MAN_MONTH ||
-        !businessPlanItems.MAN_MONTH.data
-      ) {
-        return null
-      }
-
-      const serviceKeys = Object.keys(businessPlanItems.MAN_MONTH.data).filter(
-        function (key) {
-          return key.match(/MM_BILL_\d+/)
-        }
+    const serviceKeys = Object.keys(businessPlanItems.MAN_MONTH.data).filter(
+      key => key.match(/MM_BILL_\d+/)
+    )
+    const serviceValues = serviceKeys.map(key => {
+      return businessPlanItems.MAN_MONTH.data[key].data.find(
+        item =>
+          item.columnKey.toLowerCase().includes('delivery_unit') &&
+          item.columnKey === targetItem.columnKey
       )
-
-      const serviceValues = serviceKeys.map(function (key) {
-        if (
-          !businessPlanItems.MAN_MONTH.data[key] ||
-          !businessPlanItems.MAN_MONTH.data[key].data
-        ) {
-          return null
-        }
-
-        const foundItem = businessPlanItems.MAN_MONTH.data[key].data.find(
-          function (item) {
-            return (
-              item &&
-              item.columnKey &&
+        ? businessPlanItems.MAN_MONTH.data[key].data.find(
+            item =>
               item.columnKey.toLowerCase().includes('delivery_unit') &&
               item.columnKey === targetItem.columnKey
-            )
-          }
-        )
+          ).value
+        : null
+    })
 
-        return foundItem && foundItem.value !== undefined
-          ? foundItem.value
-          : null
-      })
-
-      return getSum(...serviceValues)
-    } catch (error) {
-      return null
-    }
+    return getSum(...serviceValues)
   }
 
   const getTotalMMBilService = ({ targetItem }) => {
@@ -317,47 +177,26 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionTotal = () => {
-    if (allLocationTypes.length > 1) {
-      const values = allLocationTypes.map(lt =>
-        getSoftwareProductionSaleByLocationType(lt)
-      )
-      return getSum.apply(null, values)
-    }
-    return getSoftwareProductionSaleByLocationType(viewMode)
-  }
-
-  const getSoftwareProductionSaleByLocationType = locationType => {
-    const rates = getRatesByLocationType(locationType)
-    return getMultiplicationRes(
-      rates.exchangeRate,
-      rates.softwareDevelopmentFee
-    )
+    return getSoftwareProductionSale()
   }
 
   const getSoftwareProductionSale = () => {
-    if (viewMode === 'Total' || viewMode === 'OB') {
-      return getSoftwareProductionTotal()
-    }
-
-    return getSoftwareProductionSaleByLocationType(viewMode)
+    return getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
   }
 
   const getSoftwareProductionInternal = () => {
     const duItems = getItems({
       sectionKey: 'REVENUES',
       rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
-      filterCallback: function (item) {
-        return (
-          item &&
-          item.columnKey &&
-          item.columnKey.toLowerCase().includes('delivery_unit')
-        )
-      },
+      filterCallback: item =>
+        item &&
+        item.columnKey &&
+        item.columnKey.toLowerCase().includes('delivery_unit'),
     })
 
-    const values = duItems.map(function (item) {
-      return getSoftwareProductionDU({ targetItem: item })
-    })
+    const values = duItems.map(item =>
+      getSoftwareProductionDU({ targetItem: item })
+    )
 
     const value = getSum(...values)
 
@@ -367,18 +206,14 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionDU = ({ targetItem }) => {
-    try {
-      const revenuesItem = getItem({
-        sectionKey: 'REVENUES',
-        rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
-        columnKey: targetItem.columnKey,
-      })
-      return revenuesItem && revenuesItem.value !== undefined
-        ? revenuesItem.value
-        : null
-    } catch (error) {
-      return null
-    }
+    if (!targetItem || !targetItem.columnKey) return null
+    const found =
+      businessPlanItems.REVENUES.data.SOFTWARE_PRODUCTION_REVENUES.data.find(
+        item =>
+          item.columnKey.toLowerCase().includes('delivery_unit') &&
+          item.columnKey === targetItem.columnKey
+      )
+    return found ? found.value : null
   }
 
   const getDeductionTotal = () => {
@@ -386,47 +221,37 @@ const useFormula = () => {
   }
 
   const getDeductionSale = () => {
-    try {
-      const resolvedColumnKey =
-        viewMode === 'Total' || viewMode === 'OB' ? 'TOTAL' : 'SALE'
+    const deductionFromBackend =
+      (
+        businessPlanItems.REVENUES.data.DEDUCTION.data.find(function (item) {
+          return item.columnKey.toLowerCase().includes('sale')
+        }) || {}
+      ).value || 0
 
-      const deductionFromBackend = getItemValue(
-        {
-          sectionKey: 'REVENUES',
-          rowKey: 'DEDUCTION',
-          columnKey: resolvedColumnKey,
-        },
-        0
-      )
+    const revenuesSaleFromBackend =
+      (
+        businessPlanItems.REVENUES.data.SOFTWARE_PRODUCTION_REVENUES.data.find(
+          function (item) {
+            return item.columnKey.toLowerCase().includes('sale')
+          }
+        ) || {}
+      ).value || 0
 
-      const revenuesSaleFromBackend = getItemValue(
-        {
-          sectionKey: 'REVENUES',
-          rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
-          columnKey: resolvedColumnKey,
-        },
-        0
-      )
+    const totalDeductionRevenueFromBackend = new Decimal(
+      revenuesSaleFromBackend
+    )
+      .plus(new Decimal(deductionFromBackend))
+      .toNumber()
 
-      const totalDeductionRevenueFromBackend = new Decimal(
-        revenuesSaleFromBackend
-      )
-        .plus(new Decimal(deductionFromBackend))
-        .toNumber()
+    const revenuesFromUserTyping =
+      getSoftwareProductionSale() !== null &&
+      getSoftwareProductionSale() !== undefined
+        ? getSoftwareProductionSale()
+        : 0
 
-      const softProdSale =
-        viewMode === 'Total' || viewMode === 'OB'
-          ? getSoftwareProductionTotal()
-          : getSoftwareProductionSale()
-      const revenuesFromUserTyping =
-        softProdSale !== null && softProdSale !== undefined ? softProdSale : 0
-
-      return new Decimal(totalDeductionRevenueFromBackend)
-        .minus(new Decimal(revenuesFromUserTyping))
-        .toNumber()
-    } catch (error) {
-      return null
-    }
+    return new Decimal(totalDeductionRevenueFromBackend)
+      .minus(new Decimal(revenuesFromUserTyping))
+      .toNumber()
   }
 
   const getOnsiteFeeTotal = ({ sectionKey, rowKey }) => {
@@ -460,13 +285,13 @@ const useFormula = () => {
   }
 
   const getIncentiveSale = () => {
-    const softwareProductionRevenuesSale = getSoftwareProductionTotal()
+    const softwareProductionRevenuesSale = getSoftwareProductionSale()
 
-    const incentiveRate = getItemValue({
+    const incentiveRate = getItem({
       sectionKey: 'REFERENCE',
       rowKey: 'INCENTIVES_RATE',
       columnKey: 'SALE',
-    })
+    }).value
 
     return softwareProductionRevenuesSale !== null &&
       softwareProductionRevenuesSale !== undefined &&
@@ -480,12 +305,12 @@ const useFormula = () => {
   }
 
   const getAgencyTotal = () => {
-    const value = getItemValue({
+    const value = getItem({
       sectionKey: 'SELLING_EXPENSES',
       rowKey: 'AGENCY_EXPENSE',
       columnKey: 'SALE',
-    })
-    return value !== null && value !== undefined ? value : null
+    }).value
+    return value ? value : value === 0 ? value : null
   }
 
   const getDirectLaborCostTotal = ({ targetItem, sectionKey, rowKey }) => {
@@ -517,11 +342,11 @@ const useFormula = () => {
   }
 
   const getProjectBonusDU = ({ targetItem }) => {
-    const productionMMBonusDU = getItemValue({
+    const productionMMBonusDU = getItem({
       sectionKey: 'REFERENCE',
       rowKey: 'PRODUCTION_MM_BONUS',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
     const mmBillDUItem = getItem({
       sectionKey: 'MAN_MONTH',
@@ -540,17 +365,12 @@ const useFormula = () => {
     const duItems = getItems({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'PROJECT_BONUS',
-      filterCallback: function (item) {
-        return (
-          item &&
-          item.columnKey &&
-          item.columnKey.toLowerCase().includes('delivery_unit')
-        )
-      },
+      filterCallback: item =>
+        item.columnKey.toLowerCase().includes('delivery_unit'),
     })
-    const duValues = duItems.map(function (item) {
-      return getProjectBonusDU({ targetItem: item })
-    })
+    const duValues = duItems.map(item =>
+      getProjectBonusDU({ targetItem: item })
+    )
 
     return getSum(...duValues)
   }
@@ -666,17 +486,17 @@ const useFormula = () => {
     return getSum(totalIncentive, projectBonus, directMargin)
   }
   const getAllocationOfPoolDU = ({ targetItem }) => {
-    const directLabor = getItemValue({
+    const directLabor = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    const billrateNorm = getItemValue({
+    const billrateNorm = getItem({
       sectionKey: 'REFERENCE',
       rowKey: 'BILL_RATE_NORM',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
     return directLabor !== null &&
       billrateNorm !== null &&
@@ -695,18 +515,13 @@ const useFormula = () => {
     const DUItems = getItems({
       sectionKey: 'MARGIN',
       rowKey: 'ALLOCATION_OF_POOL_AND_UNBILLABLE',
-      filterCallback: function (item) {
-        return (
-          item &&
-          item.columnKey &&
-          item.columnKey.toLowerCase().includes('delivery_unit')
-        )
-      },
+      filterCallback: item =>
+        item.columnKey.toLowerCase().includes('delivery_unit'),
     })
 
-    const duValues = DUItems.map(function (item) {
-      return getAllocationOfPoolDU({ targetItem: item })
-    })
+    const duValues = DUItems.map(item =>
+      getAllocationOfPoolDU({ targetItem: item })
+    )
 
     return getSum(...duValues)
   }
@@ -797,7 +612,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return directMarginValue && revenuesValue
+    return directMarginValue != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(directMarginValue)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -827,7 +644,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return directMarginBonus && revenuesValue
+    return directMarginBonus != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(directMarginBonus)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -836,13 +655,14 @@ const useFormula = () => {
   }
 
   const getDirectMarginBonusRateSaleInternal = ({ targetItem }) => {
+    let directMarginBonus
     const directMarginBonusItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN_BONUS',
       columnKey: targetItem.columnKey,
     })
 
-    const directMarginBonus = getDirectMarginBonusSaleInternal({
+    directMarginBonus = getDirectMarginBonusSaleInternal({
       targetItem: directMarginBonusItem,
     })
 
@@ -857,7 +677,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return directMarginBonus && revenuesValue
+    return directMarginBonus != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(directMarginBonus)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -866,13 +688,14 @@ const useFormula = () => {
   }
 
   const getDirectMarginBonusRateDU = ({ targetItem }) => {
+    let directMarginBonus
     const directMarginBonusItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN_BONUS',
       columnKey: targetItem.columnKey,
     })
 
-    const directMarginBonus = getDirectMarginBonusDU({
+    directMarginBonus = getDirectMarginBonusDU({
       targetItem: directMarginBonusItem,
     })
 
@@ -887,7 +710,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return directMarginBonus && revenuesValue
+    return directMarginBonus != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(directMarginBonus)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -896,13 +721,14 @@ const useFormula = () => {
   }
 
   const getIndirectMarginRateDU = ({ targetItem }) => {
+    let indirectMargin
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
       columnKey: targetItem.columnKey,
     })
 
-    const indirectMargin = getIndirectMarginDU({
+    indirectMargin = getIndirectMarginDU({
       targetItem: indirectMarginItem,
     })
 
@@ -917,7 +743,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return indirectMargin && revenuesValue
+    return indirectMargin != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(indirectMargin)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -926,13 +754,14 @@ const useFormula = () => {
   }
 
   const getIndirectMarginRateSaleInternal = ({ targetItem }) => {
+    let indirectMargin
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
       columnKey: targetItem.columnKey,
     })
 
-    const indirectMargin = getIndirectMarginInternalSale({
+    indirectMargin = getIndirectMarginInternalSale({
       targetItem: indirectMarginItem,
     })
 
@@ -947,7 +776,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return indirectMargin && revenuesValue
+    return indirectMargin != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(indirectMargin)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -956,13 +787,14 @@ const useFormula = () => {
   }
 
   const getIndirectMarginRateTotal = () => {
+    let indirectMargin
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
       columnKey: 'TOTAL',
     })
 
-    const indirectMargin = getIndirectMarginTotal({
+    indirectMargin = getIndirectMarginTotal({
       targetItem: indirectMarginItem,
     })
 
@@ -977,7 +809,9 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    return indirectMargin && revenuesValue
+    return indirectMargin != null &&
+      revenuesValue != null &&
+      revenuesValue !== 0
       ? new Decimal(indirectMargin)
           .dividedBy(new Decimal(revenuesValue))
           .times(100)
@@ -998,7 +832,10 @@ const useFormula = () => {
     })
 
     const mmManufacture = getMMManufactureTotal()
-    return deliveryExpenses && mmManufacture
+
+    return deliveryExpenses != null &&
+      mmManufacture != null &&
+      mmManufacture !== 0
       ? new Decimal(deliveryExpenses)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1009,7 +846,8 @@ const useFormula = () => {
     const costOfDUSold = getDUCostSale()
 
     const mmManufacture = getMMManufactureSale()
-    return costOfDUSold && mmManufacture
+
+    return costOfDUSold != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(costOfDUSold)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1028,13 +866,15 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.DELIVERY_EXPENSES.newRowKey,
     })
 
-    const mmManufacture = getItemValue({
+    const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    return deliveryExpenses && mmManufacture
+    return deliveryExpenses != null &&
+      mmManufacture != null &&
+      mmManufacture !== 0
       ? new Decimal(deliveryExpenses)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1042,33 +882,33 @@ const useFormula = () => {
   }
 
   const getSalaryAverageExpensesDU = ({ targetItem }) => {
-    const laborCost = getItemValue({
+    const laborCost = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    const mmManufacture = getItemValue({
+    const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    return laborCost && mmManufacture
+    return laborCost != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(laborCost).dividedBy(new Decimal(mmManufacture)).toNumber()
       : null
   }
 
   const getSalaryAverageExpensesSale = ({ targetItem }) => {
-    const laborCost = getItemValue({
+    const laborCost = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
     const mmManufacture = getMMManufactureSale()
 
-    return laborCost && mmManufacture
+    return laborCost != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(laborCost).dividedBy(new Decimal(mmManufacture)).toNumber()
       : null
   }
@@ -1081,7 +921,7 @@ const useFormula = () => {
 
     const mmManufacture = getMMManufactureTotal()
 
-    return laborCost && mmManufacture
+    return laborCost != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(laborCost).dividedBy(new Decimal(mmManufacture)).toNumber()
       : null
   }
@@ -1095,13 +935,13 @@ const useFormula = () => {
 
     const mmBillValue = getMMBillDU({ targetItem: mmBill })
 
-    const mmManufacture = getItemValue({
+    const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    return mmBillValue && mmManufacture
+    return mmBillValue != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(mmBillValue)
           .dividedBy(new Decimal(mmManufacture))
           .times(100)
@@ -1114,7 +954,7 @@ const useFormula = () => {
 
     const mmManufacture = getMMManufactureSale()
 
-    return mmBill && mmManufacture
+    return mmBill != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(mmBill)
           .dividedBy(new Decimal(mmManufacture))
           .times(100)
@@ -1127,7 +967,7 @@ const useFormula = () => {
 
     const mmManufacture = getMMManufactureTotal()
 
-    return mmBill && mmManufacture
+    return mmBill != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(mmBill)
           .dividedBy(new Decimal(mmManufacture))
           .times(100)
@@ -1146,13 +986,13 @@ const useFormula = () => {
       targetItem: softwareProductionRevenues,
     })
 
-    const mmManufacture = getItemValue({
+    const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    return softwareValue && mmManufacture
+    return softwareValue != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(softwareValue)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1164,7 +1004,9 @@ const useFormula = () => {
 
     const mmManufacture = getMMManufactureTotal()
 
-    return softwareProductionRevenues && mmManufacture
+    return softwareProductionRevenues != null &&
+      mmManufacture != null &&
+      mmManufacture !== 0
       ? new Decimal(softwareProductionRevenues)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1179,13 +1021,13 @@ const useFormula = () => {
     })
     const directMargin = getDirectMargin({ targetItem: directMarginItem })
 
-    const mmManufacture = getItemValue({
+    const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
       columnKey: targetItem.columnKey,
-    })
+    }).value
 
-    return directMargin && mmManufacture
+    return directMargin != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(directMargin)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1202,7 +1044,7 @@ const useFormula = () => {
 
     const mmManufacture = getMMManufactureTotal()
 
-    return directMargin && mmManufacture
+    return directMargin != null && mmManufacture != null && mmManufacture !== 0
       ? new Decimal(directMargin)
           .dividedBy(new Decimal(mmManufacture))
           .toNumber()
@@ -1222,11 +1064,11 @@ const useFormula = () => {
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
 
-    const pic = getItemValue({
+    const pic = getItem({
       sectionKey: 'TAX',
       rowKey: 'PIC_CIT',
       columnKey: 'TOTAL',
-    })
+    }).value
 
     return revenuesValue !== null &&
       pic !== null &&

@@ -29,7 +29,7 @@
         "id": 65,
         "label": "BJ2",
         "index": 2,
-        "columnKey": "SALE"
+        "columnKey": "SALE_65"
       },
       {
         "id": null,
@@ -73,7 +73,7 @@
               },
               {
                 "value": 29479000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -134,7 +134,7 @@
               },
               {
                 "value": 3,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -195,7 +195,7 @@
               },
               {
                 "value": 3,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -256,7 +256,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -324,7 +324,7 @@
               },
               {
                 "value": 89049000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -385,7 +385,7 @@
               },
               {
                 "value": 480000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -446,7 +446,7 @@
               },
               {
                 "value": -391563000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -507,7 +507,7 @@
               },
               {
                 "value": 203000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -568,7 +568,7 @@
               },
               {
                 "value": 204000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -629,7 +629,7 @@
               },
               {
                 "value": 205000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -697,7 +697,7 @@
               },
               {
                 "value": 45000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -758,7 +758,7 @@
               },
               {
                 "value": 45000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -826,7 +826,7 @@
               },
               {
                 "value": 110000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -887,7 +887,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -948,7 +948,7 @@
               },
               {
                 "value": 110000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1016,7 +1016,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1077,7 +1077,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1138,7 +1138,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1199,7 +1199,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1260,7 +1260,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1321,7 +1321,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1382,7 +1382,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1443,7 +1443,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1504,7 +1504,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1572,7 +1572,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1633,7 +1633,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1701,7 +1701,7 @@
               },
               {
                 "value": 43939000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1762,7 +1762,7 @@
               },
               {
                 "value": 43939000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1823,7 +1823,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1884,7 +1884,7 @@
               },
               {
                 "value": 43939000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -1945,7 +1945,7 @@
               },
               {
                 "value": 49.342,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2006,7 +2006,7 @@
               },
               {
                 "value": 49.342,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2067,7 +2067,7 @@
               },
               {
                 "value": 49.342,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2135,7 +2135,7 @@
               },
               {
                 "value": 15000000,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2196,7 +2196,7 @@
               },
               {
                 "value": 0,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2257,7 +2257,7 @@
               },
               {
                 "value": 100,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2318,7 +2318,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2379,7 +2379,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2440,7 +2440,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2501,7 +2501,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
@@ -2562,7 +2562,7 @@
               },
               {
                 "value": null,
-                "columnKey": "SALE",
+                "columnKey": "SALE_65",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,

@@ -279,6 +279,7 @@ const MetricHeaderRow = ({
   tooltipLabel,
   dataArray,
   mergedColumns,
+  perms,
 }) => {
   var useFloorCeiling = normFloor !== undefined && normFloor !== null
 
@@ -311,7 +312,7 @@ const MetricHeaderRow = ({
           className="text-center text-wrap"
           style={{ color: totalColor, fontWeight: 500 }}>
           <Tooltip title={totalTooltip}>
-            {formatNumber(totalValue, isPercent)}
+            {perms.renderColumn('TOTAL', totalValue, isPercent)}
           </Tooltip>
         </span>
       </th>
@@ -356,7 +357,7 @@ const MetricHeaderRow = ({
               className="text-center text-wrap"
               style={{ color: colColor, fontWeight: 500 }}>
               <Tooltip title={colTooltip}>
-                {formatNumber(colValue, isPercent)}
+                {perms.renderColumn(col.columnKey, colValue, isPercent)}
               </Tooltip>
             </span>
           </th>
@@ -1214,6 +1215,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                   tooltipLabel="Unit price"
                   dataArray={unitPriceArray}
                   mergedColumns={mergedColumns}
+                  perms={perms}
                 />
                 <MetricHeaderRow
                   label="Billable rate"
@@ -1235,6 +1237,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                   tooltipLabel="Billable rate"
                   dataArray={billableRateArray}
                   mergedColumns={mergedColumns}
+                  perms={perms}
                 />
                 <MetricHeaderRow
                   label="Direct margin before incentives and project bonus rate"
@@ -1256,6 +1259,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                   tooltipLabel="Direct margin before incentives and project bonus rate"
                   dataArray={directMarginArray}
                   mergedColumns={mergedColumns}
+                  perms={perms}
                 />
               </Fragment>
             )}

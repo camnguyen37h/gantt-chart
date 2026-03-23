@@ -10,42 +10,6 @@ business-plan-detail:207 Mode: Standalone Mock
 business-plan-detail:208 ========================================
 business-plan-detail:209 
 bootstrap:851 [HMR] Waiting for update signal from WDS...
-configureStore.ts:165 No reducer provided for key "businessComments"
-(anonymous) @ index.js:1
-warning @ redux.js:426
-combineReducers @ redux.js:510
-configureStore @ configureStore.ts:165
-(anonymous) @ index.js:13
-./src/store/index.js @ index.js:32
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-(anonymous) @ index.css:82
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-configureStore.ts:165 No reducer provided for key "bussinessPlanHistory"
-(anonymous) @ index.js:1
-warning @ redux.js:426
-combineReducers @ redux.js:510
-configureStore @ configureStore.ts:165
-(anonymous) @ index.js:13
-./src/store/index.js @ index.js:32
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-(anonymous) @ index.css:82
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
 index.js:11 Warning: Legacy context API has been detected within a strict-mode tree.
 
 The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
@@ -70,11 +34,11 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 (anonymous) @ react-dom.development.js:11432
-(anonymous) @ react-dom.development.js:11418
+push../node_modules/react-dom/cjs/react-dom.development.js.ReactStrictModeWarnings.flushLegacyContextWarning @ react-dom.development.js:11418
 flushRenderPhaseStrictModeWarningsInDEV @ react-dom.development.js:23109
 commitRootImpl @ react-dom.development.js:22396
 unstable_runWithPriority @ scheduler.development.js:653
@@ -92,7 +56,7 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
@@ -103,10 +67,10 @@ index.js:11 Warning: Using UNSAFE_componentWillReceiveProps in strict mode is no
 * If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state
 
 Please update the following components: Animate, Form(WrappedComponent)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
-(anonymous) @ react-dom.development.js:11359
+push../node_modules/react-dom/cjs/react-dom.development.js.ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings @ react-dom.development.js:11359
 flushRenderPhaseStrictModeWarningsInDEV @ react-dom.development.js:23112
 commitRootImpl @ react-dom.development.js:22396
 unstable_runWithPriority @ scheduler.development.js:653
@@ -124,7 +88,7 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
@@ -149,7 +113,7 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 findHostInstanceWithWarning @ react-dom.development.js:24306
@@ -180,7 +144,7 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
@@ -196,9 +160,9 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in div (at BusinessPlanVersion/index.jsx:224)
     in div (at BusinessPlanVersion/index.jsx:223)
     in BusinessPlanVersion (created by Context.Consumer)
-    in withRouter(BusinessPlanVersion) (at BusinessPlanDetail/index.jsx:496)
-    in div (at BusinessPlanDetail/index.jsx:492)
-    in div (at BusinessPlanDetail/index.jsx:491)
+    in withRouter(BusinessPlanVersion) (at BusinessPlanDetail/index.jsx:494)
+    in div (at BusinessPlanDetail/index.jsx:490)
+    in div (at BusinessPlanDetail/index.jsx:489)
     in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
     in BusinessPlanDetailPage (created by Context.Consumer)
     in Route (at App.js:34)
@@ -220,7 +184,7 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 findHostInstanceWithWarning @ react-dom.development.js:24306
@@ -247,7 +211,7 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
@@ -279,13 +243,13 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in Table (created by withStore(Table))
     in withStore(Table) (at KpiBonusBodyItem.jsx:98)
     in Unknown (created by Form(WrappedComponent))
-    in Form(WrappedComponent) (at BusinessPlanGeneralInformation/index.jsx:593)
-    in div (at BusinessPlanGeneralInformation/index.jsx:592)
-    in div (at BusinessPlanGeneralInformation/index.jsx:568)
+    in Form(WrappedComponent) (at BusinessPlanGeneralInformation/index.jsx:618)
+    in div (at BusinessPlanGeneralInformation/index.jsx:617)
+    in div (at BusinessPlanGeneralInformation/index.jsx:593)
     in form (created by Context.Consumer)
-    in Form (at BusinessPlanGeneralInformation/index.jsx:395)
-    in div (at BusinessPlanGeneralInformation/index.jsx:372)
-    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:521)
+    in Form (at BusinessPlanGeneralInformation/index.jsx:413)
+    in div (at BusinessPlanGeneralInformation/index.jsx:390)
+    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:519)
     in div (created by PanelContent)
     in div (created by PanelContent)
     in PanelContent (created by CollapsePanel)
@@ -293,13 +257,13 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in Animate (created by CollapsePanel)
     in div (created by CollapsePanel)
     in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:516)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:514)
     in div (created by Collapse)
     in Collapse (created by Context.Consumer)
     in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:512)
-    in div (at BusinessPlanDetail/index.jsx:492)
-    in div (at BusinessPlanDetail/index.jsx:491)
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:510)
+    in div (at BusinessPlanDetail/index.jsx:490)
+    in div (at BusinessPlanDetail/index.jsx:489)
     in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
     in BusinessPlanDetailPage (created by Context.Consumer)
     in Route (at App.js:34)
@@ -321,7 +285,7 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 findHostInstanceWithWarning @ react-dom.development.js:24306
@@ -349,7 +313,7 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
@@ -373,15 +337,15 @@ index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pa
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 findHostInstanceWithWarning @ react-dom.development.js:24306
 findDOMNode @ react-dom.development.js:24804
 (anonymous) @ SelectTrigger.js:80
 requestAnimationFrame
-(anonymous) @ index.js:64
-(anonymous) @ SelectTrigger.js:79
+push../node_modules/raf/index.js.module.exports @ index.js:64
+SelectTrigger._this.setDropdownWidth @ SelectTrigger.js:79
 componentDidUpdate @ SelectTrigger.js:163
 commitLifeCycles @ react-dom.development.js:19835
 commitLayoutEffects @ react-dom.development.js:22803
@@ -406,26 +370,26 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
 (anonymous) @ main.chunk.js:1Understand this error
-ApprovalList.jsx:142 Warning: Each child in a list should have a unique "key" prop.
+ApprovalList.jsx:143 Warning: Each child in a list should have a unique "key" prop.
 
 Check the render method of `ApprovalList`. See https://reactjs.org/link/warning-keys for more information.
-    in ApprovalItem (at ApprovalList.jsx:146)
+    in div (at ApprovalList.jsx:165)
     in ApprovalList (at WorkflowApproval.jsx:172)
     in div (created by styled.div)
     in styled.div (at WorkflowApproval.jsx:150)
     in div (at WorkflowApproval.jsx:119)
     in div (at WorkflowApproval.jsx:117)
-    in WorkflowApproval (at BusinessPlanStep/index.jsx:228)
-    in div (at BusinessPlanStep/index.jsx:153)
+    in WorkflowApproval (at BusinessPlanStep/index.jsx:238)
+    in div (at BusinessPlanStep/index.jsx:163)
     in BusinessPlanStep (created by Context.Consumer)
-    in withRouter(BusinessPlanStep) (at BusinessPlanDetail/index.jsx:507)
-    in div (at BusinessPlanDetail/index.jsx:492)
-    in div (at BusinessPlanDetail/index.jsx:491)
+    in withRouter(BusinessPlanStep) (at BusinessPlanDetail/index.jsx:505)
+    in div (at BusinessPlanDetail/index.jsx:490)
+    in div (at BusinessPlanDetail/index.jsx:489)
     in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
     in BusinessPlanDetailPage (created by Context.Consumer)
     in Route (at App.js:34)
@@ -447,13 +411,13 @@ Check the render method of `ApprovalList`. See https://reactjs.org/link/warning-
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-jsx-dev-runtime.development.js:125
 error @ react-jsx-dev-runtime.development.js:92
 validateExplicitKey @ react-jsx-dev-runtime.development.js:672
 validateChildKeys @ react-jsx-dev-runtime.development.js:699
 jsxWithValidation @ react-jsx-dev-runtime.development.js:860
-(anonymous) @ ApprovalList.jsx:142
+(anonymous) @ ApprovalList.jsx:143
 ApprovalList @ ApprovalList.jsx:108
 renderWithHooks @ react-dom.development.js:14803
 mountIndeterminateComponent @ react-dom.development.js:17482
@@ -472,9 +436,9 @@ notify @ Subscription.js:16
 notifyNestedSubs @ Subscription.js:101
 handleChangeWrapper @ Subscription.js:106
 dispatch @ redux.js:297
-(anonymous) @ index.js:20
-(anonymous) @ immutableStateInvariantMiddleware.ts:266
-(anonymous) @ actionCreatorInvariantMiddleware.ts:32
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:20
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
 dispatch @ redux.js:691
 (anonymous) @ createAsyncThunk.ts:682
 step @ RefreshUtils.js:174
@@ -486,13 +450,13 @@ step @ RefreshUtils.js:174
 __async @ RefreshUtils.js:174
 (anonymous) @ createAsyncThunk.ts:599
 (anonymous) @ createAsyncThunk.ts:684
-(anonymous) @ index.js:16
-(anonymous) @ immutableStateInvariantMiddleware.ts:266
-(anonymous) @ actionCreatorInvariantMiddleware.ts:32
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:16
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
 (anonymous) @ useBusinessPlanStep.js:26
-(anonymous) @ index.jsx:144
+(anonymous) @ index.jsx:146
 await in (anonymous)
-(anonymous) @ index.jsx:149
+(anonymous) @ index.jsx:151
 commitHookEffectListMount @ react-dom.development.js:19731
 commitPassiveHookEffects @ react-dom.development.js:19769
 callCallback @ react-dom.development.js:188
@@ -515,7 +479,7 @@ render @ react-dom.development.js:24840
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:4122
+1 @ mockBusinessPlanData.js:3707
 __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
@@ -533,16 +497,16 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in styled.div (at BusinessPlanTabWrapper/index.jsx:63)
     in div (created by Context.Consumer)
     in TabPane (at BusinessPlanTabWrapper/index.jsx:62)
-    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:533)
+    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:531)
     in div (created by TabContent)
     in TabContent (created by Tabs)
     in div (created by Tabs)
     in Tabs (created by Context.Consumer)
-    in Tabs (at BusinessPlanDetail/index.jsx:527)
-    in div (at BusinessPlanDetail/index.jsx:526)
+    in Tabs (at BusinessPlanDetail/index.jsx:525)
+    in div (at BusinessPlanDetail/index.jsx:524)
     in div (created by Context.Consumer)
     in div (created by Context.Consumer)
-    in Spin (at BusinessPlanDetail/index.jsx:525)
+    in Spin (at BusinessPlanDetail/index.jsx:523)
     in div (created by PanelContent)
     in div (created by PanelContent)
     in PanelContent (created by CollapsePanel)
@@ -550,13 +514,13 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in Animate (created by CollapsePanel)
     in div (created by CollapsePanel)
     in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:524)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:522)
     in div (created by Collapse)
     in Collapse (created by Context.Consumer)
     in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:512)
-    in div (at BusinessPlanDetail/index.jsx:492)
-    in div (at BusinessPlanDetail/index.jsx:491)
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:510)
+    in div (at BusinessPlanDetail/index.jsx:490)
+    in div (at BusinessPlanDetail/index.jsx:489)
     in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
     in BusinessPlanDetailPage (created by Context.Consumer)
     in Route (at App.js:34)
@@ -578,11 +542,11 @@ Learn more about this warning here: https://fb.me/react-legacy-context
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 (anonymous) @ react-dom.development.js:11432
-(anonymous) @ react-dom.development.js:11418
+push../node_modules/react-dom/cjs/react-dom.development.js.ReactStrictModeWarnings.flushLegacyContextWarning @ react-dom.development.js:11418
 flushRenderPhaseStrictModeWarningsInDEV @ react-dom.development.js:23109
 commitRootImpl @ react-dom.development.js:22396
 unstable_runWithPriority @ scheduler.development.js:653
@@ -601,11 +565,11 @@ dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
 index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Tabs which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
     in div (created by Tabs)
     in Tabs (created by Context.Consumer)
-    in Tabs (at BusinessPlanDetail/index.jsx:527)
-    in div (at BusinessPlanDetail/index.jsx:526)
+    in Tabs (at BusinessPlanDetail/index.jsx:525)
+    in div (at BusinessPlanDetail/index.jsx:524)
     in div (created by Context.Consumer)
     in div (created by Context.Consumer)
-    in Spin (at BusinessPlanDetail/index.jsx:525)
+    in Spin (at BusinessPlanDetail/index.jsx:523)
     in div (created by PanelContent)
     in div (created by PanelContent)
     in PanelContent (created by CollapsePanel)
@@ -613,13 +577,13 @@ index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pas
     in Animate (created by CollapsePanel)
     in div (created by CollapsePanel)
     in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:524)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:522)
     in div (created by Collapse)
     in Collapse (created by Context.Consumer)
     in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:512)
-    in div (at BusinessPlanDetail/index.jsx:492)
-    in div (at BusinessPlanDetail/index.jsx:491)
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:510)
+    in div (at BusinessPlanDetail/index.jsx:490)
+    in div (at BusinessPlanDetail/index.jsx:489)
     in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
     in BusinessPlanDetailPage (created by Context.Consumer)
     in Route (at App.js:34)
@@ -641,7 +605,7 @@ index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was pas
     in App (at src/index.js:14)
     in Provider (at src/index.js:13)
     in StrictMode (at src/index.js:12)
-(anonymous) @ index.js:1
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
 printWarning @ react-dom.development.js:88
 error @ react-dom.development.js:60
 findHostInstanceWithWarning @ react-dom.development.js:24306
@@ -666,36 +630,75 @@ flushSyncCallbackQueue @ react-dom.development.js:11072
 discreteUpdates$1 @ react-dom.development.js:21893
 discreteUpdates @ react-dom.development.js:806
 dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-useBusinessPlanPermission.js:30 allRoles =  ['DB-ADMIN']
-businessDetails.js:316 Uncaught (in promise) ReferenceError: action is not defined
-    at businessDetails.js:316:1
-    at createReducer.ts:294:1
-    at immerClass.ts:94:1
-    at createReducer.ts:293:1
-    at Array.reduce (<anonymous>)
-    at reducer (createReducer.ts:260:1)
-    at reducer (createSlice.ts:372:1)
-    at combination (redux.js:560:1)
-    at dispatch (redux.js:288:1)
-    at index.js:20:1
-    at immutableStateInvariantMiddleware.ts:266:1
-    at actionCreatorInvariantMiddleware.ts:32:1
+useFormula.js:115 Uncaught TypeError: Cannot read properties of undefined (reading 'value')
+    at useFormula.js:115:1
+    at Array.map (<anonymous>)
+    at Object.getTotalColumnAndSet (useFormula.js:95:1)
+    at getFormula (useFormula.js:1283:1)
+    at index.jsx:859:1
+    at Array.map (<anonymous>)
+    at index.jsx:827:1
+    at Array.map (<anonymous>)
+    at renderTableBody (index.jsx:714:1)
+    at BusinessPlanFormSection (index.jsx:1272:1)
+    at renderWithHooks (react-dom.development.js:14803:1)
+    at updateFunctionComponent (react-dom.development.js:17034:1)
+    at beginWork (react-dom.development.js:18610:1)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
+    at invokeGuardedCallback (react-dom.development.js:292:1)
+    at beginWork$1 (react-dom.development.js:23203:1)
+    at performUnitOfWork (react-dom.development.js:22154:1)
+    at workLoopSync (react-dom.development.js:22130:1)
+    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
+    at react-dom.development.js:11089:1
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
+    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
+    at batchedUpdates$1 (react-dom.development.js:21862:1)
+    at Object.notify (Subscription.js:16:1)
+    at Object.notifyNestedSubs (Subscription.js:101:1)
+    at handleChangeWrapper (Subscription.js:106:1)
+    at dispatch (redux.js:297:1)
+    at push../node_modules/redux-thunk/es/index.js.middleware (index.js:20:1)
+    at push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options (immutableStateInvariantMiddleware.ts:266:1)
+    at push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args (actionCreatorInvariantMiddleware.ts:32:1)
     at dispatch (redux.js:691:1)
     at createAsyncThunk.ts:682:1
     at step (RefreshUtils.js:174:1)
     at Object.next (RefreshUtils.js:174:1)
     at fulfilled (RefreshUtils.js:174:1)
-(anonymous) @ businessDetails.js:316
-(anonymous) @ createReducer.ts:294
-(anonymous) @ immerClass.ts:94
-(anonymous) @ createReducer.ts:293
-reducer @ createReducer.ts:260
-reducer @ createSlice.ts:372
-combination @ redux.js:560
-dispatch @ redux.js:288
-(anonymous) @ index.js:20
-(anonymous) @ immutableStateInvariantMiddleware.ts:266
-(anonymous) @ actionCreatorInvariantMiddleware.ts:32
+(anonymous) @ useFormula.js:115
+getTotalColumnAndSet @ useFormula.js:95
+getFormula @ useFormula.js:1283
+(anonymous) @ index.jsx:859
+(anonymous) @ index.jsx:827
+renderTableBody @ index.jsx:714
+BusinessPlanFormSection @ index.jsx:1272
+renderWithHooks @ react-dom.development.js:14803
+updateFunctionComponent @ react-dom.development.js:17034
+beginWork @ react-dom.development.js:18610
+callCallback @ react-dom.development.js:188
+invokeGuardedCallbackDev @ react-dom.development.js:237
+invokeGuardedCallback @ react-dom.development.js:292
+beginWork$1 @ react-dom.development.js:23203
+performUnitOfWork @ react-dom.development.js:22154
+workLoopSync @ react-dom.development.js:22130
+performSyncWorkOnRoot @ react-dom.development.js:21756
+(anonymous) @ react-dom.development.js:11089
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+flushSyncCallbackQueueImpl @ react-dom.development.js:11084
+flushSyncCallbackQueue @ react-dom.development.js:11072
+batchedUpdates$1 @ react-dom.development.js:21862
+notify @ Subscription.js:16
+notifyNestedSubs @ Subscription.js:101
+handleChangeWrapper @ Subscription.js:106
+dispatch @ redux.js:297
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:20
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
 dispatch @ redux.js:691
 (anonymous) @ createAsyncThunk.ts:682
 step @ RefreshUtils.js:174
@@ -707,11 +710,11 @@ step @ RefreshUtils.js:174
 __async @ RefreshUtils.js:174
 (anonymous) @ createAsyncThunk.ts:599
 (anonymous) @ createAsyncThunk.ts:684
-(anonymous) @ index.js:16
-(anonymous) @ immutableStateInvariantMiddleware.ts:266
-(anonymous) @ actionCreatorInvariantMiddleware.ts:32
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:16
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
 (anonymous) @ useBusinessPlanDetails.js:104
-(anonymous) @ index.jsx:457
+(anonymous) @ index.jsx:455
 commitHookEffectListMount @ react-dom.development.js:19731
 commitPassiveHookEffects @ react-dom.development.js:19769
 callCallback @ react-dom.development.js:188
@@ -727,16 +730,78 @@ unstable_runWithPriority @ scheduler.development.js:653
 runWithPriority$1 @ react-dom.development.js:11039
 flushSyncCallbackQueueImpl @ react-dom.development.js:11084
 flushSyncCallbackQueue @ react-dom.development.js:11072
-scheduleUpdateOnFiber @ react-dom.development.js:21199
-enqueueForceUpdate @ react-dom.development.js:12678
-(anonymous) @ react.development.js:490
-(anonymous) @ Tabs.js:81
-requestAnimationFrame
-(anonymous) @ index.js:64
-updateSentinelContext @ Tabs.js:79
-(anonymous) @ Tabs.js:236
-commitAttachRef @ react-dom.development.js:20023
-commitLayoutEffects @ react-dom.development.js:22808
+flushPendingDiscreteUpdates @ react-dom.development.js:21847
+flushDiscreteUpdates @ react-dom.development.js:21827
+finishEventHandler @ react-dom.development.js:764
+batchedEventUpdates @ react-dom.development.js:798
+dispatchEventForLegacyPluginEventSystem @ react-dom.development.js:3568
+attemptToDispatchEvent @ react-dom.development.js:4267
+dispatchEvent @ react-dom.development.js:4189
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+discreteUpdates$1 @ react-dom.development.js:21887
+discreteUpdates @ react-dom.development.js:806
+dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
+immutableStateInvariantMiddleware.ts:266 The above error occurred in the <BusinessPlanFormSection> component:
+    in BusinessPlanFormSection (at BusinessPlanDetail/index.jsx:552)
+    in div (created by Context.Consumer)
+    in TabPane (at BusinessPlanTabWrapper/index.jsx:62)
+    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:531)
+    in div (created by TabContent)
+    in TabContent (created by Tabs)
+    in div (created by Tabs)
+    in Tabs (created by Context.Consumer)
+    in Tabs (at BusinessPlanDetail/index.jsx:525)
+    in div (at BusinessPlanDetail/index.jsx:524)
+    in div (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Spin (at BusinessPlanDetail/index.jsx:523)
+    in div (created by PanelContent)
+    in div (created by PanelContent)
+    in PanelContent (created by CollapsePanel)
+    in AnimateChild (created by Animate)
+    in Animate (created by CollapsePanel)
+    in div (created by CollapsePanel)
+    in CollapsePanel (created by Context.Consumer)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:522)
+    in div (created by Collapse)
+    in Collapse (created by Context.Consumer)
+    in Collapse (created by Styled(Collapse))
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:510)
+    in div (at BusinessPlanDetail/index.jsx:490)
+    in div (at BusinessPlanDetail/index.jsx:489)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:34)
+    in Switch (at App.js:32)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:23)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:21)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:19)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:18)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://fb.me/react-error-boundaries to learn more about error boundaries.
+push../node_modules/react-error-overlay/lib/index.js.console.<computed> @ index.js:1
+logCapturedError @ react-dom.development.js:19527
+logError @ react-dom.development.js:19564
+(anonymous) @ react-dom.development.js:20708
+callCallback @ react-dom.development.js:12490
+commitUpdateQueue @ react-dom.development.js:12511
+commitLifeCycles @ react-dom.development.js:19883
+commitLayoutEffects @ react-dom.development.js:22803
 callCallback @ react-dom.development.js:188
 invokeGuardedCallbackDev @ react-dom.development.js:237
 invokeGuardedCallback @ react-dom.development.js:292
@@ -751,10 +816,170 @@ unstable_runWithPriority @ scheduler.development.js:653
 runWithPriority$1 @ react-dom.development.js:11039
 flushSyncCallbackQueueImpl @ react-dom.development.js:11084
 flushSyncCallbackQueue @ react-dom.development.js:11072
-discreteUpdates$1 @ react-dom.development.js:21893
+batchedUpdates$1 @ react-dom.development.js:21862
+notify @ Subscription.js:16
+notifyNestedSubs @ Subscription.js:101
+handleChangeWrapper @ Subscription.js:106
+dispatch @ redux.js:297
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:20
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
+dispatch @ redux.js:691
+(anonymous) @ createAsyncThunk.ts:682
+step @ RefreshUtils.js:174
+(anonymous) @ RefreshUtils.js:174
+fulfilled @ RefreshUtils.js:174
+Promise.then
+step @ RefreshUtils.js:174
+(anonymous) @ RefreshUtils.js:174
+__async @ RefreshUtils.js:174
+(anonymous) @ createAsyncThunk.ts:599
+(anonymous) @ createAsyncThunk.ts:684
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:16
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
+(anonymous) @ useBusinessPlanDetails.js:104
+(anonymous) @ index.jsx:455
+commitHookEffectListMount @ react-dom.development.js:19731
+commitPassiveHookEffects @ react-dom.development.js:19769
+callCallback @ react-dom.development.js:188
+invokeGuardedCallbackDev @ react-dom.development.js:237
+invokeGuardedCallback @ react-dom.development.js:292
+flushPassiveEffectsImpl @ react-dom.development.js:22853
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+flushPassiveEffects @ react-dom.development.js:22820
+performSyncWorkOnRoot @ react-dom.development.js:21737
+(anonymous) @ react-dom.development.js:11089
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+flushSyncCallbackQueueImpl @ react-dom.development.js:11084
+flushSyncCallbackQueue @ react-dom.development.js:11072
+flushPendingDiscreteUpdates @ react-dom.development.js:21847
+flushDiscreteUpdates @ react-dom.development.js:21827
+finishEventHandler @ react-dom.development.js:764
+batchedEventUpdates @ react-dom.development.js:798
+dispatchEventForLegacyPluginEventSystem @ react-dom.development.js:3568
+attemptToDispatchEvent @ react-dom.development.js:4267
+dispatchEvent @ react-dom.development.js:4189
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+discreteUpdates$1 @ react-dom.development.js:21887
 discreteUpdates @ react-dom.development.js:806
 dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-VM795:2 Uncaught ReferenceError: process is not defined
+useFormula.js:115 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'value')
+    at useFormula.js:115:1
+    at Array.map (<anonymous>)
+    at Object.getTotalColumnAndSet (useFormula.js:95:1)
+    at getFormula (useFormula.js:1283:1)
+    at index.jsx:859:1
+    at Array.map (<anonymous>)
+    at index.jsx:827:1
+    at Array.map (<anonymous>)
+    at renderTableBody (index.jsx:714:1)
+    at BusinessPlanFormSection (index.jsx:1272:1)
+    at renderWithHooks (react-dom.development.js:14803:1)
+    at updateFunctionComponent (react-dom.development.js:17034:1)
+    at beginWork (react-dom.development.js:18610:1)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
+    at invokeGuardedCallback (react-dom.development.js:292:1)
+    at beginWork$1 (react-dom.development.js:23203:1)
+    at performUnitOfWork (react-dom.development.js:22154:1)
+    at workLoopSync (react-dom.development.js:22130:1)
+    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
+    at react-dom.development.js:11089:1
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
+    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
+    at batchedUpdates$1 (react-dom.development.js:21862:1)
+    at Object.notify (Subscription.js:16:1)
+    at Object.notifyNestedSubs (Subscription.js:101:1)
+    at handleChangeWrapper (Subscription.js:106:1)
+    at dispatch (redux.js:297:1)
+    at push../node_modules/redux-thunk/es/index.js.middleware (index.js:20:1)
+    at push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options (immutableStateInvariantMiddleware.ts:266:1)
+    at push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args (actionCreatorInvariantMiddleware.ts:32:1)
+    at dispatch (redux.js:691:1)
+    at createAsyncThunk.ts:682:1
+    at step (RefreshUtils.js:174:1)
+    at Object.next (RefreshUtils.js:174:1)
+    at fulfilled (RefreshUtils.js:174:1)
+(anonymous) @ useFormula.js:115
+getTotalColumnAndSet @ useFormula.js:95
+getFormula @ useFormula.js:1283
+(anonymous) @ index.jsx:859
+(anonymous) @ index.jsx:827
+renderTableBody @ index.jsx:714
+BusinessPlanFormSection @ index.jsx:1272
+renderWithHooks @ react-dom.development.js:14803
+updateFunctionComponent @ react-dom.development.js:17034
+beginWork @ react-dom.development.js:18610
+callCallback @ react-dom.development.js:188
+invokeGuardedCallbackDev @ react-dom.development.js:237
+invokeGuardedCallback @ react-dom.development.js:292
+beginWork$1 @ react-dom.development.js:23203
+performUnitOfWork @ react-dom.development.js:22154
+workLoopSync @ react-dom.development.js:22130
+performSyncWorkOnRoot @ react-dom.development.js:21756
+(anonymous) @ react-dom.development.js:11089
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+flushSyncCallbackQueueImpl @ react-dom.development.js:11084
+flushSyncCallbackQueue @ react-dom.development.js:11072
+batchedUpdates$1 @ react-dom.development.js:21862
+notify @ Subscription.js:16
+notifyNestedSubs @ Subscription.js:101
+handleChangeWrapper @ Subscription.js:106
+dispatch @ redux.js:297
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:20
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
+dispatch @ redux.js:691
+(anonymous) @ createAsyncThunk.ts:682
+step @ RefreshUtils.js:174
+(anonymous) @ RefreshUtils.js:174
+fulfilled @ RefreshUtils.js:174
+Promise.then
+step @ RefreshUtils.js:174
+(anonymous) @ RefreshUtils.js:174
+__async @ RefreshUtils.js:174
+(anonymous) @ createAsyncThunk.ts:599
+(anonymous) @ createAsyncThunk.ts:684
+push../node_modules/redux-thunk/es/index.js.middleware @ index.js:16
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.options @ immutableStateInvariantMiddleware.ts:266
+push../node_modules/@reduxjs/toolkit/dist/redux-toolkit.esm.js.MiddlewareArray.MiddlewareArray.args @ actionCreatorInvariantMiddleware.ts:32
+(anonymous) @ useBusinessPlanDetails.js:104
+(anonymous) @ index.jsx:455
+commitHookEffectListMount @ react-dom.development.js:19731
+commitPassiveHookEffects @ react-dom.development.js:19769
+callCallback @ react-dom.development.js:188
+invokeGuardedCallbackDev @ react-dom.development.js:237
+invokeGuardedCallback @ react-dom.development.js:292
+flushPassiveEffectsImpl @ react-dom.development.js:22853
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+flushPassiveEffects @ react-dom.development.js:22820
+performSyncWorkOnRoot @ react-dom.development.js:21737
+(anonymous) @ react-dom.development.js:11089
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+flushSyncCallbackQueueImpl @ react-dom.development.js:11084
+flushSyncCallbackQueue @ react-dom.development.js:11072
+flushPendingDiscreteUpdates @ react-dom.development.js:21847
+flushDiscreteUpdates @ react-dom.development.js:21827
+finishEventHandler @ react-dom.development.js:764
+batchedEventUpdates @ react-dom.development.js:798
+dispatchEventForLegacyPluginEventSystem @ react-dom.development.js:3568
+attemptToDispatchEvent @ react-dom.development.js:4267
+dispatchEvent @ react-dom.development.js:4189
+unstable_runWithPriority @ scheduler.development.js:653
+runWithPriority$1 @ react-dom.development.js:11039
+discreteUpdates$1 @ react-dom.development.js:21887
+discreteUpdates @ react-dom.development.js:806
+dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
+VM462:2 Uncaught ReferenceError: process is not defined
     at 4043 (<anonymous>:2:13175)
     at r (<anonymous>:2:306606)
     at 8048 (<anonymous>:2:9504)
@@ -764,26 +989,3 @@ VM795:2 Uncaught ReferenceError: process is not defined
     at <anonymous>:2:315634
     at <anonymous>:2:324254
     at <anonymous>:2:324258
-    at e.onload (index.js:1:1)
-4043 @ VM795:2
-r @ VM795:2
-8048 @ VM795:2
-r @ VM795:2
-8641 @ VM795:2
-r @ VM795:2
-(anonymous) @ VM795:2
-(anonymous) @ VM795:2
-(anonymous) @ VM795:2
-e.onload @ index.js:1
-be @ index.js:1
-push../node_modules/react-error-overlay/lib/index.js.me @ index.js:1
-(anonymous) @ index.js:1
-PendingScript
-e.onload @ index.js:1
-be @ index.js:1
-push../node_modules/react-error-overlay/lib/index.js.me @ index.js:1
-(anonymous) @ index.js:1
-Promise.then
-push../node_modules/react-error-overlay/lib/index.js.te @ index.js:1
-(anonymous) @ index.js:1
-l @ index.js:1Understand this error

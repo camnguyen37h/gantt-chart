@@ -47,25 +47,29 @@
         "id": 34,
         "label": "DU3.11",
         "index": 5,
-        "columnKey": "DELIVERY_UNIT_34"
+        "columnKey": "DELIVERY_UNIT_34",
+        "mvvLocationType": "Onsite"
       },
       {
         "id": 39,
         "label": "DU1.12",
         "index": 6,
-        "columnKey": "DELIVERY_UNIT_39"
+        "columnKey": "DELIVERY_UNIT_39",
+        "mvvLocationType": "Onsite"
       },
       {
         "id": 6,
         "label": "DU1.6",
         "index": 7,
-        "columnKey": "DELIVERY_UNIT_6"
+        "columnKey": "DELIVERY_UNIT_6",
+        "mvvLocationType": "Offshore"
       },
       {
         "id": 7,
         "label": "DU1.8",
         "index": 8,
-        "columnKey": "DELIVERY_UNIT_7"
+        "columnKey": "DELIVERY_UNIT_7",
+        "mvvLocationType": "Offshore"
       }
     ],
     "sectionList": [
@@ -578,7 +582,7 @@
                 "permissionView": true
               },
               {
-                "value": 480000000,
+                "value": 470000000,
                 "columnKey": "SALE_169",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
