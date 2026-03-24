@@ -413,12 +413,17 @@ const useFormula = () => {
   }
 
   const getAgencyTotal = () => {
-    const value = getItem({
+    const items = getItems({
       sectionKey: 'SELLING_EXPENSES',
       rowKey: 'AGENCY_EXPENSE',
-      columnKey: 'SALE',
-    }).value
-    return value ? value : value === 0 ? value : null
+      filterCallback: function (item) {
+        if (!item || !item.columnKey) return false
+        var key = item.columnKey
+        return key === 'SALE' || /^SALE_\d+$/i.test(key)
+      },
+    })
+    const values = items.map(function (item) { return item.value })
+    return getSum(...values)
   }
 
   const getDirectLaborCostTotal = ({ targetItem, sectionKey, rowKey }) => {
@@ -1256,7 +1261,6 @@ const useFormula = () => {
         },
         COST_OF_DU_SOLD: {
           internal: getDUCostInternal,
-          sale: getDUCostSale,
         },
       },
       SELLING_EXPENSES: {

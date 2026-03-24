@@ -17,15 +17,17 @@ const businessApprovalSlice = createSlice({
     })
     builder.addCase(
       fetchBusinessPlanWorkflow.fulfilled,
-      (state, { payload }) => {
+      (state, { payload, meta }) => {
         state.loading = false
         if (!payload || !payload.data) return
+
+        const currentBuId = meta && meta.arg && meta.arg.referenceId
 
         const activeSteps = Object.values(payload.data).filter(
           item => !item.stateName.match(/Draft|Approved/)
         )
 
-        const mergedSteps = mergeStepsByPosition(activeSteps)
+        const mergedSteps = mergeStepsByPosition(activeSteps, currentBuId)
 
         const lastActiveIndex = mergedSteps.reduceRight(
           (found, item, i) =>

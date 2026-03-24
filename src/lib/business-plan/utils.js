@@ -111,13 +111,10 @@ const getProjectCodeByViewMode = (viewMode, arrayMap) => {
   return viewMode
 }
 
-const mergeApprovers = (existing, incoming, gKey) => {
+const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
   if (gKey !== 'None') {
     return existing.concat(
-      incoming.map(({ referenceId, ...a }) => ({
-        ...a,
-        referenceIds: referenceId != null ? [referenceId] : [],
-      }))
+      incoming.map(({ referenceId, ...a }) => ({ ...a }))
     )
   }
 
@@ -130,28 +127,19 @@ const mergeApprovers = (existing, incoming, gKey) => {
   incoming.forEach(({ referenceId, ...a }) => {
     const idx = ldapIndexMap[a.ldap]
     if (idx !== undefined) {
-      if (
-        referenceId != null &&
-        result[idx].referenceIds.indexOf(referenceId) === -1
-      ) {
-        result[idx] = {
-          ...result[idx],
-          referenceIds: result[idx].referenceIds.concat([referenceId]),
-        }
+      if (referenceId != null && String(referenceId) === String(currentBuId)) {
+        result[idx] = { ...a }
       }
     } else {
       ldapIndexMap[a.ldap] = result.length
-      result.push({
-        ...a,
-        referenceIds: referenceId != null ? [referenceId] : [],
-      })
+      result.push({ ...a })
     }
   })
 
   return result
 }
 
-export const mergeStepsByPosition = steps => {
+export const mergeStepsByPosition = (steps, currentBuId) => {
   const positionMap = {}
   steps.forEach(step => {
     const posKey = `${step.stateOrder}|${step.order}`
@@ -163,7 +151,8 @@ export const mergeStepsByPosition = steps => {
       target.map[gKey] = mergeApprovers(
         target.map[gKey] || [],
         step.map[gKey],
-        gKey
+        gKey,
+        currentBuId
       )
     })
   })
