@@ -112,10 +112,6 @@ const getProjectCodeByViewMode = (viewMode, arrayMap) => {
 }
 
 const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
-  if (gKey !== 'None') {
-    return existing.concat(incoming)
-  }
-
   const result = existing.slice()
   const ldapIndexMap = {}
   result.forEach((approver, i) => {
