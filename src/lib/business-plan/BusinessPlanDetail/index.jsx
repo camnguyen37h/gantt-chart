@@ -14,7 +14,6 @@ import styled from 'styled-components'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../hooks'
 import {
   getBusinessPlanHistory,
-  getCompareBusinessPlanDetail,
   getListDUByVersionDelivery,
   getListDUByVersionRevenue,
   postSubmitBaselineRevenuePlan,
@@ -200,30 +199,6 @@ function BusinessPlanDetail({ match, history }) {
       info => info.mvvLocationType && info.mvvLocationType !== 'Total'
     )
 
-    const fetchedSectionDataMap = {}
-    await Promise.all(
-      mvvInfos.map(async function(info) {
-        if (info.mvvLocationType === viewMode) {
-          fetchedSectionDataMap[info.mvvLocationType] = {
-            sectionList: originalBusinessPlanItems,
-            columnLabels: columnLabels,
-          }
-        } else {
-          const res = await dispatch(
-            getCompareBusinessPlanDetail({
-              id: match.params.buId,
-              params: { view: info.mvvLocationType },
-            })
-          )
-          const data = res && res.payload
-          fetchedSectionDataMap[info.mvvLocationType] = {
-            sectionList: (data && data.sectionList) || [],
-            columnLabels: (data && data.columnLabels) || [],
-          }
-        }
-      })
-    )
-
     const params = mvvInfos.reduce((acc, info) => {
       const key = info.mvvLocationType.toLowerCase()
 
@@ -273,37 +248,37 @@ function BusinessPlanDetail({ match, history }) {
             },
       }
 
-      const fetched = fetchedSectionDataMap[info.mvvLocationType] || {}
-      const sectionList = cloneDeep(fetched.sectionList || [])
-      sectionList.forEach(function(section) {
-        section.rowLabels = section.rowLabels.filter(function(row) {
-          if (row.label) return true
-          if (row.cellList.some(function(item) { return item.editable && item.value !== null })) {
-            return true
-          }
-          return false
-        })
-        section.rowLabels.forEach(function(row) {
-          row.cellList = row.cellList.map(function(cell) {
-            if (!cell.compareKey) return cell
-            var c = Object.assign({}, cell)
-            delete c.compareKey
-            return c
+      if (info.mvvLocationType === viewMode) {
+        const sectionList = cloneDeep(originalBusinessPlanItems)
+        sectionList.forEach(function(section) {
+          section.rowLabels = section.rowLabels.filter(function(row) {
+            if (row.label) return true
+            if (row.cellList.some(function(item) { return item.editable && item.value !== null })) {
+              return true
+            }
+            return false
+          })
+          section.rowLabels.forEach(function(row) {
+            row.cellList = row.cellList.map(function(cell) {
+              if (!cell.compareKey) return cell
+              const c = Object.assign({}, cell)
+              delete c.compareKey
+              return c
+            })
           })
         })
-      })
-      const rawColumnLabels = fetched.columnLabels || []
-      const cleanColumnLabels = rawColumnLabels.map(function(col) {
-        if (!col.compareKey) return col
-        var c = Object.assign({}, col)
-        delete c.compareKey
-        return c
-      })
-      acc[key].businessPlanSectionDTO = {
-        columnLabels: cleanColumnLabels,
-        sectionList: sectionList,
-        businessPlanVersionId: info.id,
-        projectCode: info.projectCode,
+        const cleanColumnLabels = columnLabels.map(function(col) {
+          if (!col.compareKey) return col
+          const c = Object.assign({}, col)
+          delete c.compareKey
+          return c
+        })
+        acc[key].businessPlanSectionDTO = {
+          columnLabels: cleanColumnLabels,
+          sectionList,
+          businessPlanVersionId: info.id,
+          projectCode: info.projectCode,
+        }
       }
 
       return acc
@@ -443,7 +418,7 @@ function BusinessPlanDetail({ match, history }) {
         section.rowLabels.forEach(function(row) {
           row.cellList = row.cellList.map(function(cell) {
             if (!cell.compareKey) return cell
-            var c = Object.assign({}, cell)
+            const c = Object.assign({}, cell)
             delete c.compareKey
             return c
           })
@@ -451,7 +426,7 @@ function BusinessPlanDetail({ match, history }) {
       })
       const cleanColumnLabels = columnLabels.map(function(col) {
         if (!col.compareKey) return col
-        var c = Object.assign({}, col)
+        const c = Object.assign({}, col)
         delete c.compareKey
         return c
       })

@@ -110,7 +110,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
         if (value === null) return value
         if (value === '-') return null
         if (value === '') return value
-        var res = value.toString().match(pattern)
+        const res = value.toString().match(pattern)
         if (rowConfig.negative) {
           return res
             ? '(' + res[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + suffix + ')'
@@ -149,15 +149,15 @@ const ServiceControl = ({
   const isManMonth = sectionKey === 'MAN_MONTH'
 
   const resolveMMBillTitle = () => {
-    var childIndex = -1
-    var parentIndex = mmBillService.findIndex(function (parent) {
+    let childIndex = -1
+    const parentIndex = mmBillService.findIndex(function (parent) {
       if (parent.id.toString() === row.title.toString()) return true
       childIndex = parent.data.findIndex(function (item) {
         return item.id.toString() === row.title.toString()
       })
       return childIndex > -1
     })
-    var str = parentIndex > -1 ? mmBillService[parentIndex].name : ''
+    let str = parentIndex > -1 ? mmBillService[parentIndex].name : ''
     if (childIndex > -1) {
       str = str + ' / ' + mmBillService[parentIndex].data[childIndex].name
     }
@@ -168,11 +168,11 @@ const ServiceControl = ({
     return <Fragment>{isManMonth ? resolveMMBillTitle() : row.title} </Fragment>
   }
 
-  var options = mmBillService.map(function (item) {
-    var children = item.data
+  const options = mmBillService.map(function (item) {
+    const children = item.data
       ? item.data
           .filter(function (child) {
-            var usedTitles = Object.keys(businessPlanItems.MAN_MONTH.data)
+            const usedTitles = Object.keys(businessPlanItems.MAN_MONTH.data)
               .filter(function (k) {
                 return k !== rowKey && k.match(/MM_BILL_\d+/)
               })
@@ -188,15 +188,15 @@ const ServiceControl = ({
     return { label: item.name, value: item.id, children: children }
   })
 
-  var childIndex = -1
-  var parentIndex = mmBillService.findIndex(function (parent) {
+  let childIndex = -1
+  const parentIndex = mmBillService.findIndex(function (parent) {
     if (parent.id.toString() === row.title.toString()) return true
     childIndex = parent.data.findIndex(function (item) {
       return item.id.toString() === row.title.toString()
     })
     return childIndex > -1
   })
-  var selectedValue =
+  const selectedValue =
     parentIndex > -1 && childIndex > -1
       ? [
           mmBillService[parentIndex].id,
@@ -204,19 +204,19 @@ const ServiceControl = ({
         ]
       : []
 
-  var labelKey = rowKey + '-label'
-  var hasError = !!validation[labelKey]
+  const labelKey = rowKey + '-label'
+  const hasError = !!validation[labelKey]
 
-  var onChangeCascader = function (value) {
-    var cloneRow = cloneDeep(row)
+  const onChangeCascader = function (value) {
+    const cloneRow = cloneDeep(row)
     cloneRow.title = value[1] || ''
     if (validation[labelKey]) setValidation({ [labelKey]: false })
     updateIsSaveShowed({ businessPlan: true })
     updateBusinessPlanRow({ sectionKey, rowKey, row: cloneRow })
   }
 
-  var onChangeInput = function (value) {
-    var cloneRow = cloneDeep(row)
+  const onChangeInput = function (value) {
+    const cloneRow = cloneDeep(row)
     cloneRow.title = value
     if (validation[labelKey]) setValidation({ [labelKey]: false })
     updateIsSaveShowed({ businessPlan: true })
@@ -282,21 +282,21 @@ const MetricHeaderRow = ({
   mergedColumns,
   perms,
 }) => {
-  var useFloorCeiling = normFloor !== undefined && normFloor !== null
+  const useFloorCeiling = normFloor !== undefined && normFloor !== null
 
-  var buildNormProps = function (value, floor, ceiling, percentage) {
+  const buildNormProps = function (value, floor, ceiling, percentage) {
     return useFloorCeiling
       ? { value: value, rowKey: rowKey, normFloor: floor, normCeiling: ceiling }
       : { value: value, rowKey: rowKey, normPercentage: percentage }
   }
 
-  var totalColor = !normConfig
+  const totalColor = !normConfig
     ? '#525559'
     : renderColorCompareNorm(
         buildNormProps(totalValue, normFloor, normCeiling, normPercentage)
       )
 
-  var totalTooltip =
+  const totalTooltip =
     '(Total) ' +
     tooltipLabel +
     ' norm = ' +
@@ -318,7 +318,7 @@ const MetricHeaderRow = ({
         </span>
       </th>
       {(mergedColumns || []).slice(1).map(function (col) {
-        var colKey =
+        const colKey =
           'metric-' +
           rowKey +
           '-' +
@@ -328,20 +328,20 @@ const MetricHeaderRow = ({
           return <th key={colKey} style={{ backgroundColor: '#fff' }} />
         }
 
-        var colValue = getCellValue(dataArray, col.currentColumnKey)
-        var colFloor = getCellFloor(dataArray, col.currentColumnKey)
-        var colCeiling = getCellCeiling(dataArray, col.currentColumnKey)
-        var colNormConfig = getCellNormConfig(dataArray, col.currentColumnKey)
-        var colPercentage = getCellPercentage(dataArray, col.currentColumnKey)
-        var colNorm = useFloorCeiling ? colNormConfig : colPercentage
+        const colValue = getCellValue(dataArray, col.currentColumnKey)
+        const colFloor = getCellFloor(dataArray, col.currentColumnKey)
+        const colCeiling = getCellCeiling(dataArray, col.currentColumnKey)
+        const colNormConfig = getCellNormConfig(dataArray, col.currentColumnKey)
+        const colPercentage = getCellPercentage(dataArray, col.currentColumnKey)
+        const colNorm = useFloorCeiling ? colNormConfig : colPercentage
 
-        var colColor = !colNorm
+        const colColor = !colNorm
           ? '#525559'
           : renderColorCompareNorm(
               buildNormProps(colValue, colFloor, colCeiling, colPercentage)
             )
 
-        var colTooltip =
+        const colTooltip =
           col.currentColumnKey === 'INTERNAL'
             ? null
             : '(' +
@@ -369,7 +369,7 @@ const MetricHeaderRow = ({
 }
 
 const ColumnHeaderRow = ({ mergedColumns, isApproved }) => {
-  var bg = isApproved ? 'unset' : '#fff'
+  const bg = isApproved ? 'unset' : '#fff'
   return (
     <tr>
       <th style={{ backgroundColor: bg }}>
@@ -457,12 +457,12 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
       )) ||
     ''
 
-  var isFin = checkRolePermission(
+  const isFin = checkRolePermission(
     SourceConstants.BUSINESS_PLAN_DETAIL,
     ActivityKeyConstants.EDIT_BUSINESS_PLAN_ALL
   )
 
-  var isOtherRole =
+  const isOtherRole =
     checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_BUSINESS_PLAN
@@ -519,10 +519,10 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
 
   useEffect(
     function () {
-      var manMonth = businessPlanItems.MAN_MONTH
+      const manMonth = businessPlanItems.MAN_MONTH
       if (!mmBillService.length || !manMonth || !manMonth.data) return
 
-      var allServiceIds = mmBillService.reduce(function (acc, item) {
+      const allServiceIds = mmBillService.reduce(function (acc, item) {
         if (item.data && item.data.length > 0) {
           return acc.concat(
             item.data.map(function (c) {
@@ -533,11 +533,11 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
         return acc.concat([item.id])
       }, [])
 
-      var allServiceKeys = Object.keys(manMonth.data).filter(function (k) {
+      const allServiceKeys = Object.keys(manMonth.data).filter(function (k) {
         return k.match(/MM_BILL_\d+/)
       })
 
-      var usedIds = allServiceKeys
+      const usedIds = allServiceKeys
         .filter(function (k) {
           return manMonth.data[k].title
         })
@@ -545,7 +545,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
           return +manMonth.data[k].title
         })
 
-      var availableIds = allServiceIds.filter(function (id) {
+      const availableIds = allServiceIds.filter(function (id) {
         return !usedIds.includes(id)
       })
 
@@ -554,7 +554,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
           return !manMonth.data[k].title
         })
         .forEach(function (k, i) {
-          var row = cloneDeep(manMonth.data[k])
+          const row = cloneDeep(manMonth.data[k])
           updateBusinessPlanRow({
             sectionKey: 'MAN_MONTH',
             rowKey: k,
@@ -589,21 +589,21 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
   }
 
   function addRow(sectionKey, newRowKey) {
-    var regex = newRowKey + '_\\d+'
-    var sectionData = businessPlanItems[sectionKey].data
-    var serviceKeys = Object.keys(sectionData).filter(function (k) {
+    const regex = newRowKey + '_\\d+'
+    const sectionData = businessPlanItems[sectionKey].data
+    const serviceKeys = Object.keys(sectionData).filter(function (k) {
       return k.match(new RegExp(regex))
     })
-    var clone = cloneDeep(Object.values(sectionData)[0])
+    const clone = cloneDeep(Object.values(sectionData)[0])
 
-    var generatedKey =
+    const generatedKey =
       serviceKeys.length > 0
         ? newRowKey +
           '_' +
           (+serviceKeys[serviceKeys.length - 1].match(/\d+/)[0] + 1)
         : newRowKey + '_1'
 
-    var newItems = clone.data.map(function (item) {
+    const newItems = clone.data.map(function (item) {
       return {
         ...item,
         value: null,
@@ -625,7 +625,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
 
   function getCellDisplayValue(item, sectionKey, rowKey, isService) {
     if (!item) return null
-    var formula = getFormula({
+    const formula = getFormula({
       item,
       columnKey: item.columnKey,
       sectionKey,
@@ -637,7 +637,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
 
   function getSectionTotalValue(sectionTotalItem, sectionKey) {
     if (!sectionTotalItem) return null
-    var formula = getFormula({
+    const formula = getFormula({
       item: sectionTotalItem,
       columnKey: 'TOTAL',
       sectionKey: sectionKey,
@@ -647,7 +647,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
   }
 
   function renderSectionTitle(title) {
-    var tabMap = {
+    const tabMap = {
       'Unit price & MM Bill': '2',
       Revenues: '2',
       'Delivery expenses': '3',
@@ -668,44 +668,44 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     return title
   }
 
-  var mergedColumns = getMergedColumns(
+  const mergedColumns = getMergedColumns(
     columns,
     compareColumnLabels,
     compareBusinessPlanItems
   )
-  var isCompare = !!compareBusinessPlanItems
+  const isCompare = !!compareBusinessPlanItems
 
-  var unitPriceCell = findCellIn(
+  const unitPriceCell = findCellIn(
     businessPlanItems,
     'MAN_MONTH',
     'UNIT_PRICE',
     'TOTAL'
   )
-  var billableRateCell = findCellIn(
+  const billableRateCell = findCellIn(
     businessPlanItems,
     'REFERENCE',
     'BILLABLE_RATE',
     'TOTAL'
   )
-  var directMarginCell = findCellIn(
+  const directMarginCell = findCellIn(
     businessPlanItems,
     'MARGIN',
     'DIRECT_MARGIN_BONUS_RATE',
     'TOTAL'
   )
 
-  var unitPriceArray =
+  const unitPriceArray =
     businessPlanItems.MAN_MONTH && businessPlanItems.MAN_MONTH.data.UNIT_PRICE
       ? businessPlanItems.MAN_MONTH.data.UNIT_PRICE.data
       : null
 
-  var billableRateArray =
+  const billableRateArray =
     businessPlanItems.REFERENCE &&
     businessPlanItems.REFERENCE.data.BILLABLE_RATE
       ? businessPlanItems.REFERENCE.data.BILLABLE_RATE.data
       : null
 
-  var directMarginArray =
+  const directMarginArray =
     businessPlanItems.MARGIN &&
     businessPlanItems.MARGIN.data.DIRECT_MARGIN_BONUS_RATE
       ? businessPlanItems.MARGIN.data.DIRECT_MARGIN_BONUS_RATE.data

@@ -65,9 +65,9 @@ function BusinessPlanVersion({
   }
   const { userName } = userPOA
 
-  var buId = Number(match.params.buId)
-  var currentMVVInfo = generalInfos.find(function(info) { return info.id === buId })
-  var currentListAM = (currentMVVInfo && currentMVVInfo.listAM) || []
+  const buId = Number(match.params.buId)
+  const currentMVVInfo = generalInfos.find(function(info) { return info.id === buId })
+  const currentListAM = (currentMVVInfo && currentMVVInfo.listAM) || []
   const isAMSubmit = currentListAM.some(function(item) { return item.ldap === userName })
 
   const isDraft =
