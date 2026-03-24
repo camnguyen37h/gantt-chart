@@ -113,26 +113,24 @@ const getProjectCodeByViewMode = (viewMode, arrayMap) => {
 
 const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
   if (gKey !== 'None') {
-    return existing.concat(
-      incoming.map(({ referenceId, ...a }) => ({ ...a }))
-    )
+    return existing.concat(incoming)
   }
 
   const result = existing.slice()
   const ldapIndexMap = {}
-  result.forEach((a, i) => {
-    ldapIndexMap[a.ldap] = i
+  result.forEach((approver, i) => {
+    ldapIndexMap[approver.ldap] = i
   })
 
-  incoming.forEach(({ referenceId, ...a }) => {
-    const idx = ldapIndexMap[a.ldap]
+  incoming.forEach(approver => {
+    const idx = ldapIndexMap[approver.ldap]
     if (idx !== undefined) {
-      if (referenceId != null && String(referenceId) === String(currentBuId)) {
-        result[idx] = { ...a }
+      if (approver.referenceId != null && String(approver.referenceId) === String(currentBuId)) {
+        result[idx] = { ...approver }
       }
     } else {
-      ldapIndexMap[a.ldap] = result.length
-      result.push({ ...a })
+      ldapIndexMap[approver.ldap] = result.length
+      result.push({ ...approver })
     }
   })
 
