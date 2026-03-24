@@ -1,157 +1,159 @@
 {
-  "httpStatus": 200,
-  "data": {
-    "id": 468,
-    "projectCode": "GLBOD2500127",
-    "status": "Draft",
-    "version": 1,
-    "startDate": 1773939600000,
-    "endDate": 1804525200000,
-    "userRoles": ["DB-ADMIN", "DB-BUL-Offshore", "DB-BUL-Onsite"],
-    "warningMessage": [],
-    "versions": [
-      {
-        "versionId": 468,
-        "versionName": "Version 1",
-        "status": "DRAFT",
-        "statusName": "Draft"
-      }
-    ],
-    "generalInfos": [
-      {
-        "listAM": [
-          {
-            "id": null,
-            "businessPlanVersionId": 468,
-            "memberType": "AM",
-            "userId": 624,
-            "ldap": "hmy",
-            "departmentId": 169,
-            "departmentName": "BKR1",
-            "startDate": 1773939600000,
-            "endDate": 1804525200000,
-            "isDefault": true
-          }
-        ],
-        "listTeamLead": [],
-        "listPreSale": [],
-        "listPreparator": [],
-        "listAdviser": [],
-        "listPM": [
-          {
-            "id": null,
-            "businessPlanVersionId": 468,
-            "memberType": "PM",
-            "userId": 9612,
-            "ldap": "ldhtrieu",
-            "departmentId": 2,
-            "departmentName": "DJ2",
-            "startDate": 1773939600000,
-            "endDate": 1804525200000,
-            "isDefault": true
-          }
-        ],
-        "businessPlanName": "Tôi là PC4",
-        "customerName": "TTLAM Client ",
+    "httpStatus": 200,
+    "data": {
+        "id": 468,
+        "projectCode": "GLBOD2500127",
+        "status": "Draft",
+        "version": 1,
         "startDate": 1773939600000,
         "endDate": 1804525200000,
-        "orderType": "T&M",
-        "recurringNew": "New",
-        "pm": "ldhtrieu",
-        "currency": 778,
-        "exchangeRate": 1,
-        "totalContractPrice": 480000000,
-        "industry": null,
-        "customerMarket": "Viet Nam",
-        "cooperationPeriod": "Less than 12 months",
-        "softwareDevelopmentFee": 480000000,
-        "otherFees": 0,
-        "planningStartDate": null,
-        "planningEndDate": null,
-        "businessPlanKpiDTO": {
-          "id": 108,
-          "businessPlanVersionId": 468,
-          "kpiPm": 30,
-          "kpiQa": 3,
-          "kpiMember": 67
-        },
-        "projectCode": "GLBOD2500127",
-        "mvvLocationType": "Onsite",
-        "id": 468,
-        "version": 1,
-        "versionName": "Version 1",
-        "status": "Draft",
-        "permissionView": true
-      },
-      {
-        "listAM": [
-          {
-            "id": null,
-            "businessPlanVersionId": 467,
-            "memberType": "AM",
-            "userId": 624,
-            "ldap": "hmy",
-            "departmentId": 169,
-            "departmentName": "BKR1",
-            "startDate": 1773939600000,
-            "endDate": 1804611600000,
-            "isDefault": true
-          }
+        "userRoles": [
+            "DB-ADMIN"
         ],
-        "listTeamLead": [],
-        "listPreSale": [],
-        "listPreparator": [],
-        "listAdviser": [],
-        "listPM": [
-          {
-            "id": null,
-            "businessPlanVersionId": 467,
-            "memberType": "PM",
-            "userId": 9612,
-            "ldap": "ldhtrieu",
-            "departmentId": 2,
-            "departmentName": "DJ2",
-            "startDate": 1773939600000,
-            "endDate": 1804611600000,
-            "isDefault": true
-          }
+        "warningMessage": [],
+        "versions": [
+            {
+                "versionId": 468,
+                "versionName": "Version 1",
+                "status": "DRAFT",
+                "statusName": "Draft"
+            }
         ],
-        "businessPlanName": "Tôi là PC3",
-        "customerName": "TTLAM Client ",
-        "startDate": 1773939600000,
-        "endDate": 1804611600000,
-        "orderType": "T&M",
-        "recurringNew": "New",
-        "pm": "ldhtrieu",
-        "currency": 778,
-        "exchangeRate": 1,
-        "totalContractPrice": 470000000,
-        "industry": null,
-        "customerMarket": "Viet Nam",
-        "cooperationPeriod": "Less than 12 months",
-        "softwareDevelopmentFee": 470000000,
-        "otherFees": 0,
-        "planningStartDate": null,
-        "planningEndDate": null,
-        "businessPlanKpiDTO": {
-          "id": null,
-          "businessPlanVersionId": null,
-          "kpiPm": null,
-          "kpiQa": null,
-          "kpiMember": null
-        },
-        "projectCode": "GLBOD2500126",
-        "mvvLocationType": "Offshore",
-        "id": 467,
-        "version": 1,
-        "versionName": "Version 1",
-        "status": "Draft",
-        "permissionView": true
-      }
-    ],
-    "columnLabels": null,
-    "sectionList": null
-  },
-  "messageId": "Success",
-  "errorMessage": ""
+        "generalInfos": [
+            {
+                "listAM": [
+                    {
+                        "id": null,
+                        "businessPlanVersionId": 468,
+                        "memberType": "AM",
+                        "userId": 624,
+                        "ldap": "hmy",
+                        "departmentId": 169,
+                        "departmentName": "BKR1",
+                        "startDate": 1773939600000,
+                        "endDate": 1804525200000,
+                        "isDefault": true
+                    }
+                ],
+                "listTeamLead": [],
+                "listPreSale": [],
+                "listPreparator": [],
+                "listAdviser": [],
+                "listPM": [
+                    {
+                        "id": null,
+                        "businessPlanVersionId": 468,
+                        "memberType": "PM",
+                        "userId": 9612,
+                        "ldap": "ldhtrieu",
+                        "departmentId": 2,
+                        "departmentName": "DJ2",
+                        "startDate": 1773939600000,
+                        "endDate": 1804525200000,
+                        "isDefault": true
+                    }
+                ],
+                "businessPlanName": "Tôi là PC4",
+                "customerName": "TTLAM Client ",
+                "startDate": 1773939600000,
+                "endDate": 1804525200000,
+                "orderType": "T&M",
+                "recurringNew": "New",
+                "pm": "ldhtrieu",
+                "currency": 778,
+                "exchangeRate": 1,
+                "totalContractPrice": 480000000,
+                "industry": null,
+                "customerMarket": "Viet Nam",
+                "cooperationPeriod": "Less than 12 months",
+                "softwareDevelopmentFee": 480000000,
+                "otherFees": 0,
+                "planningStartDate": null,
+                "planningEndDate": null,
+                "businessPlanKpiDTO": {
+                    "id": 108,
+                    "businessPlanVersionId": 468,
+                    "kpiPm": 30,
+                    "kpiQa": 3,
+                    "kpiMember": 67
+                },
+                "projectCode": "GLBOD2500127",
+                "mvvLocationType": "Onsite",
+                "id": 468,
+                "version": 1,
+                "versionName": "Version 1",
+                "status": "Draft",
+                "permissionView": true
+            },
+            {
+                "listAM": [
+                    {
+                        "id": null,
+                        "businessPlanVersionId": 467,
+                        "memberType": "AM",
+                        "userId": 624,
+                        "ldap": "hmy",
+                        "departmentId": 169,
+                        "departmentName": "BKR1",
+                        "startDate": 1773939600000,
+                        "endDate": 1804611600000,
+                        "isDefault": true
+                    }
+                ],
+                "listTeamLead": [],
+                "listPreSale": [],
+                "listPreparator": [],
+                "listAdviser": [],
+                "listPM": [
+                    {
+                        "id": null,
+                        "businessPlanVersionId": 467,
+                        "memberType": "PM",
+                        "userId": 9612,
+                        "ldap": "ldhtrieu",
+                        "departmentId": 2,
+                        "departmentName": "DJ2",
+                        "startDate": 1773939600000,
+                        "endDate": 1804611600000,
+                        "isDefault": true
+                    }
+                ],
+                "businessPlanName": "Tôi là PC3",
+                "customerName": "TTLAM Client ",
+                "startDate": 1773939600000,
+                "endDate": 1804611600000,
+                "orderType": "T&M",
+                "recurringNew": "New",
+                "pm": "ldhtrieu",
+                "currency": 778,
+                "exchangeRate": 1,
+                "totalContractPrice": 480000000,
+                "industry": null,
+                "customerMarket": "Viet Nam",
+                "cooperationPeriod": "Less than 12 months",
+                "softwareDevelopmentFee": 480000000,
+                "otherFees": 0,
+                "planningStartDate": null,
+                "planningEndDate": null,
+                "businessPlanKpiDTO": {
+                    "id": null,
+                    "businessPlanVersionId": null,
+                    "kpiPm": null,
+                    "kpiQa": null,
+                    "kpiMember": null
+                },
+                "projectCode": "GLBOD2500126",
+                "mvvLocationType": "Offshore",
+                "id": 467,
+                "version": 1,
+                "versionName": "Version 1",
+                "status": "Draft",
+                "permissionView": true
+            }
+        ],
+        "columnLabels": null,
+        "sectionList": null
+    },
+    "messageId": "Success",
+    "errorMessage": ""
 }

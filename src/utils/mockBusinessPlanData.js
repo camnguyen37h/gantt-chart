@@ -24,7 +24,9 @@ import mockSellingPlan468Raw from './mock-data/sellingPlan468.json'
 import mockRevenueSummary468Raw from './mock-data/revenueSummary468.json'
 import mockOtherExpensesTable468Raw from './mock-data/otherExpensesTable468.json'
 import mockListDeliveryPlanMember468Raw from './mock-data/listDeliveryPlanMember468.json'
-import mockUserActionHistory468Raw from './mock-data/userActionHistory468.json'
+import mockUserActionHistory468Raw from './mock-data/userActionHistoryRevenue468.json'
+import mockUserActionHistoryDelivery468Raw from './mock-data/userActionHistoryDelivery468.json'
+import mockMMBillsService468Raw from './mock-data/mmBillsService468.json'
 
 export const mockBusinessPlanDetail464 = mockBusinessPlanDetail464Raw
 export const mockBusinessPlanDetail468 = mockBusinessPlanDetail468Raw
@@ -37,6 +39,7 @@ export const mockRevenueSummary468 = mockRevenueSummary468Raw
 export const mockOtherExpensesTable468 = mockOtherExpensesTable468Raw
 export const mockListDeliveryPlanMember468 = mockListDeliveryPlanMember468Raw
 export const mockUserActionHistory468 = mockUserActionHistory468Raw
+export const mockUserActionHistoryDelivery468 = mockUserActionHistoryDelivery468Raw
 
 // ==================== BUSINESS PLAN DETAIL ====================
 export const mockBusinessPlanDetail = {
@@ -2661,315 +2664,60 @@ export const mockBusinessPlanEdgeCaseDetail = {
 }
 
 // ==================== PRODUCTION REVENUE ====================
-export const mockProductionRevenue = {
-  httpStatus: 200,
-  data: {
-    startDate: 1770915600000,
-    endDate: 1784134800000,
-    revenueInfos: [
-      {
-        saleWorkOrderId: '271626',
-        groupId: null,
-        pipelineKey: 'WO-7821',
-        position: '',
-        unitPrice: 5000000,
-        rateCard: null,
-        department: 'BU3',
-        exchangeRate: 1,
-        pipeLineRatio: 100,
-        totalManMonth: 1,
-        totalRevenue: 5000000,
-        revenue: {
-          '03-2026': {
-            manMonth: 1,
-            revenue: 5000000,
-          },
-        },
-      },
-    ],
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockProductionRevenue = mockProductionRevenue468Raw
 
-// ==================== OTHER REVENUE ====================
-export const mockOtherRevenue = {
-  httpStatus: 200,
-  data: {
-    startDate: 1770915600000,
-    endDate: 1784134800000,
-    revenues: [],
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockOtherRevenue = mockOtherRevenue468Raw
 
 // ==================== SELLING PLAN ====================
-export const mockSellingPlan = {
-  httpStatus: 200,
-  data: {
-    startDate: 1770915600000,
-    endDate: 1784134800000,
-    revenues: [],
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockSellingPlan = mockSellingPlan468Raw
 
 // ==================== REVENUE SUMMARY ====================
-export const mockRevenueSummary = {
-  httpStatus: 200,
-  data: {
-    mmBill: 1,
-    softwareProductionRevenues: 12000000,
-    deduction: -7000000,
-    onsiteFee: null,
-    equipmentRevenue: null,
-    otherRevenues: null,
-    agencyExpenses: null,
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockRevenueSummary = mockRevenueSummary468Raw
 
 // ==================== MM BILLS SERVICE ====================
-export const mockMMBillsService = {
-  httpStatus: 200,
-  data: {
-    crmMasterDataMappings: [
-      {
-        id: 236,
-        name: '1.Traditional Services',
-        isCategory: true,
-        parentId: 8,
-        status: 1,
-        data: [
-          {
-            id: 237,
-            name: '1.1 Application Development (Web/App/Mobile)',
-            isCategory: false,
-            parentId: 236,
-            status: 1,
-            data: null,
-            masterdata: '',
-            masterdataName: 'Sub-service',
-          },
-          {
-            id: 241,
-            name: '1.3 Testing',
-            isCategory: false,
-            parentId: 236,
-            status: 1,
-            data: null,
-            masterdata: '',
-            masterdataName: 'Sub-service',
-          },
-        ],
-        masterdata: '',
-        masterdataName: 'Service',
-      },
-      {
-        id: 238,
-        name: '2.Digital Transformation Services',
-        isCategory: true,
-        parentId: 8,
-        status: 1,
-        data: [
-          {
-            id: 247,
-            name: '2.1 Cloud Professional Services',
-            isCategory: false,
-            parentId: 238,
-            status: 1,
-            data: null,
-            masterdata: '',
-            masterdataName: 'Sub-service',
-          },
-          {
-            id: 248,
-            name: '2.2 AI Implementation',
-            isCategory: false,
-            parentId: 238,
-            status: 1,
-            data: null,
-            masterdata: '',
-            masterdataName: 'Sub-service',
-          },
-        ],
-        masterdata: '',
-        masterdataName: 'Service',
-      },
-    ],
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockMMBillsService = mockMMBillsService468Raw
 
 // ==================== DELIVERY PLAN SUMMARY ====================
 export const mockDeliveryPlanSummary = {
   httpStatus: 200,
   data: {
-    mmEffort: 6,
-    directLaborCost: 87600000,
+    mmEffort: 8,
+    directLaborCost: 134523552,
     outsourcingCost: null,
-    equipmentExpense: null,
-    onsiteExpense: null,
-    overtime: null,
-    other: null,
-    nonDeductibleInputVAT: null,
+    equipmentExpense: 400000,
+    onsiteExpense: 400000,
+    overtime: 400000,
+    other: 400000,
+    permissionView: true,
+    nonDeductibleInputVAT: 400000,
   },
   messageId: 'Success',
   errorMessage: '',
 }
 
 // ==================== DELIVERY PLAN MEMBERS ====================
-export const mockDeliveryPlanMembers = {
-  httpStatus: 200,
-  data: {
-    total: 1,
-    body: {
-      listLabelMonth: [
-        'Feb-26',
-        'Mar-26',
-        'Apr-26',
-        'May-26',
-        'Jun-26',
-        'Jul-26',
-      ],
-      listBudgetMMForEachMonth: {
-        'Feb-26': 1,
-        'Mar-26': 1,
-        'Apr-26': 1,
-        'May-26': 1,
-        'Jun-26': 1,
-        'Jul-26': 1,
-      },
-      deliveryPlanByHeadCountList: [
-        {
-          deliveryMemberId: 1000110,
-          userId: 3860,
-          resourceType: 'User',
-          resourceFullName: 'Lam. Tran Tung  - CMCGlobal DJ2',
-          location: 'Vietnam',
-          ldap: 'ttlam1',
-          employeeType: 'In-house',
-          originalGrossSalary: 5000000,
-          grossSalary: 5000000,
-          position: 'SE02',
-          role: 'Member',
-          rowTotal: 6,
-          budgetMMValue: null,
-          budgetMMValueDTO: {
-            'Feb-26': {
-              id: 1000283,
-              deliveryMemberId: 1000110,
-              month: 2,
-              year: 2026,
-              value: 1,
-            },
-            'Mar-26': {
-              id: 1000284,
-              deliveryMemberId: 1000110,
-              month: 3,
-              year: 2026,
-              value: 1,
-            },
-            'Apr-26': {
-              id: 1000285,
-              deliveryMemberId: 1000110,
-              month: 4,
-              year: 2026,
-              value: 1,
-            },
-            'May-26': {
-              id: 1000286,
-              deliveryMemberId: 1000110,
-              month: 5,
-              year: 2026,
-              value: 1,
-            },
-            'Jun-26': {
-              id: 1000287,
-              deliveryMemberId: 1000110,
-              month: 6,
-              year: 2026,
-              value: 1,
-            },
-            'Jul-26': {
-              id: 1000288,
-              deliveryMemberId: 1000110,
-              month: 7,
-              year: 2026,
-              value: 1,
-            },
-          },
-          groupId: 2,
-          groupName: 'DJ2',
-        },
-      ],
-      totalRecord: 1,
-    },
-    page: 1,
-    size: 20,
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockDeliveryPlanMembers = mockListDeliveryPlanMember468Raw
 
 // ==================== OTHER EXPENSES TABLE ====================
-export const mockOtherExpensesTable = {
-  httpStatus: 200,
-  data: {
-    total: 5,
-    body: {
-      labelMonth: ['Feb-26', 'Mar-26', 'Apr-26', 'May-26', 'Jun-26', 'Jul-26'],
-      dataList: [
-        {
-          otherExpenseId: null,
-          expenseCategoriesEnum: 'Onsite',
-          categoriesDataList: null,
-          totalExpenseValue: null,
-        },
-        {
-          otherExpenseId: null,
-          expenseCategoriesEnum: 'Equipment',
-          categoriesDataList: null,
-          totalExpenseValue: null,
-        },
-        {
-          otherExpenseId: null,
-          expenseCategoriesEnum: 'Overtime',
-          categoriesDataList: null,
-          totalExpenseValue: null,
-        },
-        {
-          otherExpenseId: null,
-          expenseCategoriesEnum: 'Non-deductible input VAT',
-          categoriesDataList: null,
-          totalExpenseValue: null,
-        },
-        {
-          otherExpenseId: null,
-          expenseCategoriesEnum: 'Others',
-          categoriesDataList: null,
-          totalExpenseValue: null,
-        },
-      ],
-      totalRecords: 5,
-    },
-    page: 1,
-    size: 10,
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockOtherExpensesTable = mockOtherExpensesTable468Raw
 
 // ==================== FILTERS & LOOKUPS ====================
 export const mockDepartmentsByVersion = {
   httpStatus: 200,
   data: [
-    { groupName: 'BU3', groupId: 220, groupSale: true },
-    { groupName: 'BJ3', groupId: 66, groupSale: false },
+    { groupName: 'BJ2', groupId: 331, groupSale: true },
+    { groupName: 'DU1.12', groupId: 39, groupSale: false },
+    { groupName: 'DU3.11', groupId: 34, groupSale: false },
+  ],
+  messageId: 'Success',
+  errorMessage: '',
+}
+
+export const mockDepartmentsByVersionDelivery = {
+  httpStatus: 200,
+  data: [
+    { groupName: 'DU1.8', groupId: 7, groupSale: false },
+    { groupName: 'DU1.6', groupId: 6, groupSale: false },
   ],
   messageId: 'Success',
   errorMessage: '',
@@ -3067,256 +2815,20 @@ export const mockMaxKPISetting = {
   errorMessage: '',
 }
 
-// Approval workflow from BE get-all-approval-steps (id=448, GLBOD2500102)
-// Groups: G3 (BU3) and CJP (BJ3)
+// Approval workflow from BE get-all-approval-steps (id=468, GLBOD2500127)
 export const mockApprovalSteps = {
   httpStatus: 200,
   data: {
-    data: {
-      9130: {
-        stepName: 'Draft',
-        stateName: 'Draft',
-        stateOrder: 10,
-        stateHidden: false,
-        order: 1,
-        map: { None: [] },
-      },
-      9131: {
-        stepName: 'BU/DU Lead Pending Approval',
-        stateName: 'Verification',
-        stateOrder: 100,
-        stateHidden: false,
-        order: 1,
-        map: {
-          CJP: [
-            {
-              id: 5832,
-              taskKey: 'BP-5832',
-              approvalStepId: 9131,
-              ldap: 'nxcanh',
-              departmentName: 'BJ3',
-              processStatus: 'APPROVED',
-              history: [{ id: 3959, approvalPersonId: 5832, ldap: 'nbtduy', previousLdap: 'nxcanh', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-          G3: [
-            {
-              id: 5831,
-              taskKey: 'BP-5831',
-              approvalStepId: 9131,
-              ldap: 'vttung3',
-              departmentName: 'BU3',
-              processStatus: 'APPROVED',
-              history: [{ id: 3960, approvalPersonId: 5831, ldap: 'nbtduy', previousLdap: 'vttung3', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-        },
-      },
-      9132: {
-        stepName: 'Approved',
-        stateName: 'Approved',
-        stateOrder: 10000,
-        stateHidden: false,
-        order: 1,
-        map: { None: [] },
-      },
-      9133: {
-        stepName: 'G Lead Pending Approval',
-        stateName: 'Verification',
-        stateOrder: 100,
-        stateHidden: false,
-        order: 2,
-        map: {
-          CJP: [
-            {
-              id: 5833,
-              taskKey: 'BP-5833',
-              approvalStepId: 9133,
-              ldap: 'ncchinh1',
-              departmentName: 'CJP',
-              processStatus: 'APPROVED',
-              history: [{ id: 3961, approvalPersonId: 5833, ldap: 'nbtduy', previousLdap: 'ncchinh1', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-            {
-              id: 5834,
-              taskKey: 'BP-5834',
-              approvalStepId: 9133,
-              ldap: 'ndtoi',
-              departmentName: 'CJP',
-              processStatus: 'APPROVED',
-              history: [{ id: 3962, approvalPersonId: 5834, ldap: 'nbtduy', previousLdap: 'ndtoi', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-          G3: [
-            {
-              id: 5835,
-              taskKey: 'BP-5835',
-              approvalStepId: 9133,
-              ldap: 'ltoanh',
-              departmentName: 'G3',
-              processStatus: 'APPROVED',
-              history: [{ id: 3963, approvalPersonId: 5835, ldap: 'nbtduy', previousLdap: 'ltoanh', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-            {
-              id: 5836,
-              taskKey: 'BP-5836',
-              approvalStepId: 9133,
-              ldap: 'ttlam1',
-              departmentName: 'G3',
-              processStatus: 'APPROVED',
-              history: [
-                { id: 3964, approvalPersonId: 5836, ldap: 'nbtduy', previousLdap: 'nbtduy', stepAction: 'APPROVED', lastProcessStatus: 'TODO' },
-                { id: 3967, approvalPersonId: 5836, ldap: 'ttlam1', previousLdap: 'nbtduy', stepAction: 'REASSIGN', lastProcessStatus: 'APPROVED' },
-                { id: 3968, approvalPersonId: 5836, ldap: 'nbtduy', previousLdap: 'ttlam1', stepAction: 'APPROVED', lastProcessStatus: 'TODO' },
-              ],
-            },
-            {
-              id: 5837,
-              taskKey: 'BP-5837',
-              approvalStepId: 9133,
-              ldap: 'nhanh16',
-              departmentName: 'G3',
-              processStatus: 'APPROVED',
-              history: [{ id: 3969, approvalPersonId: 5837, ldap: 'nbtduy', previousLdap: 'nhanh16', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-            {
-              id: 5838,
-              taskKey: 'BP-5838',
-              approvalStepId: 9133,
-              ldap: 'vttung3',
-              departmentName: 'G3',
-              processStatus: 'APPROVED',
-              history: [{ id: 3970, approvalPersonId: 5838, ldap: 'nbtduy', previousLdap: 'vttung3', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-        },
-      },
-      9134: {
-        stepName: 'FC Pending Approval',
-        stateName: 'Peer Review',
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 1,
-        map: {
-          None: [
-            {
-              id: 5839,
-              taskKey: 'BP-5839',
-              approvalStepId: 9134,
-              ldap: 'ttmy',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [{ id: 3971, approvalPersonId: 5839, ldap: 'nbtduy', previousLdap: 'ttmy', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-        },
-      },
-      9135: {
-        stepName: 'BOM Pending Approval',
-        stateName: 'Peer Review',
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 2,
-        map: {
-          None: [
-            {
-              id: 5840,
-              taskKey: 'BP-5840',
-              approvalStepId: 9135,
-              ldap: 'htthoa',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [{ id: 3972, approvalPersonId: 5840, ldap: 'nbtduy', previousLdap: 'htthoa', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-            {
-              id: 5841,
-              taskKey: 'BP-5841',
-              approvalStepId: 9135,
-              ldap: 'nvbach',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [{ id: 3973, approvalPersonId: 5841, ldap: 'nbtduy', previousLdap: 'nvbach', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-            {
-              id: 5842,
-              taskKey: 'BP-5842',
-              approvalStepId: 9135,
-              ldap: 'mthuong',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [{ id: 3974, approvalPersonId: 5842, ldap: 'nbtduy', previousLdap: 'mthuong', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-        },
-      },
-      9136: {
-        stepName: 'CEO Pending Approval',
-        stateName: 'Peer Review',
-        stateOrder: 1000,
-        stateHidden: false,
-        order: 3,
-        map: {
-          None: [
-            {
-              id: 5843,
-              taskKey: 'BP-5843',
-              approvalStepId: 9136,
-              ldap: 'dnbao',
-              departmentName: null,
-              processStatus: 'APPROVED',
-              history: [{ id: 3975, approvalPersonId: 5843, ldap: 'nbtduy', previousLdap: 'dnbao', stepAction: 'APPROVED', lastProcessStatus: 'TODO' }],
-            },
-          ],
-        },
-      },
-    },
-    workOrder: {
-      CJP: [{ duName: 'BJ3' }],
-      G3: [{ duName: 'BU3' }],
-    },
+    data: {},
+    workOrder: {},
   },
   messageId: 'Success',
   errorMessage: '',
 }
 
 
-export const mockUserActionHistory = {
-  httpStatus: 200,
-  data: {
-    total: 2,
-    body: {
-      userActionHistoryDtoList: [
-        {
-          id: 116603,
-          actionTime: '10/Feb/26 14:33 PM',
-          author: 'ttlam1',
-          historyType: 'DELIVERY_PLAN',
-          oldValueString: '{"id":1000110,"items":{}}',
-          newValueString:
-            '{"id":1000110,"items":{"04-2026":1.0,"05-2026":1.0,"06-2026":1.0,"07-2026":1.0}}',
-          entity: 'Resource Info - ttlam1',
-        },
-        {
-          id: 116572,
-          actionTime: '10/Feb/26 14:30 PM',
-          author: 'ttlam1',
-          historyType: 'DELIVERY_PLAN',
-          oldValueString: null,
-          newValueString:
-            '{"employeeType":"In-house","grossSalaryVnd":5000000.0,"role":"Member","location":"Vietnam","id":1000110,"position":"SE02","userName":"ttlam1","items":{"02-2026":1.0,"03-2026":1.0},"originalGrossSalary":5000000.0,"resourceType":"User"}',
-          entity: 'Resource Info - ttlam1',
-        },
-      ],
-      total: 2,
-      pageNum: 1,
-      pageSize: 10,
-    },
-    page: 1,
-    size: 10,
-  },
-  messageId: 'Success',
-  errorMessage: '',
-}
+export const mockUserActionHistory = mockUserActionHistory468Raw
+export const mockUserActionHistoryDelivery = mockUserActionHistoryDelivery468Raw
 
 export const mockDocuments = {
   httpStatus: 200,

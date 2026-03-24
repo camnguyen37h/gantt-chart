@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import { sectionConfig } from '../constants'
+import { getDisplayKey } from '../utils'
 import Decimal from 'decimal.js'
 
 const useFormula = () => {
@@ -15,7 +16,7 @@ const useFormula = () => {
     const col =
       columns &&
       columns.find(function (c) {
-        return c.columnKey === columnKey
+        return getDisplayKey(c) === columnKey
       })
     if (col && col.colCategory) {
       const locationType =
@@ -66,16 +67,14 @@ const useFormula = () => {
       .toNumber()
   }
 
-  const getItem = ({ sectionKey, rowKey, columnKey }) => {
-    return businessPlanItems[sectionKey] &&
+  const getItem = ({ sectionKey, rowKey, columnKey, targetItem: ti }) => {
+    const key = ti ? getDisplayKey(ti) : columnKey
+    const data =
+      businessPlanItems[sectionKey] &&
       businessPlanItems[sectionKey].data[rowKey] &&
-      businessPlanItems[sectionKey].data[rowKey].data.find(
-        item => item.columnKey === columnKey
-      )
-      ? businessPlanItems[sectionKey].data[rowKey].data.find(
-          item => item.columnKey === columnKey
-        )
-      : {}
+      businessPlanItems[sectionKey].data[rowKey].data
+    if (!data) return {}
+    return data.find(item => getDisplayKey(item) === key) || {}
   }
 
   const getItems = ({ sectionKey, rowKey, filterCallback }) => {
@@ -117,14 +116,15 @@ const useFormula = () => {
   }
 
   const getTotalColumnAndSet = ({ targetItem, serviceRowKey }) => {
-    const { sectionKey, columnKey, rowKey } = targetItem
+    const { sectionKey, rowKey } = targetItem
+    const targetKey = getDisplayKey(targetItem)
 
     const rowKeys = Object.keys(businessPlanItems[sectionKey].data).filter(
       key => key !== rowKey
     )
     const values = rowKeys.map(key => {
       const childItem = businessPlanItems[sectionKey].data[key].data.find(
-        item => item.columnKey === columnKey
+        item => getDisplayKey(item) === targetKey
       )
 
       if (!childItem) return null
@@ -133,7 +133,7 @@ const useFormula = () => {
       const isService = key.match(new RegExp(regex))
       const formulaResult = getFormula({
         item: childItem,
-        columnKey,
+        columnKey: getDisplayKey(childItem),
         rowKey: key,
         sectionKey,
         isService,
@@ -187,12 +187,12 @@ const useFormula = () => {
       return businessPlanItems.MAN_MONTH.data[key].data.find(
         item =>
           item.columnKey.toLowerCase().includes('delivery_unit') &&
-          item.columnKey === targetItem.columnKey
+          getDisplayKey(item) === getDisplayKey(targetItem)
       )
         ? businessPlanItems.MAN_MONTH.data[key].data.find(
             item =>
               item.columnKey.toLowerCase().includes('delivery_unit') &&
-              item.columnKey === targetItem.columnKey
+              getDisplayKey(item) === getDisplayKey(targetItem)
           ).value
         : null
     })
@@ -212,7 +212,7 @@ const useFormula = () => {
     const saleColumns =
       columns &&
       columns.filter(function (c) {
-        return c.columnKey && /^sale_\d+$/i.test(c.columnKey)
+        return getDisplayKey(c) && /^sale_\d+$/i.test(getDisplayKey(c))
       })
     if (!saleColumns || saleColumns.length === 0) {
       return getSoftwareProductionSale()
@@ -225,8 +225,8 @@ const useFormula = () => {
 
   const getSoftwareProductionSale = function ({ targetItem } = {}) {
     const rates =
-      targetItem && targetItem.columnKey
-        ? getRatesForColumn(targetItem.columnKey)
+      targetItem && getDisplayKey(targetItem)
+        ? getRatesForColumn(getDisplayKey(targetItem))
         : {
             exchangeRate: exchangeRate,
             softwareDevelopmentFee: softwareDevelopmentFee,
@@ -260,11 +260,12 @@ const useFormula = () => {
 
   const getSoftwareProductionDU = ({ targetItem }) => {
     if (!targetItem || !targetItem.columnKey) return null
+    const targetKey = getDisplayKey(targetItem)
     const found =
       businessPlanItems.REVENUES.data.SOFTWARE_PRODUCTION_REVENUES.data.find(
         item =>
           item.columnKey.toLowerCase().includes('delivery_unit') &&
-          item.columnKey === targetItem.columnKey
+          getDisplayKey(item) === targetKey
       )
     return found ? found.value : null
   }
@@ -306,13 +307,13 @@ const useFormula = () => {
 
   // targetItem carries the exact SALE columnKey so we read/compute against the right column.
   const getDeductionSale = function ({ targetItem } = {}) {
-    const saleColumnKey = targetItem && targetItem.columnKey
+    const saleColumnKey = targetItem && getDisplayKey(targetItem)
 
     const deductionFromBackend =
       (
         businessPlanItems.REVENUES.data.DEDUCTION.data.find(function (item) {
           return saleColumnKey
-            ? item.columnKey === saleColumnKey
+            ? getDisplayKey(item) === saleColumnKey
             : item.columnKey.toLowerCase().includes('sale')
         }) || {}
       ).value || 0
@@ -322,7 +323,7 @@ const useFormula = () => {
         businessPlanItems.REVENUES.data.SOFTWARE_PRODUCTION_REVENUES.data.find(
           function (item) {
             return saleColumnKey
-              ? item.columnKey === saleColumnKey
+              ? getDisplayKey(item) === saleColumnKey
               : item.columnKey.toLowerCase().includes('sale')
           }
         ) || {}
@@ -452,13 +453,13 @@ const useFormula = () => {
     const productionMMBonusDU = getItem({
       sectionKey: 'REFERENCE',
       rowKey: 'PRODUCTION_MM_BONUS',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     const mmBillDUItem = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_BILL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const mmBillDU = getMMBillDU({ targetItem: mmBillDUItem })
@@ -486,31 +487,31 @@ const useFormula = () => {
     const totalRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const totalCostPrice = getItem({
       sectionKey: 'COST_PRICE',
       rowKey: 'COST_PRICE_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const totalSellingExpenses = getItem({
       sectionKey: 'SELLING_EXPENSES',
       rowKey: 'SELLING_EXPENSES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const totalDeliveryExpenses = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DELIVERY_EXPENSES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const totalTaxExpenses = getItem({
       sectionKey: 'TAX',
       rowKey: 'TAX_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const totalTaxExpensesValue = getTotalTax({ targetItem: totalTaxExpenses })
@@ -547,14 +548,14 @@ const useFormula = () => {
     const projectBonusItem = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'PROJECT_BONUS',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
     const projectBonus = getProjectBonusDU({ targetItem: projectBonusItem })
 
     const directMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const directMargin = getDirectMargin({ targetItem: directMarginItem })
@@ -569,7 +570,7 @@ const useFormula = () => {
     const directMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const directMargin = getDirectMargin({ targetItem: directMarginItem })
@@ -596,13 +597,13 @@ const useFormula = () => {
     const directLabor = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     const billrateNorm = getItem({
       sectionKey: 'REFERENCE',
       rowKey: 'BILL_RATE_NORM',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     return directLabor !== null &&
@@ -637,7 +638,7 @@ const useFormula = () => {
     const directMargin = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const directMarginValue = getDirectMargin({
@@ -647,7 +648,7 @@ const useFormula = () => {
     const allocationOfPoolItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'ALLOCATION_OF_POOL_AND_UNBILLABLE',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const allocationOfPool = getAllocationOfPoolDU({
@@ -691,7 +692,7 @@ const useFormula = () => {
     const directMargin = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     return getDirectMargin({
@@ -703,7 +704,7 @@ const useFormula = () => {
     const directMargin = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const directMarginValue = getDirectMargin({ targetItem: directMargin })
@@ -711,7 +712,7 @@ const useFormula = () => {
     const totalRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const revenuesValue = getTotalColumnAndSet({
@@ -766,7 +767,7 @@ const useFormula = () => {
     const directMarginBonusItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN_BONUS',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     directMarginBonus = getDirectMarginBonusSaleInternal({
@@ -776,7 +777,7 @@ const useFormula = () => {
     const totalRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const revenuesValue = getTotalColumnAndSet({
@@ -799,7 +800,7 @@ const useFormula = () => {
     const directMarginBonusItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN_BONUS',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     directMarginBonus = getDirectMarginBonusDU({
@@ -809,7 +810,7 @@ const useFormula = () => {
     const totalRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const revenuesValue = getTotalColumnAndSet({
@@ -832,7 +833,7 @@ const useFormula = () => {
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     indirectMargin = getIndirectMarginDU({
@@ -842,7 +843,7 @@ const useFormula = () => {
     const totalRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const revenuesValue = getTotalColumnAndSet({
@@ -865,7 +866,7 @@ const useFormula = () => {
     const indirectMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'INDIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     indirectMargin = getIndirectMarginInternalSale({
@@ -875,7 +876,7 @@ const useFormula = () => {
     const totalRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const revenuesValue = getTotalColumnAndSet({
@@ -965,7 +966,7 @@ const useFormula = () => {
     const deliveryExpensesItem = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DELIVERY_EXPENSES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const deliveryExpenses = getTotalColumnAndSet({
@@ -976,7 +977,7 @@ const useFormula = () => {
     const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     return deliveryExpenses != null &&
@@ -992,13 +993,13 @@ const useFormula = () => {
     const laborCost = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     return laborCost != null && mmManufacture != null && mmManufacture !== 0
@@ -1010,7 +1011,7 @@ const useFormula = () => {
     const laborCost = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     const mmManufacture = getMMManufactureSale()
@@ -1037,7 +1038,7 @@ const useFormula = () => {
     const mmBill = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_BILL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const mmBillValue = getMMBillDU({ targetItem: mmBill })
@@ -1045,7 +1046,7 @@ const useFormula = () => {
     const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     return mmBillValue != null && mmManufacture != null && mmManufacture !== 0
@@ -1086,7 +1087,7 @@ const useFormula = () => {
     const softwareProductionRevenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const softwareValue = getSoftwareProductionDU({
@@ -1096,7 +1097,7 @@ const useFormula = () => {
     const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     return softwareValue != null && mmManufacture != null && mmManufacture !== 0
@@ -1124,14 +1125,14 @@ const useFormula = () => {
     const directMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
     const directMargin = getDirectMargin({ targetItem: directMarginItem })
 
     const mmManufacture = getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_PRODUCTION',
-      columnKey: targetItem.columnKey,
+      targetItem,
     }).value
 
     return directMargin != null && mmManufacture != null && mmManufacture !== 0
@@ -1145,7 +1146,7 @@ const useFormula = () => {
     const directMarginItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
     const directMargin = getDirectMargin({ targetItem: directMarginItem })
 
@@ -1163,7 +1164,7 @@ const useFormula = () => {
     const revenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
-      columnKey: targetItem.columnKey,
+      targetItem,
     })
 
     const revenuesValue = getTotalColumnAndSet({

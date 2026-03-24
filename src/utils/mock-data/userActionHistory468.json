@@ -1,29 +1,185 @@
 {
     "httpStatus": 200,
     "data": {
-        "total": 2,
+        "total": 7,
         "body": {
             "userActionHistoryDtoList": [
                 {
-                    "id": 116603,
-                    "actionTime": "10/Feb/26 14:33 PM",
+                    "id": 125862,
+                    "actionTime": "20/Mar/26 14:56 PM",
                     "author": "ttlam1",
-                    "historyType": "DELIVERY_PLAN",
-                    "oldValueString": "{\"id\":1000110,\"items\":{}}",
-                    "newValueString": "{\"id\":1000110,\"items\":{\"04-2026\":1.0,\"05-2026\":1.0,\"06-2026\":1.0,\"07-2026\":1.0}}",
-                    "entity": "Resource Info - ttlam1"
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"04-2026\":null,\"03-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":3,\"revenueName\":\"AG\",\"items\":{\"04-2026\":10000,\"03-2026\":100000}}",
+                    "entity": "Agency Expense - AG"
                 },
                 {
-                    "id": 116572,
-                    "actionTime": "10/Feb/26 14:30 PM",
+                    "id": 125838,
+                    "actionTime": "20/Mar/26 14:55 PM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":0,\"revenueName\":\"Onssite Fee 1\",\"items\":{\"05-2026\":100000.000}}",
+                    "newValueString": "{\"revenueTypeId\":0,\"revenueName\":\"Onssite Fee 1\",\"items\":{\"05-2026\":3000}}",
+                    "entity": "Onsite Fee - Onssite Fee 1"
+                },
+                {
+                    "id": 125839,
+                    "actionTime": "20/Mar/26 14:55 PM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":1,\"revenueName\":\"Onssite Fee 2\",\"items\":{\"05-2026\":100000.000}}",
+                    "newValueString": "{\"revenueTypeId\":1,\"revenueName\":\"Onssite Fee 2\",\"items\":{\"05-2026\":4000}}",
+                    "entity": "Equipment - Onssite Fee 2"
+                },
+                {
+                    "id": 125840,
+                    "actionTime": "20/Mar/26 14:55 PM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":2,\"revenueName\":\"Onssite Fee 3\",\"items\":{\"05-2026\":100000.000}}",
+                    "newValueString": "{\"revenueTypeId\":2,\"revenueName\":\"Onssite Fee 3\",\"items\":{\"05-2026\":5000}}",
+                    "entity": "Other - Onssite Fee 3"
+                },
+                {
+                    "id": 125814,
+                    "actionTime": "20/Mar/26 14:55 PM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"04-2026\":null,\"05-2026\":null,\"03-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":1,\"revenueName\":\"Onssite Fee 2\",\"items\":{\"04-2026\":100000,\"05-2026\":100000,\"03-2026\":100000}}",
+                    "entity": "Equipment - Onssite Fee 2"
+                },
+                {
+                    "id": 125815,
+                    "actionTime": "20/Mar/26 14:55 PM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"04-2026\":null,\"05-2026\":null,\"03-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":0,\"revenueName\":\"Onssite Fee 1\",\"items\":{\"04-2026\":100000,\"05-2026\":100000,\"03-2026\":100000}}",
+                    "entity": "Onsite Fee - Onssite Fee 1"
+                },
+                {
+                    "id": 125816,
+                    "actionTime": "20/Mar/26 14:55 PM",
+                    "author": "ttlam1",
+                    "historyType": "REVENUE_PLAN",
+                    "oldValueString": "{\"revenueTypeId\":null,\"revenueName\":null,\"items\":{\"04-2026\":null,\"05-2026\":null,\"03-2026\":null}}",
+                    "newValueString": "{\"revenueTypeId\":2,\"revenueName\":\"Onssite Fee 3\",\"items\":{\"04-2026\":100000,\"05-2026\":100000,\"03-2026\":100000}}",
+                    "entity": "Other - Onssite Fee 3"
+                }
+            ],
+            "total": 7,
+            "pageNum": 1,
+            "pageSize": 10
+        },
+        "page": 1,
+        "size": 10
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}
+
+
+// Delivery 
+
+{
+    "httpStatus": 200,
+    "data": {
+        "total": 51,
+        "body": {
+            "userActionHistoryDtoList": [
+                {
+                    "id": 124870,
+                    "actionTime": "20/Mar/26 10:24 AM",
                     "author": "ttlam1",
                     "historyType": "DELIVERY_PLAN",
                     "oldValueString": null,
-                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":5000000.0,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000110,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"02-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":5000000.0,\"resourceType\":\"User\"}",
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":2.0E7,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000179,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"03-2026\":1.0},\"originalGrossSalary\":2.0E7,\"resourceType\":\"User\"}",
                     "entity": "Resource Info - ttlam1"
+                },
+                {
+                    "id": 125098,
+                    "actionTime": "20/Mar/26 14:09 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":1.0E7,\"role\":\"Member\",\"location\":\"Vietnam\",\"id\":1000186,\"position\":\"SE02\",\"userName\":\"ttlam1\",\"items\":{\"04-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":1.0E7,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ttlam1"
+                },
+                {
+                    "id": 125099,
+                    "actionTime": "20/Mar/26 14:09 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":0.0,\"role\":\"Member\",\"location\":\"Japan\",\"id\":1000187,\"position\":\"SE02\",\"userName\":\"nvthai3\",\"items\":{\"04-2026\":1.0,\"03-2026\":1.0},\"originalGrossSalary\":1.0E7,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - nvthai3"
+                },
+                {
+                    "id": 125100,
+                    "actionTime": "20/Mar/26 14:09 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":0.0,\"role\":\"Member\",\"location\":\"Japan\",\"id\":1000188,\"position\":\"SE02\",\"userName\":\"ttlam\",\"items\":{\"03-2026\":1.0},\"originalGrossSalary\":1.0E7,\"resourceType\":\"User\"}",
+                    "entity": "Resource Info - ttlam"
+                },
+                {
+                    "id": 125133,
+                    "actionTime": "20/Mar/26 14:10 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": "{\"employeeType\":\"In-house\",\"grossSalaryVnd\":0.0,\"role\":\"Member\",\"location\":\"Japan\",\"id\":1000188,\"position\":\"SE02\",\"userName\":\"ttlam\",\"items\":{\"03-2026\":1.0},\"originalGrossSalary\":1.0E7,\"resourceType\":\"User\"}",
+                    "newValueString": null,
+                    "entity": "Resource Information - ttlam"
+                },
+                {
+                    "id": 125187,
+                    "actionTime": "20/Mar/26 14:13 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"costName\":\"VAT1\",\"id\":4603,\"items\":{\"04-2026\":50000.0}}",
+                    "entity": "NON_DEDUCTIBLE_INPUT_VAT - VAT1"
+                },
+                {
+                    "id": 125188,
+                    "actionTime": "20/Mar/26 14:13 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"costName\":\"Other1\",\"id\":4604,\"items\":{\"04-2026\":50000.0,\"03-2026\":50000.0}}",
+                    "entity": "OTHER - Other1"
+                },
+                {
+                    "id": 125189,
+                    "actionTime": "20/Mar/26 14:13 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"costName\":\"Other12\",\"id\":4605,\"items\":{\"04-2026\":50000.0,\"03-2026\":50000.0}}",
+                    "entity": "OTHER - Other12"
+                },
+                {
+                    "id": 125190,
+                    "actionTime": "20/Mar/26 14:13 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"costName\":\"OT1\",\"id\":4606,\"items\":{\"04-2026\":50000.0}}",
+                    "entity": "OVERTIME - OT1"
+                },
+                {
+                    "id": 125191,
+                    "actionTime": "20/Mar/26 14:13 PM",
+                    "author": "ttlam1",
+                    "historyType": "DELIVERY_PLAN",
+                    "oldValueString": null,
+                    "newValueString": "{\"costName\":\"OT2\",\"id\":4607,\"items\":{\"03-2026\":50000.0}}",
+                    "entity": "OVERTIME - OT2"
                 }
             ],
-            "total": 2,
+            "total": 51,
             "pageNum": 1,
             "pageSize": 10
         },

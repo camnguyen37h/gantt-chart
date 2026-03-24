@@ -1,9 +1,10 @@
 import Decimal from 'decimal.js'
+import { getDisplayKey } from '../../utils'
 
 const findCell = (dataArray, columnKey) => {
   if (!dataArray) return null
   for (var i = 0; i < dataArray.length; i++) {
-    if (dataArray[i].columnKey === columnKey) return dataArray[i]
+    if (getDisplayKey(dataArray[i]) === columnKey) return dataArray[i]
   }
   return null
 }
@@ -87,7 +88,7 @@ const getMergedColumns = (
         label: col.label,
         index: col.index,
         columnKey: col.columnKey,
-        currentColumnKey: col.columnKey,
+        currentColumnKey: getDisplayKey(col),
         compareColumnKey: null,
         isCurrentOnly: false,
         isCompareOnly: false,
@@ -120,8 +121,8 @@ const getMergedColumns = (
       label: col.label,
       index: col.index,
       columnKey: col.columnKey,
-      currentColumnKey: col.columnKey,
-      compareColumnKey: matchedCmp ? matchedCmp.columnKey : null,
+      currentColumnKey: getDisplayKey(col),
+      compareColumnKey: matchedCmp ? getDisplayKey(matchedCmp) : null,
       isCurrentOnly: !matchedCmp,
       isCompareOnly: false,
     })

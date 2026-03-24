@@ -17,12 +17,14 @@ import {
   mockDeliveryPlanMembers,
   mockOtherExpensesTable,
   mockDepartmentsByVersion,
+  mockDepartmentsByVersionDelivery,
   mockPositions,
   mockCurrencies,
   mockIndustries,
   mockMaxKPISetting,
   mockApprovalSteps,
   mockUserActionHistory,
+  mockUserActionHistoryDelivery,
   mockDocuments,
   mockStatusList,
   mockResourceTypes,
@@ -607,7 +609,7 @@ export const getHistoryRevenuePlan = async (params) => {
  */
 export const getListDUByVersionDelivery = async (params) => {
   await delay();
-  return mockDepartmentsByVersion;
+  return mockDepartmentsByVersionDelivery;
 };
 
 /**
@@ -626,12 +628,21 @@ export const getSummaryDeliveryPlan = async (params) => {
 export const getLocationExchangeRate = async () => {
   await delay();
   return successResponse({
-    locations: mockLocations.data,
-    exchangeRates: {
-      "Vietnam": 1,
-      "Japan": 0.0065,
-      "Singapore": 0.000034
-    }
+    locationExchangeRateData: [
+      { location: 'Vietnam', exchangeRate: 1 },
+      { location: 'Japan', exchangeRate: 2 },
+      { location: 'Singapore', exchangeRate: 3 },
+      { location: 'Korea', exchangeRate: 4 },
+      { location: 'US', exchangeRate: 5 },
+    ],
+    locationSalaryExpenseIndexData: [
+      { location: 'Korea', salaryIndex: 1.340000033378601, expenseIndex: 7000000 },
+      { location: 'Vietnam', salaryIndex: 1.25, expenseIndex: 3500000 },
+      { location: 'Japan', salaryIndex: 1.2899999618530273, expenseIndex: 5671776 },
+      { location: 'Singapore', salaryIndex: 1.340000033378601, expenseIndex: 7000000 },
+      { location: 'US', salaryIndex: 1.340000033378601, expenseIndex: 20000000 },
+    ],
+    permissionView: true,
   });
 };
 
@@ -736,7 +747,7 @@ export const saveDeliveryPlan = async (data) => {
  */
 export const getHistoryDeliveryPlan = async (params) => {
   await delay();
-  return mockUserActionHistory;
+  return mockUserActionHistoryDelivery;
 };
 
 // ==================== EXPORT ALL FUNCTIONS ====================

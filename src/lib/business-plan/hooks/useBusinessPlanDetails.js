@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ResponseStatusCode } from '../../service/constant'
 import * as redux from '../redux'
 import { getRowConfig } from '../constants'
+import { getDisplayKey } from '../utils'
 import moment from 'moment'
 import { DateFormat } from '../../constants/DateFormat'
 
@@ -206,7 +207,7 @@ const useBusinessPlanDetails = () => {
             getRowConfig()[rowKey] &&
             getRowConfig()[rowKey].required
           ) {
-            res[`${rowKey}-${item.columnKey}`] = true
+            res[`${rowKey}-${getDisplayKey(item)}`] = true
           }
           return { ...itemRes, ...res }
         }, {})

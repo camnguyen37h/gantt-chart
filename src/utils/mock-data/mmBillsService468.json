@@ -1,0 +1,272 @@
+{
+    "httpStatus": 200,
+    "data": {
+        "crmMasterDataMappings": [
+            {
+                "id": 236,
+                "name": "1.Traditional Services",
+                "isCategory": true,
+                "parentId": 8,
+                "status": 1,
+                "data": [
+                    {
+                        "id": 237,
+                        "name": "1.1 Application Development (Web/App/Mobile)",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 241,
+                        "name": "1.3 Testing",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 242,
+                        "name": "1.4 Business Process Outsourcing",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 243,
+                        "name": "1.5 UI/UX Analysis & Design",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 244,
+                        "name": "1.6 Application Managed Service",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 245,
+                        "name": "1.7 Bespoke IT Team",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 246,
+                        "name": "1.8 Others",
+                        "isCategory": false,
+                        "parentId": 236,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    }
+                ],
+                "masterdata": "",
+                "masterdataName": "Service"
+            },
+            {
+                "id": 238,
+                "name": "2.Digital Transformation Services",
+                "isCategory": true,
+                "parentId": 8,
+                "status": 1,
+                "data": [
+                    {
+                        "id": 247,
+                        "name": "2.1 Cloud Professional Services",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 248,
+                        "name": "2.2 AI Implementation",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 249,
+                        "name": "2.3 BPA-RPA Implementation",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 250,
+                        "name": "2.4 Others",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 362,
+                        "name": "2.7 Blockchain",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 363,
+                        "name": "2.5 BPA-Low code",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 364,
+                        "name": "2.6 BPA-Low-test platforms",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 366,
+                        "name": "2.8 IOT",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 367,
+                        "name": "2.9 AR/VR",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 368,
+                        "name": "2.10 DnA",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 369,
+                        "name": "2.11 Modernization Service",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 370,
+                        "name": "2.3 RPA Implementation",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 836,
+                        "name": "tetst",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 851,
+                        "name": "2.14 Civams",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    },
+                    {
+                        "id": 852,
+                        "name": "2.15 IoV - Internet of Vehicles",
+                        "isCategory": false,
+                        "parentId": 238,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    }
+                ],
+                "masterdata": "",
+                "masterdataName": "Service"
+            },
+            {
+                "id": 240,
+                "name": "3.Others",
+                "isCategory": true,
+                "parentId": 8,
+                "status": 1,
+                "data": [
+                    {
+                        "id": 251,
+                        "name": "3.1 Others",
+                        "isCategory": false,
+                        "parentId": 240,
+                        "status": 1,
+                        "data": null,
+                        "masterdata": "",
+                        "masterdataName": "Sub-service"
+                    }
+                ],
+                "masterdata": "",
+                "masterdataName": "Service"
+            }
+        ]
+    },
+    "messageId": "Success",
+    "errorMessage": ""
+}

@@ -17,6 +17,7 @@ import {
   mockMMBillsService,
   mockDeliveryPlanSummary,
   mockDepartmentsByVersion,
+  mockDepartmentsByVersionDelivery,
   mockPositions,
   mockCurrencies,
   mockIndustries,
@@ -29,6 +30,7 @@ import {
   mockOtherExpensesTable468,
   mockListDeliveryPlanMember468,
   mockUserActionHistory468,
+  mockUserActionHistoryDelivery468,
 } from '../../utils/mockBusinessPlanData';
 
 // Simulate network delay
@@ -535,16 +537,7 @@ export const getUserActionHistory = async (businessPlanVersionId, deliveryUnit, 
 export const getListDUByVersionRevenue = async (params) => {
   await delay(300);
   
-  const { businessPlanVersionId, type } = params || {};
-  // Filter for revenue departments (groupSale = true)
-  const revenueDepartments = mockDepartmentsByVersion.data.filter(dept => dept.groupSale);
-  
-  return {
-    httpStatus: 200,
-    data: revenueDepartments,
-    messageId: "Success",
-    errorMessage: ""
-  };
+  return mockDepartmentsByVersion;
 };
 
 /**
@@ -555,16 +548,7 @@ export const getListDUByVersionRevenue = async (params) => {
 export const getListDUByVersionDelivery = async (params) => {
   await delay(300);
   
-  const { businessPlanVersionId, type } = params || {};
-  // Filter for delivery departments (groupSale = false)
-  const deliveryDepartments = mockDepartmentsByVersion.data.filter(dept => !dept.groupSale);
-  
-  return {
-    httpStatus: 200,
-    data: deliveryDepartments,
-    messageId: "Success",
-    errorMessage: ""
-  };
+  return mockDepartmentsByVersionDelivery;
 };
 
 // ========== Delivery Plan APIs ==========
@@ -580,14 +564,15 @@ export const getSummaryDeliveryPlan = async (params) => {
   return {
     httpStatus: 200,
     data: {
-      mmEffort: 6,
-      directLaborCost: 87600000,
+      mmEffort: 8,
+      directLaborCost: 134523552,
       outsourcingCost: null,
-      equipmentExpense: null,
-      onsiteExpense: null,
-      overtime: null,
-      other: null,
-      nonDeductibleInputVAT: null,
+      equipmentExpense: 400000,
+      onsiteExpense: 400000,
+      overtime: 400000,
+      other: 400000,
+      permissionView: true,
+      nonDeductibleInputVAT: 400000,
     },
     messageId: "Success",
     errorMessage: "",
@@ -979,7 +964,7 @@ const deliveryHistoryStore = new Map([
       size: 10,
     },
   ],
-  [468, JSON.parse(JSON.stringify(mockUserActionHistory468.data))],
+  [468, JSON.parse(JSON.stringify(mockUserActionHistoryDelivery468.data))],
 ]);
 
 /**

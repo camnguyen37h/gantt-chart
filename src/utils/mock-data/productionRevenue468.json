@@ -1,29 +1,140 @@
 {
     "httpStatus": 200,
     "data": {
-        "startDate": 1770915600000,
-        "endDate": 1784134800000,
-        "revenueInfos": [
+        "startDate": 1773939600000,
+        "endDate": 1804525200000,
+        "revenues": [
             {
-                "saleWorkOrderId": "271626",
-                "groupId": null,
-                "pipelineKey": "WO-7821",
-                "position": "",
-                "unitPrice": 5000000,
-                "rateCard": null,
-                "department": "BU3",
-                "exchangeRate": 1,
-                "pipeLineRatio": 100,
-                "totalManMonth": 1,
-                "totalRevenue": 5000000,
-                "revenue": {
-                    "03-2026": {
-                        "manMonth": 1,
-                        "revenue": 5000000
+                "type": "Onsite Fee",
+                "revenueTypeId": 0,
+                "total": 203000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 0,
+                        "revenueTypeSpecificId": 1782,
+                        "revenueName": "Onssite Fee 1",
+                        "total": 203000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 0,
+                                "revenueTypeSpecificId": 1782,
+                                "revenueName": "Onssite Fee 1",
+                                "month": 3,
+                                "year": 2026,
+                                "date": "03-2026",
+                                "value": 100000
+                            },
+                            {
+                                "revenueTypeId": 0,
+                                "revenueTypeSpecificId": 1782,
+                                "revenueName": "Onssite Fee 1",
+                                "month": 4,
+                                "year": 2026,
+                                "date": "04-2026",
+                                "value": 100000
+                            },
+                            {
+                                "revenueTypeId": 0,
+                                "revenueTypeSpecificId": 1782,
+                                "revenueName": "Onssite Fee 1",
+                                "month": 5,
+                                "year": 2026,
+                                "date": "05-2026",
+                                "value": 3000
+                            }
+                        ]
                     }
-                }
+                ]
+            },
+            {
+                "type": "Equipment",
+                "revenueTypeId": 1,
+                "total": 204000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 1,
+                        "revenueTypeSpecificId": 1783,
+                        "revenueName": "Onssite Fee 2",
+                        "total": 204000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 1,
+                                "revenueTypeSpecificId": 1783,
+                                "revenueName": "Onssite Fee 2",
+                                "month": 3,
+                                "year": 2026,
+                                "date": "03-2026",
+                                "value": 100000
+                            },
+                            {
+                                "revenueTypeId": 1,
+                                "revenueTypeSpecificId": 1783,
+                                "revenueName": "Onssite Fee 2",
+                                "month": 4,
+                                "year": 2026,
+                                "date": "04-2026",
+                                "value": 100000
+                            },
+                            {
+                                "revenueTypeId": 1,
+                                "revenueTypeSpecificId": 1783,
+                                "revenueName": "Onssite Fee 2",
+                                "month": 5,
+                                "year": 2026,
+                                "date": "05-2026",
+                                "value": 4000
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "Other",
+                "revenueTypeId": 2,
+                "total": 205000,
+                "additionalItems": [
+                    {
+                        "key": null,
+                        "revenueTypeId": 2,
+                        "revenueTypeSpecificId": 1784,
+                        "revenueName": "Onssite Fee 3",
+                        "total": 205000,
+                        "revenueDetails": [
+                            {
+                                "revenueTypeId": 2,
+                                "revenueTypeSpecificId": 1784,
+                                "revenueName": "Onssite Fee 3",
+                                "month": 3,
+                                "year": 2026,
+                                "date": "03-2026",
+                                "value": 100000
+                            },
+                            {
+                                "revenueTypeId": 2,
+                                "revenueTypeSpecificId": 1784,
+                                "revenueName": "Onssite Fee 3",
+                                "month": 4,
+                                "year": 2026,
+                                "date": "04-2026",
+                                "value": 100000
+                            },
+                            {
+                                "revenueTypeId": 2,
+                                "revenueTypeSpecificId": 1784,
+                                "revenueName": "Onssite Fee 3",
+                                "month": 5,
+                                "year": 2026,
+                                "date": "05-2026",
+                                "value": 5000
+                            }
+                        ]
+                    }
+                ]
             }
-        ]
+        ],
+        "permissionView": true
     },
     "messageId": "Success",
     "errorMessage": ""

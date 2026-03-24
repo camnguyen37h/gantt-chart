@@ -1,14 +1,15 @@
 {
     "httpStatus": 200,
     "data": {
-        "mmEffort": 6,
-        "directLaborCost": 87600000,
+        "mmEffort": 8,
+        "directLaborCost": 134523552,
         "outsourcingCost": null,
-        "equipmentExpense": null,
-        "onsiteExpense": null,
-        "overtime": null,
-        "other": null,
-        "nonDeductibleInputVAT": null
+        "equipmentExpense": 400000,
+        "onsiteExpense": 400000,
+        "overtime": 400000,
+        "other": 400000,
+        "permissionView": true,
+        "nonDeductibleInputVAT": 400000
     },
     "messageId": "Success",
     "errorMessage": ""

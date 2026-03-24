@@ -54,7 +54,7 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { listAM, generalInfos } = useSelector(
+  const { generalInfos } = useSelector(
     state => state.businessGeneralInformation
   )
 
@@ -65,10 +65,10 @@ function BusinessPlanVersion({
   }
   const { userName } = userPOA
 
-  const isAMSubmit =
-    listAM &&
-    listAM.map(item => item.ldap) &&
-    listAM.map(item => item.ldap).includes(userName)
+  var buId = Number(match.params.buId)
+  var currentMVVInfo = generalInfos.find(function(info) { return info.id === buId })
+  var currentListAM = (currentMVVInfo && currentMVVInfo.listAM) || []
+  const isAMSubmit = currentListAM.some(function(item) { return item.ldap === userName })
 
   const isDraft =
     (generalInfos.length > 0 &&

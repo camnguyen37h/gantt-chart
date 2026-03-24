@@ -174,6 +174,8 @@ export const mergeStepsByPosition = steps => {
   )
 }
 
+export const getDisplayKey = item => (item && item.compareKey) || (item && item.columnKey)
+
 export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   const keyCounts = {}
   for (const col of columnLabels) {
@@ -224,7 +226,7 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
     if (newKey === col.columnKey && !colCategory) return col
     return {
       ...col,
-      ...(newKey !== col.columnKey && { columnKey: newKey }),
+      ...(newKey !== col.columnKey && { compareKey: newKey }),
       ...(colCategory && { colCategory }),
     }
   })
@@ -234,8 +236,8 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   const renamedKeysByOriginal = new Map()
   for (let i = 0; i < columnLabels.length; i++) {
     const orig = columnLabels[i].columnKey
-    const renamed = resultColumns[i].columnKey
-    if (orig !== renamed) {
+    const renamed = resultColumns[i].compareKey
+    if (renamed) {
       const arr = renamedKeysByOriginal.get(orig)
       if (arr) arr.push(renamed)
       else renamedKeysByOriginal.set(orig, [renamed])
@@ -253,7 +255,7 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
           if (!renamedKeys) return cell
           const occ = (cellOcc[cell.columnKey] =
             (cellOcc[cell.columnKey] || 0) + 1)
-          return { ...cell, columnKey: renamedKeys[occ - 1] }
+          return { ...cell, compareKey: renamedKeys[occ - 1] }
         }),
       }
     }),

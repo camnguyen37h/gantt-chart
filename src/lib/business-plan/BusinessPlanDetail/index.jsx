@@ -14,6 +14,7 @@ import styled from 'styled-components'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../hooks'
 import {
   getBusinessPlanHistory,
+  getCompareBusinessPlanDetail,
   getListDUByVersionDelivery,
   getListDUByVersionRevenue,
   postSubmitBaselineRevenuePlan,
@@ -195,45 +196,118 @@ function BusinessPlanDetail({ match, history }) {
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
 
-    const params = generalInfos
-      .filter(info => info.mvvLocationType && info.mvvLocationType !== 'Total')
-      .reduce((acc, info) => {
-        const key = info.mvvLocationType.toLowerCase()
-        const {
-          listAM = [],
-          listTeamLead = [],
-          listPreSale = [],
-          listPreparator = [],
-          listAdviser = [],
-          listPM = [],
-          currency,
-          exchangeRate,
-          totalContractPrice,
-          softwareDevelopmentFee,
-          otherFees,
-          industry,
-          businessPlanKpiDTO,
-        } = info
-        acc[key] = {
-          businessPlanVersionId: info.id,
-          generalInformation: {
-            listAM,
-            listTeamLead,
-            listPreSale,
-            listPreparator,
-            listAdviser,
-            listPM,
-            currency,
-            exchangeRate,
-            totalContractPrice,
-            softwareDevelopmentFee,
-            otherFees,
-            industry,
-            businessPlanKpiDTO,
-          },
+    const mvvInfos = generalInfos.filter(
+      info => info.mvvLocationType && info.mvvLocationType !== 'Total'
+    )
+
+    const fetchedSectionDataMap = {}
+    await Promise.all(
+      mvvInfos.map(async function(info) {
+        if (info.mvvLocationType === viewMode) {
+          fetchedSectionDataMap[info.mvvLocationType] = {
+            sectionList: originalBusinessPlanItems,
+            columnLabels: columnLabels,
+          }
+        } else {
+          const res = await dispatch(
+            getCompareBusinessPlanDetail({
+              id: match.params.buId,
+              params: { view: info.mvvLocationType },
+            })
+          )
+          const data = res && res.payload
+          fetchedSectionDataMap[info.mvvLocationType] = {
+            sectionList: (data && data.sectionList) || [],
+            columnLabels: (data && data.columnLabels) || [],
+          }
         }
-        return acc
-      }, {})
+      })
+    )
+
+    const params = mvvInfos.reduce((acc, info) => {
+      const key = info.mvvLocationType.toLowerCase()
+
+      const {
+        listAM = [],
+        listTeamLead = [],
+        listPreSale = [],
+        listPreparator = [],
+        listAdviser = [],
+        listPM = [],
+        currency,
+        exchangeRate,
+        totalContractPrice,
+        softwareDevelopmentFee,
+        otherFees,
+        industry,
+        businessPlanKpiDTO,
+      } = info
+
+      const isEditedInfo =
+        isSaveShowed.generalInformation &&
+        listGeneralInformation &&
+        listGeneralInformation.id === info.id
+
+      acc[key] = {
+        businessPlanVersionId: info.id,
+        generalInformation: isEditedInfo
+          ? {
+              ...generalInformationParams,
+              businessPlanVersionId: listGeneralInformation.id || undefined,
+              projectCode: listGeneralInformation.projectCode || undefined,
+            }
+          : {
+              listAM,
+              listTeamLead,
+              listPreSale,
+              listPreparator,
+              listAdviser,
+              listPM,
+              currency,
+              exchangeRate,
+              totalContractPrice,
+              softwareDevelopmentFee,
+              otherFees,
+              industry,
+              businessPlanKpiDTO,
+            },
+      }
+
+      const fetched = fetchedSectionDataMap[info.mvvLocationType] || {}
+      const sectionList = cloneDeep(fetched.sectionList || [])
+      sectionList.forEach(function(section) {
+        section.rowLabels = section.rowLabels.filter(function(row) {
+          if (row.label) return true
+          if (row.cellList.some(function(item) { return item.editable && item.value !== null })) {
+            return true
+          }
+          return false
+        })
+        section.rowLabels.forEach(function(row) {
+          row.cellList = row.cellList.map(function(cell) {
+            if (!cell.compareKey) return cell
+            var c = Object.assign({}, cell)
+            delete c.compareKey
+            return c
+          })
+        })
+      })
+      const rawColumnLabels = fetched.columnLabels || []
+      const cleanColumnLabels = rawColumnLabels.map(function(col) {
+        if (!col.compareKey) return col
+        var c = Object.assign({}, col)
+        delete c.compareKey
+        return c
+      })
+      acc[key].businessPlanSectionDTO = {
+        columnLabels: cleanColumnLabels,
+        sectionList: sectionList,
+        businessPlanVersionId: info.id,
+        projectCode: info.projectCode,
+      }
+
+      return acc
+    }, {})
 
     const isSubmit = await submit(params)
 
@@ -366,9 +440,23 @@ function BusinessPlanDetail({ match, history }) {
           }
           return false
         })
+        section.rowLabels.forEach(function(row) {
+          row.cellList = row.cellList.map(function(cell) {
+            if (!cell.compareKey) return cell
+            var c = Object.assign({}, cell)
+            delete c.compareKey
+            return c
+          })
+        })
+      })
+      const cleanColumnLabels = columnLabels.map(function(col) {
+        if (!col.compareKey) return col
+        var c = Object.assign({}, col)
+        delete c.compareKey
+        return c
       })
       params.businessPlanSectionDTO = {
-        columnLabels,
+        columnLabels: cleanColumnLabels,
         sectionList,
         businessPlanVersionId: businessPlanVersionId,
         projectCode: projectCode,

@@ -19,6 +19,7 @@ import {
   formatNumber,
   formatNumberCompare,
   renderColorCompareNorm,
+  getDisplayKey,
 } from '../../utils'
 import { statusBusinessPlanDetail } from '../constant'
 import Decimal from 'decimal.js'
@@ -87,8 +88,8 @@ const BusinessPlanInput = ({ item, suffix }) => {
     if (validation[item.rowKey + '-label']) {
       setValidation({ [item.rowKey + '-label']: false })
     }
-    if (validation[item.rowKey + '-' + item.columnKey]) {
-      setValidation({ [item.rowKey + '-' + item.columnKey]: false })
+    if (validation[item.rowKey + '-' + getDisplayKey(item)]) {
+      setValidation({ [item.rowKey + '-' + getDisplayKey(item)]: false })
     }
   }
 
@@ -100,7 +101,7 @@ const BusinessPlanInput = ({ item, suffix }) => {
     <InputNumber
       step={1}
       className={
-        validation[item.rowKey + '-' + item.columnKey] ? 'input-error' : ''
+        validation[item.rowKey + '-' + getDisplayKey(item)] ? 'input-error' : ''
       }
       value={item.value < 0 ? -item.value : item.value}
       size="small"
@@ -327,11 +328,11 @@ const MetricHeaderRow = ({
           return <th key={colKey} style={{ backgroundColor: '#fff' }} />
         }
 
-        var colValue = getCellValue(dataArray, col.columnKey)
-        var colFloor = getCellFloor(dataArray, col.columnKey)
-        var colCeiling = getCellCeiling(dataArray, col.columnKey)
-        var colNormConfig = getCellNormConfig(dataArray, col.columnKey)
-        var colPercentage = getCellPercentage(dataArray, col.columnKey)
+        var colValue = getCellValue(dataArray, col.currentColumnKey)
+        var colFloor = getCellFloor(dataArray, col.currentColumnKey)
+        var colCeiling = getCellCeiling(dataArray, col.currentColumnKey)
+        var colNormConfig = getCellNormConfig(dataArray, col.currentColumnKey)
+        var colPercentage = getCellPercentage(dataArray, col.currentColumnKey)
         var colNorm = useFloorCeiling ? colNormConfig : colPercentage
 
         var colColor = !colNorm
@@ -341,7 +342,7 @@ const MetricHeaderRow = ({
             )
 
         var colTooltip =
-          col.columnKey === 'INTERNAL'
+          col.currentColumnKey === 'INTERNAL'
             ? null
             : '(' +
               col.label +
@@ -357,7 +358,7 @@ const MetricHeaderRow = ({
               className="text-center text-wrap"
               style={{ color: colColor, fontWeight: 500 }}>
               <Tooltip title={colTooltip}>
-                {perms.renderColumn(col.columnKey, colValue, isPercent)}
+                {perms.renderColumn(col.currentColumnKey, colValue, isPercent)}
               </Tooltip>
             </span>
           </th>
@@ -435,7 +436,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     () =>
       columns.reduce(
         (map, col) =>
-          col.colCategory ? { ...map, [col.columnKey]: col.colCategory } : map,
+          col.colCategory ? { ...map, [getDisplayKey(col)]: col.colCategory } : map,
         {}
       ),
     [columns]
@@ -830,7 +831,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               if (!mergedCol.isCompareOnly && sectionTotalRowData) {
                 for (let i = 0; i < sectionTotalRowData.data.length; i++) {
                   if (
-                    sectionTotalRowData.data[i].columnKey ===
+                    getDisplayKey(sectionTotalRowData.data[i]) ===
                     mergedCol.currentColumnKey
                   ) {
                     currentCell = sectionTotalRowData.data[i]
@@ -843,7 +844,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               if (!mergedCol.isCurrentOnly && compareSectionTotalRow) {
                 for (let j = 0; j < compareSectionTotalRow.data.length; j++) {
                   if (
-                    compareSectionTotalRow.data[j].columnKey ===
+                    getDisplayKey(compareSectionTotalRow.data[j]) ===
                     mergedCol.compareColumnKey
                   ) {
                     compareCellValue = compareSectionTotalRow.data[j].value
@@ -858,7 +859,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
               } else if (currentCell) {
                 const f = getFormula({
                   item: currentCell,
-                  columnKey: currentCell.columnKey,
+                  columnKey: getDisplayKey(currentCell),
                   sectionKey: sectionKey,
                   rowKey: currentCell.rowKey,
                 })
@@ -1052,7 +1053,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                   if (!mergedCol.isCompareOnly) {
                     for (let ri = 0; ri < rowData.data.length; ri++) {
                       if (
-                        rowData.data[ri].columnKey ===
+                        getDisplayKey(rowData.data[ri]) ===
                         mergedCol.currentColumnKey
                       ) {
                         currentItem = rowData.data[ri]
@@ -1065,7 +1066,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                   if (!mergedCol.isCurrentOnly && compareRowData) {
                     for (let ci = 0; ci < compareRowData.length; ci++) {
                       if (
-                        compareRowData[ci].columnKey ===
+                        getDisplayKey(compareRowData[ci]) ===
                         mergedCol.compareColumnKey
                       ) {
                         compareItem = compareRowData[ci]
@@ -1078,7 +1079,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                   const cellFormula = currentItem
                     ? getFormula({
                         item: currentItem,
-                        columnKey: currentItem.columnKey,
+                        columnKey: getDisplayKey(currentItem),
                         sectionKey,
                         rowKey,
                         isService,

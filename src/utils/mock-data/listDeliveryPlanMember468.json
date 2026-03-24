@@ -1,79 +1,153 @@
 {
     "httpStatus": 200,
     "data": {
-        "total": 1,
+        "total": 4,
         "body": {
             "listLabelMonth": [
-                "Feb-26",
                 "Mar-26",
                 "Apr-26",
                 "May-26",
                 "Jun-26",
-                "Jul-26"
+                "Jul-26",
+                "Aug-26",
+                "Sep-26",
+                "Oct-26",
+                "Nov-26",
+                "Dec-26",
+                "Jan-27",
+                "Feb-27",
+                "Mar-27"
             ],
             "listBudgetMMForEachMonth": {
-                "Feb-26": 1,
-                "Mar-26": 1,
-                "Jun-26": 1,
-                "Apr-26": 1,
-                "Jul-26": 1,
-                "May-26": 1
+                "Mar-26": 4,
+                "Apr-26": 4
             },
             "deliveryPlanByHeadCountList": [
                 {
-                    "deliveryMemberId": 1000110,
+                    "deliveryMemberId": 1000189,
+                    "userId": 6590,
+                    "resourceType": "User",
+                    "resourceFullName": "Cam. Nguyen Phu - CMC Global DJ2",
+                    "location": "Vietnam",
+                    "ldap": "npcam",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 1000000,
+                    "grossSalary": 1000000,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 2,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Mar-26": {
+                            "id": 1000442,
+                            "deliveryMemberId": 1000189,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "Apr-26": {
+                            "id": 1000443,
+                            "deliveryMemberId": 1000189,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000187,
+                    "userId": 7873,
+                    "resourceType": "User",
+                    "resourceFullName": "Thai. Nguyen Van - CMC Global DJ2",
+                    "location": "Japan",
+                    "ldap": "nvthai3",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 10000000,
+                    "grossSalary": 0,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 2,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Mar-26": {
+                            "id": 1000439,
+                            "deliveryMemberId": 1000187,
+                            "month": 3,
+                            "year": 2026,
+                            "value": 1
+                        },
+                        "Apr-26": {
+                            "id": 1000440,
+                            "deliveryMemberId": 1000187,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000186,
                     "userId": 3860,
                     "resourceType": "User",
                     "resourceFullName": "Lam. Tran Tung  - CMCGlobal DJ2",
                     "location": "Vietnam",
                     "ldap": "ttlam1",
                     "employeeType": "In-house",
-                    "originalGrossSalary": 5000000,
-                    "grossSalary": 5000000,
+                    "originalGrossSalary": 10000000,
+                    "grossSalary": 10000000,
                     "position": "SE02",
                     "role": "Member",
-                    "rowTotal": 6,
+                    "rowTotal": 2,
                     "budgetMMValue": null,
                     "budgetMMValueDTO": {
-                        "Feb-26": {
-                            "id": 1000283,
-                            "deliveryMemberId": 1000110,
-                            "month": 2,
-                            "year": 2026,
-                            "value": 1
-                        },
                         "Mar-26": {
-                            "id": 1000284,
-                            "deliveryMemberId": 1000110,
+                            "id": 1000437,
+                            "deliveryMemberId": 1000186,
                             "month": 3,
                             "year": 2026,
                             "value": 1
                         },
-                        "Jun-26": {
-                            "id": 1000287,
-                            "deliveryMemberId": 1000110,
-                            "month": 6,
+                        "Apr-26": {
+                            "id": 1000438,
+                            "deliveryMemberId": 1000186,
+                            "month": 4,
+                            "year": 2026,
+                            "value": 1
+                        }
+                    },
+                    "groupId": 2,
+                    "groupName": "DJ2"
+                },
+                {
+                    "deliveryMemberId": 1000179,
+                    "userId": 3860,
+                    "resourceType": "User",
+                    "resourceFullName": "Lam. Tran Tung  - CMCGlobal DJ2",
+                    "location": "Singapore",
+                    "ldap": "ttlam1",
+                    "employeeType": "In-house",
+                    "originalGrossSalary": 2000000,
+                    "grossSalary": 0,
+                    "position": "SE02",
+                    "role": "Member",
+                    "rowTotal": 2,
+                    "budgetMMValue": null,
+                    "budgetMMValueDTO": {
+                        "Mar-26": {
+                            "id": 1000436,
+                            "deliveryMemberId": 1000179,
+                            "month": 3,
                             "year": 2026,
                             "value": 1
                         },
                         "Apr-26": {
-                            "id": 1000285,
-                            "deliveryMemberId": 1000110,
+                            "id": 1000444,
+                            "deliveryMemberId": 1000179,
                             "month": 4,
-                            "year": 2026,
-                            "value": 1
-                        },
-                        "Jul-26": {
-                            "id": 1000288,
-                            "deliveryMemberId": 1000110,
-                            "month": 7,
-                            "year": 2026,
-                            "value": 1
-                        },
-                        "May-26": {
-                            "id": 1000286,
-                            "deliveryMemberId": 1000110,
-                            "month": 5,
                             "year": 2026,
                             "value": 1
                         }
@@ -82,7 +156,8 @@
                     "groupName": "DJ2"
                 }
             ],
-            "totalRecord": 1
+            "totalRecord": 4,
+            "permissionView": true
         },
         "page": 1,
         "size": 20
