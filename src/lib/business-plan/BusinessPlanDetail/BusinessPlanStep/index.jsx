@@ -92,6 +92,9 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   const handleApprove = async params => {
     const { departmentName, stepName, taskKey, referenceIds } = params || {}
 
+    const currentStep = listStep.find(s => s.stepName === stepName)
+    const mergeApproved = !!(currentStep && currentStep.stateOrder >= 1000)
+
     await approveRejectWO({
       ldap: userName,
       department: departmentName,
@@ -99,6 +102,7 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
       referenceIds,
       action: 'APPROVED',
       taskKey,
+      mergeApproved,
     })
     await getBusinessPlanWorkflow({
       referenceId: businessPlanId,
