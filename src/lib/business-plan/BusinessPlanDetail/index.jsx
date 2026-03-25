@@ -19,6 +19,7 @@ import {
   postSubmitBaselineRevenuePlan,
   saveDeliveryPlan,
   setActiveBusinessPlanPanel,
+  setActiveViewMode,
   setContractPriceData,
   setIsSaveShowedDeliveryPlan,
   setValidation,
@@ -98,6 +99,7 @@ function BusinessPlanDetail({ match, history }) {
     submit,
     getBusinessPlanDetail,
     getBusinessPlanDetailByViewMode,
+    fetchAllViewModesData,
     originalBusinessPlanItems,
     columns: columnLabels,
     startDate,
@@ -195,94 +197,69 @@ function BusinessPlanDetail({ match, history }) {
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
 
-    const mvvInfos = generalInfos.filter(
-      info => info.mvvLocationType && info.mvvLocationType !== 'Total'
-    )
+    const params = {}
 
-    const params = mvvInfos.reduce((acc, info) => {
-      const key = info.mvvLocationType.toLowerCase()
-
-      const {
-        listAM = [],
-        listTeamLead = [],
-        listPreSale = [],
-        listPreparator = [],
-        listAdviser = [],
-        listPM = [],
-        currency,
-        exchangeRate,
-        totalContractPrice,
-        softwareDevelopmentFee,
-        otherFees,
-        industry,
-        businessPlanKpiDTO,
-      } = info
-
-      const isEditedInfo =
-        isSaveShowed.generalInformation &&
-        listGeneralInformation &&
-        listGeneralInformation.id === info.id
-
-      acc[key] = {
-        businessPlanVersionId: info.id,
-        generalInformation: isEditedInfo
-          ? {
-              ...generalInformationParams,
-              businessPlanVersionId: listGeneralInformation.id || undefined,
-              projectCode: listGeneralInformation.projectCode || undefined,
-            }
-          : {
-              listAM,
-              listTeamLead,
-              listPreSale,
-              listPreparator,
-              listAdviser,
-              listPM,
-              currency,
-              exchangeRate,
-              totalContractPrice,
-              softwareDevelopmentFee,
-              otherFees,
-              industry,
-              businessPlanKpiDTO,
-            },
+    if (isSaveShowed.generalInformation && listGeneralInformation) {
+      params.generalInformation = {
+        ...generalInformationParams,
+        businessPlanVersionId: listGeneralInformation.id || undefined,
+        projectCode: listGeneralInformation.projectCode || undefined,
       }
+    }
 
-      if (info.mvvLocationType === viewMode) {
-        const sectionList = cloneDeep(originalBusinessPlanItems)
-        sectionList.forEach(function(section) {
-          section.rowLabels = section.rowLabels.filter(function(row) {
-            if (row.label) return true
-            if (row.cellList.some(function(item) { return item.editable && item.value !== null })) {
-              return true
-            }
-            return false
-          })
-          section.rowLabels.forEach(function(row) {
-            row.cellList = row.cellList.map(function(cell) {
-              if (!cell.compareKey) return cell
-              const c = Object.assign({}, cell)
-              delete c.compareKey
-              return c
-            })
+    if (
+      businessPlanVersionId &&
+      (viewMode === 'Onsite' || viewMode === 'Offshore')
+    ) {
+      const sectionList = cloneDeep(originalBusinessPlanItems)
+      sectionList.forEach(section => {
+        section.rowLabels = section.rowLabels.filter(row => {
+          if (row.label) return true
+          if (row.cellList.some(item => item.editable && item.value !== null)) {
+            return true
+          }
+          return false
+        })
+        section.rowLabels.forEach(function(row) {
+          row.cellList = row.cellList.map(function(cell) {
+            if (!cell.compareKey) return cell
+            const c = Object.assign({}, cell)
+            delete c.compareKey
+            return c
           })
         })
-        const cleanColumnLabels = columnLabels.map(function(col) {
-          if (!col.compareKey) return col
-          const c = Object.assign({}, col)
-          delete c.compareKey
-          return c
-        })
-        acc[key].businessPlanSectionDTO = {
-          columnLabels: cleanColumnLabels,
-          sectionList,
-          businessPlanVersionId: info.id,
-          projectCode: info.projectCode,
-        }
+      })
+      const cleanColumnLabels = columnLabels.map(function(col) {
+        if (!col.compareKey) return col
+        const c = Object.assign({}, col)
+        delete c.compareKey
+        return c
+      })
+      params.businessPlanSectionDTO = {
+        columnLabels: cleanColumnLabels,
+        sectionList,
+        businessPlanVersionId: businessPlanVersionId,
+        projectCode: projectCode,
       }
+    }
 
-      return acc
-    }, {})
+    const onsiteInfo = generalInfos.find(item => item.mvvLocationType === 'Onsite')
+    const offshoreInfo = generalInfos.find(item => item.mvvLocationType === 'Offshore')
+
+    if (onsiteInfo) {
+      params.onsite = {
+        businessPlanVersionId: onsiteInfo.id,
+        projectCode: onsiteInfo.projectCode,
+        status: onsiteInfo.status ? onsiteInfo.status.replace(' ', '_').toUpperCase() : onsiteInfo.status,
+      }
+    }
+    if (offshoreInfo) {
+      params.offshore = {
+        businessPlanVersionId: offshoreInfo.id,
+        projectCode: offshoreInfo.projectCode,
+        status: offshoreInfo.status ? offshoreInfo.status.replace(' ', '_').toUpperCase() : offshoreInfo.status,
+      }
+    }
 
     const isSubmit = await submit(params)
 
@@ -468,6 +445,7 @@ function BusinessPlanDetail({ match, history }) {
         })
       }
     }
+    await fetchAllViewModesData(match.params.buId)
     await dispatch(getBusinessPlanHistory(match.params.buId))
     setLoadingSave(false)
   }
@@ -480,6 +458,7 @@ function BusinessPlanDetail({ match, history }) {
     setVisible(false)
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     await getBusinessPlanDetail(match.params.buId)
+    await fetchAllViewModesData(match.params.buId)
   }
 
   const handleDenyCancel = () => {
@@ -506,19 +485,22 @@ function BusinessPlanDetail({ match, history }) {
     )
   }
 
+  // Load all 4 view modes in parallel when Business Plan tab is opened
   useEffect(() => {
     if (
       !match.params.buId ||
-      !viewMode ||
       !activeCollapse.includes('2') ||
       !activeTab.includes('1')
     )
       return
+    fetchAllViewModesData(match.params.buId)
+  }, [activeCollapse, match.params.buId, activeTab])
 
-    getBusinessPlanDetailByViewMode(match.params.buId, {
-      view: viewMode,
-    })
-  }, [viewMode, activeCollapse, match.params.buId])
+  // Switch active view mode from pre-loaded data (no API call)
+  useEffect(() => {
+    if (!viewMode) return
+    dispatch(setActiveViewMode({ viewMode }))
+  }, [viewMode])
 
   useEffect(() => {
     const result = {

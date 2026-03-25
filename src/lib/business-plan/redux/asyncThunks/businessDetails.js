@@ -51,5 +51,24 @@ export const getBusinessPlanDetailByViewMode = createAsyncThunk(
   }
 )
 
+export const fetchAllViewModesData = createAsyncThunk(
+  'get/fetchAllViewModesData',
+  async ({ id }) => {
+    const viewModes = ['Total', 'OB', 'Onsite', 'Offshore']
+    const results = await Promise.all(
+      viewModes.map(view =>
+        BusinessPlanAPI.getBusinessPlanDetailByViewMode(id, { view })
+      )
+    )
+    return viewModes.reduce((acc, view, index) => {
+      const result = results[index]
+      if (result && result.status === ResponseStatusCode.success) {
+        acc[view] = result.data
+      }
+      return acc
+    }, {})
+  }
+)
+
 export const getBusinessPlanDetailVersion = id =>
   Request(BUSINESS_PLAN_API.getBusinessPlanDetail(id))

@@ -6,9 +6,88 @@ import {
   getCompareBusinessPlanDetail,
   getPositionRevenuePlan,
   getSummaryRevenuePlan,
+  fetchAllViewModesData,
 } from '../asyncThunks'
 import { sectionConfig } from '../../constants'
 import { normalizeColumnKeys } from '../../utils'
+
+// --- Normalization helpers (defined outside createSlice so they can be reused) ---
+
+const buildViewModeEntry = (rawData, viewModeName) => {
+  const { columnLabels, sectionList } = normalizeColumnKeys(
+    rawData.columnLabels || [],
+    rawData.sectionList || [],
+    viewModeName
+  )
+
+  const mmBillRow = sectionList.reduce(function (found, section) {
+    if (found) return found
+    return section.rowLabels.find(function (row) { return row.rowKey === 'MM_BILL' }) || null
+  }, null)
+
+  const processedSectionList = cloneDeep(sectionList)
+
+  if (mmBillRow) {
+    const mmBillService = {
+      ...cloneDeep(mmBillRow),
+      label: '',
+      rowKey: 'MM_BILL_1',
+      cellList: cloneDeep(mmBillRow).cellList.map(function (item) {
+        return {
+          ...item,
+          value: null,
+          rowKey: 'MM_BILL_1',
+          editable: sectionConfig.MAN_MONTH.newRowEditable(item.columnKey),
+        }
+      }),
+    }
+    processedSectionList.forEach(function (section, index) {
+      if (
+        section.sectionKey === 'MAN_MONTH' &&
+        !section.rowLabels.some(function (r) { return r.rowKey === 'MM_BILL_1' })
+      ) {
+        processedSectionList[index].rowLabels.push(mmBillService)
+      }
+    })
+  }
+
+  const businessPlanItems = processedSectionList.reduce(function (res, cur) {
+    res[cur.sectionKey] = {
+      title: cur.sectionTitle,
+      data: cur.rowLabels.reduce(function (rowRes, rowCur) {
+        rowRes[rowCur.rowKey] = {
+          title: rowCur.label,
+          data: rowCur.cellList.map(function (item) {
+            return { ...item, sectionKey: cur.sectionKey }
+          }),
+        }
+        return rowRes
+      }, {}),
+    }
+    return res
+  }, {})
+
+  return {
+    businessPlanItems,
+    columns: columnLabels,
+    originalBusinessPlanItems: processedSectionList,
+  }
+}
+
+const applyViewModeEntry = (state, entry, viewMode) => {
+  state.businessPlanItems = entry.businessPlanItems
+  state.columns = entry.columns
+  state.originalBusinessPlanItems = entry.originalBusinessPlanItems
+  state.viewMode = viewMode
+  const rates = state.ratesByLocationType[viewMode]
+  if (rates) {
+    state.exchangeRate = rates.exchangeRate
+    state.softwareDevelopmentFee = rates.softwareDevelopmentFee
+    if (rates.otherFees != null) state.otherFees = rates.otherFees
+  }
+}
+
+// -------------------------------------------------------------------------------
 
 const initialState = {
   isSaveShowed: { generalInformation: false, businessPlan: false },
@@ -34,6 +113,7 @@ const initialState = {
   activePanel: '',
   deliveryUnitDataDelivery: {},
   loadingBusinessPlan: false,
+  viewModeDataMap: {},
 }
 
 const businessDetailsSlice = createSlice({
@@ -197,6 +277,14 @@ const businessDetailsSlice = createSlice({
       state.activePanel =
         activeKey === '2' ? 'Revenue' : activeKey === '3' ? 'Delivery' : ''
     },
+
+    setActiveViewMode: (state, { payload }) => {
+      const { viewMode } = payload
+      state.viewMode = viewMode
+      const entry = state.viewModeDataMap[viewMode]
+      if (!entry) return
+      applyViewModeEntry(state, entry, viewMode)
+    },
   },
   extraReducers: builder => {
     builder.addCase(getBusinessPlanDetail.fulfilled, (state, { payload }) => {
@@ -252,87 +340,53 @@ const businessDetailsSlice = createSlice({
       (state, action) => {
         state.loadingBusinessPlan = false
         const { data, errorMessage } = action.payload || {}
-
         const viewModeFromAction =
           action.meta &&
           action.meta.arg &&
           action.meta.arg.params &&
           action.meta.arg.params.view
-
         if (!data) return
-        const { columnLabels, sectionList } = normalizeColumnKeys(
-          data.columnLabels || [],
-          data.sectionList || [],
-          viewModeFromAction
-        )
-        const mmBill = sectionList.reduce((res, section) => {
-          if (!res)
-            return section.rowLabels.find(item => item.rowKey === 'MM_BILL')
-          return res
-        }, null)
 
-        let mmBillService = cloneDeep(mmBill)
-        mmBillService = {
-          ...mmBillService,
-          label: '',
-          rowKey: 'MM_BILL_1',
-          cellList: mmBillService.cellList.map(item => ({
-            ...item,
-            value: null,
-            rowKey: 'MM_BILL_1',
-            editable: sectionConfig.MAN_MONTH.newRowEditable(item.columnKey),
-          })),
-        }
-
-        const originalBusinessPlanItems = cloneDeep(sectionList)
-        state.businessPlanItems = sectionList.reduce((res, cur, index) => {
-          const cloneRowLabels = cloneDeep(cur.rowLabels)
-
-          if (
-            cur.sectionKey === 'MAN_MONTH' &&
-            !cloneRowLabels.some(item => item.rowKey === 'MM_BILL_1')
-          ) {
-            cloneRowLabels.push(mmBillService)
-            originalBusinessPlanItems[index].rowLabels = cloneRowLabels
-          }
-          res[cur.sectionKey] = {
-            title: cur.sectionTitle,
-            data: cloneRowLabels.reduce((rowRes, rowCur) => {
-              rowRes[rowCur.rowKey] = {
-                title: rowCur.label,
-                data: rowCur.cellList.map(item => ({
-                  ...item,
-                  sectionKey: cur.sectionKey,
-                })),
-              }
-              return rowRes
-            }, {}),
-          }
-          return res
-        }, {})
-        state.originalBusinessPlanItems = originalBusinessPlanItems
-        state.columns = columnLabels
+        const entry = buildViewModeEntry(data, viewModeFromAction)
+        state.viewModeDataMap = { ...state.viewModeDataMap, [viewModeFromAction]: entry }
+        applyViewModeEntry(state, entry, viewModeFromAction)
         state.version = data.version
         state.warningMessage = data.warningMessage
         state.errorMessage = errorMessage
-
-        if (viewModeFromAction) {
-          state.viewMode = viewModeFromAction
-        }
-
-        if (
-          viewModeFromAction &&
-          state.ratesByLocationType[viewModeFromAction]
-        ) {
-          const rates = state.ratesByLocationType[viewModeFromAction]
-          state.exchangeRate = rates.exchangeRate
-          state.softwareDevelopmentFee = rates.softwareDevelopmentFee
-          if (rates.otherFees != null) state.otherFees = rates.otherFees
-        }
       }
     )
 
     builder.addCase(getBusinessPlanDetailByViewMode.rejected, state => {
+      state.loadingBusinessPlan = false
+    })
+
+    builder.addCase(fetchAllViewModesData.pending, state => {
+      state.loadingBusinessPlan = true
+    })
+
+    builder.addCase(fetchAllViewModesData.fulfilled, (state, { payload }) => {
+      state.loadingBusinessPlan = false
+      const viewModeDataMap = Object.keys(payload).reduce(function (acc, view) {
+        const rawData = payload[view]
+        if (rawData) {
+          acc[view] = buildViewModeEntry(rawData, view)
+        }
+        return acc
+      }, {})
+      state.viewModeDataMap = viewModeDataMap
+
+      const activeViewMode = state.viewMode
+      if (activeViewMode && viewModeDataMap[activeViewMode]) {
+        applyViewModeEntry(state, viewModeDataMap[activeViewMode], activeViewMode)
+        const activeRawData = payload[activeViewMode]
+        if (activeRawData) {
+          state.version = activeRawData.version
+          state.warningMessage = activeRawData.warningMessage
+        }
+      }
+    })
+
+    builder.addCase(fetchAllViewModesData.rejected, state => {
       state.loadingBusinessPlan = false
     })
 
@@ -405,6 +459,7 @@ export const {
   clearCompareBusinessPlan,
   setVersion,
   setActiveBusinessPlanPanel,
+  setActiveViewMode,
 } = businessDetailsSlice.actions
 
 export default businessDetailsSlice.reducer

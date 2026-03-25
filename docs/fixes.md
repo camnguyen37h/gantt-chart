@@ -1,56 +1,170 @@
-# Fixes & Solutions
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Menu which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in ul (created by DOMWrap)
+    in DOMWrap (created by SubPopupMenu)
+    in SubPopupMenu (created by Connect(SubPopupMenu))
+    in Connect(SubPopupMenu) (created by Menu)
+    in Provider (created by Menu)
+    in Menu (created by Context.Consumer)
+    in InternalMenu (created by Context.Consumer)
+    in Menu (at Sidebar.jsx:87)
+    in div (created by Context.Consumer)
+    in aside (created by Context.Consumer)
+    in InternalSider (created by Context.Consumer)
+    in Sider (at Sidebar.jsx:75)
+    in Sidebar (at App.js:22)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:21)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:19)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:18)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+console.<computed> @ index.js:1Understand this error
+useFormula.js:438 Uncaught TypeError: Cannot read properties of undefined (reading 'columnKey')
+    at Object.getProjectBonusDU [as delivery_unit] (useFormula.js:438:1)
+    at getFormula (useFormula.js:1457:1)
+    at useFormula.js:119:1
+    at Array.map (<anonymous>)
+    at Object.getTotalColumnAndSet (useFormula.js:112:1)
+    at getFormula (useFormula.js:1457:1)
+    at index.jsx:860:1
+    at Array.map (<anonymous>)
+    at index.jsx:828:1
+    at Array.map (<anonymous>)
+    at renderTableBody (index.jsx:715:1)
+    at BusinessPlanFormSection (index.jsx:1273:1)
+    at renderWithHooks (react-dom.development.js:14803:1)
+    at updateFunctionComponent (react-dom.development.js:17034:1)
+    at beginWork (react-dom.development.js:18610:1)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
+    at invokeGuardedCallback (react-dom.development.js:292:1)
+    at beginWork$1 (react-dom.development.js:23203:1)
+    at performUnitOfWork (react-dom.development.js:22154:1)
+    at workLoopSync (react-dom.development.js:22130:1)
+    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
+    at react-dom.development.js:11089:1
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
+    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
+    at flushPendingDiscreteUpdates (react-dom.development.js:21847:1)
+    at flushDiscreteUpdates (react-dom.development.js:21827:1)
+    at finishEventHandler (react-dom.development.js:764:1)
+    at batchedEventUpdates (react-dom.development.js:798:1)
+    at dispatchEventForLegacyPluginEventSystem (react-dom.development.js:3568:1)
+    at attemptToDispatchEvent (react-dom.development.js:4267:1)
+    at dispatchEvent (react-dom.development.js:4189:1)
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at discreteUpdates$1 (react-dom.development.js:21887:1)
+    at discreteUpdates (react-dom.development.js:806:1)
+    at dispatchDiscreteEvent (react-dom.development.js:4168:1)Understand this error
+index.js:1 The above error occurred in the <BusinessPlanFormSection> component:
+    in BusinessPlanFormSection (at BusinessPlanDetail/index.jsx:622)
+    in div (created by Context.Consumer)
+    in TabPane (at BusinessPlanTabWrapper/index.jsx:62)
+    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:601)
+    in div (created by TabContent)
+    in TabContent (created by Tabs)
+    in div (created by Tabs)
+    in Tabs (created by Context.Consumer)
+    in Tabs (at BusinessPlanDetail/index.jsx:595)
+    in div (at BusinessPlanDetail/index.jsx:594)
+    in div (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Spin (at BusinessPlanDetail/index.jsx:593)
+    in div (created by PanelContent)
+    in div (created by PanelContent)
+    in PanelContent (created by CollapsePanel)
+    in AnimateChild (created by Animate)
+    in Animate (created by CollapsePanel)
+    in div (created by CollapsePanel)
+    in CollapsePanel (created by Context.Consumer)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:592)
+    in div (created by Collapse)
+    in Collapse (created by Context.Consumer)
+    in Collapse (created by Styled(Collapse))
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:580)
+    in div (at BusinessPlanDetail/index.jsx:560)
+    in div (at BusinessPlanDetail/index.jsx:559)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:34)
+    in Switch (at App.js:32)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:23)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:21)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:19)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:18)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
 
-## 1. Score Setting — Auto-fill Description từ template string
-
-**File:** `src/lib/performance-score-setting/PerformanceScoreSettingForm.jsx`
-
-**Hướng xử lý:**
-- Khi user gõ vào ô **Score**, ô **Description** tự fill theo dạng `Definition of <tên score>`
-- Chỉ tự fill khi Description đang trống hoặc vẫn đang là giá trị tự fill từ trước — nếu user đã tự gõ tay thì không ghi đè
-- Dùng `form.setFieldsValue` để set giá trị Description từ bên ngoài ô input (vì cả 2 ô đều là Ant Design Form field được quản lý bởi `getFieldDecorator`)
-
----
-
-## 2. Business Plan Detail
-
-**Thư mục:** `src/lib/business-plan/BusinessPlanDetail/`
-
-### Tổng quan
-
-Trang chi tiết Business Plan gồm 2 phần chính: **General Information** và **bảng Business Plan** dạng multirow-multicolumn. Dữ liệu lưu trong Redux, được chuẩn hoá thành nested object `businessPlanItems[sectionKey].data[rowKey].data[]` (mảng cells).
-
-### Data Flow
-
-1. Mount → dispatch API lấy data theo `buId`
-2. Data normalize vào Redux (`businessPlanItems`)
-3. User edit cell → update Redux trực tiếp
-4. Save/Submit → serialize lại thành params → gọi API
-
-### Render bảng (`BusinessPlanFormSection`)
-
-- Loop qua sections → rows → cells
-- Mỗi cell gọi `getFormula()` để lấy giá trị tính toán; nếu không có formula thì dùng `.value` thô
-- Cell editable hay readonly do `useBusinessPlanPermission` quyết định theo role và scope
-
-### View Mode (OB / Onsite / Total / ...)
-
-- Mỗi mode là một tab riêng, load data song song
-- OB mode có cấu trúc column khác các mode còn lại — một số row không tồn tại column tương ứng
-- **Fix crash OB:** Trong `getTotalColumnAndSet` (useFormula.js), thêm null guard sau `.find()`: nếu `childItem` là `undefined` thì trả `0` thay vì crash. Đồng thời chỉ gọi `getFormula` một lần, lưu vào biến để tái dùng.
-
-### Compare Mode
-
-- Merge columns từ 2 version để hiển thị song song
-- Tính diff = `current - compare`, hiển thị bên dưới mỗi cell
-
-### Công thức (`useFormula`)
-
-- `getFormula()` tra cứu config theo `sectionKey + rowKey + columnKey`, gọi hàm tương ứng
-- Dùng `Decimal.js` cho phép toán chính xác
-- Các phép tính: cộng tổng (sum), nhân (UnitPrice × MM), chia (Revenue / MMBill), kết hợp nhiều bước
-- Không có cache — recalc mỗi render, dùng `useMemo` ở tầng trên để kiểm soát
-
-### Permission
-
-- `useBusinessPlanPermission` check role + scope (Onsite / Offshore / Total)
-- Quyết định cell nào editable, data nào bị ẩn/mask
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://fb.me/react-error-boundaries to learn more about error boundaries.
+console.<computed> @ index.js:1Understand this error
+react-dom.development.js:11102 Uncaught TypeError: Cannot read properties of undefined (reading 'columnKey')
+    at Object.getProjectBonusDU [as delivery_unit] (useFormula.js:438:1)
+    at getFormula (useFormula.js:1457:1)
+    at useFormula.js:119:1
+    at Array.map (<anonymous>)
+    at Object.getTotalColumnAndSet (useFormula.js:112:1)
+    at getFormula (useFormula.js:1457:1)
+    at index.jsx:860:1
+    at Array.map (<anonymous>)
+    at index.jsx:828:1
+    at Array.map (<anonymous>)
+    at renderTableBody (index.jsx:715:1)
+    at BusinessPlanFormSection (index.jsx:1273:1)
+    at renderWithHooks (react-dom.development.js:14803:1)
+    at updateFunctionComponent (react-dom.development.js:17034:1)
+    at beginWork (react-dom.development.js:18610:1)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
+    at invokeGuardedCallback (react-dom.development.js:292:1)
+    at beginWork$1 (react-dom.development.js:23203:1)
+    at performUnitOfWork (react-dom.development.js:22154:1)
+    at workLoopSync (react-dom.development.js:22130:1)
+    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
+    at react-dom.development.js:11089:1
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
+    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
+    at flushPendingDiscreteUpdates (react-dom.development.js:21847:1)
+    at flushDiscreteUpdates (react-dom.development.js:21827:1)
+    at finishEventHandler (react-dom.development.js:764:1)
+    at batchedEventUpdates (react-dom.development.js:798:1)
+    at dispatchEventForLegacyPluginEventSystem (react-dom.development.js:3568:1)
+    at attemptToDispatchEvent (react-dom.development.js:4267:1)
+    at dispatchEvent (react-dom.development.js:4189:1)
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at discreteUpdates$1 (react-dom.development.js:21887:1)
+    at discreteUpdates (react-dom.development.js:806:1)
+    at dispatchDiscreteEvent (react-dom.development.js:4168:1)Understand this error
+VM119:2 Uncaught ReferenceError: process is not defined
+    at 4043 (<anonymous>:2:13175)
+    at r (<anonymous>:2:306606)
+    at 8048 (<anonymous>:2:9504)
+    at r (<anonymous>:2:306606)
+    at 8641 (<anonymous>:2:1379)
+    at r (<anonymous>:2:306606)
+    at <anonymous>:2:315634
+    at <anonymous>:2:324254
+    at <anonymous>:2:324258
+    at e.onload (index.js:1:1)

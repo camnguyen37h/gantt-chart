@@ -693,6 +693,15 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     'DIRECT_MARGIN_BONUS_RATE',
     'TOTAL'
   )
+  // Use formula result for header total value (same as resolveValue used in section rows)
+  // so the header is consistent with the table and not affected by wrong API-stored values
+  const directMarginTotalValue = resolveValue(
+    directMarginCell,
+    directMarginCell
+      ? getFormula({ item: directMarginCell, columnKey: 'TOTAL', sectionKey: 'MARGIN', rowKey: 'DIRECT_MARGIN_BONUS_RATE' })
+      : undefined,
+    isSpecialSectionFormula
+  )
 
   const unitPriceArray =
     businessPlanItems.MAN_MONTH && businessPlanItems.MAN_MONTH.data.UNIT_PRICE
@@ -1243,7 +1252,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
                 <MetricHeaderRow
                   label="Direct margin before incentives and project bonus rate"
                   rowKey="DIRECT_MARGIN_BONUS_RATE"
-                  totalValue={directMarginCell ? directMarginCell.value : null}
+                  totalValue={directMarginTotalValue}
                   normConfig={
                     directMarginCell
                       ? directMarginCell.normBusinessPlanConfig

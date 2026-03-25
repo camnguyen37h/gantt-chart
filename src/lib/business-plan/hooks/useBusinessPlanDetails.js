@@ -107,6 +107,11 @@ const useBusinessPlanDetails = () => {
     [dispatch]
   )
 
+  const fetchAllViewModesData = useCallback(
+    id => dispatch(redux.fetchAllViewModesData({ id })),
+    [dispatch]
+  )
+
   const updateIsSaveShowed = useCallback(
     value => {
       return dispatch(redux.setIsSaveShowed(value))
@@ -377,6 +382,7 @@ const useBusinessPlanDetails = () => {
     submit,
     getBusinessPlanDetail,
     getBusinessPlanDetailByViewMode,
+    fetchAllViewModesData,
     setContractPriceData,
     handleValidate,
     version,
