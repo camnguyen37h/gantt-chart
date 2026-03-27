@@ -431,7 +431,7 @@ const BusinessPlanGeneralInformation = () => {
                     }`}>
                     {isStartDate || isEndDate ? (
                       <DatePicker
-                        disabled={!isEditInputDraft}
+                        disabled={!isEditGeneralField}
                         className="custom-planning-date-picker"
                         value={item.value}
                         format={DateFormat.DATE_FORWARD_SLASH}
@@ -589,6 +589,7 @@ const BusinessPlanGeneralInformation = () => {
                 fieldName={data.fieldName}
                 startDate={startDate}
                 endDate={endDate}
+                canEditScope={canEditGeneral}
               />
             ))}
           </div>
@@ -620,7 +621,7 @@ const BusinessPlanGeneralInformation = () => {
           <div className="d-flex gap-6 flex-wrap">
             <KpiBonusBodyItem
               businessPlanKpiDTO={businessPlanKpiDTO}
-              canEdit={isEditInputDraft && canViewGeneral}
+              canEdit={isEditGeneralField}
               masked={!canViewGeneral}
               onChangeKpiBonusInput={onChangeKpiBonusInput}
             />

@@ -44,6 +44,7 @@ function CollaboratorBodyItem({
   fieldName,
   startDate,
   endDate,
+  canEditScope = true,
 }) {
   const { updateIsSaveShowed, listAM, listPreparator } =
     useBusinessPlanDetails()
@@ -73,7 +74,8 @@ function CollaboratorBodyItem({
     ) ||
       (listAM && listAM.some(p => p.ldap === userName)) ||
       (listPreparator && listPreparator.some(p => p.ldap === userName))) &&
-    isDraft
+    isDraft &&
+    canEditScope
 
   const handleReturnIndexItem = (pagination, index) => {
     return (pagination.current - 1) * pagination.pageSize + index + 1

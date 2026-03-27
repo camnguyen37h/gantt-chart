@@ -1517,7 +1517,7 @@
             "rowKey": "DELIVERY_EXPENSES_TOTAL",
             "cellList": [
               {
-                "value": 249521216,
+                "value": 249561216,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1539,7 +1539,7 @@
                 "permissionView": true
               },
               {
-                "value": 70000,
+                "value": 110000,
                 "columnKey": "SALE_169",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1611,7 +1611,7 @@
             "rowKey": "DIRECT_LABOR_COST",
             "cellList": [
               {
-                "value": 245401216,
+                "value": 245441216,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -2565,7 +2565,7 @@
             "rowKey": "DIRECT_MARGIN",
             "cellList": [
               {
-                "value": -96696316,
+                "value": -96736316,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2587,7 +2587,7 @@
                 "permissionView": true
               },
               {
-                "value": 30560800,
+                "value": 30520800,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2659,7 +2659,7 @@
             "rowKey": "DIRECT_MARGIN_BONUS",
             "cellList": [
               {
-                "value": -96696316,
+                "value": -96736316,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2681,7 +2681,7 @@
                 "permissionView": true
               },
               {
-                "value": 30560800,
+                "value": 30520800,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2753,7 +2753,7 @@
             "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
             "cellList": [
               {
-                "value": 0,
+                "value": 521027631.238,
                 "columnKey": "TOTAL",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2819,7 +2819,7 @@
                 "permissionView": true
               },
               {
-                "value": 0,
+                "value": 213529536,
                 "columnKey": "DELIVERY_UNIT_6",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2830,7 +2830,7 @@
                 "permissionView": true
               },
               {
-                "value": 0,
+                "value": 307498095.238,
                 "columnKey": "DELIVERY_UNIT_7",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2847,7 +2847,7 @@
             "rowKey": "INDIRECT_MARGIN",
             "cellList": [
               {
-                "value": -96696316,
+                "value": -617763947.238,
                 "columnKey": "TOTAL",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2869,7 +2869,7 @@
                 "permissionView": true
               },
               {
-                "value": 30560800,
+                "value": 30520800,
                 "columnKey": "SALE_169",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2913,7 +2913,7 @@
                 "permissionView": true
               },
               {
-                "value": -11577664,
+                "value": -225107200,
                 "columnKey": "DELIVERY_UNIT_6",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2924,7 +2924,7 @@
                 "permissionView": true
               },
               {
-                "value": -64200000,
+                "value": -371698095.238,
                 "columnKey": "DELIVERY_UNIT_7",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2941,7 +2941,7 @@
             "rowKey": "DIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": -113.116,
+                "value": -113.167,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2963,7 +2963,7 @@
                 "permissionView": true
               },
               {
-                "value": 38.875,
+                "value": 38.825,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -3035,7 +3035,7 @@
             "rowKey": "DIRECT_MARGIN_BONUS_RATE",
             "cellList": [
               {
-                "value": -113.116,
+                "value": -113.167,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -3057,7 +3057,7 @@
                 "permissionView": true
               },
               {
-                "value": 38.875,
+                "value": 38.825,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -3129,7 +3129,7 @@
             "rowKey": "INDIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": -113.116,
+                "value": -765.985,
                 "columnKey": "TOTAL",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -3151,7 +3151,7 @@
                 "permissionView": true
               },
               {
-                "value": 38.875,
+                "value": 38.825,
                 "columnKey": "SALE_169",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -3195,7 +3195,7 @@
                 "permissionView": true
               },
               {
-                "value": -56.202,
+                "value": -1092.753,
                 "columnKey": "DELIVERY_UNIT_6",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -3206,7 +3206,7 @@
                 "permissionView": true
               },
               {
-                "value": -311.65,
+                "value": -1804.36,
                 "columnKey": "DELIVERY_UNIT_7",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -3230,7 +3230,7 @@
             "rowKey": "DELIVERY_AVERAGE_EXPENSES",
             "cellList": [
               {
-                "value": 33206717.429,
+                "value": 33212431.714,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -3324,7 +3324,7 @@
             "rowKey": "SALARY_AVERAGE_EXPENSES",
             "cellList": [
               {
-                "value": 32654931.714,
+                "value": 32660646,
                 "columnKey": "TOTAL",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -3346,7 +3346,7 @@
                 "permissionView": true
               },
               {
-                "value": 5000,
+                "value": 25000,
                 "columnKey": "SALE_169",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -3606,7 +3606,7 @@
             "rowKey": "EFFICIENCY",
             "cellList": [
               {
-                "value": -12823054.929,
+                "value": -12828769.214,
                 "columnKey": "TOTAL",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -3954,7 +3954,7 @@
                 "permissionView": true
               },
               {
-                "value": 0,
+                "value": 12,
                 "columnKey": "DELIVERY_UNIT_6",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
@@ -3965,7 +3965,7 @@
                 "permissionView": true
               },
               {
-                "value": 0,
+                "value": 21,
                 "columnKey": "DELIVERY_UNIT_7",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
