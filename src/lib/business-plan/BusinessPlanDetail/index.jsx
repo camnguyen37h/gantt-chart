@@ -87,6 +87,7 @@ const StyledAffix = styled.div`
 function BusinessPlanDetail({ match, history }) {
   const affixRef = useRef(null)
   const businessPlanDeliveryRef = useRef(null)
+  const userViewModeRef = useRef(null)
   const [activeTab, setActiveTab] = useState('1')
   const [activeCollapse, setActiveCollapse] = useState('')
   const [viewMode, setViewMode] = useState('Total')
@@ -143,6 +144,7 @@ function BusinessPlanDetail({ match, history }) {
   useEffect(() => {
     ;(async () => {
       if (match.params.buId) {
+        userViewModeRef.current = null
         const res = await getBusinessPlanDetail(match.params.buId)
         if (res.type.includes('fulfilled')) {
           await getBusinessPlanWorkflow({
@@ -153,8 +155,21 @@ function BusinessPlanDetail({ match, history }) {
     })()
   }, [match.params.buId])
 
+  const handleViewModeChange = e => {
+    userViewModeRef.current = e.target.value
+    setViewMode(e.target.value)
+  }
+
   useEffect(() => {
     if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+      if (
+        userViewModeRef.current &&
+        generalInfos.some(info => info.mvvLocationType === userViewModeRef.current)
+      ) {
+        setViewMode(userViewModeRef.current)
+        return
+      }
+
       const matchedMVV = generalInfos.find(
         info => info.id === Number(match.params.buId)
       )
@@ -575,7 +590,7 @@ function BusinessPlanDetail({ match, history }) {
                   onChange={handleChangeTab}>
                   <BusinessPlanTabWrapper
                     value={viewMode}
-                    onChange={e => setViewMode(e.target.value)}
+                    onChange={handleViewModeChange}
                     activeTab={activeTab}
                     availableModes={availableModes}
                     tab={
@@ -603,7 +618,7 @@ function BusinessPlanDetail({ match, history }) {
                   {listDuRevenue && listDuRevenue.length > 0 && (
                     <BusinessPlanTabWrapper
                       value={viewMode}
-                      onChange={e => setViewMode(e.target.value)}
+                      onChange={handleViewModeChange}
                       activeTab={activeTab}
                       availableModes={availableModes}
                       tab={
@@ -644,7 +659,7 @@ function BusinessPlanDetail({ match, history }) {
                   {listDUDelivery && listDUDelivery.length > 0 && (
                     <BusinessPlanTabWrapper
                       value={viewMode}
-                      onChange={e => setViewMode(e.target.value)}
+                      onChange={handleViewModeChange}
                       activeTab={activeTab}
                       availableModes={availableModes}
                       tab={
