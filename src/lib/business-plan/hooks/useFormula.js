@@ -815,13 +815,21 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
       const cross = getOBCrossViewCell('MARGIN', 'INDIRECT_MARGIN', targetItem)
       if (cross !== undefined) return cross
     }
-    return getDirectMarginBonusSaleInternal({
+    const dmBonus = getDirectMarginBonusSaleInternal({
       targetItem: getItem({
         sectionKey: 'MARGIN',
         rowKey: 'DIRECT_MARGIN_BONUS',
         columnKey: targetItem.columnKey,
       }),
     })
+    const alloc = getItem({
+      sectionKey: 'MARGIN',
+      rowKey: 'ALLOCATION_OF_POOL_AND_UNBILLABLE',
+      columnKey: targetItem.columnKey,
+    }).value
+    return dmBonus != null
+      ? new Decimal(dmBonus).minus(new Decimal(alloc || 0)).toNumber()
+      : null
   }
 
 const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, isInternalFn }) => {
