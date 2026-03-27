@@ -87,7 +87,6 @@ const StyledAffix = styled.div`
 function BusinessPlanDetail({ match, history }) {
   const affixRef = useRef(null)
   const businessPlanDeliveryRef = useRef(null)
-  const userViewModeRef = useRef(null)
   const [activeTab, setActiveTab] = useState('1')
   const [activeCollapse, setActiveCollapse] = useState('')
   const [viewMode, setViewMode] = useState('Total')
@@ -123,6 +122,7 @@ function BusinessPlanDetail({ match, history }) {
     listGeneralInformation,
     generalInfos,
     mvvLocationTypeIdMap,
+    selectedMvvCode,
   } = useSelector(state => state.businessGeneralInformation)
 
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
@@ -144,7 +144,6 @@ function BusinessPlanDetail({ match, history }) {
   useEffect(() => {
     ;(async () => {
       if (match.params.buId) {
-        userViewModeRef.current = null
         const res = await getBusinessPlanDetail(match.params.buId)
         if (res.type.includes('fulfilled')) {
           await getBusinessPlanWorkflow({
@@ -156,31 +155,17 @@ function BusinessPlanDetail({ match, history }) {
   }, [match.params.buId])
 
   const handleViewModeChange = e => {
-    userViewModeRef.current = e.target.value
-    setViewMode(e.target.value)
+    const newMode = e.target.value
+    setViewMode(newMode)
+    const info = generalInfos.find(i => i.mvvLocationType === newMode)
+    if (info) dispatch(setSelectedMvvCode(info.projectCode))
   }
 
   useEffect(() => {
-    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
-      if (
-        userViewModeRef.current &&
-        generalInfos.some(info => info.mvvLocationType === userViewModeRef.current)
-      ) {
-        setViewMode(userViewModeRef.current)
-        return
-      }
-
-      const matchedMVV = generalInfos.find(
-        info => info.id === Number(match.params.buId)
-      )
-      const currentMVV = matchedMVV || generalInfos[0]
-
-      if (currentMVV && currentMVV.mvvLocationType) {
-        const locationType = currentMVV.mvvLocationType
-        setViewMode(locationType)
-      }
-    }
-  }, [generalInfos, match.params.buId])
+    if (!generalInfos || generalInfos.length === 0) return
+    const info = generalInfos.find(i => i.projectCode === selectedMvvCode) || generalInfos[0]
+    if (info && info.mvvLocationType) setViewMode(info.mvvLocationType)
+  }, [generalInfos, selectedMvvCode])
 
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
