@@ -260,8 +260,10 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
   const getTotalMMBilService = ({ targetItem }) =>
     getSumDUValues({ sectionKey: targetItem.sectionKey, rowKey: targetItem.rowKey })
 
-  const getSoftwareProductionSale = () =>
-    getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
+  const getSoftwareProductionSale = () => {
+    if (isOBOrTotal()) return undefined
+    return getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
+  }
 
   const getSoftwareProductionDU = ({ targetItem }) => {
     const cell =
@@ -303,6 +305,7 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
   }
 
   const getDeductionSale = () => {
+    if (isOBOrTotal()) return undefined
     const deductionFromBackend =
       (
         businessPlanItems.REVENUES.data.DEDUCTION.data.find(item =>
@@ -330,14 +333,10 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
       onsiteData.businessPlanItems['REVENUES'] &&
       onsiteData.businessPlanItems['REVENUES'].data[rowKey]
     if (!onsiteRow) return undefined
-    const obRow =
-      businessPlanItems['REVENUES'] && businessPlanItems['REVENUES'].data[rowKey]
-    if (!obRow) return undefined
-    const internalCell = obRow.data.find(item => item.columnKey === 'INTERNAL')
     return getSum(
-      getSum(...onsiteRow.data.filter(item => isDU(item.columnKey)).map(item => item.value)),
-      getSum(...obRow.data.filter(item => isSaleCol(item.columnKey)).map(item => item.value)),
-      internalCell ? internalCell.value : null
+      ...onsiteRow.data
+        .filter(item => item.columnKey.toUpperCase() !== 'TOTAL')
+        .map(item => item.value)
     )
   }
 
@@ -396,6 +395,7 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
   }
 
   const getIncentiveSale = () => {
+    if (isOBOrTotal()) return undefined
     const revenues = getSoftwareProductionSale()
     const rate = getItem({
       sectionKey: 'REFERENCE',
@@ -1126,8 +1126,6 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       REVENUES_TOTAL: {
         total: getTotalColumnAndSet,
         sale: getTotalColumnAndSet,
-        sale_65: getTotalColumnAndSet,
-        sale_169: getTotalColumnAndSet,
         internal: getRevenuesTotalInternal,
         delivery_unit: getTotalColumnAndSet,
       },
@@ -1147,16 +1145,12 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       COST_PRICE_TOTAL: {
         total: getTotalColumnAndSet,
         sale: getTotalColumnAndSet,
-        sale_65: getTotalColumnAndSet,
-        sale_169: getTotalColumnAndSet,
         internal: getTotalColumnAndSet,
         delivery_unit: getTotalColumnAndSet,
       },
       COST_OF_DU_SOLD: {
         total: getDUCostTotal,
         sale: getDUCostSaleOB,
-        sale_65: getDUCostSaleOB,
-        sale_169: getDUCostSaleOB,
         internal: getDUCostInternal,
       },
     },
@@ -1164,8 +1158,6 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       SELLING_EXPENSES_TOTAL: {
         total: getTotalColumnAndSet,
         sale: getTotalColumnAndSet,
-        sale_65: getTotalColumnAndSet,
-        sale_169: getTotalColumnAndSet,
         internal: getOBNegativeDUSumInternal,
       },
       INCENTIVES: {
@@ -1179,8 +1171,6 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       DELIVERY_EXPENSES_TOTAL: {
         total: getTotalColumnAndSet,
         sale: getTotalColumnAndSet,
-        sale_65: getTotalColumnAndSet,
-        sale_169: getTotalColumnAndSet,
         internal: getTotalColumnAndSet,
         delivery_unit: getTotalColumnAndSet,
       },
@@ -1227,8 +1217,6 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       TAX_TOTAL: {
         total: getTaxExpensesTotal,
         sale: getTotalTax,
-        sale_65: getTotalTax,
-        sale_169: getTotalTax,
         internal: getOBNegativeDUSumInternal,
         delivery_unit: getTotalTax,
       },
@@ -1238,55 +1226,41 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       DIRECT_MARGIN: {
         total: getDirectMargin,
         sale: getDirectMargin,
-        sale_65: getDirectMargin,
-        sale_169: getDirectMargin,
         internal: getDirectMargin,
         delivery_unit: getDirectMargin,
       },
       DIRECT_MARGIN_BONUS: {
         total: getDirectMarginBonusTotal,
         sale: getDirectMarginBonusSaleInternal,
-        sale_65: getDirectMarginBonusSaleInternal,
-        sale_169: getDirectMarginBonusSaleInternal,
         internal: getDirectMarginBonusSaleInternal,
         delivery_unit: getDirectMarginBonusDU,
       },
       ALLOCATION_OF_POOL_AND_UNBILLABLE: {
         total: getAllocationOfPoolTotal,
         sale: getOBAllocationPoolCellValue,
-        sale_65: getOBAllocationPoolCellValue,
-        sale_169: getOBAllocationPoolCellValue,
         delivery_unit: getAllocationOfPoolDU,
       },
       INDIRECT_MARGIN: {
         total: getIndirectMarginTotal,
         sale: getIndirectMarginInternalSale,
-        sale_65: getIndirectMarginInternalSale,
-        sale_169: getIndirectMarginInternalSale,
         internal: getIndirectMarginInternalSale,
         delivery_unit: getIndirectMarginDU,
       },
       DIRECT_MARGIN_RATE: {
         total: getDirectMarginRate,
         sale: getDirectMarginRate,
-        sale_65: getDirectMarginRate,
-        sale_169: getDirectMarginRate,
         internal: getDirectMarginRate,
         delivery_unit: getDirectMarginRate,
       },
       DIRECT_MARGIN_BONUS_RATE: {
         total: getDirectMarginBonusRateTotal,
         sale: getDirectMarginBonusRateSaleInternal,
-        sale_65: getDirectMarginBonusRateSaleInternal,
-        sale_169: getDirectMarginBonusRateSaleInternal,
         internal: getDirectMarginBonusRateSaleInternal,
         delivery_unit: getDirectMarginBonusRateDU,
       },
       INDIRECT_MARGIN_RATE: {
         total: getIndirectMarginRateTotal,
         sale: getIndirectMarginRateSaleInternal,
-        sale_65: getIndirectMarginRateSaleInternal,
-        sale_169: getIndirectMarginRateSaleInternal,
         internal: getIndirectMarginRateSaleInternal,
         delivery_unit: getIndirectMarginRateDU,
       },
@@ -1295,58 +1269,41 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       DELIVERY_AVERAGE_EXPENSES: {
         total: getDeliveryAverageExpensesTotal,
         sale: hideInOB(getDeliveryAverageExpensesSale),
-        sale_65: hideInOB(getDeliveryAverageExpensesSale),
-        sale_169: hideInOB(getDeliveryAverageExpensesSale),
         internal: obOnly(getDeliveryAverageExpensesTotal),
         delivery_unit: hideInOB(getDeliveryAverageExpensesDU),
       },
       SALARY_AVERAGE_EXPENSES: {
         total: getSalaryAverageExpensesTotal,
         sale: getSalaryAverageExpensesSale,
-        sale_65: getSalaryAverageExpensesSale,
-        sale_169: getSalaryAverageExpensesSale,
         internal: obOnly(getSalaryAverageExpensesTotal),
         delivery_unit: hideInOB(getSalaryAverageExpensesDU),
       },
       BILLABLE_RATE: {
         total: hideInOB(getBillableRateTotal),
         sale: hideInOB(getBillableRateSale),
-        sale_65: hideInOB(getBillableRateSale),
-        sale_169: hideInOB(getBillableRateSale),
         internal: obOnly(getBillableRateTotal),
         delivery_unit: hideInOB(getBillableRateDU),
       },
       PRODUCTIVITY: {
-        total: hideInOB(getProductivityTotal),
-        sale: hideInOB(getProductivitySale),
-        sale_65: hideInOB(getProductivitySale),
-        sale_169: hideInOB(getProductivitySale),
-        internal: obOnly(getProductivityTotal),
+        total: getProductivityTotal,
         delivery_unit: hideInOB(getProductivityDU),
       },
       EFFICIENCY: {
-        total: hideInOB(getEfficiencyTotal),
-        sale: hideInOB(getEfficiencySale),
-        sale_65: hideInOB(getEfficiencySale),
-        sale_169: hideInOB(getEfficiencySale),
-        internal: obOnly(getEfficiencyTotal),
+        total: getEfficiencyTotal,
         delivery_unit: hideInOB(getEfficiencyDU),
       },
       INCENTIVES_RATE: {
-        sale_65: hideInOB(getIncentivesRateCell),
-        sale_169: hideInOB(getIncentivesRateCell),
+        sale: hideInOB(getIncentivesRateCell),
         internal: obOnly(({ targetItem }) => getItem({ sectionKey: 'REFERENCE', rowKey: 'INCENTIVES_RATE', columnKey: targetItem.columnKey }).value),
         delivery_unit: hideInOB(getIncentivesRateCell),
       },
       PRODUCTION_MM_BONUS: {
-        sale_65: hideInOB(getProductionMMBonusCell),
-        sale_169: hideInOB(getProductionMMBonusCell),
+        sale: hideInOB(getProductionMMBonusCell),
         internal: obOnly(({ targetItem }) => getItem({ sectionKey: 'REFERENCE', rowKey: 'PRODUCTION_MM_BONUS', columnKey: targetItem.columnKey }).value),
         delivery_unit: hideInOB(getProductionMMBonusCell),
       },
       BILL_RATE_NORM: {
-        sale_65: hideInOB(getBillRateNormCell),
-        sale_169: hideInOB(getBillRateNormCell),
+        sale: hideInOB(getBillRateNormCell),
         internal: obOnly(({ targetItem }) => getItem({ sectionKey: 'REFERENCE', rowKey: 'BILL_RATE_NORM', columnKey: targetItem.columnKey }).value),
         delivery_unit: hideInOB(getBillRateNormCell),
       },
@@ -1356,6 +1313,7 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
   const getFormula = ({ item, columnKey, sectionKey, rowKey, isService }) => {
     let colKey = columnKey.toLowerCase()
     if (colKey.includes('delivery_unit')) colKey = 'delivery_unit'
+    else if (isSaleCol(colKey)) colKey = 'sale'
     const effectiveRowKey = isService ? 'SERVICE' : rowKey
 
     const rowConfig =
