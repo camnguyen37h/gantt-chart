@@ -163,7 +163,9 @@ function BusinessPlanDetail({ match, history }) {
 
   useEffect(() => {
     if (!generalInfos || generalInfos.length === 0) return
-    const info = generalInfos.find(i => i.projectCode === selectedMvvCode) || generalInfos[0]
+    const info =
+      generalInfos.find(i => i.projectCode === selectedMvvCode) ||
+      generalInfos[0]
     if (info && info.mvvLocationType) setViewMode(info.mvvLocationType)
   }, [generalInfos, selectedMvvCode])
 
@@ -220,8 +222,8 @@ function BusinessPlanDetail({ match, history }) {
           }
           return false
         })
-        section.rowLabels.forEach(function(row) {
-          row.cellList = row.cellList.map(function(cell) {
+        section.rowLabels.forEach(function (row) {
+          row.cellList = row.cellList.map(function (cell) {
             if (!cell.compareKey) return cell
             const c = Object.assign({}, cell)
             delete c.compareKey
@@ -229,7 +231,7 @@ function BusinessPlanDetail({ match, history }) {
           })
         })
       })
-      const cleanColumnLabels = columnLabels.map(function(col) {
+      const cleanColumnLabels = columnLabels.map(function (col) {
         if (!col.compareKey) return col
         const c = Object.assign({}, col)
         delete c.compareKey
@@ -243,33 +245,43 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    const onsiteInfo = generalInfos.find(item => item.mvvLocationType === 'Onsite')
-    const offshoreInfo = generalInfos.find(item => item.mvvLocationType === 'Offshore')
+    const onsiteInfo = generalInfos.find(
+      item => item.mvvLocationType === 'Onsite'
+    )
+    const offshoreInfo = generalInfos.find(
+      item => item.mvvLocationType === 'Offshore'
+    )
 
     if (onsiteInfo) {
       params.onsite = {
         businessPlanVersionId: onsiteInfo.id,
         projectCode: onsiteInfo.projectCode,
-        status: onsiteInfo.status ? onsiteInfo.status.replace(' ', '_').toUpperCase() : onsiteInfo.status,
+        status: onsiteInfo.status
+          ? onsiteInfo.status.replace(' ', '_').toUpperCase()
+          : onsiteInfo.status,
       }
     }
     if (offshoreInfo) {
       params.offshore = {
         businessPlanVersionId: offshoreInfo.id,
         projectCode: offshoreInfo.projectCode,
-        status: offshoreInfo.status ? offshoreInfo.status.replace(' ', '_').toUpperCase() : offshoreInfo.status,
+        status: offshoreInfo.status
+          ? offshoreInfo.status.replace(' ', '_').toUpperCase()
+          : offshoreInfo.status,
       }
     }
 
+    console.log('params = ', params)
+
     const isSubmit = await submit(params)
 
-    if (isSubmit) {
-      await getBusinessPlanDetail(match.params.buId)
-      await getBusinessPlanWorkflow({
-        referenceId: match.params.buId,
-      })
-      await dispatch(getBusinessPlanHistory(match.params.buId))
-    }
+    // if (isSubmit) {
+    //   await getBusinessPlanDetail(match.params.buId)
+    //   await getBusinessPlanWorkflow({
+    //     referenceId: match.params.buId,
+    //   })
+    //   await dispatch(getBusinessPlanHistory(match.params.buId))
+    // }
 
     setLoadingSubmit(false)
   }
@@ -392,8 +404,8 @@ function BusinessPlanDetail({ match, history }) {
           }
           return false
         })
-        section.rowLabels.forEach(function(row) {
-          row.cellList = row.cellList.map(function(cell) {
+        section.rowLabels.forEach(function (row) {
+          row.cellList = row.cellList.map(function (cell) {
             if (!cell.compareKey) return cell
             const c = Object.assign({}, cell)
             delete c.compareKey
@@ -401,7 +413,7 @@ function BusinessPlanDetail({ match, history }) {
           })
         })
       })
-      const cleanColumnLabels = columnLabels.map(function(col) {
+      const cleanColumnLabels = columnLabels.map(function (col) {
         if (!col.compareKey) return col
         const c = Object.assign({}, col)
         delete c.compareKey

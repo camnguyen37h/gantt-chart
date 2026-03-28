@@ -30,7 +30,6 @@ const useBusinessPlanDetails = () => {
     otherFees,
     warningMessage,
     errorMessage,
-    generalInfos: allMvvGeneralInfos,
   } = useSelector(state => state.businessPlanDetails)
 
   const {
@@ -141,15 +140,15 @@ const useBusinessPlanDetails = () => {
     const isValid = handleValidate()
 
     if (!isValid) return
-    // const result = await BusinessPlanAPI.submit(params)
-    // if (result.status === ResponseStatusCode.success) {
-    //   NotificationManager.success(result.data)
-    //   updateIsSaveShowed({ generalInformation: false, businessPlan: false })
-    //   return result.data
-    // } else {
-    //   updateIsSaveShowed({ generalInformation: false, businessPlan: false })
-    //   return NotificationManager.error(result.message)
-    // }
+    const result = await BusinessPlanAPI.submit(params)
+    if (result.status === ResponseStatusCode.success) {
+      NotificationManager.success(result.data)
+      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
+      return result.data
+    } else {
+      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
+      return NotificationManager.error(result.message)
+    }
   }
 
   const createNewVersion = async id => {
@@ -224,8 +223,8 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
-    // generalInformationResult / resultValidateKPIBonus for the currently selected MVV
-    // (uses live flattened state — most up-to-date values including unsaved edits)
+    // --- Selected MVV: compute generalInformationResult + resultValidateKPIBonus
+    // from live flattened state, then dispatch for UI field highlighting ---
     const generalInformationResult = {
       industryCurrency: !industryCurrency ? true : false,
       exchangeRate:
@@ -274,7 +273,7 @@ const useBusinessPlanDetails = () => {
       businessPlanKpiDTO || {}
     )
 
-    // Dispatch setValidation for the selected MVV — drives UI highlighting
+    // Dispatch for UI highlighting (selected MVV only)
     dispatch(
       redux.setValidation({
         ...generalInformationResult,
@@ -289,12 +288,14 @@ const useBusinessPlanDetails = () => {
 
     const isEmptyVal = v => v === null || v === undefined || v === ''
 
-    // Build a unified list of all MVVs merging live state (selected) with
-    // generalInfos snapshot (non-selected). generalInformationParams holds
-    // the latest values for the currently-edited MVV.
+    // --- Multi-MVV validation ---
+    // allMvvInfosFromGI is kept up-to-date by setSelectedMvvCode write-back:
+    // whenever the user switches MVV tabs, the outgoing MVV's live edits are
+    // persisted back into generalInfos before loading the incoming MVV.
+    // For the currently selected MVV we still override with the latest live
+    // state (covers edits made without a tab switch).
     const allMvvInfos = allMvvInfosFromGI.map(info => {
       if (info.projectCode === selectedMvvCode) {
-        // Use live flattened state for the currently selected MVV
         return {
           ...info,
           currency: industryCurrency,
@@ -309,7 +310,6 @@ const useBusinessPlanDetails = () => {
           businessPlanKpiDTO,
         }
       }
-      // Non-selected MVVs: use their generalInfos snapshot (original API data)
       return info
     })
 
