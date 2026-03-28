@@ -43,6 +43,7 @@ import styled from 'styled-components'
 import { formatterMMValues, parserMMValues } from '../utils'
 import { v4 as uuid } from 'uuid'
 import {
+  ACTION_NOT_AVAILABLE_MESSAGE,
   DU_MEMBER_WARNING_MESSAGE,
   RESOURCE_REFERENCE_TYPE_ENUM,
   RESOURCE_TABLE_WIDTH,
@@ -53,6 +54,7 @@ import {
   VALIDATE_REQUIRED_FIELDS_MESSAGE,
 } from '../constants'
 import moment from 'moment'
+import { useBusinessPlanDetails } from '../../../hooks'
 
 const { Option } = Select
 
@@ -219,7 +221,9 @@ const HeadCountTable = forwardRef((props, ref) => {
     loadDataFromValue,
     errorDataSubmitDeliveryPlan,
     summaryDeliveryPlan,
+    duValueDelivery,
   } = useSelector(state => state.businessPlanDelivery)
+  const { status } = useBusinessPlanDetails()
   const dispatch = useDispatch()
 
   const [data, setData] = useState([])
@@ -608,7 +612,12 @@ const HeadCountTable = forwardRef((props, ref) => {
                 onClick={() => handleAddResourceType()}
               />
             ) : (
-              <Tooltip title={REVIEWING_WARNING_MESSAGE}>
+              <Tooltip
+                title={
+                  duValueDelivery === 'All' || status === 'Draft'
+                    ? REVIEWING_WARNING_MESSAGE
+                    : ACTION_NOT_AVAILABLE_MESSAGE
+                }>
                 <StyledDisabledIcon type="plus-circle" />
               </Tooltip>
             ),
@@ -623,7 +632,12 @@ const HeadCountTable = forwardRef((props, ref) => {
                   onClick={() => handleRemoveResourceType(record.key)}
                 />
               ) : (
-                <Tooltip title={REVIEWING_WARNING_MESSAGE}>
+                <Tooltip
+                  title={
+                    duValueDelivery === 'All' || status === 'Draft'
+                      ? REVIEWING_WARNING_MESSAGE
+                      : ACTION_NOT_AVAILABLE_MESSAGE
+                  }>
                   <StyledDisabledIcon type="minus-circle" />
                 </Tooltip>
               )),
@@ -1406,6 +1420,7 @@ const HeadCountTable = forwardRef((props, ref) => {
           x: 'max-content',
           y: 400,
         }}
+        showHeader={data && data.length > 0}
       />
     </div>
   )

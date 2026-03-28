@@ -483,11 +483,6 @@ const BusinessPlanGeneralInformation = () => {
                   <span className="required">*</span>
                 </div>
                 <div className="business-industry-select">
-                  {validation['industryDomain'] && (
-                    <span className="text-danger text-left d-block">
-                      Please input required fields
-                    </span>
-                  )}
                   <Tooltip title={handleRenderTooltip()}>
                     <Select
                       value={
@@ -511,6 +506,11 @@ const BusinessPlanGeneralInformation = () => {
                       ))}
                     </Select>
                   </Tooltip>
+                  {validation['industryDomain'] && (
+                    <span className="text-danger text-left d-block">
+                      Please input required fields
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -520,11 +520,6 @@ const BusinessPlanGeneralInformation = () => {
                   <span className="required">*</span>
                 </div>
                 <div className="business-industry-select">
-                  {validation['industryCurrency'] && (
-                    <span className="text-danger text-left d-block">
-                      Please input required fields
-                    </span>
-                  )}
                   <Tooltip title={handleRenderTooltip()}>
                     <Select
                       value={
@@ -548,6 +543,11 @@ const BusinessPlanGeneralInformation = () => {
                       ))}
                     </Select>
                   </Tooltip>
+                  {validation['industryCurrency'] && (
+                    <span className="text-danger text-left d-block">
+                      Please input required fields
+                    </span>
+                  )}
                 </div>
               </div>
               {contractPriceInputConfig.map(item => (

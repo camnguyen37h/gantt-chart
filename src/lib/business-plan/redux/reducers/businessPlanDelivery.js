@@ -386,6 +386,9 @@ const businessPlanDeliverySlice = createSlice({
     setErrorDataSubmitDeliveryPlan: (state, { payload }) => {
       state.errorDataSubmitDeliveryPlan = payload
     },
+    setDataResourcesInformation: (state, { payload }) => {
+      state.dataResourcesInformation = payload
+    },
   },
   extraReducers: builder => {
     builder
@@ -596,6 +599,8 @@ export const {
   removeCreateOtherExpense,
   setErrorDataSubmitDeliveryPlan,
   resetPayloadSaveDelivery,
+  duValueDelivery,
+  setDataResourcesInformation,
 } = businessPlanDeliverySlice.actions
 
 export default businessPlanDeliverySlice.reducer

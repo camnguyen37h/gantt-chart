@@ -63,7 +63,7 @@ const StyledAffix = styled.div`
   width: calc(100% - 280px);
   transition: transform 1s;
   transform: translateY(100%);
-  z-index: 99;
+  z-index: 110;
   left: 240px;
   &.active {
     transform: translateY(0);
@@ -99,6 +99,7 @@ function BusinessPlanDetail({ match, history }) {
     updateIsSaveShowed,
     saveDraft,
     submit,
+    getUserRoleBusinessPlan,
     getBusinessPlanDetail,
     getBusinessPlanDetailByViewMode,
     fetchAllViewModesData,
@@ -119,11 +120,12 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const loadingCollaborator = useSelector(state => state.businessGeneralInformation.loadingCollaborator)
-  const listGeneralInformation = useSelector(state => state.businessGeneralInformation.listGeneralInformation)
-  const generalInfos = useSelector(state => state.businessGeneralInformation.generalInfos)
-  const mvvLocationTypeIdMap = useSelector(state => state.businessGeneralInformation.mvvLocationTypeIdMap)
-  const selectedMvvCode = useSelector(state => state.businessGeneralInformation.selectedMvvCode)
+  const {
+    loadingCollaborator,
+    listGeneralInformation,
+    generalInfos,
+    mvvLocationTypeIdMap,
+  } = useSelector(state => state.businessGeneralInformation)
 
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
 
@@ -149,24 +151,28 @@ function BusinessPlanDetail({ match, history }) {
           await getBusinessPlanWorkflow({
             referenceId: match.params.buId,
           })
-          // Init viewMode once from response — avoids a separate reactive effect
-          // that would interfere with viewMode state during save flows.
-          const infos = res.payload && res.payload.data && res.payload.data.generalInfos
-          if (infos && infos.length > 0) {
-            const matchedMVV = infos.find(info => info.id === Number(match.params.buId))
-            const currentMVV = matchedMVV || infos[0]
-            if (currentMVV && currentMVV.mvvLocationType) {
-              setViewMode(currentMVV.mvvLocationType)
-            }
-          }
         }
       }
     })()
   }, [match.params.buId])
 
+  useEffect(() => {
+    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+      const matchedMVV = generalInfos.find(
+        info => info.id === Number(match.params.buId)
+      )
+      const currentMVV = matchedMVV || generalInfos[0]
+
+      if (currentMVV && currentMVV.mvvLocationType) {
+        const locationType = currentMVV.mvvLocationType
+        setViewMode(locationType)
+      }
+    }
+  }, [generalInfos, match.params.buId])
+
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
-  }, [viewMode, mvvLocationTypeIdMap])
+  }, [viewMode])
 
   const projectCode = useMemo(() => {
     return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
@@ -200,6 +206,7 @@ function BusinessPlanDetail({ match, history }) {
     }
 
     if (
+      isSaveShowed.businessPlan &&
       businessPlanVersionId &&
       (viewMode === 'Onsite' || viewMode === 'Offshore')
     ) {
@@ -248,7 +255,7 @@ function BusinessPlanDetail({ match, history }) {
         projectCode: onsiteInfo.projectCode,
         status: onsiteInfo.status
           ? onsiteInfo.status.replace(' ', '_').toUpperCase()
-          : onsiteInfo.status,
+          : undefined,
       }
     }
     if (offshoreInfo) {
@@ -257,7 +264,7 @@ function BusinessPlanDetail({ match, history }) {
         projectCode: offshoreInfo.projectCode,
         status: offshoreInfo.status
           ? offshoreInfo.status.replace(' ', '_').toUpperCase()
-          : offshoreInfo.status,
+          : undefined,
       }
     }
 
@@ -420,14 +427,14 @@ function BusinessPlanDetail({ match, history }) {
       const res = await getBusinessPlanDetail(match.params.buId)
 
       if (res && res.payload && res.payload.data) {
-        const infos = res.payload.data.generalInfos || []
-        // Always restore the MVV the user was on — getBusinessPlanDetail resets
-        // selectedMvvCode to data.projectCode (API default), so we re-dispatch here.
-        const targetCode = selectedMvvCode || savedProjectCode
-        if (targetCode) {
-          const restoredInfo = infos.find(info => info.projectCode === targetCode)
+        const defaultProjectCode = res.payload.data.projectCode
+        if (savedProjectCode && savedProjectCode !== defaultProjectCode) {
+          const infos = res.payload.data.generalInfos || []
+          const restoredInfo = infos.find(
+            info => info.projectCode === savedProjectCode
+          )
           if (restoredInfo) {
-            dispatch(setSelectedMvvCode(targetCode))
+            dispatch(setSelectedMvvCode(savedProjectCode))
             dispatch(
               setContractPriceData({
                 exchangeRate: restoredInfo.exchangeRate,
@@ -447,11 +454,6 @@ function BusinessPlanDetail({ match, history }) {
     }
     await fetchAllViewModesData(match.params.buId)
     await dispatch(getBusinessPlanHistory(match.params.buId))
-    // Re-apply the correct view after all data is refreshed.
-    // fetchAllViewModesData.fulfilled uses state.viewMode at resolve time which may
-    // already be stale; dispatching setActiveViewMode here guarantees consistency.
-    dispatch(setActiveViewMode({ viewMode: savedViewMode }))
-    setViewMode(savedViewMode)
     setLoadingSave(false)
   }
 
@@ -490,7 +492,10 @@ function BusinessPlanDetail({ match, history }) {
     )
   }
 
-  // Load all 4 view modes in parallel when Business Plan tab is opened
+  useEffect(() => {
+    getUserRoleBusinessPlan(match.params.buId)
+  }, [])
+
   useEffect(() => {
     if (
       !match.params.buId ||
@@ -501,7 +506,6 @@ function BusinessPlanDetail({ match, history }) {
     fetchAllViewModesData(match.params.buId)
   }, [activeCollapse, match.params.buId, activeTab])
 
-  // Switch active view mode from pre-loaded data (no API call)
   useEffect(() => {
     if (!viewMode) return
     dispatch(setActiveViewMode({ viewMode }))
@@ -520,7 +524,7 @@ function BusinessPlanDetail({ match, history }) {
     }
     dispatch(setValidation(result))
 
-    if (businessPlanVersionId) {
+    if (businessPlanVersionId && availableModes.includes(viewMode)) {
       const dataDelivery = {
         businessPlanVersionId: businessPlanVersionId,
         type: 'Delivery',
@@ -533,7 +537,7 @@ function BusinessPlanDetail({ match, history }) {
       }
       dispatch(getListDUByVersionRevenue(dataRevenue))
     }
-  }, [businessPlanVersionId])
+  }, [businessPlanVersionId, availableModes])
 
   return (
     <div className="main-content-pr">

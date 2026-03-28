@@ -436,7 +436,9 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     () =>
       columns.reduce(
         (map, col) =>
-          col.colCategory ? { ...map, [getDisplayKey(col)]: col.colCategory } : map,
+          col.colCategory
+            ? { ...map, [getDisplayKey(col)]: col.colCategory }
+            : map,
         {}
       ),
     [columns]
@@ -693,12 +695,15 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     'DIRECT_MARGIN_BONUS_RATE',
     'TOTAL'
   )
-  // Use formula result for header total value (same as resolveValue used in section rows)
-  // so the header is consistent with the table and not affected by wrong API-stored values
   const directMarginTotalValue = resolveValue(
     directMarginCell,
     directMarginCell
-      ? getFormula({ item: directMarginCell, columnKey: 'TOTAL', sectionKey: 'MARGIN', rowKey: 'DIRECT_MARGIN_BONUS_RATE' })
+      ? getFormula({
+          item: directMarginCell,
+          columnKey: 'TOTAL',
+          sectionKey: 'MARGIN',
+          rowKey: 'DIRECT_MARGIN_BONUS_RATE',
+        })
       : undefined,
     isSpecialSectionFormula
   )
@@ -774,7 +779,7 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
           }>
           <th
             style={{ cursor: collapsible ? 'pointer' : '' }}
-            onClick={function () {
+            onClick={() => {
               if (collapsible) toggleCollapse(sectionKey)
             }}>
             <div className="title flex-items-center justify-space-between">

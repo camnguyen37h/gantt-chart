@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import {
   resolvePolicy,
@@ -23,6 +23,7 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
 
   const allRoles = useMemo(() => {
     // const apiRoles = Array.isArray(userRoles) ? userRoles : []
+    // return [...apiRoles, ...getSystemRoles()]
     return ['DB-ADMIN']
   }, [userRoles])
 
@@ -46,6 +47,7 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
         ),
 
       canViewCell: (item, columnKey, isSectionHeader, sectionKey) => {
+        if (item && item.permissionView === false) return false
         return canViewColumn(
           allRoles,
           normalizedScope,
@@ -94,6 +96,7 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
         isSectionHeader,
         sectionKey
       ) => {
+        if (item && item.permissionView === false) return MASKED_VALUE
         return canViewColumn(
           allRoles,
           normalizedScope,

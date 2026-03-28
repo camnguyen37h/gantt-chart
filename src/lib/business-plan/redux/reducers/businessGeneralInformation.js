@@ -4,6 +4,7 @@ import {
   getIndustryCurrency,
   getIndustryDomain,
   getUserAndDepartmentCollaborator,
+  getUserRoleBusinessPlan,
 } from '../asyncThunks/businessGeneralInformation'
 
 import { getBusinessPlanDetail } from '../asyncThunks'
@@ -63,31 +64,6 @@ export const businessGeneralInformationSlice = createSlice({
       }
     },
     setSelectedMvvCode: (state, { payload }) => {
-      // Write back current flattened state to the previous MVV's generalInfos entry
-      // so non-selected MVV data reflects the user's latest edits when validating
-      const prevCode = state.selectedMvvCode
-      if (prevCode && typeof prevCode === 'string') {
-        const prevIdx = state.generalInfos.findIndex(
-          info => info.projectCode === prevCode
-        )
-        if (prevIdx !== -1) {
-          state.generalInfos[prevIdx] = {
-            ...state.generalInfos[prevIdx],
-            listAM: state.listAM,
-            listAdviser: state.listAdviser,
-            listPreSale: state.listPreSale,
-            listPreparator: state.listPreparator,
-            listTeamLead: state.listTeamLead,
-            listPM: state.listPM,
-            industry: state.industryDomain,
-            currency: state.industryCurrency,
-            businessPlanKpiDTO: state.businessPlanKpiDTO,
-            planningStartDate: state.planningStartDate,
-            planningEndDate: state.planningEndDate,
-          }
-        }
-      }
-
       state.selectedMvvCode = payload || {}
 
       const selectedInfo = state.generalInfos.find(
@@ -123,7 +99,6 @@ export const businessGeneralInformationSlice = createSlice({
         return
       }
 
-      state.userRoles = data.userRoles || []
       state.generalInfos = data.generalInfos.filter(item => !!item.id) || []
       state.selectedMvvCode = data.projectCode
       state.mvvLocationTypeIdMap = (state.generalInfos || []).reduce(
@@ -185,6 +160,25 @@ export const businessGeneralInformationSlice = createSlice({
         state.listUsername = action.payload
       }
     )
+
+    builder.addCase(getUserRoleBusinessPlan.pending, state => {
+      state.loadingCollaborator = true
+    })
+
+    builder.addCase(getUserRoleBusinessPlan.fulfilled, (state, { payload }) => {
+      state.loadingCollaborator = false
+      const { userRoles } = payload || {}
+
+      if (!userRoles) {
+        return
+      }
+
+      state.userRoles = userRoles || []
+    })
+
+    builder.addCase(getUserRoleBusinessPlan.rejected, state => {
+      state.loadingCollaborator = false
+    })
   },
 })
 

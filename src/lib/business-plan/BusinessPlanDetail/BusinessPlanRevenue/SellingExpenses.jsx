@@ -665,6 +665,7 @@ const SellingExpenses = ({
       expandIconColumnIndex={-1}
       expandIconAsCell={false}
       scroll={{ x: 'max-content', y: 400 }}
+      showHeader={canView && dataSourceTable && dataSourceTable.length > 0}
     />
   )
 }

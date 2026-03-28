@@ -8,6 +8,8 @@ export const DU_MEMBER_WARNING_MESSAGE = "This person does not belong to this de
 
 export const REVIEWING_WARNING_MESSAGE = "You cannot edit when filter is All, please change the filter to a single unit"
 
+export const ACTION_NOT_AVAILABLE_MESSAGE = "Action not available since business plan has been submitted"
+
 export const DUPLICATED_COSTNAMES_MESSAGE = "Cost name is duplicated in other expenses section"
 
 export const VALIDATE_REQUIRED_FIELDS_MESSAGE = "Please input required fields"

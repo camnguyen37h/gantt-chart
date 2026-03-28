@@ -290,6 +290,7 @@ const LaborCostTable = ({ mainColumns }) => {
         }}
         loading={loadingDataResourcesInformation || loadingTable}
         rowKey={record => record.deliveryMemberId}
+        showHeader={data && data.length > 0}
       />
     </div>
   )

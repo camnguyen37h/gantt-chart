@@ -69,9 +69,6 @@ const getResultCompare = (current, compare, isCompare) => {
 }
 
 const makeCellKey = mergedCol => {
-  // Use the display key (compareKey-based) rather than raw columnKey so that
-  // duplicate columns that share the same columnKey/id (e.g. DU39 Onsite vs Offshore)
-  // still produce unique React keys.
   const keyBase =
     mergedCol.currentColumnKey != null
       ? mergedCol.currentColumnKey

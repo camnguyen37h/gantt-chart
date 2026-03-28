@@ -8,6 +8,7 @@ import { getRowConfig } from '../constants'
 import { getDisplayKey } from '../utils'
 import moment from 'moment'
 import { DateFormat } from '../../constants/DateFormat'
+import { getUserRoleBusinessPlan } from '../redux'
 
 const useBusinessPlanDetails = () => {
   const dispatch = useDispatch()
@@ -105,6 +106,13 @@ const useBusinessPlanDetails = () => {
   const getBusinessPlanDetailByViewMode = useCallback(
     (id, params) => {
       return dispatch(redux.getBusinessPlanDetailByViewMode({ id, params }))
+    },
+    [dispatch]
+  )
+
+  const getUserRoleBusinessPlan = useCallback(
+    id => {
+      return dispatch(redux.getUserRoleBusinessPlan(id))
     },
     [dispatch]
   )
@@ -223,57 +231,36 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
-    // --- Selected MVV: compute generalInformationResult + resultValidateKPIBonus
-    // from live flattened state, then dispatch for UI field highlighting ---
     const generalInformationResult = {
-      industryCurrency: !industryCurrency ? true : false,
+      industryCurrency: !industryCurrency,
       exchangeRate:
         exchangeRate === null ||
         exchangeRate === undefined ||
-        exchangeRate === ''
-          ? true
-          : false,
+        exchangeRate === '',
       totalContractPrice:
         totalContractPrice === null ||
         totalContractPrice === undefined ||
-        totalContractPrice === ''
-          ? true
-          : false,
+        totalContractPrice === '',
       otherFees:
-        otherFees === null || otherFees === undefined || otherFees === ''
-          ? true
-          : false,
+        otherFees === null || otherFees === undefined || otherFees === '',
       softwareDevelopmentFee:
         softwareDevelopmentFee === null ||
         softwareDevelopmentFee === undefined ||
-        softwareDevelopmentFee === ''
-          ? true
-          : false,
-      listAM:
-        listAM.length < 1 || !handleCheckAtLeastOneFilled(listAM)
-          ? true
-          : false,
+        softwareDevelopmentFee === '',
+      listAM: listAM.length < 1 || !handleCheckAtLeastOneFilled(listAM),
       listTeamLead:
-        listTeamLead.length < 1 || !handleCheckAtLeastOneFilled(listTeamLead)
-          ? true
-          : false,
+        listTeamLead.length < 1 || !handleCheckAtLeastOneFilled(listTeamLead),
       listPreparator:
         listPreparator.length < 1 ||
-        !handleCheckAtLeastOneFilled(listPreparator)
-          ? true
-          : false,
-      listPM:
-        listPM.length < 1 || !handleCheckAtLeastOneFilled(listPM)
-          ? true
-          : false,
-      industryDomain: !industryDomain ? true : false,
+        !handleCheckAtLeastOneFilled(listPreparator),
+      listPM: listPM.length < 1 || !handleCheckAtLeastOneFilled(listPM),
+      industryDomain: !industryDomain,
     }
 
     const resultValidateKPIBonus = handleValidateKpiBonus(
       businessPlanKpiDTO || {}
     )
 
-    // Dispatch for UI highlighting (selected MVV only)
     dispatch(
       redux.setValidation({
         ...generalInformationResult,
@@ -288,12 +275,6 @@ const useBusinessPlanDetails = () => {
 
     const isEmptyVal = v => v === null || v === undefined || v === ''
 
-    // --- Multi-MVV validation ---
-    // allMvvInfosFromGI is kept up-to-date by setSelectedMvvCode write-back:
-    // whenever the user switches MVV tabs, the outgoing MVV's live edits are
-    // persisted back into generalInfos before loading the incoming MVV.
-    // For the currently selected MVV we still override with the latest live
-    // state (covers edits made without a tab switch).
     const allMvvInfos = allMvvInfosFromGI.map(info => {
       if (info.projectCode === selectedMvvCode) {
         return {
@@ -343,7 +324,9 @@ const useBusinessPlanDetails = () => {
         return
       }
 
-      const kpiValidation = handleValidateKpiBonus(info.businessPlanKpiDTO || {})
+      const kpiValidation = handleValidateKpiBonus(
+        info.businessPlanKpiDTO || {}
+      )
       const isKpiFieldsInvalid = Object.values(kpiValidation).some(Boolean)
 
       if (isKpiFieldsInvalid) {
@@ -360,17 +343,23 @@ const useBusinessPlanDetails = () => {
 
     if (invalidGeneralMvvCodes.length > 0) {
       return NotificationManager.error(
-        `Please input required fields in General Information for MVV: ${invalidGeneralMvvCodes.join(', ')}`
+        `Please input required fields in General Information for MVV: ${invalidGeneralMvvCodes.join(
+          ', '
+        )}`
       )
     }
     if (invalidKpiBonusMvvCodes.length > 0) {
       return NotificationManager.error(
-        `Please fill all KPI Bonus fields (PM/QA/Member) for MVV: ${invalidKpiBonusMvvCodes.join(', ')}`
+        `Please fill all KPI Bonus fields (PM/QA/Member) for MVV: ${invalidKpiBonusMvvCodes.join(
+          ', '
+        )}`
       )
     }
     if (invalidKpiTotalMvvCodes.length > 0) {
       return NotificationManager.error(
-        `Total % Bonus must be ${totalKpiBonus}% for MVV: ${invalidKpiTotalMvvCodes.join(', ')}`
+        `Total % Bonus must be ${totalKpiBonus}% for MVV: ${invalidKpiTotalMvvCodes.join(
+          ', '
+        )}`
       )
     }
     if (!isValidBusinessPlan) {
@@ -457,17 +446,14 @@ const useBusinessPlanDetails = () => {
     return true
   }, [
     dispatch,
-    listAM,
-    listPreparator,
-    listTeamLead,
-    listPM,
+    listAM.length,
+    listPreparator.length,
+    listTeamLead.length,
     totalContractPrice,
     exchangeRate,
     industryCurrency,
-    industryDomain,
-    softwareDevelopmentFee,
-    otherFees,
-    originalBusinessPlanItems,
+    handleCheckAtLeastOneFilled,
+    businessPlanKpiDTO,
   ])
 
   const setValidation = useCallback(
@@ -486,6 +472,7 @@ const useBusinessPlanDetails = () => {
     updateIsSaveShowed,
     saveDraft,
     submit,
+    getUserRoleBusinessPlan,
     getBusinessPlanDetail,
     getBusinessPlanDetailByViewMode,
     fetchAllViewModesData,

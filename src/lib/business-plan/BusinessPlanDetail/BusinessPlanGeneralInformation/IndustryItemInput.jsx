@@ -11,7 +11,7 @@ function IndustryItemInput({
   handleRenderTooltip,
   disabled,
   isSubItem,
-  masked
+  masked,
 }) {
   const [visible, setVisible] = useState(false)
   const handleFormatInput = value => {
@@ -33,11 +33,6 @@ function IndustryItemInput({
         </div>
 
         <div className="industry-input">
-          {validation[name] && (
-            <span className="text-danger text-left d-block">
-              Please input required fields
-            </span>
-          )}
           <Tooltip
             visible={visible && !isEditInput}
             title={handleRenderTooltip()}>
@@ -60,6 +55,11 @@ function IndustryItemInput({
               } industry-input-number`}
             />
           </Tooltip>
+          {validation[name] && (
+            <span className="text-danger text-left d-block">
+              Please input required fields
+            </span>
+          )}
         </div>
       </div>
     </div>

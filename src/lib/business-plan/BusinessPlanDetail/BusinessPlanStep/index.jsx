@@ -12,7 +12,7 @@ import {
 import { withRouter } from 'react-router-dom'
 import { STATUS_COLOR_DETAIL, STATUS_COLOR_PROJECT_TYPE } from '../../constants'
 import { useBusinessPlanDetails, useBusinessPlanStep } from '../../hooks'
-import { statusBusinessPlanDetail } from '../constant'
+import { APPROVAL_STATUS_STEP, statusBusinessPlanDetail } from '../constant'
 import { VersionRowWrapper, VersionRow } from './index.styled'
 import WorkflowApproval from '../../../../components/workflow-approval/WorkflowApproval'
 import { useDispatch, useSelector } from 'react-redux'
@@ -66,22 +66,30 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   )
 
   const businessPlanId = match.params.buId
-
   const projectReferenceIds = useMemo(() => {
     return !isEmpty(mvvLocationTypeIdMap) && Object.values(mvvLocationTypeIdMap)
   }, [mvvLocationTypeIdMap])
 
   const handleAssign = async params => {
-    const { ldap, departmentName, stepName, taskKey, referenceIds } =
+    const { ldap, departmentName, stepName, taskKey, referenceId } =
       params || {}
+
+    const currentStep = listStep.find(s => s.stepName === stepName)
+    const mergeApprove = !!(
+      currentStep &&
+      Object.values(APPROVAL_STATUS_STEP).includes(
+        Number(currentStep.stepOrder)
+      )
+    )
 
     await approveRejectWO({
       ldap,
       department: departmentName,
       stepName,
-      referenceIds,
+      referenceId,
       action: 'REASSIGN',
       taskKey,
+      mergeApprove,
     })
     await getBusinessPlanWorkflow({
       referenceId: businessPlanId,
@@ -90,19 +98,27 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   }
 
   const handleApprove = async params => {
-    const { departmentName, stepName, taskKey, referenceIds } = params || {}
+    const { departmentName, stepName, taskKey, referenceId, mergeApprove } =
+      params || {}
 
     const currentStep = listStep.find(s => s.stepName === stepName)
-    const mergeApproved = !!(currentStep && currentStep.stateOrder >= 1000)
+    const hasApproved =
+      mergeApprove ||
+      !!(
+        currentStep &&
+        Object.values(APPROVAL_STATUS_STEP).includes(
+          Number(currentStep.stepOrder)
+        )
+      )
 
     await approveRejectWO({
       ldap: userName,
       department: departmentName,
       stepName,
-      referenceIds,
+      referenceId,
       action: 'APPROVED',
       taskKey,
-      mergeApproved,
+      mergeApprove: hasApproved,
     })
     await getBusinessPlanWorkflow({
       referenceId: businessPlanId,
@@ -114,7 +130,8 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
     try {
       setRejectLoading(true)
       const res = await commentRef.current.form.validateFields()
-      const { departmentName, stepName, taskKey } = rejectPerson || {}
+      const { departmentName, stepName, taskKey, referenceId } =
+        rejectPerson || {}
 
       await dispatch(
         postBusinessPlanComment({
@@ -125,20 +142,27 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
       )
       await dispatch(
         getBusinessPlanDetailComment({
-          referenceIds:
-            projectReferenceIds && projectReferenceIds.length > 0
-              ? projectReferenceIds.join(',')
-              : undefined,
+          referenceId: businessPlanId,
           module: MODULE_COMMENT_TYPE.BUSINESS_PLAN_DETAIL,
         })
       )
+
+      const currentStep = listStep.find(s => s.stepName === stepName)
+      const mergeApprove = !!(
+        currentStep &&
+        Object.values(APPROVAL_STATUS_STEP).includes(
+          Number(currentStep.stepOrder)
+        )
+      )
+
       await approveRejectWO({
         ldap: userName,
         department: departmentName,
         stepName,
-        referenceIds: projectReferenceIds,
+        referenceId,
         action: 'REJECTED',
-        taskKey: taskKey,
+        taskKey,
+        mergeApprove,
       })
       setRejectModalVisible(false)
     } catch (e) {

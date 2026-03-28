@@ -9,6 +9,7 @@ import {
   Radio,
   Row,
   Select,
+  Tooltip,
 } from 'antd'
 import {
   forwardRef,
@@ -42,10 +43,15 @@ import {
   getListResourceType,
   getLocation,
   resetPayloadSaveDelivery,
+  setDataResourcesInformation,
 } from '../../redux'
 import { debounce, isEqual } from 'lodash'
-import RESOURCE_INFORMATION_TYPE from './constants'
+import RESOURCE_INFORMATION_TYPE, {
+  ACTION_NOT_AVAILABLE_MESSAGE,
+  REVIEWING_WARNING_MESSAGE,
+} from './constants'
 import { ALL_OPTION_VALUE } from '../../constants'
+import { useBusinessPlanDetails } from '../../hooks'
 const { Option } = Select
 
 const buildFilterSelectConfig = (name, options, title) => {
@@ -99,7 +105,10 @@ const ResourcesInformation = forwardRef((props, ref) => {
     loadingListResource,
     resourceInfoTableParams,
     loadDataFromValue,
+    duValueDelivery,
   } = useSelector(state => state.businessPlanDelivery)
+
+  const { status } = useBusinessPlanDetails()
 
   const filters = useSelector(
     state => state.businessPlanDelivery.filtersResourcesInfo,
@@ -286,7 +295,18 @@ const ResourcesInformation = forwardRef((props, ref) => {
     const isVersionChanged = prevBuIdRef.current !== buId
     prevBuIdRef.current = buId
 
-    if (!canView) return
+    if (!canView) {
+      dispatch(
+        setDataResourcesInformation({
+          listLabelMonth: [],
+          listBudgetMMForEachMonth: {},
+          deliveryPlanByHeadCountList: [],
+          totalRecord: 0,
+          permissionView: false,
+        })
+      )
+      return
+    }
     if (!isExpandPanel || !buId) return
     if (!deliveryUnitDataDelivery) return
     if (
@@ -334,6 +354,23 @@ const ResourcesInformation = forwardRef((props, ref) => {
     [valueRadio]
   )
 
+  const loadDataSelect = (
+    <Select
+      style={{ width: '200px' }}
+      placeholder="Load data from"
+      value={loadDataFromValue}
+      onChange={onChangeLoadData}
+      defaultActiveFirstOption={false}
+      filterOption={false}
+      disabled={!canEdit}>
+      {loadDataFromList.map(option => (
+        <Option key={option.value} value={option.value}>
+          {option.label}
+        </Option>
+      ))}
+    </Select>
+  )
+
   return (
     <div>
       <Row gutter={32} style={{ marginBottom: 20 }}>
@@ -362,20 +399,18 @@ const ResourcesInformation = forwardRef((props, ref) => {
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}>
-          <Select
-            style={{ width: '200px' }}
-            placeholder="Load data from"
-            value={loadDataFromValue}
-            onChange={onChangeLoadData}
-            defaultActiveFirstOption={false}
-            filterOption={false}
-            disabled={!canEdit}>
-            {loadDataFromList.map(option => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
-          </Select>
+          {canEdit ? (
+            loadDataSelect
+          ) : (
+            <Tooltip
+              title={
+                duValueDelivery === 'All' || status === 'Draft'
+                  ? REVIEWING_WARNING_MESSAGE
+                  : ACTION_NOT_AVAILABLE_MESSAGE
+              }>
+              {loadDataSelect}
+            </Tooltip>
+          )}
           <Radio.Group
             style={{ minWidth: '200px' }}
             onChange={onChangeRadio}

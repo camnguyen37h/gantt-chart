@@ -32,6 +32,8 @@ import {
   mockListDeliveryPlanMember468,
   mockUserActionHistory468,
   mockUserActionHistoryDelivery468,
+  mockMaxKPISetting,
+  mockUserAndDepartment,
 } from '../../utils/mockBusinessPlanData';
 
 // Simulate network delay
@@ -447,34 +449,61 @@ export const getDepartmentsByBPVersion = async (businessPlanVersionId) => {
 };
 
 /**
- * Get All Positions
- * @returns {Promise<Array>} List of positions
+ * Get All Positions (alias: getPositionRevenuePlan)
+ * @returns {Promise<Object>} List of positions
  */
 export const getAllPositions = async () => {
   await delay(300);
-  
+
   return JSON.parse(JSON.stringify(mockPositions));
 };
 
+export const getPositionRevenuePlan = getAllPositions;
+
 /**
- * Get All Currencies
- * @returns {Promise<Array>} List of currencies
+ * Get User And Department Collaborator
+ * @param {Object} params - search params
+ * @returns {Promise<Object>} Users and departments
  */
-export const getAllCurrencies = async () => {
+export const getUserAndDepartmentCollaborator = async (params) => {
   await delay(300);
-  
-  return JSON.parse(JSON.stringify(mockCurrencies));
+
+  return JSON.parse(JSON.stringify(mockUserAndDepartment));
 };
 
 /**
- * Get All Industries
- * @returns {Promise<Array>} List of industries
+ * Get Business Plan Setting Max KPI
+ * @returns {Promise<Object>} Max KPI settings
+ */
+export const getBusinessPlanSettingMaxKPI = async (params) => {
+  await delay(300);
+
+  return JSON.parse(JSON.stringify(mockMaxKPISetting));
+};
+
+/**
+ * Get All Currencies (alias: getIndustryCurrency) (alias: getIndustryCurrency)
+ * @returns {Promise<Object>} List of currencies
+ */
+export const getAllCurrencies = async () => {
+  await delay(300);
+
+  return JSON.parse(JSON.stringify(mockCurrencies));
+};
+
+export const getIndustryCurrency = getAllCurrencies;
+
+/**
+ * Get All Industries (alias: getIndustryDomain)
+ * @returns {Promise<Object>} List of industries
  */
 export const getAllIndustries = async () => {
   await delay(300);
-  
+
   return JSON.parse(JSON.stringify(mockIndustries));
 };
+
+export const getIndustryDomain = getAllIndustries;
 
 /**
  * Get All Approval Steps
@@ -1013,8 +1042,13 @@ const mockBusinessPlanApi = {
   getListDUByVersionRevenue,
   getListDUByVersionDelivery,
   getAllPositions,
+  getPositionRevenuePlan,
   getAllCurrencies,
+  getIndustryCurrency,
   getAllIndustries,
+  getIndustryDomain,
+  getUserAndDepartmentCollaborator,
+  getBusinessPlanSettingMaxKPI,
   getAllApprovalSteps,
   getBusinessPlanWorkflow,
   uploadDocument,

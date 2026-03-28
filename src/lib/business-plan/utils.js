@@ -1,5 +1,7 @@
 import moment from 'moment'
 import Decimal from 'decimal.js'
+import cloneDeep from 'lodash/cloneDeep'
+import { sectionConfig } from './constants'
 
 export const formatNumber = (value, percent) => {
   if (value === null || value === undefined || !isFinite(value) || isNaN(value))
@@ -122,7 +124,10 @@ const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
     const idx = ldapIndexMap[approver.ldap]
     if (idx !== undefined) {
       // Same LDAP exists in both MVVs → mark as mergeApprove
-      if (approver.referenceId != null && String(approver.referenceId) === String(currentBuId)) {
+      if (
+        approver.referenceId != null &&
+        String(approver.referenceId) === String(currentBuId)
+      ) {
         result[idx] = { ...approver, mergeApprove: true }
       } else {
         result[idx] = { ...result[idx], mergeApprove: true }
@@ -176,7 +181,6 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   const resultColumns = columnLabels.map(col => {
     const isDuplicate = keyCounts[col.columnKey] > 1
 
-    // Compute colCategory first so it can inform compareKey for duplicate DU columns.
     let colCategory
     if (col.id != null) {
       if (col.columnKey.startsWith('SALE')) {
@@ -207,14 +211,14 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
       }
     }
 
-    // Compute compareKey:
-    // - explicit mvvType takes priority
-    // - duplicate DU columns without mvvType use their colCategory suffix to stay unique
-    // - everything else keeps the raw columnKey
     let newKey
     if (col.mvvType) {
       newKey = `${col.columnKey}_${col.mvvType.toLowerCase()}`
-    } else if (isDuplicate && col.columnKey.startsWith('DELIVERY_UNIT') && colCategory) {
+    } else if (
+      isDuplicate &&
+      col.columnKey.startsWith('DELIVERY_UNIT') &&
+      colCategory
+    ) {
       const suffix = colCategory.endsWith('offshore') ? 'offshore' : 'onsite'
       newKey = `${col.columnKey}_${suffix}`
     } else {
@@ -228,7 +232,6 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
     }
   })
 
-  // Build a map: originalColumnKey → [compareKey, ...] in order of appearance
   const compareKeysByOriginal = new Map()
   for (let i = 0; i < columnLabels.length; i++) {
     const orig = columnLabels[i].columnKey
@@ -247,7 +250,8 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
         cellList: row.cellList.map(cell => {
           const cks = compareKeysByOriginal.get(cell.columnKey)
           if (!cks) return cell
-          const occ = (cellOcc[cell.columnKey] = (cellOcc[cell.columnKey] || 0) + 1)
+          const occ = (cellOcc[cell.columnKey] =
+            (cellOcc[cell.columnKey] || 0) + 1)
           return { ...cell, compareKey: cks[occ - 1] }
         }),
       }
@@ -255,4 +259,84 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   }))
 
   return { columnLabels: resultColumns, sectionList: resultSections }
+}
+
+export const buildViewModeEntry = (rawData, viewModeName) => {
+  const { columnLabels, sectionList } = normalizeColumnKeys(
+    rawData.columnLabels || [],
+    rawData.sectionList || [],
+    viewModeName
+  )
+
+  const mmBillRow = sectionList.reduce(function (found, section) {
+    if (found) return found
+    return (
+      section.rowLabels.find(function (row) {
+        return row.rowKey === 'MM_BILL'
+      }) || null
+    )
+  }, null)
+
+  const processedSectionList = cloneDeep(sectionList)
+
+  if (mmBillRow) {
+    const mmBillService = {
+      ...cloneDeep(mmBillRow),
+      label: '',
+      rowKey: 'MM_BILL_1',
+      cellList: cloneDeep(mmBillRow).cellList.map(function (item) {
+        return {
+          ...item,
+          value: null,
+          rowKey: 'MM_BILL_1',
+          editable: sectionConfig.MAN_MONTH.newRowEditable(item.columnKey),
+        }
+      }),
+    }
+    processedSectionList.forEach(function (section, index) {
+      if (
+        section.sectionKey === 'MAN_MONTH' &&
+        !section.rowLabels.some(function (r) {
+          return r.rowKey === 'MM_BILL_1'
+        })
+      ) {
+        processedSectionList[index].rowLabels.push(mmBillService)
+      }
+    })
+  }
+
+  const businessPlanItems = processedSectionList.reduce(function (res, cur) {
+    res[cur.sectionKey] = {
+      title: cur.sectionTitle,
+      data: cur.rowLabels.reduce(function (rowRes, rowCur) {
+        rowRes[rowCur.rowKey] = {
+          title: rowCur.label,
+          data: rowCur.cellList.map(function (item) {
+            return { ...item, sectionKey: cur.sectionKey }
+          }),
+        }
+        return rowRes
+      }, {}),
+    }
+    return res
+  }, {})
+
+  return {
+    businessPlanItems,
+    columns: columnLabels,
+    originalBusinessPlanItems: processedSectionList,
+  }
+}
+
+export const applyViewModeEntry = (state, entry, viewMode) => {
+  state.businessPlanItems = entry.businessPlanItems
+  state.columns = entry.columns
+  state.originalBusinessPlanItems = entry.originalBusinessPlanItems
+  state.viewMode = viewMode
+  const rates = state.ratesByLocationType[viewMode]
+  if (rates) {
+    state.exchangeRate = rates.exchangeRate
+    state.softwareDevelopmentFee = rates.softwareDevelopmentFee
+    if (rates.otherFees != null) state.otherFees = rates.otherFees
+  }
 }

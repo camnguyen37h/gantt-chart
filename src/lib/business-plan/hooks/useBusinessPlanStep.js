@@ -14,10 +14,10 @@ const useBusinessPlanStep = () => {
   const approveRejectWO = async params => {
     const result = await BusinessPlanAPI.approveRejectWO(params)
     if (result.status === ResponseStatusCode.success) {
-      NotificationManager.success(result.data.message)
+      NotificationManager.success(result.data.message || 'Success')
       return result.data
     } else {
-      return NotificationManager.error(result.message)
+      return NotificationManager.error(result.message || 'Failed')
     }
   }
 

@@ -29,7 +29,7 @@ function BusinessPlanActivity({ match }) {
     }
     await dispatch(
       postBusinessPlanComment({
-        referenceId: match.params.buId,
+        referenceIds: [match.params.buId],
         commentContent: inputValue,
         moduleTypeEnum: MODULE_COMMENT_TYPE.BUSINESS_PLAN_DETAIL,
       })

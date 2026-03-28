@@ -325,6 +325,9 @@ const BusinessPlanRevenue = forwardRef(
         dispatch(setIsLoadingSellingExpenses(false))
         updateIsSaveConfirmShowed(false)
       } finally {
+        dispatch(setIsLoadingOtherRevenues(false))
+        dispatch(setIsLoadingSellingExpenses(false))
+        updateIsSaveConfirmShowed(false)
         if (hasSucceeded) {
           NotificationManager.success('Save successfully!')
         }

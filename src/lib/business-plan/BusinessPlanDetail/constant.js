@@ -25,6 +25,11 @@ export const permissionType = {
   DB_SPECIAL_VIEW_MARGIN_OFFSHORE: 'DB_SPECIAL_VIEW_MARGIN_OFFSHORE',
 }
 
+export const APPROVAL_STATUS_STEP = {
+  FC_PENDING: 5,
+  BOM_PENDING: 6,
+}
+
 export const dummyPlan = {
   id: 'loading',
   generalInformation: {
@@ -43,19 +48,25 @@ export const dummyPlan = {
     mvvLocationType: '',
   },
   summaryInfo: {
-    unitPrice: { value: null },
-    revenues: { value: null },
-    costOfSales: { value: null },
-    sellingExpenses: { value: null },
-    deliveryExpenses: { value: null },
-    taxExpenses: { value: null },
-    directMargin: { value: null },
-    directMarginBeforeIncentivesAndProjectBonus: { value: null },
-    allocationOfPoolAndUnbillable: { value: null },
-    indirectMargin: { value: null },
-    directMarginRate: { value: null },
-    directMarginBeforeIncentivesAndProjectBonusRate: { value: null },
-    indirectMarginRate: { value: null },
+    unitPrice: { value: null, permissionView: null },
+    revenues: { value: null, permissionView: null },
+    costOfSales: { value: null, permissionView: null },
+    sellingExpenses: { value: null, permissionView: null },
+    deliveryExpenses: { value: null, permissionView: null },
+    taxExpenses: { value: null, permissionView: null },
+    directMargin: { value: null, permissionView: null },
+    directMarginBeforeIncentivesAndProjectBonus: {
+      value: null,
+      permissionView: null,
+    },
+    allocationOfPoolAndUnbillable: { value: null, permissionView: null },
+    indirectMargin: { value: null, permissionView: null },
+    directMarginRate: { value: null, permissionView: null },
+    directMarginBeforeIncentivesAndProjectBonusRate: {
+      value: null,
+      permissionView: null,
+    },
+    indirectMarginRate: { value: null, permissionView: null },
   },
   allProjectCode: [],
 }

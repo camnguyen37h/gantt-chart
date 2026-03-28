@@ -1,4 +1,4 @@
-﻿import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import useBusinessPlanForm from './useBusinessPlanForm'
 import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
@@ -184,8 +184,6 @@ const useFormula = () => {
       if (!locType) return null
       return getCrossViewCell(locType, secKey, rowKey, 'SALE')
     }
-    // For DU and other columns: prefer the specific locType derived from colCategory
-    // so that DUs sharing the same columnKey across Onsite/Offshore resolve correctly.
     if (isDU(colKey)) {
       const locType = getOBLocationTypeByDisplayKey(
         getDisplayColumnKey(targetItem)
@@ -307,7 +305,7 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionInternal = () => {
-    if (viewMode === 'Total') {
+    if (isOBOrTotal()) {
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(
           locType,
@@ -319,7 +317,6 @@ const useFormula = () => {
       if (!perLoc.some(v => v !== null)) return undefined
       return getSum(...perLoc)
     }
-    // OB, Onsite, Offshore: internal = -Σ DU (formula values)
     const duItems = getItems({
       sectionKey: 'REVENUES',
       rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
@@ -384,8 +381,6 @@ const useFormula = () => {
       onsiteData.businessPlanItems['REVENUES'] &&
       onsiteData.businessPlanItems['REVENUES'].data[rowKey]
     if (!onsiteRow) return undefined
-    // Total = Σ SALE(onsite) + Internal(onsite) + Σ DU(onsite)
-    // Since Internal(onsite) = -Σ DU(onsite), this simplifies to Σ SALE(onsite) only
     return getSum(
       ...onsiteRow.data
         .filter(item => isSaleCol(item.columnKey))
@@ -422,12 +417,6 @@ const useFormula = () => {
 
   const getDUCostSaleOB = ({ targetItem }) => {
     if (!isOB()) return undefined
-    if (isSaleCol(targetItem.columnKey)) {
-      const saleColumns = (columns || []).filter(c => isSaleCol(c.columnKey))
-      if (saleColumns.length === 1) {
-        return getCrossViewCell('Offshore', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
-      }
-    }
     const locType = getOBLocationTypeByDisplayKey(
       getDisplayColumnKey(targetItem)
     )
@@ -445,13 +434,7 @@ const useFormula = () => {
     return cell && cell.value != null ? cell.value : undefined
   }
 
-  const getDUCostInternal = () => {
-    if (isOB()) {
-      const sale = getCrossViewCell('Offshore', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
-      return sale == null ? null : decimalNegate(sale)
-    }
-    return getSoftwareProductionInternal()
-  }
+  const getDUCostInternal = () => (isOB() ? 0 : getSoftwareProductionInternal())
 
   const getDUCostTotal = () => {
     if (isOB()) return 0
@@ -459,13 +442,11 @@ const useFormula = () => {
   }
 
   const getIncentiveTotal = () => {
-    if (isOB()) return getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'INCENTIVES', 'TOTAL')
     if (isOBOrTotal()) return undefined
     return getIncentiveSale()
   }
 
   const getIncentiveSale = () => {
-    if (isOB()) return getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'INCENTIVES', 'SALE')
     if (isOBOrTotal()) return undefined
     const revenues = getSoftwareProductionSale()
     const rate = getItem({
@@ -1340,8 +1321,8 @@ const useFormula = () => {
   const getProductionMMBonusCell = makeRefCrossViewFn('PRODUCTION_MM_BONUS')
   const getBillRateNormCell = makeRefCrossViewFn('BILL_RATE_NORM')
 
-  const hideInOB = fn => args => isOB() ? undefined : fn(args)
-  const obOnly = fn => args => isOB() ? fn(args) : null
+  const hideInOB = fn => args => (isOB() ? undefined : fn(args))
+  const obOnly = fn => args => (isOB() ? fn(args) : null)
 
   const SPECIAL_SECTIONS = new Set([
     'REVENUES',
@@ -1404,10 +1385,7 @@ const useFormula = () => {
     SELLING_EXPENSES: {
       SELLING_EXPENSES_TOTAL: {
         total: getTotalColumnAndSet,
-        sale: ({ targetItem }) =>
-          isOB()
-            ? getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'SELLING_EXPENSES_TOTAL', 'SALE')
-            : getTotalColumnAndSet({ targetItem }),
+        sale: getTotalColumnAndSet,
         internal: getOBNegativeDUSumInternal,
       },
       INCENTIVES: {

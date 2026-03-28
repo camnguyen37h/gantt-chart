@@ -25,6 +25,7 @@ import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { formatInputNumber, parseInputNumber } from '../../utils'
 import styled from 'styled-components'
 import {
+  ACTION_NOT_AVAILABLE_MESSAGE,
   DUPLICATED_COSTNAMES_MESSAGE,
   OTHER_EXPENSE_TABLE_WIDTH,
   OTHER_EXPENSES_KEYS,
@@ -32,6 +33,7 @@ import {
   VALIDATE_REQUIRED_FIELDS_MESSAGE,
 } from './constants'
 import { ALL_OPTION_VALUE } from '../../constants'
+import { useBusinessPlanDetails } from '../../hooks'
 const StyledInputNumber = styled(InputNumber)`
   .ant-input-number-handler-wrap {
     display: none;
@@ -57,7 +59,9 @@ const OtherExpensesTable = forwardRef(
       dataListOtherExpenses,
       labelMonthOtherExpenses,
       getOtherExpensesTableLoading,
+      duValueDelivery,
     } = useSelector(state => state.businessPlanDelivery)
+    const { status } = useBusinessPlanDetails()
 
     const listCreateOtherExpenses = useSelector(
       state =>
@@ -487,7 +491,12 @@ const OtherExpensesTable = forwardRef(
                       />
                     )
                   ) : (
-                    <Tooltip title={REVIEWING_WARNING_MESSAGE}>
+                    <Tooltip
+                      title={
+                        duValueDelivery === 'All' || status === 'Draft'
+                          ? REVIEWING_WARNING_MESSAGE
+                          : ACTION_NOT_AVAILABLE_MESSAGE
+                      }>
                       <StyledDisabledIcon
                         type={record.parentKey ? 'minus-circle' : 'plus-circle'}
                       />
@@ -673,6 +682,7 @@ const OtherExpensesTable = forwardRef(
             y: 400,
           }}
           loading={getOtherExpensesTableLoading}
+          showHeader={data && data.length > 0}
         />
       </div>
     )

@@ -4,90 +4,14 @@ import {
   getBusinessPlanDetail,
   getBusinessPlanDetailByViewMode,
   getCompareBusinessPlanDetail,
-  getPositionRevenuePlan,
   getSummaryRevenuePlan,
   fetchAllViewModesData,
 } from '../asyncThunks'
-import { sectionConfig } from '../../constants'
-import { normalizeColumnKeys } from '../../utils'
-
-// --- Normalization helpers (defined outside createSlice so they can be reused) ---
-
-const buildViewModeEntry = (rawData, viewModeName) => {
-  const { columnLabels, sectionList } = normalizeColumnKeys(
-    rawData.columnLabels || [],
-    rawData.sectionList || [],
-    viewModeName
-  )
-
-  const mmBillRow = sectionList.reduce(function (found, section) {
-    if (found) return found
-    return section.rowLabels.find(function (row) { return row.rowKey === 'MM_BILL' }) || null
-  }, null)
-
-  const processedSectionList = cloneDeep(sectionList)
-
-  if (mmBillRow) {
-    const mmBillService = {
-      ...cloneDeep(mmBillRow),
-      label: '',
-      rowKey: 'MM_BILL_1',
-      cellList: cloneDeep(mmBillRow).cellList.map(function (item) {
-        return {
-          ...item,
-          value: null,
-          rowKey: 'MM_BILL_1',
-          editable: sectionConfig.MAN_MONTH.newRowEditable(item.columnKey),
-        }
-      }),
-    }
-    processedSectionList.forEach(function (section, index) {
-      if (
-        section.sectionKey === 'MAN_MONTH' &&
-        !section.rowLabels.some(function (r) { return r.rowKey === 'MM_BILL_1' })
-      ) {
-        processedSectionList[index].rowLabels.push(mmBillService)
-      }
-    })
-  }
-
-  const businessPlanItems = processedSectionList.reduce(function (res, cur) {
-    res[cur.sectionKey] = {
-      title: cur.sectionTitle,
-      data: cur.rowLabels.reduce(function (rowRes, rowCur) {
-        rowRes[rowCur.rowKey] = {
-          title: rowCur.label,
-          data: rowCur.cellList.map(function (item) {
-            return { ...item, sectionKey: cur.sectionKey }
-          }),
-        }
-        return rowRes
-      }, {}),
-    }
-    return res
-  }, {})
-
-  return {
-    businessPlanItems,
-    columns: columnLabels,
-    originalBusinessPlanItems: processedSectionList,
-  }
-}
-
-const applyViewModeEntry = (state, entry, viewMode) => {
-  state.businessPlanItems = entry.businessPlanItems
-  state.columns = entry.columns
-  state.originalBusinessPlanItems = entry.originalBusinessPlanItems
-  state.viewMode = viewMode
-  const rates = state.ratesByLocationType[viewMode]
-  if (rates) {
-    state.exchangeRate = rates.exchangeRate
-    state.softwareDevelopmentFee = rates.softwareDevelopmentFee
-    if (rates.otherFees != null) state.otherFees = rates.otherFees
-  }
-}
-
-// -------------------------------------------------------------------------------
+import {
+  applyViewModeEntry,
+  buildViewModeEntry,
+  normalizeColumnKeys,
+} from '../../utils'
 
 const initialState = {
   isSaveShowed: { generalInformation: false, businessPlan: false },
@@ -348,7 +272,10 @@ const businessDetailsSlice = createSlice({
         if (!data) return
 
         const entry = buildViewModeEntry(data, viewModeFromAction)
-        state.viewModeDataMap = { ...state.viewModeDataMap, [viewModeFromAction]: entry }
+        state.viewModeDataMap = {
+          ...state.viewModeDataMap,
+          [viewModeFromAction]: entry,
+        }
         applyViewModeEntry(state, entry, viewModeFromAction)
         state.version = data.version
         state.warningMessage = data.warningMessage
@@ -377,7 +304,11 @@ const businessDetailsSlice = createSlice({
 
       const activeViewMode = state.viewMode
       if (activeViewMode && viewModeDataMap[activeViewMode]) {
-        applyViewModeEntry(state, viewModeDataMap[activeViewMode], activeViewMode)
+        applyViewModeEntry(
+          state,
+          viewModeDataMap[activeViewMode],
+          activeViewMode
+        )
         const activeRawData = payload[activeViewMode]
         if (activeRawData) {
           state.version = activeRawData.version

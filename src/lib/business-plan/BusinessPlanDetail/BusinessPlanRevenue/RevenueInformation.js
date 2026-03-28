@@ -36,7 +36,8 @@ const transformAvergeColumns = (originalColumns, averagePriceTotalRevenue) => {
           title:
             col.title === 'Total' ? (
               'Average Price'
-            ) : col.children[0].title === 'Total' ? (
+            ) : col.children[0].title === 'Total' &&
+              !isNaN(averagePriceTotalRevenue) ? (
               <span title={formatFloatNumber(averagePriceTotalRevenue, 0, 8)}>
                 {formatFloatNumber(Number(averagePriceTotalRevenue), 0, 3)}
               </span>
@@ -183,6 +184,7 @@ const RevenueInformation = ({
 
   const dispatch = useDispatch()
   const {
+    summaryRevenuePlan,
     filtersRevenue: filters,
     dataFilterPosition: positionRevenuePlan,
     isLoadingFilterPosition: isLoadingFilterPositionRevenuePlan,
@@ -190,6 +192,12 @@ const RevenueInformation = ({
   const filterRef = useRef()
   const isInitialRender = useRef(true)
   const prevVersionRef = useRef(businessVersion)
+
+  const totalSum =
+    (summaryRevenuePlan &&
+      summaryRevenuePlan.mmBill &&
+      summaryRevenuePlan.mmBill) ||
+    null
 
   const handleSearchPosition = useCallback(
     text => {
@@ -445,14 +453,6 @@ const RevenueInformation = ({
       )
     })
 
-    const totalSum = dataSourceTable.revenueInfos.reduce((sum, item) => {
-      const totalByLabel =
-        switchValue === SWITCH_LABEL.REVENUE
-          ? item.totalRevenue
-          : item.totalManMonth
-      return sum + parseFloat(totalByLabel)
-    }, 0)
-
     const totalSumManMonthRevenue = dataSourceTable.revenueInfos.reduce(
       (sum, item) => {
         const totalByLabel =
@@ -477,11 +477,14 @@ const RevenueInformation = ({
       if (column.children.some(child => child.dataIndex === 'totalRevenue')) {
         return {
           ...column,
-          title: (
-            <span title={formatFloatNumber(totalSum, 0, 8)}>
-              {formatFloatNumber(totalSum, 0, 3)}
-            </span>
-          ),
+          title:
+            totalSum !== null && !isNaN(totalSum) ? (
+              <span title={formatFloatNumber(totalSum, 0, 8)}>
+                {formatFloatNumber(totalSum, 0, 3)}
+              </span>
+            ) : (
+              ''
+            ),
         }
       }
       return column
@@ -522,11 +525,14 @@ const RevenueInformation = ({
       if (column.children.some(child => child.dataIndex === 'totalRevenue')) {
         return {
           ...column,
-          title: (
-            <span title={formatFloatNumber(totalSum, 0, 8)}>
-              {formatFloatNumber(totalSum, 0, 3)}
-            </span>
-          ),
+          title:
+            totalSum !== null && !isNaN(totalSum) ? (
+              <span title={formatFloatNumber(totalSum, 0, 8)}>
+                {formatFloatNumber(totalSum, 0, 3)}
+              </span>
+            ) : (
+              ''
+            ),
           children: column.children.map(child => {
             if (child.dataIndex === 'totalRevenue') {
               return {
@@ -560,7 +566,7 @@ const RevenueInformation = ({
         : updatedColumnsHeadcount),
       ...dataKeyColumn,
     ])
-  }, [switchValue, dataSourceTable])
+  }, [switchValue, dataSourceTable, totalSum])
 
   useEffect(() => {
     if (!canView) return
@@ -692,6 +698,12 @@ const RevenueInformation = ({
         }
         loading={loadingTable}
         scroll={{ x: 'max-content', y: 400 }}
+        showHeader={
+          canView &&
+          dataSourceTable &&
+          dataSourceTable.revenueInfos &&
+          dataSourceTable.revenueInfos.length > 0
+        }
       />
     </div>
   )
