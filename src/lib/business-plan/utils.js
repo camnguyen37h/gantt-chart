@@ -177,7 +177,8 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   const resultColumns = columnLabels.map(col => {
     const isDuplicate = keyCounts[col.columnKey] > 1
     if (isDuplicate) hasRenames = true
-    const newKey = isDuplicate ? `${col.columnKey}_${col.index}` : col.columnKey
+    const newKey = col.mvvType ? `${col.columnKey}_${col.mvvType.toLowerCase()}` : col.columnKey
+    if (newKey !== col.columnKey) hasRenames = true
 
     let colCategory
     if (col.id != null) {
