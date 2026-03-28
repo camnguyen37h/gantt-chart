@@ -7,9 +7,7 @@
     "version": 1,
     "startDate": 1774371600000,
     "endDate": 1805216400000,
-    "userRoles": [
-      "DB-ADMIN"
-    ],
+    "userRoles": ["DB-ADMIN"],
     "warningMessage": [],
     "versions": [
       {
@@ -43,15 +41,13 @@
         "id": 39,
         "label": "DU1.12",
         "index": 4,
-        "columnKey": "DELIVERY_UNIT_39",
-        "mvvType": "Offshore"
+        "columnKey": "DELIVERY_UNIT_39"
       },
       {
         "id": 103,
         "label": "DU1.18",
         "index": 5,
-        "columnKey": "DELIVERY_UNIT_103",
-        "mvvType": "Offshore"
+        "columnKey": "DELIVERY_UNIT_103"
       }
     ],
     "sectionList": [
@@ -474,7 +470,7 @@
                 "editable": false
               },
               {
-                "value": 103002,
+                "value": 103000,
                 "columnKey": "SALE",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
@@ -494,7 +490,7 @@
                 "editable": false
               },
               {
-                "value": 200001,
+                "value": 300000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,

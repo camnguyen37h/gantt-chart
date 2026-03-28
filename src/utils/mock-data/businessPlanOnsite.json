@@ -7,9 +7,7 @@
     "version": 1,
     "startDate": 1774371600000,
     "endDate": 1805821200000,
-    "userRoles": [
-      "DB-ADMIN"
-    ],
+    "userRoles": ["DB-ADMIN"],
     "warningMessage": [],
     "versions": [
       {
@@ -43,15 +41,13 @@
         "id": 1,
         "label": "DU3.1",
         "index": 4,
-        "columnKey": "DELIVERY_UNIT_1",
-        "mvvType": "Onsite"
+        "columnKey": "DELIVERY_UNIT_1"
       },
       {
         "id": 39,
         "label": "DU1.12",
         "index": 5,
-        "columnKey": "DELIVERY_UNIT_39",
-        "mvvType": "Onsite"
+        "columnKey": "DELIVERY_UNIT_39"
       }
     ],
     "sectionList": [

@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux'
+﻿import { useSelector } from 'react-redux'
 import useBusinessPlanForm from './useBusinessPlanForm'
 import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
@@ -1321,8 +1321,8 @@ const useFormula = () => {
   const getProductionMMBonusCell = makeRefCrossViewFn('PRODUCTION_MM_BONUS')
   const getBillRateNormCell = makeRefCrossViewFn('BILL_RATE_NORM')
 
-  const hideInOB = fn => args => (isOB() ? undefined : fn(args))
-  const obOnly = fn => args => (isOB() ? fn(args) : null)
+  const hideInOB = fn => args => isOB() ? undefined : fn(args)
+  const obOnly = fn => args => isOB() ? fn(args) : null
 
   const SPECIAL_SECTIONS = new Set([
     'REVENUES',

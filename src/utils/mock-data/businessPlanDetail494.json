@@ -9,9 +9,7 @@
     "version": 1,
     "startDate": 1774371600000,
     "endDate": 1805821200000,
-    "userRoles": [
-      "DB-ADMIN"
-    ],
+    "userRoles": ["DB-ADMIN"],
     "warningMessage": null,
     "versions": [
       {
@@ -90,12 +88,12 @@
         "pm": "ttlam1",
         "currency": 778,
         "exchangeRate": 1,
-        "totalContractPrice": 200000000,
+        "totalContractPrice": 200015000,
         "industry": 18,
         "customerMarket": "US",
         "cooperationPeriod": "Less than 12 months",
         "softwareDevelopmentFee": 200000000,
-        "otherFees": 0,
+        "otherFees": 15000,
         "planningStartDate": null,
         "planningEndDate": null,
         "businessPlanKpiDTO": {
@@ -179,13 +177,13 @@
         "recurringNew": "New",
         "pm": "pmuser",
         "currency": 778,
-        "exchangeRate": 1,
-        "totalContractPrice": 600000000,
+        "exchangeRate": 2,
+        "totalContractPrice": 300015000,
         "industry": 18,
         "customerMarket": "US",
         "cooperationPeriod": "Less than 12 months",
-        "softwareDevelopmentFee": 600000000,
-        "otherFees": 0,
+        "softwareDevelopmentFee": 300000000,
+        "otherFees": 15000,
         "planningStartDate": null,
         "planningEndDate": null,
         "businessPlanKpiDTO": {

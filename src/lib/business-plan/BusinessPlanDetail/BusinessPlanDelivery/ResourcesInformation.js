@@ -302,7 +302,6 @@ const ResourcesInformation = forwardRef((props, ref) => {
           listBudgetMMForEachMonth: {},
           deliveryPlanByHeadCountList: [],
           totalRecord: 0,
-          permissionView: false,
         })
       )
       return
