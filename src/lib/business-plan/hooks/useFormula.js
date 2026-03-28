@@ -171,6 +171,15 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
     }
 
     if (isSaleCol(colKey)) {
+      const saleColumns = (columns || []).filter(c => isSaleCol(c.columnKey))
+      if (saleColumns.length === 1) {
+        // Bu chung: single shared BU column present in both Onsite and Offshore
+        // → aggregate contributions from both loc types
+        const results = LOC_TYPES.map(lt => getCrossViewCell(lt, secKey, rowKey, 'SALE'))
+        if (!results.some(v => v !== null)) return null
+        return getSum(...results)
+      }
+      // Bu riêng: each SALE column belongs to exactly one loc type
       const locType = getOBLocationTypeByDisplayKey(getDisplayColumnKey(targetItem))
       if (!locType) return null
       return getCrossViewCell(locType, secKey, rowKey, 'SALE')
@@ -400,7 +409,15 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
     return cell && cell.value != null ? cell.value : undefined
   }
 
-  const getDUCostInternal = () => (isOB() ? 0 : getSoftwareProductionInternal())
+  const getDUCostInternal = () => {
+    if (isOB()) return getCrossViewCell('Offshore', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
+    return getSoftwareProductionInternal()
+  }
+
+  const getCostPriceTotalInternal = ({ targetItem }) => {
+    if (isOB()) return getCrossViewCell('Offshore', 'COST_PRICE', 'COST_PRICE_TOTAL', 'SALE')
+    return getTotalColumnAndSet({ targetItem })
+  }
 
   const getDUCostTotal = () => {
     if (isOB()) return 0
@@ -1171,7 +1188,7 @@ const getMarginRate = ({ targetItem, marginRowKey, marginValueFn, rateRowKey, is
       COST_PRICE_TOTAL: {
         total: getTotalColumnAndSet,
         sale: getTotalColumnAndSet,
-        internal: getTotalColumnAndSet,
+        internal: getCostPriceTotalInternal,
         delivery_unit: getTotalColumnAndSet,
       },
       COST_OF_DU_SOLD: {
