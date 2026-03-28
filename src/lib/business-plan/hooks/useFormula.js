@@ -347,9 +347,11 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
       onsiteData.businessPlanItems['REVENUES'] &&
       onsiteData.businessPlanItems['REVENUES'].data[rowKey]
     if (!onsiteRow) return undefined
+    // Total = Σ SALE(onsite) + Internal(onsite) + Σ DU(onsite)
+    // Since Internal(onsite) = -Σ DU(onsite), this simplifies to Σ SALE(onsite) only
     return getSum(
       ...onsiteRow.data
-        .filter(item => item.columnKey.toUpperCase() !== 'TOTAL')
+        .filter(item => isSaleCol(item.columnKey))
         .map(item => item.value)
     )
   }

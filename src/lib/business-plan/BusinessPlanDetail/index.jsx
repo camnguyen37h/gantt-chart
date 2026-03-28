@@ -87,6 +87,7 @@ const StyledAffix = styled.div`
 function BusinessPlanDetail({ match, history }) {
   const affixRef = useRef(null)
   const businessPlanDeliveryRef = useRef(null)
+  const skipViewModeReset = useRef(false)
   const [activeTab, setActiveTab] = useState('1')
   const [activeCollapse, setActiveCollapse] = useState('')
   const [viewMode, setViewMode] = useState('Total')
@@ -154,20 +155,20 @@ function BusinessPlanDetail({ match, history }) {
     })()
   }, [match.params.buId])
 
-  const handleViewModeChange = e => {
-    const newMode = e.target.value
-    setViewMode(newMode)
-    const info = generalInfos.find(i => i.mvvLocationType === newMode)
-    if (info) dispatch(setSelectedMvvCode(info.projectCode))
-  }
-
   useEffect(() => {
-    if (!generalInfos || generalInfos.length === 0) return
-    const info =
-      generalInfos.find(i => i.projectCode === selectedMvvCode) ||
-      generalInfos[0]
-    if (info && info.mvvLocationType) setViewMode(info.mvvLocationType)
-  }, [generalInfos, selectedMvvCode])
+    if (skipViewModeReset.current) return
+    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+      const matchedMVV = generalInfos.find(
+        info => info.id === Number(match.params.buId)
+      )
+      const currentMVV = matchedMVV || generalInfos[0]
+
+      if (currentMVV && currentMVV.mvvLocationType) {
+        const locationType = currentMVV.mvvLocationType
+        setViewMode(locationType)
+      }
+    }
+  }, [generalInfos, match.params.buId])
 
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
@@ -271,17 +272,15 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    console.log('params = ', params)
-
     const isSubmit = await submit(params)
 
-    // if (isSubmit) {
-    //   await getBusinessPlanDetail(match.params.buId)
-    //   await getBusinessPlanWorkflow({
-    //     referenceId: match.params.buId,
-    //   })
-    //   await dispatch(getBusinessPlanHistory(match.params.buId))
-    // }
+    if (isSubmit) {
+      await getBusinessPlanDetail(match.params.buId)
+      await getBusinessPlanWorkflow({
+        referenceId: match.params.buId,
+      })
+      await dispatch(getBusinessPlanHistory(match.params.buId))
+    }
 
     setLoadingSubmit(false)
   }
@@ -379,6 +378,10 @@ function BusinessPlanDetail({ match, history }) {
     setLoadingSave(true)
     const savedProjectCode = projectCode
     const savedViewMode = viewMode
+    const savedActiveCollapse = activeCollapse
+    const savedActiveTab = activeTab
+    const savedSelectedMvvCode = selectedMvvCode
+    skipViewModeReset.current = true
 
     const params = {}
 
@@ -432,14 +435,14 @@ function BusinessPlanDetail({ match, history }) {
       const res = await getBusinessPlanDetail(match.params.buId)
 
       if (res && res.payload && res.payload.data) {
-        const defaultProjectCode = res.payload.data.projectCode
-        if (savedProjectCode && savedProjectCode !== defaultProjectCode) {
-          const infos = res.payload.data.generalInfos || []
+        const infos = res.payload.data.generalInfos || []
+        const targetCode = savedSelectedMvvCode || savedProjectCode
+        if (targetCode) {
           const restoredInfo = infos.find(
-            info => info.projectCode === savedProjectCode
+            info => info.projectCode === targetCode
           )
           if (restoredInfo) {
-            dispatch(setSelectedMvvCode(savedProjectCode))
+            dispatch(setSelectedMvvCode(targetCode))
             dispatch(
               setContractPriceData({
                 exchangeRate: restoredInfo.exchangeRate,
@@ -459,6 +462,10 @@ function BusinessPlanDetail({ match, history }) {
     }
     await fetchAllViewModesData(match.params.buId)
     await dispatch(getBusinessPlanHistory(match.params.buId))
+    skipViewModeReset.current = false
+    setViewMode(savedViewMode)
+    setActiveCollapse(savedActiveCollapse)
+    setActiveTab(savedActiveTab)
     setLoadingSave(false)
   }
 
@@ -587,7 +594,7 @@ function BusinessPlanDetail({ match, history }) {
                   onChange={handleChangeTab}>
                   <BusinessPlanTabWrapper
                     value={viewMode}
-                    onChange={handleViewModeChange}
+                    onChange={e => setViewMode(e.target.value)}
                     activeTab={activeTab}
                     availableModes={availableModes}
                     tab={
@@ -615,7 +622,7 @@ function BusinessPlanDetail({ match, history }) {
                   {listDuRevenue && listDuRevenue.length > 0 && (
                     <BusinessPlanTabWrapper
                       value={viewMode}
-                      onChange={handleViewModeChange}
+                      onChange={e => setViewMode(e.target.value)}
                       activeTab={activeTab}
                       availableModes={availableModes}
                       tab={
@@ -656,7 +663,7 @@ function BusinessPlanDetail({ match, history }) {
                   {listDUDelivery && listDUDelivery.length > 0 && (
                     <BusinessPlanTabWrapper
                       value={viewMode}
-                      onChange={handleViewModeChange}
+                      onChange={e => setViewMode(e.target.value)}
                       activeTab={activeTab}
                       availableModes={availableModes}
                       tab={
