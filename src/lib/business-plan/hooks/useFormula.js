@@ -29,6 +29,7 @@ const useFormula = () => {
     softwareDevelopmentFee,
     viewModeDataMap,
     viewMode,
+    ratesByLocationType,
   } = useSelector(state => state.businessPlanDetails)
 
   const getDisplayColumnKey = item =>
@@ -260,8 +261,14 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
   const getTotalMMBilService = ({ targetItem }) =>
     getSumDUValues({ sectionKey: targetItem.sectionKey, rowKey: targetItem.rowKey })
 
-  const getSoftwareProductionSale = () => {
-    if (isOBOrTotal()) return undefined
+  const getSoftwareProductionSale = ({ targetItem } = {}) => {
+    if (isOBOrTotal()) {
+      const locType = getOBLocationTypeByDisplayKey(getDisplayColumnKey(targetItem))
+      if (!locType) return undefined
+      const rates = ratesByLocationType && ratesByLocationType[locType]
+      if (!rates) return undefined
+      return getMultiplicationRes(rates.exchangeRate, rates.softwareDevelopmentFee)
+    }
     return getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
   }
 
@@ -293,8 +300,15 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
   }
 
   const getSoftwareProductionTotal = () => {
-    if (isOB()) return sumCrossViewTotals('REVENUES', 'SOFTWARE_PRODUCTION_REVENUES')
-    if (viewMode === 'Total') return undefined
+    if (isOBOrTotal()) {
+      const perLoc = LOC_TYPES.map(locType => {
+        const rates = ratesByLocationType && ratesByLocationType[locType]
+        if (!rates) return null
+        return getMultiplicationRes(rates.exchangeRate, rates.softwareDevelopmentFee)
+      })
+      if (!perLoc.some(v => v !== null)) return undefined
+      return getSum(...perLoc)
+    }
     return getSoftwareProductionSale()
   }
 
