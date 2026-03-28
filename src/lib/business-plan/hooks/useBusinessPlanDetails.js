@@ -413,29 +413,61 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
+    const isEmptyVal = v => v === null || v === undefined || v === ''
+
+    const generalInformationResult = {
+      industryCurrency: !industryCurrency,
+      exchangeRate: isEmptyVal(exchangeRate),
+      softwareDevelopmentFee: isEmptyVal(softwareDevelopmentFee),
+      otherFees: isEmptyVal(otherFees),
+      industryDomain: !industryDomain,
+      listAM: listAM.length < 1 || !handleCheckAtLeastOneFilled(listAM),
+      listTeamLead:
+        listTeamLead.length < 1 || !handleCheckAtLeastOneFilled(listTeamLead),
+      listPreparator:
+        listPreparator.length < 1 ||
+        !handleCheckAtLeastOneFilled(listPreparator),
+      listPM: listPM.length < 1 || !handleCheckAtLeastOneFilled(listPM),
+    }
+
     const result = {
+      ...generalInformationResult,
       ...itemsRes,
     }
 
     dispatch(redux.setValidation(result))
 
-    const isValid = Object.values(result).every(item => !item)
+    const isGeneralInfoInvalid = Object.values(generalInformationResult).some(
+      Boolean
+    )
+    const isBusinessPlanInvalid = Object.values(itemsRes).some(Boolean)
 
-    if (!isValid) {
-      return NotificationManager.error('Please input required fields')
+    if (isGeneralInfoInvalid) {
+      return NotificationManager.error(
+        'Please input required fields in General Information'
+      )
     }
 
-    return isValid
+    if (isBusinessPlanInvalid) {
+      return NotificationManager.error(
+        'Please input required fields in Tab Business Plan'
+      )
+    }
+
+    return true
   }, [
     dispatch,
-    listAM.length,
-    listPreparator.length,
-    listTeamLead.length,
+    listAM,
+    listPreparator,
+    listTeamLead,
+    listPM,
     totalContractPrice,
     exchangeRate,
     industryCurrency,
-    handleCheckAtLeastOneFilled,
-    businessPlanKpiDTO,
+    industryDomain,
+    softwareDevelopmentFee,
+    otherFees,
+    originalBusinessPlanItems,
   ])
 
   const setValidation = useCallback(
