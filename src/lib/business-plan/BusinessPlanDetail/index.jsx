@@ -40,6 +40,8 @@ import { NotificationManager } from 'react-notifications'
 const { Panel } = Collapse
 const { TabPane } = Tabs
 
+const customPanelStyle = { border: 0, overflow: 'hidden' }
+
 const StyledCollapse = styled(Collapse)`
   .ant-collapse-item {
     .ant-collapse-header {
@@ -117,13 +119,11 @@ function BusinessPlanDetail({ match, history }) {
   const [loadingExport, setLoadingExport] = useState(false)
   const [visible, setVisible] = useState(false)
   const { loadingApproval } = useBusinessPlanStep()
-  const {
-    loadingCollaborator,
-    listGeneralInformation,
-    generalInfos,
-    mvvLocationTypeIdMap,
-    selectedMvvCode,
-  } = useSelector(state => state.businessGeneralInformation)
+  const loadingCollaborator = useSelector(state => state.businessGeneralInformation.loadingCollaborator)
+  const listGeneralInformation = useSelector(state => state.businessGeneralInformation.listGeneralInformation)
+  const generalInfos = useSelector(state => state.businessGeneralInformation.generalInfos)
+  const mvvLocationTypeIdMap = useSelector(state => state.businessGeneralInformation.mvvLocationTypeIdMap)
+  const selectedMvvCode = useSelector(state => state.businessGeneralInformation.selectedMvvCode)
 
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
 
@@ -149,12 +149,12 @@ function BusinessPlanDetail({ match, history }) {
           await getBusinessPlanWorkflow({
             referenceId: match.params.buId,
           })
-          const data = res.payload && res.payload.data
-          if (data && data.generalInfos && data.generalInfos.length > 0) {
-            const matchedMVV = data.generalInfos.find(
-              info => info.id === Number(match.params.buId)
-            )
-            const currentMVV = matchedMVV || data.generalInfos[0]
+          // Init viewMode once from response — avoids a separate reactive effect
+          // that would interfere with viewMode state during save flows.
+          const infos = res.payload && res.payload.data && res.payload.data.generalInfos
+          if (infos && infos.length > 0) {
+            const matchedMVV = infos.find(info => info.id === Number(match.params.buId))
+            const currentMVV = matchedMVV || infos[0]
             if (currentMVV && currentMVV.mvvLocationType) {
               setViewMode(currentMVV.mvvLocationType)
             }
@@ -166,7 +166,7 @@ function BusinessPlanDetail({ match, history }) {
 
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
-  }, [viewMode])
+  }, [viewMode, mvvLocationTypeIdMap])
 
   const projectCode = useMemo(() => {
     return (generalInfos.find(item => +item.id === businessPlanVersionId) || [])
@@ -184,11 +184,6 @@ function BusinessPlanDetail({ match, history }) {
     if (mvvLocationTypeIdMap['Offshore']) modes.push('Offshore')
     return modes
   }, [mvvLocationTypeIdMap])
-
-  const customPanelStyle = {
-    border: 0,
-    overflow: 'hidden',
-  }
 
   const onSubmit = async () => {
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
@@ -372,9 +367,6 @@ function BusinessPlanDetail({ match, history }) {
     setLoadingSave(true)
     const savedProjectCode = projectCode
     const savedViewMode = viewMode
-    const savedActiveCollapse = activeCollapse
-    const savedActiveTab = activeTab
-    const savedSelectedMvvCode = selectedMvvCode
 
     const params = {}
 
@@ -429,11 +421,11 @@ function BusinessPlanDetail({ match, history }) {
 
       if (res && res.payload && res.payload.data) {
         const infos = res.payload.data.generalInfos || []
-        const targetCode = savedSelectedMvvCode || savedProjectCode
+        // Always restore the MVV the user was on — getBusinessPlanDetail resets
+        // selectedMvvCode to data.projectCode (API default), so we re-dispatch here.
+        const targetCode = selectedMvvCode || savedProjectCode
         if (targetCode) {
-          const restoredInfo = infos.find(
-            info => info.projectCode === targetCode
-          )
+          const restoredInfo = infos.find(info => info.projectCode === targetCode)
           if (restoredInfo) {
             dispatch(setSelectedMvvCode(targetCode))
             dispatch(
@@ -447,13 +439,19 @@ function BusinessPlanDetail({ match, history }) {
         }
       }
 
+      if (businessPlanVersionId && savedViewMode !== 'Total') {
+        await getBusinessPlanDetailByViewMode(match.params.buId, {
+          view: savedViewMode,
+        })
+      }
     }
     await fetchAllViewModesData(match.params.buId)
     await dispatch(getBusinessPlanHistory(match.params.buId))
+    // Re-apply the correct view after all data is refreshed.
+    // fetchAllViewModesData.fulfilled uses state.viewMode at resolve time which may
+    // already be stale; dispatching setActiveViewMode here guarantees consistency.
     dispatch(setActiveViewMode({ viewMode: savedViewMode }))
     setViewMode(savedViewMode)
-    setActiveCollapse(savedActiveCollapse)
-    setActiveTab(savedActiveTab)
     setLoadingSave(false)
   }
 
