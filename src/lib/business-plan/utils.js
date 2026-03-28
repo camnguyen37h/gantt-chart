@@ -194,9 +194,9 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
           colCategory = 'du_offshore'
         } else if (normalizedView === 'onsite') {
           colCategory = 'du_onsite'
-        } else if (col.mvvLocationType === 'Offshore') {
+        } else if (col.mvvType === 'Offshore') {
           colCategory = 'du_offshore'
-        } else if (col.mvvLocationType === 'Onsite') {
+        } else if (col.mvvType === 'Onsite') {
           colCategory = 'du_onsite'
         } else if (isDuplicate) {
           const occ = (duOccurrence[col.columnKey] =
