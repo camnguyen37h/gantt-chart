@@ -14,6 +14,7 @@ import mockBusinessPlanByViewOffshore from './mock-data/businessPlanOffshore.jso
 import mockBusinessPlanByViewOffshoreV2 from './mock-data/businessPlanOffshoreV2.json'
 import mockBusinessPlanDetail464Raw from './mock-data/businessPlanDetail464.json'
 import mockBusinessPlanDetail468Raw from './mock-data/businessPlanDetail468.json'
+import mockBusinessPlanDetail494Raw from './mock-data/businessPlanDetail494.json'
 import mockBusinessPlanTotal468Raw from './mock-data/businessPlanTotal468.json'
 import mockBusinessPlanOB468Raw from './mock-data/businessPlanOB468.json'
 import mockBusinessPlanOnsite468Raw from './mock-data/businessPlanOnsite468.json'
@@ -30,6 +31,7 @@ import mockMMBillsService468Raw from './mock-data/mmBillsService468.json'
 
 export const mockBusinessPlanDetail464 = mockBusinessPlanDetail464Raw
 export const mockBusinessPlanDetail468 = mockBusinessPlanDetail468Raw
+export const mockBusinessPlanDetail494 = mockBusinessPlanDetail494Raw
 
 // ==================== REAL API DATA FOR ID 468 ====================
 export const mockProductionRevenue468 = mockProductionRevenue468Raw
