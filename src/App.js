@@ -6,9 +6,11 @@ import {
   Redirect,
 } from 'react-router-dom'
 import { Layout } from 'antd'
+import { NotificationContainer } from 'react-notifications'
 import AppHeader from './components/Layout/AppHeader'
 import Sidebar from './components/Layout/Sidebar'
 import BusinessPlanDetailPage from './pages/BusinessPlanDetailPage'
+import 'react-notifications/lib/notifications.css'
 import './App.css'
 
 const { Content } = Layout
@@ -40,6 +42,7 @@ const App = () => {
           </Layout>
         </Layout>
       </Layout>
+      <NotificationContainer />
     </Router>
   )
 }

@@ -63,6 +63,31 @@ export const businessGeneralInformationSlice = createSlice({
       }
     },
     setSelectedMvvCode: (state, { payload }) => {
+      // Write back current flattened state to the previous MVV's generalInfos entry
+      // so non-selected MVV data reflects the user's latest edits when validating
+      const prevCode = state.selectedMvvCode
+      if (prevCode && typeof prevCode === 'string') {
+        const prevIdx = state.generalInfos.findIndex(
+          info => info.projectCode === prevCode
+        )
+        if (prevIdx !== -1) {
+          state.generalInfos[prevIdx] = {
+            ...state.generalInfos[prevIdx],
+            listAM: state.listAM,
+            listAdviser: state.listAdviser,
+            listPreSale: state.listPreSale,
+            listPreparator: state.listPreparator,
+            listTeamLead: state.listTeamLead,
+            listPM: state.listPM,
+            industry: state.industryDomain,
+            currency: state.industryCurrency,
+            businessPlanKpiDTO: state.businessPlanKpiDTO,
+            planningStartDate: state.planningStartDate,
+            planningEndDate: state.planningEndDate,
+          }
+        }
+      }
+
       state.selectedMvvCode = payload || {}
 
       const selectedInfo = state.generalInfos.find(

@@ -30,6 +30,7 @@ const useBusinessPlanDetails = () => {
     otherFees,
     warningMessage,
     errorMessage,
+    generalInfos: allMvvGeneralInfos,
   } = useSelector(state => state.businessPlanDetails)
 
   const {
@@ -45,6 +46,8 @@ const useBusinessPlanDetails = () => {
     businessPlanSettingMaxKpiSetting,
     planningStartDate,
     planningEndDate,
+    selectedMvvCode,
+    generalInfos: allMvvInfosFromGI,
   } = useSelector(state => state.businessGeneralInformation)
   const { listDocuments } = useSelector(state => state.businessDocuments)
   const changeDataWithoutId = data => {
@@ -138,15 +141,15 @@ const useBusinessPlanDetails = () => {
     const isValid = handleValidate()
 
     if (!isValid) return
-    const result = await BusinessPlanAPI.submit(params)
-    if (result.status === ResponseStatusCode.success) {
-      NotificationManager.success(result.data)
-      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
-      return result.data
-    } else {
-      updateIsSaveShowed({ generalInformation: false, businessPlan: false })
-      return NotificationManager.error(result.message)
-    }
+    // const result = await BusinessPlanAPI.submit(params)
+    // if (result.status === ResponseStatusCode.success) {
+    //   NotificationManager.success(result.data)
+    //   updateIsSaveShowed({ generalInformation: false, businessPlan: false })
+    //   return result.data
+    // } else {
+    //   updateIsSaveShowed({ generalInformation: false, businessPlan: false })
+    //   return NotificationManager.error(result.message)
+    // }
   }
 
   const createNewVersion = async id => {
@@ -221,6 +224,8 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
+    // generalInformationResult / resultValidateKPIBonus for the currently selected MVV
+    // (uses live flattened state — most up-to-date values including unsaved edits)
     const generalInformationResult = {
       industryCurrency: !industryCurrency ? true : false,
       exchangeRate:
@@ -269,40 +274,103 @@ const useBusinessPlanDetails = () => {
       businessPlanKpiDTO || {}
     )
 
-    const result = {
-      ...generalInformationResult,
-      ...itemsRes,
-      ...resultValidateKPIBonus,
-    }
-
-    dispatch(redux.setValidation(result))
+    // Dispatch setValidation for the selected MVV — drives UI highlighting
+    dispatch(
+      redux.setValidation({
+        ...generalInformationResult,
+        ...itemsRes,
+        ...resultValidateKPIBonus,
+      })
+    )
 
     const totalKpiBonus = businessPlanSettingMaxKpiSetting
       ? businessPlanSettingMaxKpiSetting.MAX_BUSINESS_PLAN_KPI_TOTAL
       : 0
 
-    const isValidGeneralInformation = Object.values({
-      ...generalInformationResult,
-      ...resultValidateKPIBonus,
-    }).every(item => !item)
+    const isEmptyVal = v => v === null || v === undefined || v === ''
+
+    // Build a unified list of all MVVs merging live state (selected) with
+    // generalInfos snapshot (non-selected). generalInformationParams holds
+    // the latest values for the currently-edited MVV.
+    const allMvvInfos = allMvvInfosFromGI.map(info => {
+      if (info.projectCode === selectedMvvCode) {
+        // Use live flattened state for the currently selected MVV
+        return {
+          ...info,
+          currency: industryCurrency,
+          exchangeRate,
+          softwareDevelopmentFee,
+          otherFees,
+          industry: industryDomain,
+          listAM,
+          listTeamLead,
+          listPreparator,
+          listPM,
+          businessPlanKpiDTO,
+        }
+      }
+      // Non-selected MVVs: use their generalInfos snapshot (original API data)
+      return info
+    })
+
+    const invalidGeneralMvvCodes = []
+    const invalidKpiBonusMvvCodes = []
+    const invalidKpiTotalMvvCodes = []
+
+    allMvvInfos.forEach(info => {
+      const listAMInfo = info.listAM || []
+      const listTeamLeadInfo = info.listTeamLead || []
+      const listPreparatorInfo = info.listPreparator || []
+      const listPMInfo = info.listPM || []
+
+      const isGeneralInfoInvalid =
+        !info.currency ||
+        isEmptyVal(info.exchangeRate) ||
+        isEmptyVal(info.softwareDevelopmentFee) ||
+        isEmptyVal(info.otherFees) ||
+        !info.industry ||
+        listAMInfo.length < 1 ||
+        !handleCheckAtLeastOneFilled(listAMInfo) ||
+        listTeamLeadInfo.length < 1 ||
+        !handleCheckAtLeastOneFilled(listTeamLeadInfo) ||
+        listPreparatorInfo.length < 1 ||
+        !handleCheckAtLeastOneFilled(listPreparatorInfo) ||
+        listPMInfo.length < 1 ||
+        !handleCheckAtLeastOneFilled(listPMInfo)
+
+      if (isGeneralInfoInvalid) {
+        invalidGeneralMvvCodes.push(info.projectCode)
+        return
+      }
+
+      const kpiValidation = handleValidateKpiBonus(info.businessPlanKpiDTO || {})
+      const isKpiFieldsInvalid = Object.values(kpiValidation).some(Boolean)
+
+      if (isKpiFieldsInvalid) {
+        invalidKpiBonusMvvCodes.push(info.projectCode)
+        return
+      }
+
+      if (!validateTotalKpiBonus(info.businessPlanKpiDTO, totalKpiBonus)) {
+        invalidKpiTotalMvvCodes.push(info.projectCode)
+      }
+    })
 
     const isValidBusinessPlan = Object.values(itemsRes).every(item => !item)
 
-    const isValid = Object.values(result).every(item => !item)
-
-    const isValidTotalKpiBonus = validateTotalKpiBonus(
-      businessPlanKpiDTO,
-      totalKpiBonus
-    )
-
-    if (!isValidGeneralInformation) {
+    if (invalidGeneralMvvCodes.length > 0) {
       return NotificationManager.error(
-        'Please input required fields in General Information'
+        `Please input required fields in General Information for MVV: ${invalidGeneralMvvCodes.join(', ')}`
       )
     }
-    if (!isValidTotalKpiBonus) {
+    if (invalidKpiBonusMvvCodes.length > 0) {
       return NotificationManager.error(
-        `Total % Bonus must be ${totalKpiBonus}%`
+        `Please fill all KPI Bonus fields (PM/QA/Member) for MVV: ${invalidKpiBonusMvvCodes.join(', ')}`
+      )
+    }
+    if (invalidKpiTotalMvvCodes.length > 0) {
+      return NotificationManager.error(
+        `Total % Bonus must be ${totalKpiBonus}% for MVV: ${invalidKpiTotalMvvCodes.join(', ')}`
       )
     }
     if (!isValidBusinessPlan) {
@@ -311,18 +379,24 @@ const useBusinessPlanDetails = () => {
       )
     }
 
-    return isValid
+    return true
   }, [
     dispatch,
-    listAM.length,
-    listPreparator.length,
-    listTeamLead.length,
+    listAM,
+    listPreparator,
+    listTeamLead,
+    listPM,
     totalContractPrice,
     exchangeRate,
     industryCurrency,
-    handleCheckAtLeastOneFilled,
+    industryDomain,
+    softwareDevelopmentFee,
+    otherFees,
     businessPlanKpiDTO,
     businessPlanSettingMaxKpiSetting,
+    originalBusinessPlanItems,
+    allMvvInfosFromGI,
+    selectedMvvCode,
   ])
 
   const handleValidateDraft = useCallback(() => {

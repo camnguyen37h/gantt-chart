@@ -10,49 +10,84 @@ business-plan-detail:207 Mode: Standalone Mock
 business-plan-detail:208 ========================================
 business-plan-detail:209 
 bootstrap:851 [HMR] Waiting for update signal from WDS...
-index.js:11 Warning: Legacy context API has been detected within a strict-mode tree.
+index.js:8 Uncaught Error: Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: E:\SourceCode\CMC\ReactJs\gantt-chart\src\lib\business-plan\hooks\useBusinessPlanDetails.js: The type cast expression is expected to be wrapped with parenthesis. (387:16) (at index.js:8:1)
 
-The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
-
-Please update the following components: BaseTable, BodyTable, ColGroup, Connect(BaseTable), Connect(ExpandableRow), Connect(ExpandableTable), Connect(MenuItem), Connect(SubPopupMenu), Connect(TableHeaderRow), Connect(TableRow), HeadTable, LocaleProvider, LocaleReceiver, Provider, Table, TableHeader, Trigger
-
-Learn more about this warning here: https://fb.me/react-legacy-context
-    in Trigger (created by SelectTrigger)
-    in SelectTrigger (created by Select)
-    in Select (created by Context.Consumer)
-    in Select (at AppHeader.jsx:27)
-    in div (at AppHeader.jsx:26)
-    in header (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Header (at AppHeader.jsx:10)
-    in AppHeader (at App.js:20)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-(anonymous) @ react-dom.development.js:11432
-push../node_modules/react-dom/cjs/react-dom.development.js.ReactStrictModeWarnings.flushLegacyContextWarning @ react-dom.development.js:11418
-flushRenderPhaseStrictModeWarningsInDEV @ react-dom.development.js:23109
-commitRootImpl @ react-dom.development.js:22396
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-scheduleUpdateOnFiber @ react-dom.development.js:21188
-updateContainer @ react-dom.development.js:24373
-(anonymous) @ react-dom.development.js:24758
-unbatchedUpdates @ react-dom.development.js:21903
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
+[0m [90m 385 |[39m     businessPlanKpiDTO[33m,[39m
+ [90m 386 |[39m     businessPlanSettingMaxKpiSetting[33m,[39m
+[31m[1m>[22m[39m[90m 387 |[39m     generalInfos[33m:[39m allMvvGeneralInfos[33m,[39m
+ [90m     |[39m                 [31m[1m^[22m[39m
+ [90m 388 |[39m     selectedMvvCode[33m,[39m
+ [90m 389 |[39m     originalBusinessPlanItems[33m,[39m
+ [90m 390 |[39m   ])[0m
+    at constructor (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:367:19)
+    at FlowParserMixin.raise (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6624:19)
+    at FlowParserMixin.toReferencedList (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:3254:14)
+    at FlowParserMixin.toReferencedListDeep (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:7346:10)
+    at FlowParserMixin.toReferencedListDeep (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:7349:14)
+    at FlowParserMixin.toReferencedArguments (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11270:10)
+    at FlowParserMixin.parseCoverCallAndAsyncArrowHead (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11264:12)
+    at FlowParserMixin.parseSubscript (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11184:19)
+    at FlowParserMixin.parseSubscript (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:3679:18)
+    at FlowParserMixin.parseSubscripts (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11158:19)
+    at constructor (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:367:19)
+    at FlowParserMixin.raise (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6624:19)
+    at FlowParserMixin.toReferencedList (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:3254:14)
+    at FlowParserMixin.toReferencedListDeep (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:7346:10)
+    at FlowParserMixin.toReferencedListDeep (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:7349:14)
+    at FlowParserMixin.toReferencedArguments (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11270:10)
+    at FlowParserMixin.parseCoverCallAndAsyncArrowHead (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11264:12)
+    at FlowParserMixin.parseSubscript (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11184:19)
+    at FlowParserMixin.parseSubscript (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:3679:18)
+    at FlowParserMixin.parseSubscripts (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11158:19)
+    at ./src/lib/business-plan/hooks/useBusinessPlanDetails.js (index.js:8:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at fn (bootstrap:150:1)
+    at Module.<anonymous> (constants.jsx:751:1)
+    at ./src/lib/business-plan/hooks/index.js (index.js:8:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at fn (bootstrap:150:1)
+    at Module.<anonymous> (constant.js:68:1)
+    at ./src/lib/business-plan/BusinessPlanDetail/index.jsx (index.jsx:737:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at fn (bootstrap:150:1)
+    at Module.<anonymous> (Regex.js:2:1)
+    at ./src/pages/BusinessPlanDetailPage.jsx (BusinessPlanDetailPage.jsx:22:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at fn (bootstrap:150:1)
+    at Module.<anonymous> (App.css:82:1)
+    at ./src/App.js (App.js:48:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at fn (bootstrap:150:1)
+    at Module.<anonymous> (index.css:82:1)
+    at ./src/index.js (index.js:16:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at fn (bootstrap:150:1)
+    at 1 (mockBusinessPlanData.js:3698:1)
+    at __webpack_require__ (bootstrap:851:1)
+    at checkDeferredModules (bootstrap:45:1)
+    at Array.webpackJsonpCallback [as push] (bootstrap:32:1)
+    at main.chunk.js:1:79
+./src/lib/business-plan/hooks/useBusinessPlanDetails.js @ index.js:8
+__webpack_require__ @ bootstrap:851
+fn @ bootstrap:150
+(anonymous) @ constants.jsx:751
+./src/lib/business-plan/hooks/index.js @ index.js:8
+__webpack_require__ @ bootstrap:851
+fn @ bootstrap:150
+(anonymous) @ constant.js:68
+./src/lib/business-plan/BusinessPlanDetail/index.jsx @ index.jsx:737
+__webpack_require__ @ bootstrap:851
+fn @ bootstrap:150
+(anonymous) @ Regex.js:2
+./src/pages/BusinessPlanDetailPage.jsx @ BusinessPlanDetailPage.jsx:22
+__webpack_require__ @ bootstrap:851
+fn @ bootstrap:150
+(anonymous) @ App.css:82
+./src/App.js @ App.js:48
+__webpack_require__ @ bootstrap:851
+fn @ bootstrap:150
+(anonymous) @ index.css:82
 ./src/index.js @ index.js:16
 __webpack_require__ @ bootstrap:851
 fn @ bootstrap:150
@@ -61,814 +96,7 @@ __webpack_require__ @ bootstrap:851
 checkDeferredModules @ bootstrap:45
 webpackJsonpCallback @ bootstrap:32
 (anonymous) @ main.chunk.js:1Understand this error
-index.js:11 Warning: Using UNSAFE_componentWillReceiveProps in strict mode is not recommended and may indicate bugs in your code. See https://fb.me/react-unsafe-component-lifecycles for details.
-
-* Move data fetching code or side effects to componentDidUpdate.
-* If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state
-
-Please update the following components: Animate, Form(WrappedComponent)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-push../node_modules/react-dom/cjs/react-dom.development.js.ReactStrictModeWarnings.flushPendingUnsafeLifecycleWarnings @ react-dom.development.js:11359
-flushRenderPhaseStrictModeWarningsInDEV @ react-dom.development.js:23112
-commitRootImpl @ react-dom.development.js:22396
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-scheduleUpdateOnFiber @ react-dom.development.js:21188
-updateContainer @ react-dom.development.js:24373
-(anonymous) @ react-dom.development.js:24758
-unbatchedUpdates @ react-dom.development.js:21903
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:3698
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of AnimateChild which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
-    in sup (created by Context.Consumer)
-    in ScrollNumber (created by Context.Consumer)
-    in AnimateChild (created by Animate)
-    in Animate (created by Context.Consumer)
-    in span (created by Context.Consumer)
-    in Badge (at AppHeader.jsx:37)
-    in div (at AppHeader.jsx:26)
-    in header (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Header (at AppHeader.jsx:10)
-    in AppHeader (at App.js:20)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-findHostInstanceWithWarning @ react-dom.development.js:24306
-findDOMNode @ react-dom.development.js:24804
-transition @ AnimateChild.js:66
-componentWillAppear @ AnimateChild.js:44
-performAppear @ Animate.js:291
-(anonymous) @ Animate.js:68
-componentDidMount @ Animate.js:66
-commitLifeCycles @ react-dom.development.js:19814
-commitLayoutEffects @ react-dom.development.js:22803
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-commitRootImpl @ react-dom.development.js:22541
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-scheduleUpdateOnFiber @ react-dom.development.js:21188
-updateContainer @ react-dom.development.js:24373
-(anonymous) @ react-dom.development.js:24758
-unbatchedUpdates @ react-dom.development.js:21903
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:3698
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Wave which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
-    in button (created by Context.Consumer)
-    in Wave (created by Context.Consumer)
-    in Button (at BusinessPlanVersion/index.jsx:240)
-    in Trigger (created by Dropdown)
-    in Dropdown (created by Context.Consumer)
-    in Dropdown (at BusinessPlanVersion/index.jsx:239)
-    in div (at BusinessPlanVersion/index.jsx:237)
-    in div (at BusinessPlanVersion/index.jsx:224)
-    in div (at BusinessPlanVersion/index.jsx:223)
-    in BusinessPlanVersion (created by Context.Consumer)
-    in withRouter(BusinessPlanVersion) (at BusinessPlanDetail/index.jsx:564)
-    in div (at BusinessPlanDetail/index.jsx:560)
-    in div (at BusinessPlanDetail/index.jsx:559)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-findHostInstanceWithWarning @ react-dom.development.js:24306
-findDOMNode @ react-dom.development.js:24804
-componentDidMount @ wave.js:174
-commitLifeCycles @ react-dom.development.js:19814
-commitLayoutEffects @ react-dom.development.js:22803
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-commitRootImpl @ react-dom.development.js:22541
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-scheduleUpdateOnFiber @ react-dom.development.js:21188
-updateContainer @ react-dom.development.js:24373
-(anonymous) @ react-dom.development.js:24758
-unbatchedUpdates @ react-dom.development.js:21903
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:3698
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of TableRow which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
-    in tr (created by BodyRow)
-    in BodyRow (created by TableRow)
-    in TableRow (created by Connect(TableRow))
-    in Connect(TableRow) (created by ExpandableRow)
-    in ExpandableRow (created by Connect(ExpandableRow))
-    in Connect(ExpandableRow) (created by BaseTable)
-    in tbody (created by BaseTable)
-    in table (created by BaseTable)
-    in BaseTable (created by Connect(BaseTable))
-    in Connect(BaseTable) (created by BodyTable)
-    in div (created by BodyTable)
-    in BodyTable (created by ExpandableTable)
-    in div (created by ExpandableTable)
-    in div (created by ExpandableTable)
-    in ExpandableTable (created by Connect(ExpandableTable))
-    in Connect(ExpandableTable) (created by Table)
-    in Provider (created by Table)
-    in Table (created by LocaleReceiver)
-    in LocaleReceiver (created by Context.Consumer)
-    in div (created by Context.Consumer)
-    in div (created by Context.Consumer)
-    in Spin (created by Context.Consumer)
-    in div (created by Context.Consumer)
-    in Table (created by withStore(Table))
-    in withStore(Table) (at KpiBonusBodyItem.jsx:94)
-    in Unknown (created by Form(WrappedComponent))
-    in Form(WrappedComponent) (at BusinessPlanGeneralInformation/index.jsx:621)
-    in div (at BusinessPlanGeneralInformation/index.jsx:620)
-    in div (at BusinessPlanGeneralInformation/index.jsx:596)
-    in form (created by Context.Consumer)
-    in Form (at BusinessPlanGeneralInformation/index.jsx:416)
-    in div (at BusinessPlanGeneralInformation/index.jsx:393)
-    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:589)
-    in div (created by PanelContent)
-    in div (created by PanelContent)
-    in PanelContent (created by CollapsePanel)
-    in AnimateChild (created by Animate)
-    in Animate (created by CollapsePanel)
-    in div (created by CollapsePanel)
-    in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:584)
-    in div (created by Collapse)
-    in Collapse (created by Context.Consumer)
-    in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:580)
-    in div (at BusinessPlanDetail/index.jsx:560)
-    in div (at BusinessPlanDetail/index.jsx:559)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-findHostInstanceWithWarning @ react-dom.development.js:24306
-findDOMNode @ react-dom.development.js:24804
-saveRowRef @ TableRow.js:205
-componentDidMount @ TableRow.js:131
-commitLifeCycles @ react-dom.development.js:19814
-commitLayoutEffects @ react-dom.development.js:22803
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-commitRootImpl @ react-dom.development.js:22541
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-scheduleUpdateOnFiber @ react-dom.development.js:21188
-updateContainer @ react-dom.development.js:24373
-(anonymous) @ react-dom.development.js:24758
-unbatchedUpdates @ react-dom.development.js:21903
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:3698
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-index.js:11 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of SelectTrigger which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
-    in div (created by Select)
-    in Trigger (created by SelectTrigger)
-    in SelectTrigger (created by Select)
-    in Select (created by Context.Consumer)
-    in Select (at AppHeader.jsx:27)
-    in div (at AppHeader.jsx:26)
-    in header (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Header (at AppHeader.jsx:10)
-    in AppHeader (at App.js:20)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-findHostInstanceWithWarning @ react-dom.development.js:24306
-findDOMNode @ react-dom.development.js:24804
-(anonymous) @ SelectTrigger.js:80
-requestAnimationFrame
-push../node_modules/raf/index.js.module.exports @ index.js:64
-SelectTrigger._this.setDropdownWidth @ SelectTrigger.js:79
-componentDidUpdate @ SelectTrigger.js:163
-commitLifeCycles @ react-dom.development.js:19835
-commitLayoutEffects @ react-dom.development.js:22803
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-commitRootImpl @ react-dom.development.js:22541
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-unbatchedUpdates @ react-dom.development.js:21909
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:3698
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-ApprovalList.jsx:143 Warning: Each child in a list should have a unique "key" prop.
-
-Check the render method of `ApprovalList`. See https://reactjs.org/link/warning-keys for more information.
-    in div (at ApprovalList.jsx:165)
-    in ApprovalList (at WorkflowApproval.jsx:172)
-    in div (created by styled.div)
-    in styled.div (at WorkflowApproval.jsx:150)
-    in div (at WorkflowApproval.jsx:119)
-    in div (at WorkflowApproval.jsx:117)
-    in WorkflowApproval (at BusinessPlanStep/index.jsx:242)
-    in div (at BusinessPlanStep/index.jsx:167)
-    in BusinessPlanStep (created by Context.Consumer)
-    in withRouter(BusinessPlanStep) (at BusinessPlanDetail/index.jsx:575)
-    in div (at BusinessPlanDetail/index.jsx:560)
-    in div (at BusinessPlanDetail/index.jsx:559)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-jsx-dev-runtime.development.js:125
-error @ react-jsx-dev-runtime.development.js:92
-validateExplicitKey @ react-jsx-dev-runtime.development.js:672
-validateChildKeys @ react-jsx-dev-runtime.development.js:699
-jsxWithValidation @ react-jsx-dev-runtime.development.js:860
-(anonymous) @ ApprovalList.jsx:143
-ApprovalList @ ApprovalList.jsx:108
-renderWithHooks @ react-dom.development.js:14803
-mountIndeterminateComponent @ react-dom.development.js:17482
-beginWork @ react-dom.development.js:18596
-beginWork$1 @ react-dom.development.js:23179
-performUnitOfWork @ react-dom.development.js:22154
-workLoopSync @ react-dom.development.js:22130
-performSyncWorkOnRoot @ react-dom.development.js:21756
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-batchedUpdates$1 @ react-dom.development.js:21862
-notify @ Subscription.js:16
-notifyNestedSubs @ Subscription.js:101
-handleChangeWrapper @ Subscription.js:106
-dispatch @ redux.js:297
-(anonymous) @ index.js:20
-(anonymous) @ immutableStateInvariantMiddleware.ts:266
-(anonymous) @ actionCreatorInvariantMiddleware.ts:32
-dispatch @ redux.js:691
-(anonymous) @ createAsyncThunk.ts:682
-step @ RefreshUtils.js:174
-(anonymous) @ RefreshUtils.js:174
-fulfilled @ RefreshUtils.js:174
-Promise.then
-step @ RefreshUtils.js:174
-(anonymous) @ RefreshUtils.js:174
-__async @ RefreshUtils.js:174
-(anonymous) @ createAsyncThunk.ts:599
-(anonymous) @ createAsyncThunk.ts:684
-(anonymous) @ index.js:16
-(anonymous) @ immutableStateInvariantMiddleware.ts:266
-(anonymous) @ actionCreatorInvariantMiddleware.ts:32
-(anonymous) @ useBusinessPlanStep.js:26
-(anonymous) @ index.jsx:148
-await in (anonymous)
-(anonymous) @ index.jsx:153
-commitHookEffectListMount @ react-dom.development.js:19731
-commitPassiveHookEffects @ react-dom.development.js:19769
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-flushPassiveEffectsImpl @ react-dom.development.js:22853
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushPassiveEffects @ react-dom.development.js:22820
-performSyncWorkOnRoot @ react-dom.development.js:21737
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-unbatchedUpdates @ react-dom.development.js:21909
-legacyRenderSubtreeIntoContainer @ react-dom.development.js:24757
-render @ react-dom.development.js:24840
-(anonymous) @ index.js:11
-./src/index.js @ index.js:16
-__webpack_require__ @ bootstrap:851
-fn @ bootstrap:150
-1 @ mockBusinessPlanData.js:3698
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-index.js:1 Warning: Legacy context API has been detected within a strict-mode tree.
-
-The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
-
-Please update the following components: Radio, RadioButton, RadioGroup
-
-Learn more about this warning here: https://fb.me/react-legacy-context
-    in RadioGroup (created by Styled(RadioGroup))
-    in Styled(RadioGroup) (at BusinessPlanTabWrapper/index.jsx:64)
-    in div (created by styled.div)
-    in styled.div (at BusinessPlanTabWrapper/index.jsx:63)
-    in div (created by Context.Consumer)
-    in TabPane (at BusinessPlanTabWrapper/index.jsx:62)
-    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:601)
-    in div (created by TabContent)
-    in TabContent (created by Tabs)
-    in div (created by Tabs)
-    in Tabs (created by Context.Consumer)
-    in Tabs (at BusinessPlanDetail/index.jsx:595)
-    in div (at BusinessPlanDetail/index.jsx:594)
-    in div (created by Context.Consumer)
-    in div (created by Context.Consumer)
-    in Spin (at BusinessPlanDetail/index.jsx:593)
-    in div (created by PanelContent)
-    in div (created by PanelContent)
-    in PanelContent (created by CollapsePanel)
-    in AnimateChild (created by Animate)
-    in Animate (created by CollapsePanel)
-    in div (created by CollapsePanel)
-    in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:592)
-    in div (created by Collapse)
-    in Collapse (created by Context.Consumer)
-    in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:580)
-    in div (at BusinessPlanDetail/index.jsx:560)
-    in div (at BusinessPlanDetail/index.jsx:559)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-(anonymous) @ react-dom.development.js:11432
-push../node_modules/react-dom/cjs/react-dom.development.js.ReactStrictModeWarnings.flushLegacyContextWarning @ react-dom.development.js:11418
-flushRenderPhaseStrictModeWarningsInDEV @ react-dom.development.js:23109
-commitRootImpl @ react-dom.development.js:22396
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-discreteUpdates$1 @ react-dom.development.js:21893
-discreteUpdates @ react-dom.development.js:806
-dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Tabs which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
-    in div (created by Tabs)
-    in Tabs (created by Context.Consumer)
-    in Tabs (at BusinessPlanDetail/index.jsx:595)
-    in div (at BusinessPlanDetail/index.jsx:594)
-    in div (created by Context.Consumer)
-    in div (created by Context.Consumer)
-    in Spin (at BusinessPlanDetail/index.jsx:593)
-    in div (created by PanelContent)
-    in div (created by PanelContent)
-    in PanelContent (created by CollapsePanel)
-    in AnimateChild (created by Animate)
-    in Animate (created by CollapsePanel)
-    in div (created by CollapsePanel)
-    in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:592)
-    in div (created by Collapse)
-    in Collapse (created by Context.Consumer)
-    in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:580)
-    in div (at BusinessPlanDetail/index.jsx:560)
-    in div (at BusinessPlanDetail/index.jsx:559)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-console.<computed> @ index.js:1
-printWarning @ react-dom.development.js:88
-error @ react-dom.development.js:60
-findHostInstanceWithWarning @ react-dom.development.js:24306
-findDOMNode @ react-dom.development.js:24804
-componentDidMount @ index.js:187
-commitLifeCycles @ react-dom.development.js:19814
-commitLayoutEffects @ react-dom.development.js:22803
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-commitRootImpl @ react-dom.development.js:22541
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-discreteUpdates$1 @ react-dom.development.js:21893
-discreteUpdates @ react-dom.development.js:806
-dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-useFormula.js:438 Uncaught TypeError: Cannot read properties of undefined (reading 'columnKey')
-    at Object.getProjectBonusDU [as delivery_unit] (useFormula.js:438:1)
-    at getFormula (useFormula.js:1457:1)
-    at useFormula.js:119:1
-    at Array.map (<anonymous>)
-    at Object.getTotalColumnAndSet (useFormula.js:112:1)
-    at getFormula (useFormula.js:1457:1)
-    at index.jsx:860:1
-    at Array.map (<anonymous>)
-    at index.jsx:828:1
-    at Array.map (<anonymous>)
-    at renderTableBody (index.jsx:715:1)
-    at BusinessPlanFormSection (index.jsx:1273:1)
-    at renderWithHooks (react-dom.development.js:14803:1)
-    at updateFunctionComponent (react-dom.development.js:17034:1)
-    at beginWork (react-dom.development.js:18610:1)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
-    at invokeGuardedCallback (react-dom.development.js:292:1)
-    at beginWork$1 (react-dom.development.js:23203:1)
-    at performUnitOfWork (react-dom.development.js:22154:1)
-    at workLoopSync (react-dom.development.js:22130:1)
-    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
-    at react-dom.development.js:11089:1
-    at unstable_runWithPriority (scheduler.development.js:653:1)
-    at runWithPriority$1 (react-dom.development.js:11039:1)
-    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
-    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
-    at flushPendingDiscreteUpdates (react-dom.development.js:21847:1)
-    at flushDiscreteUpdates (react-dom.development.js:21827:1)
-    at finishEventHandler (react-dom.development.js:764:1)
-    at batchedEventUpdates (react-dom.development.js:798:1)
-    at dispatchEventForLegacyPluginEventSystem (react-dom.development.js:3568:1)
-    at attemptToDispatchEvent (react-dom.development.js:4267:1)
-    at dispatchEvent (react-dom.development.js:4189:1)
-    at unstable_runWithPriority (scheduler.development.js:653:1)
-    at runWithPriority$1 (react-dom.development.js:11039:1)
-    at discreteUpdates$1 (react-dom.development.js:21887:1)
-    at discreteUpdates (react-dom.development.js:806:1)
-    at dispatchDiscreteEvent (react-dom.development.js:4168:1)
-getProjectBonusDU @ useFormula.js:438
-getFormula @ useFormula.js:1457
-(anonymous) @ useFormula.js:119
-getTotalColumnAndSet @ useFormula.js:112
-getFormula @ useFormula.js:1457
-(anonymous) @ index.jsx:860
-(anonymous) @ index.jsx:828
-renderTableBody @ index.jsx:715
-BusinessPlanFormSection @ index.jsx:1273
-renderWithHooks @ react-dom.development.js:14803
-updateFunctionComponent @ react-dom.development.js:17034
-beginWork @ react-dom.development.js:18610
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-beginWork$1 @ react-dom.development.js:23203
-performUnitOfWork @ react-dom.development.js:22154
-workLoopSync @ react-dom.development.js:22130
-performSyncWorkOnRoot @ react-dom.development.js:21756
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-flushPendingDiscreteUpdates @ react-dom.development.js:21847
-flushDiscreteUpdates @ react-dom.development.js:21827
-finishEventHandler @ react-dom.development.js:764
-batchedEventUpdates @ react-dom.development.js:798
-dispatchEventForLegacyPluginEventSystem @ react-dom.development.js:3568
-attemptToDispatchEvent @ react-dom.development.js:4267
-dispatchEvent @ react-dom.development.js:4189
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-discreteUpdates$1 @ react-dom.development.js:21887
-discreteUpdates @ react-dom.development.js:806
-dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-index.js:1 The above error occurred in the <BusinessPlanFormSection> component:
-    in BusinessPlanFormSection (at BusinessPlanDetail/index.jsx:622)
-    in div (created by Context.Consumer)
-    in TabPane (at BusinessPlanTabWrapper/index.jsx:62)
-    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:601)
-    in div (created by TabContent)
-    in TabContent (created by Tabs)
-    in div (created by Tabs)
-    in Tabs (created by Context.Consumer)
-    in Tabs (at BusinessPlanDetail/index.jsx:595)
-    in div (at BusinessPlanDetail/index.jsx:594)
-    in div (created by Context.Consumer)
-    in div (created by Context.Consumer)
-    in Spin (at BusinessPlanDetail/index.jsx:593)
-    in div (created by PanelContent)
-    in div (created by PanelContent)
-    in PanelContent (created by CollapsePanel)
-    in AnimateChild (created by Animate)
-    in Animate (created by CollapsePanel)
-    in div (created by CollapsePanel)
-    in CollapsePanel (created by Context.Consumer)
-    in CollapsePanel (at BusinessPlanDetail/index.jsx:592)
-    in div (created by Collapse)
-    in Collapse (created by Context.Consumer)
-    in Collapse (created by Styled(Collapse))
-    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:580)
-    in div (at BusinessPlanDetail/index.jsx:560)
-    in div (at BusinessPlanDetail/index.jsx:559)
-    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
-    in BusinessPlanDetailPage (created by Context.Consumer)
-    in Route (at App.js:34)
-    in Switch (at App.js:32)
-    in main (created by Basic)
-    in Basic (created by Context.Consumer)
-    in Content (at App.js:24)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:23)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:21)
-    in section (created by BasicLayout)
-    in BasicLayout (created by Context.Consumer)
-    in Layout (at App.js:19)
-    in Router (created by BrowserRouter)
-    in BrowserRouter (at App.js:18)
-    in App (at src/index.js:14)
-    in Provider (at src/index.js:13)
-    in StrictMode (at src/index.js:12)
-
-Consider adding an error boundary to your tree to customize error handling behavior.
-Visit https://fb.me/react-error-boundaries to learn more about error boundaries.
-console.<computed> @ index.js:1
-logCapturedError @ react-dom.development.js:19527
-logError @ react-dom.development.js:19564
-update.callback @ react-dom.development.js:20708
-callCallback @ react-dom.development.js:12490
-commitUpdateQueue @ react-dom.development.js:12511
-commitLifeCycles @ react-dom.development.js:19883
-commitLayoutEffects @ react-dom.development.js:22803
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-commitRootImpl @ react-dom.development.js:22541
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-commitRoot @ react-dom.development.js:22381
-finishSyncRender @ react-dom.development.js:21807
-performSyncWorkOnRoot @ react-dom.development.js:21793
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-flushPendingDiscreteUpdates @ react-dom.development.js:21847
-flushDiscreteUpdates @ react-dom.development.js:21827
-finishEventHandler @ react-dom.development.js:764
-batchedEventUpdates @ react-dom.development.js:798
-dispatchEventForLegacyPluginEventSystem @ react-dom.development.js:3568
-attemptToDispatchEvent @ react-dom.development.js:4267
-dispatchEvent @ react-dom.development.js:4189
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-discreteUpdates$1 @ react-dom.development.js:21887
-discreteUpdates @ react-dom.development.js:806
-dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-react-dom.development.js:11102 Uncaught TypeError: Cannot read properties of undefined (reading 'columnKey')
-    at Object.getProjectBonusDU [as delivery_unit] (useFormula.js:438:1)
-    at getFormula (useFormula.js:1457:1)
-    at useFormula.js:119:1
-    at Array.map (<anonymous>)
-    at Object.getTotalColumnAndSet (useFormula.js:112:1)
-    at getFormula (useFormula.js:1457:1)
-    at index.jsx:860:1
-    at Array.map (<anonymous>)
-    at index.jsx:828:1
-    at Array.map (<anonymous>)
-    at renderTableBody (index.jsx:715:1)
-    at BusinessPlanFormSection (index.jsx:1273:1)
-    at renderWithHooks (react-dom.development.js:14803:1)
-    at updateFunctionComponent (react-dom.development.js:17034:1)
-    at beginWork (react-dom.development.js:18610:1)
-    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
-    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
-    at invokeGuardedCallback (react-dom.development.js:292:1)
-    at beginWork$1 (react-dom.development.js:23203:1)
-    at performUnitOfWork (react-dom.development.js:22154:1)
-    at workLoopSync (react-dom.development.js:22130:1)
-    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
-    at react-dom.development.js:11089:1
-    at unstable_runWithPriority (scheduler.development.js:653:1)
-    at runWithPriority$1 (react-dom.development.js:11039:1)
-    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
-    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
-    at flushPendingDiscreteUpdates (react-dom.development.js:21847:1)
-    at flushDiscreteUpdates (react-dom.development.js:21827:1)
-    at finishEventHandler (react-dom.development.js:764:1)
-    at batchedEventUpdates (react-dom.development.js:798:1)
-    at dispatchEventForLegacyPluginEventSystem (react-dom.development.js:3568:1)
-    at attemptToDispatchEvent (react-dom.development.js:4267:1)
-    at dispatchEvent (react-dom.development.js:4189:1)
-    at unstable_runWithPriority (scheduler.development.js:653:1)
-    at runWithPriority$1 (react-dom.development.js:11039:1)
-    at discreteUpdates$1 (react-dom.development.js:21887:1)
-    at discreteUpdates (react-dom.development.js:806:1)
-    at dispatchDiscreteEvent (react-dom.development.js:4168:1)
-getProjectBonusDU @ useFormula.js:438
-getFormula @ useFormula.js:1457
-(anonymous) @ useFormula.js:119
-getTotalColumnAndSet @ useFormula.js:112
-getFormula @ useFormula.js:1457
-(anonymous) @ index.jsx:860
-(anonymous) @ index.jsx:828
-renderTableBody @ index.jsx:715
-BusinessPlanFormSection @ index.jsx:1273
-renderWithHooks @ react-dom.development.js:14803
-updateFunctionComponent @ react-dom.development.js:17034
-beginWork @ react-dom.development.js:18610
-callCallback @ react-dom.development.js:188
-invokeGuardedCallbackDev @ react-dom.development.js:237
-invokeGuardedCallback @ react-dom.development.js:292
-beginWork$1 @ react-dom.development.js:23203
-performUnitOfWork @ react-dom.development.js:22154
-workLoopSync @ react-dom.development.js:22130
-performSyncWorkOnRoot @ react-dom.development.js:21756
-(anonymous) @ react-dom.development.js:11089
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-flushSyncCallbackQueueImpl @ react-dom.development.js:11084
-flushSyncCallbackQueue @ react-dom.development.js:11072
-flushPendingDiscreteUpdates @ react-dom.development.js:21847
-flushDiscreteUpdates @ react-dom.development.js:21827
-finishEventHandler @ react-dom.development.js:764
-batchedEventUpdates @ react-dom.development.js:798
-dispatchEventForLegacyPluginEventSystem @ react-dom.development.js:3568
-attemptToDispatchEvent @ react-dom.development.js:4267
-dispatchEvent @ react-dom.development.js:4189
-unstable_runWithPriority @ scheduler.development.js:653
-runWithPriority$1 @ react-dom.development.js:11039
-discreteUpdates$1 @ react-dom.development.js:21887
-discreteUpdates @ react-dom.development.js:806
-dispatchDiscreteEvent @ react-dom.development.js:4168Understand this error
-VM63:2 Uncaught ReferenceError: process is not defined
+VM221:2 Uncaught ReferenceError: process is not defined
     at 4043 (<anonymous>:2:13175)
     at r (<anonymous>:2:306606)
     at 8048 (<anonymous>:2:9504)
@@ -879,3 +107,46 @@ VM63:2 Uncaught ReferenceError: process is not defined
     at <anonymous>:2:324254
     at <anonymous>:2:324258
     at e.onload (index.js:1:1)
+4043 @ VM221:2
+r @ VM221:2
+8048 @ VM221:2
+r @ VM221:2
+8641 @ VM221:2
+r @ VM221:2
+(anonymous) @ VM221:2
+(anonymous) @ VM221:2
+(anonymous) @ VM221:2
+e.onload @ index.js:1
+be @ index.js:1
+de @ index.js:1
+handleErrors @ webpackHotDevClient.js:169
+push../node_modules/react-dev-utils/webpackHotDevClient.js.connection.onmessage @ webpackHotDevClient.js:213
+PendingScript
+e.onload @ index.js:1
+be @ index.js:1
+de @ index.js:1
+handleErrors @ webpackHotDevClient.js:169
+push../node_modules/react-dev-utils/webpackHotDevClient.js.connection.onmessage @ webpackHotDevClient.js:213Understand this error
+index.js:1 ./src/lib/business-plan/hooks/useBusinessPlanDetails.js
+SyntaxError: E:\SourceCode\CMC\ReactJs\gantt-chart\src\lib\business-plan\hooks\useBusinessPlanDetails.js: The type cast expression is expected to be wrapped with parenthesis. (387:16)
+
+  385 |     businessPlanKpiDTO,
+  386 |     businessPlanSettingMaxKpiSetting,
+> 387 |     generalInfos: allMvvGeneralInfos,
+      |                 ^
+  388 |     selectedMvvCode,
+  389 |     originalBusinessPlanItems,
+  390 |   ])
+console.<computed> @ index.js:1
+handleErrors @ webpackHotDevClient.js:174
+push../node_modules/react-dev-utils/webpackHotDevClient.js.connection.onmessage @ webpackHotDevClient.js:213Understand this error
+index.js:1 src\lib\business-plan\hooks\useBusinessPlanDetails.js
+  Line 387:17:  Parsing error: The type cast expression is expected to be wrapped with parenthesis.
+
+  385 |     businessPlanKpiDTO,
+  386 |     businessPlanSettingMaxKpiSetting,
+> 387 |     generalInfos: allMvvGeneralInfos,
+      |                 ^
+  388 |     selectedMvvCode,
+  389 |     originalBusinessPlanItems,
+  390 |   ])
