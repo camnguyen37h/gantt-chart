@@ -87,7 +87,6 @@ const StyledAffix = styled.div`
 function BusinessPlanDetail({ match, history }) {
   const affixRef = useRef(null)
   const businessPlanDeliveryRef = useRef(null)
-  const skipViewModeReset = useRef(false)
   const [activeTab, setActiveTab] = useState('1')
   const [activeCollapse, setActiveCollapse] = useState('')
   const [viewMode, setViewMode] = useState('Total')
@@ -150,25 +149,20 @@ function BusinessPlanDetail({ match, history }) {
           await getBusinessPlanWorkflow({
             referenceId: match.params.buId,
           })
+          const data = res.payload && res.payload.data
+          if (data && data.generalInfos && data.generalInfos.length > 0) {
+            const matchedMVV = data.generalInfos.find(
+              info => info.id === Number(match.params.buId)
+            )
+            const currentMVV = matchedMVV || data.generalInfos[0]
+            if (currentMVV && currentMVV.mvvLocationType) {
+              setViewMode(currentMVV.mvvLocationType)
+            }
+          }
         }
       }
     })()
   }, [match.params.buId])
-
-  useEffect(() => {
-    if (skipViewModeReset.current) return
-    if (generalInfos && generalInfos.length > 0 && match.params.buId) {
-      const matchedMVV = generalInfos.find(
-        info => info.id === Number(match.params.buId)
-      )
-      const currentMVV = matchedMVV || generalInfos[0]
-
-      if (currentMVV && currentMVV.mvvLocationType) {
-        const locationType = currentMVV.mvvLocationType
-        setViewMode(locationType)
-      }
-    }
-  }, [generalInfos, match.params.buId])
 
   const businessPlanVersionId = useMemo(() => {
     return +mvvLocationTypeIdMap[viewMode] || null
@@ -381,7 +375,6 @@ function BusinessPlanDetail({ match, history }) {
     const savedActiveCollapse = activeCollapse
     const savedActiveTab = activeTab
     const savedSelectedMvvCode = selectedMvvCode
-    skipViewModeReset.current = true
 
     const params = {}
 
@@ -454,15 +447,10 @@ function BusinessPlanDetail({ match, history }) {
         }
       }
 
-      if (businessPlanVersionId && savedViewMode !== 'Total') {
-        await getBusinessPlanDetailByViewMode(match.params.buId, {
-          view: savedViewMode,
-        })
-      }
     }
     await fetchAllViewModesData(match.params.buId)
     await dispatch(getBusinessPlanHistory(match.params.buId))
-    skipViewModeReset.current = false
+    dispatch(setActiveViewMode({ viewMode: savedViewMode }))
     setViewMode(savedViewMode)
     setActiveCollapse(savedActiveCollapse)
     setActiveTab(savedActiveTab)
