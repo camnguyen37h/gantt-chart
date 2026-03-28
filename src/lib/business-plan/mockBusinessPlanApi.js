@@ -574,7 +574,6 @@ export const getSummaryDeliveryPlan = async (params) => {
       onsiteExpense: 400000,
       overtime: 400000,
       other: 400000,
-      permissionView: true,
       nonDeductibleInputVAT: 400000,
     },
     messageId: "Success",

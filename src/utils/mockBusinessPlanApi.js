@@ -642,7 +642,6 @@ export const getLocationExchangeRate = async () => {
       { location: 'Singapore', salaryIndex: 1.340000033378601, expenseIndex: 7000000 },
       { location: 'US', salaryIndex: 1.340000033378601, expenseIndex: 20000000 },
     ],
-    permissionView: true,
   });
 };
 

@@ -7,7 +7,9 @@
     "version": 1,
     "startDate": 1773939600000,
     "endDate": 1804525200000,
-    "userRoles": ["DB-ADMIN"],
+    "userRoles": [
+      "DB-ADMIN"
+    ],
     "warningMessage": [],
     "versions": [
       {
@@ -81,7 +83,6 @@
         "version": 1,
         "versionName": "Version 1",
         "status": "Draft",
-        "permissionView": true,
         "businessPlanVAT": 10
       },
       {
@@ -147,7 +148,6 @@
         "version": 1,
         "versionName": "Version 1",
         "status": "Draft",
-        "permissionView": true,
         "businessPlanVAT": 10
       }
     ],

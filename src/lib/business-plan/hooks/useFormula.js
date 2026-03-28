@@ -307,7 +307,7 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionInternal = () => {
-    if (isOBOrTotal()) {
+    if (viewMode === 'Total') {
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(
           locType,
@@ -319,6 +319,7 @@ const useFormula = () => {
       if (!perLoc.some(v => v !== null)) return undefined
       return getSum(...perLoc)
     }
+    // OB, Onsite, Offshore: internal = -Σ DU (formula values)
     const duItems = getItems({
       sectionKey: 'REVENUES',
       rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
@@ -421,6 +422,12 @@ const useFormula = () => {
 
   const getDUCostSaleOB = ({ targetItem }) => {
     if (!isOB()) return undefined
+    if (isSaleCol(targetItem.columnKey)) {
+      const saleColumns = (columns || []).filter(c => isSaleCol(c.columnKey))
+      if (saleColumns.length === 1) {
+        return getCrossViewCell('Offshore', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
+      }
+    }
     const locType = getOBLocationTypeByDisplayKey(
       getDisplayColumnKey(targetItem)
     )
@@ -438,7 +445,13 @@ const useFormula = () => {
     return cell && cell.value != null ? cell.value : undefined
   }
 
-  const getDUCostInternal = () => (isOB() ? 0 : getSoftwareProductionInternal())
+  const getDUCostInternal = () => {
+    if (isOB()) {
+      const sale = getCrossViewCell('Offshore', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
+      return sale == null ? null : decimalNegate(sale)
+    }
+    return getSoftwareProductionInternal()
+  }
 
   const getDUCostTotal = () => {
     if (isOB()) return 0
@@ -446,11 +459,13 @@ const useFormula = () => {
   }
 
   const getIncentiveTotal = () => {
+    if (isOB()) return getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'INCENTIVES', 'TOTAL')
     if (isOBOrTotal()) return undefined
     return getIncentiveSale()
   }
 
   const getIncentiveSale = () => {
+    if (isOB()) return getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'INCENTIVES', 'SALE')
     if (isOBOrTotal()) return undefined
     const revenues = getSoftwareProductionSale()
     const rate = getItem({
@@ -1389,7 +1404,10 @@ const useFormula = () => {
     SELLING_EXPENSES: {
       SELLING_EXPENSES_TOTAL: {
         total: getTotalColumnAndSet,
-        sale: getTotalColumnAndSet,
+        sale: ({ targetItem }) =>
+          isOB()
+            ? getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'SELLING_EXPENSES_TOTAL', 'SALE')
+            : getTotalColumnAndSet({ targetItem }),
         internal: getOBNegativeDUSumInternal,
       },
       INCENTIVES: {

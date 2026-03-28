@@ -7,7 +7,9 @@
     "version": 1,
     "startDate": 1753376400000,
     "endDate": 1816880400000,
-    "userRoles": ["DB-DUL-Onsite"],
+    "userRoles": [
+      "DB-DUL-Onsite"
+    ],
     "warningMessage": [],
     "versions": [
       {
@@ -69,8 +71,7 @@
                 "normUnitPriceFloor": 86355.28,
                 "normUnitPriceCeiling": 109906.72,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 100000,
@@ -80,8 +81,7 @@
                 "normUnitPriceFloor": 86355.28,
                 "normUnitPriceCeiling": 109906.72,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -91,8 +91,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 1,
@@ -102,8 +101,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -119,8 +117,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -130,8 +127,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -141,8 +137,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 2.46,
@@ -152,8 +147,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -169,8 +163,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -180,8 +173,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -191,8 +183,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -202,8 +193,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -219,8 +209,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -230,8 +219,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -241,8 +229,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -252,8 +239,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -276,8 +262,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 8200000,
@@ -287,8 +272,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -82,
@@ -298,8 +282,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -309,8 +292,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -326,8 +308,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -337,8 +318,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -348,8 +328,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -359,8 +338,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -376,8 +354,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -41800000,
@@ -387,8 +364,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -398,8 +374,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -409,8 +384,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -426,8 +400,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -437,8 +410,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -448,8 +420,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -459,8 +430,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -476,8 +446,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -487,8 +456,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -498,8 +466,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -509,8 +476,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -526,8 +492,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -537,8 +502,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -548,8 +512,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -559,8 +522,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -583,8 +545,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -594,8 +555,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -82,
@@ -605,8 +565,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -616,8 +575,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -633,8 +591,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 82,
@@ -644,8 +601,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -82,
@@ -655,8 +611,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -666,8 +621,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -690,8 +644,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 1000000,
@@ -701,8 +654,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -712,8 +664,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -723,8 +674,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -740,8 +690,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 1000000,
@@ -751,8 +700,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -762,8 +710,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -773,8 +720,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -790,8 +736,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -801,8 +746,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -812,8 +756,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -823,8 +766,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -847,8 +789,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -858,8 +799,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -869,8 +809,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 98400000,
@@ -880,8 +819,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -897,8 +835,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -908,8 +845,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -919,8 +855,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -930,8 +865,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -947,8 +881,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -958,8 +891,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -969,8 +901,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -980,8 +911,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -997,8 +927,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1008,8 +937,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1019,8 +947,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1030,8 +957,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1047,8 +973,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1058,8 +983,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1069,8 +993,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1080,8 +1003,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1097,8 +1019,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1108,8 +1029,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1119,8 +1039,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 98400000,
@@ -1130,8 +1049,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1147,8 +1065,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1158,8 +1075,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1169,8 +1085,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1180,8 +1095,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1197,8 +1111,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1208,8 +1121,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1219,8 +1131,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1230,8 +1141,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1247,8 +1157,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1258,8 +1167,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1269,8 +1177,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": 0,
@@ -1280,8 +1187,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -1304,8 +1210,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 1640000,
@@ -1315,8 +1220,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1326,8 +1230,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 16.4,
@@ -1337,8 +1240,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1354,8 +1256,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": null,
@@ -1365,8 +1266,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1376,8 +1276,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1387,8 +1286,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -1411,8 +1309,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 5559918,
@@ -1422,8 +1319,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1433,8 +1329,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -98399934.4,
@@ -1444,8 +1339,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1461,8 +1355,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 6559918,
@@ -1472,8 +1365,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1483,8 +1375,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 65.6,
@@ -1494,8 +1385,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1511,8 +1401,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1522,8 +1411,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1533,8 +1421,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1544,8 +1431,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1561,8 +1447,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 5559918,
@@ -1572,8 +1457,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1583,8 +1467,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -98399934.4,
@@ -1594,8 +1477,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1611,8 +1493,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 67.804,
@@ -1622,8 +1503,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1633,8 +1513,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -119999920,
@@ -1644,8 +1523,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1661,8 +1539,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 79.999,
@@ -1672,8 +1549,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1683,8 +1559,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 80,
@@ -1694,8 +1569,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1711,8 +1585,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 67.804,
@@ -1722,8 +1595,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1733,8 +1605,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -119999920,
@@ -1744,8 +1615,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           }
@@ -1768,8 +1638,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 1,
@@ -1779,8 +1648,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1790,8 +1658,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 40000000,
@@ -1801,8 +1668,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1818,8 +1684,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1829,8 +1694,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1840,8 +1704,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 0,
@@ -1851,8 +1714,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1868,8 +1730,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 100,
@@ -1879,8 +1740,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1890,8 +1750,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 3333.333,
@@ -1901,8 +1760,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1918,8 +1776,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1929,8 +1786,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1940,8 +1796,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 33.333,
@@ -1951,8 +1806,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -1968,8 +1822,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1979,8 +1832,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -1990,8 +1842,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": -39999973.333,
@@ -2001,8 +1852,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -2018,8 +1868,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 2,
@@ -2029,8 +1878,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               },
               {
                 "value": null,
@@ -2040,8 +1888,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -2051,8 +1898,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               }
             ]
           },
@@ -2068,8 +1914,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -2079,8 +1924,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -2090,8 +1934,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 1200000,
@@ -2101,8 +1944,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               }
             ]
           },
@@ -2118,8 +1960,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -2129,8 +1970,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": null,
@@ -2140,8 +1980,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false,
-                "permissionView": true
+                "editable": false
               },
               {
                 "value": 85,
@@ -2151,8 +1990,7 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true,
-                "permissionView": true
+                "editable": true
               }
             ]
           }

@@ -1,0 +1,209 @@
+{
+  "httpStatus": 200,
+  "messageId": null,
+  "errorMessage": null,
+  "data": {
+    "id": 494,
+    "projectCode": "GLBOD2500147",
+    "status": "Draft",
+    "version": 1,
+    "startDate": 1774371600000,
+    "endDate": 1805821200000,
+    "userRoles": [
+      "DB-ADMIN"
+    ],
+    "warningMessage": null,
+    "versions": [
+      {
+        "versionId": 494,
+        "versionName": "Version 1",
+        "status": "DRAFT",
+        "statusName": "Draft"
+      }
+    ],
+    "generalInfos": [
+      {
+        "listAM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 494,
+            "memberType": "AM",
+            "userId": 3744,
+            "ldap": "ntmanh6",
+            "departmentId": 40,
+            "departmentName": "BU3",
+            "startDate": 1774371600000,
+            "endDate": 1805821200000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [
+          {
+            "id": 11564,
+            "businessPlanVersionId": 494,
+            "memberType": "TEAM_LEAD",
+            "userId": 136,
+            "ldap": "lcnguyen",
+            "departmentId": 1,
+            "departmentName": "DU1.12",
+            "startDate": 1774371600000,
+            "endDate": 1805821200000,
+            "isDefault": false
+          }
+        ],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 11563,
+            "businessPlanVersionId": 494,
+            "memberType": "PREPARATOR",
+            "userId": 3,
+            "ldap": "bhduc",
+            "departmentId": 1,
+            "departmentName": "DU1.12",
+            "startDate": 1774371600000,
+            "endDate": 1805821200000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 494,
+            "memberType": "PM",
+            "userId": 3860,
+            "ldap": "ttlam1",
+            "departmentId": 1,
+            "departmentName": "DU1.12",
+            "startDate": 1774371600000,
+            "endDate": 1805821200000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "GLBOD2500147 Onsite",
+        "customerName": "Global Client A",
+        "startDate": 1774371600000,
+        "endDate": 1805821200000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": "ttlam1",
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 200000000,
+        "industry": 18,
+        "customerMarket": "US",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 200000000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 201,
+          "businessPlanVersionId": 494,
+          "kpiPm": 30,
+          "kpiQa": 3,
+          "kpiMember": 67
+        },
+        "projectCode": "GLBOD2500147",
+        "mvvLocationType": "Onsite",
+        "id": 494,
+        "version": 1,
+        "versionName": "Version 1",
+        "status": "Draft"
+      },
+      {
+        "listAM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 495,
+            "memberType": "AM",
+            "userId": 3744,
+            "ldap": "ntmanh6",
+            "departmentId": 40,
+            "departmentName": "BU3",
+            "startDate": 1774371600000,
+            "endDate": 1805216400000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [
+          {
+            "id": 11565,
+            "businessPlanVersionId": 495,
+            "memberType": "TEAM_LEAD",
+            "userId": 800,
+            "ldap": "ntthuong",
+            "departmentId": 39,
+            "departmentName": "DU1.12",
+            "startDate": 1774371600000,
+            "endDate": 1805216400000,
+            "isDefault": false
+          }
+        ],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 11566,
+            "businessPlanVersionId": 495,
+            "memberType": "PREPARATOR",
+            "userId": 6,
+            "ldap": "bmthin",
+            "departmentId": 39,
+            "departmentName": "DU1.12",
+            "startDate": 1774371600000,
+            "endDate": 1805216400000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 495,
+            "memberType": "PM",
+            "userId": 900,
+            "ldap": "pmuser",
+            "departmentId": 39,
+            "departmentName": "DU1.12",
+            "startDate": 1774371600000,
+            "endDate": 1805216400000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "GLBOD2500148 Offshore",
+        "customerName": "Global Client A",
+        "startDate": 1774371600000,
+        "endDate": 1805216400000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": "pmuser",
+        "currency": 778,
+        "exchangeRate": 1,
+        "totalContractPrice": 600000000,
+        "industry": 18,
+        "customerMarket": "US",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 600000000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 202,
+          "businessPlanVersionId": 495,
+          "kpiPm": 30,
+          "kpiQa": 3,
+          "kpiMember": 67
+        },
+        "projectCode": "GLBOD2500148",
+        "mvvLocationType": "Offshore",
+        "id": 495,
+        "version": 1,
+        "versionName": "Version 1",
+        "status": "Draft"
+      }
+    ],
+    "columnLabels": null,
+    "sectionList": null
+  }
+}

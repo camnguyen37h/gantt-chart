@@ -516,7 +516,7 @@
                 "editable": false
               },
               {
-                "value": -34000000,
+                "value": -600000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -969,7 +969,7 @@
                 "editable": false
               },
               {
-                "value": 16000000,
+                "value": 18000000,
                 "columnKey": "SALE_169",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
@@ -979,7 +979,7 @@
                 "editable": false
               },
               {
-                "value": -16000000,
+                "value": -18000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,

@@ -46,7 +46,6 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
         ),
 
       canViewCell: (item, columnKey, isSectionHeader, sectionKey) => {
-        if (item && item.permissionView === false) return false
         return canViewColumn(
           allRoles,
           normalizedScope,
@@ -95,7 +94,6 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
         isSectionHeader,
         sectionKey
       ) => {
-        if (item && item.permissionView === false) return MASKED_VALUE
         return canViewColumn(
           allRoles,
           normalizedScope,

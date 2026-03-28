@@ -1,211 +1,209 @@
 {
-    "httpStatus": 200,
-    "data": {
-        "id": 464,
-        "projectCode": "GLBPB2500118",
-        "status": "Draft",
-        "version": 1,
+  "httpStatus": 200,
+  "data": {
+    "id": 464,
+    "projectCode": "GLBPB2500118",
+    "status": "Draft",
+    "version": 1,
+    "startDate": 1767200400000,
+    "endDate": 1835456400000,
+    "userRoles": [
+      "DB-ADMIN"
+    ],
+    "warningMessage": [],
+    "versions": [
+      {
+        "versionId": 464,
+        "versionName": "Version 1",
+        "status": "DRAFT",
+        "statusName": "Draft"
+      }
+    ],
+    "generalInfos": [
+      {
+        "listAM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 464,
+            "memberType": "AM",
+            "userId": 3744,
+            "ldap": "ntmanh6",
+            "departmentId": 40,
+            "departmentName": "BU3",
+            "startDate": 1767200400000,
+            "endDate": 1835456400000,
+            "isDefault": true
+          }
+        ],
+        "listTeamLead": [
+          {
+            "id": 11564,
+            "businessPlanVersionId": 464,
+            "memberType": "TEAM_LEAD",
+            "userId": 3,
+            "ldap": "bhduc",
+            "departmentId": 6,
+            "departmentName": "DU1.6",
+            "startDate": 1767200400000,
+            "endDate": 1835456400000,
+            "isDefault": false
+          }
+        ],
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 11563,
+            "businessPlanVersionId": 464,
+            "memberType": "PREPARATOR",
+            "userId": 6,
+            "ldap": "bmthin",
+            "departmentId": 203,
+            "departmentName": "HNO",
+            "startDate": 1767200400000,
+            "endDate": 1835456400000,
+            "isDefault": false
+          }
+        ],
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 464,
+            "memberType": "PM",
+            "userId": 3860,
+            "ldap": "ttlam1",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1767200400000,
+            "endDate": 1835456400000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "Uniqlo Onsite",
+        "customerName": "MUJI",
         "startDate": 1767200400000,
         "endDate": 1835456400000,
-        "userRoles": [
-            "DB-ADMIN"
+        "orderType": "Fixed price",
+        "recurringNew": "New",
+        "pm": "ttlam1",
+        "currency": 777,
+        "exchangeRate": 170,
+        "totalContractPrice": 2500000,
+        "industry": 30,
+        "customerMarket": "Japan",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 2000000,
+        "otherFees": 500000,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 101,
+          "businessPlanVersionId": 464,
+          "kpiPm": null,
+          "kpiQa": 3,
+          "kpiMember": null
+        },
+        "projectCode": "GLBPB2500118",
+        "mvvLocationType": "Onsite",
+        "id": 464,
+        "version": 1,
+        "versionName": "Version 1",
+        "status": "Draft"
+      },
+      {
+        "listAM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 463,
+            "memberType": "AM",
+            "userId": 3744,
+            "ldap": "ntmanh6",
+            "departmentId": 40,
+            "departmentName": "BU3",
+            "startDate": 1772298000000,
+            "endDate": 1803834000000,
+            "isDefault": true
+          }
         ],
-        "warningMessage": [],
-        "versions": [
-            {
-                "versionId": 464,
-                "versionName": "Version 1",
-                "status": "DRAFT",
-                "statusName": "Draft"
-            }
+        "listTeamLead": [
+          {
+            "id": 11568,
+            "businessPlanVersionId": 463,
+            "memberType": "TEAM_LEAD",
+            "userId": 4,
+            "ldap": "bhhieu",
+            "departmentId": 1,
+            "departmentName": "DU3.1",
+            "startDate": 1767200400000,
+            "endDate": 1835456400000,
+            "isDefault": false
+          }
         ],
-        "generalInfos": [
-            {
-                "listAM": [
-                    {
-                        "id": null,
-                        "businessPlanVersionId": 464,
-                        "memberType": "AM",
-                        "userId": 3744,
-                        "ldap": "ntmanh6",
-                        "departmentId": 40,
-                        "departmentName": "BU3",
-                        "startDate": 1767200400000,
-                        "endDate": 1835456400000,
-                        "isDefault": true
-                    }
-                ],
-                "listTeamLead": [
-                    {
-                        "id": 11564,
-                        "businessPlanVersionId": 464,
-                        "memberType": "TEAM_LEAD",
-                        "userId": 3,
-                        "ldap": "bhduc",
-                        "departmentId": 6,
-                        "departmentName": "DU1.6",
-                        "startDate": 1767200400000,
-                        "endDate": 1835456400000,
-                        "isDefault": false
-                    }
-                ],
-                "listPreSale": [],
-                "listPreparator": [
-                    {
-                        "id": 11563,
-                        "businessPlanVersionId": 464,
-                        "memberType": "PREPARATOR",
-                        "userId": 6,
-                        "ldap": "bmthin",
-                        "departmentId": 203,
-                        "departmentName": "HNO",
-                        "startDate": 1767200400000,
-                        "endDate": 1835456400000,
-                        "isDefault": false
-                    }
-                ],
-                "listAdviser": [],
-                "listPM": [
-                    {
-                        "id": null,
-                        "businessPlanVersionId": 464,
-                        "memberType": "PM",
-                        "userId": 3860,
-                        "ldap": "ttlam1",
-                        "departmentId": 2,
-                        "departmentName": "DJ2",
-                        "startDate": 1767200400000,
-                        "endDate": 1835456400000,
-                        "isDefault": true
-                    }
-                ],
-                "businessPlanName": "Uniqlo Onsite",
-                "customerName": "MUJI",
-                "startDate": 1767200400000,
-                "endDate": 1835456400000,
-                "orderType": "Fixed price",
-                "recurringNew": "New",
-                "pm": "ttlam1",
-                "currency": 777,
-                "exchangeRate": 170,
-                "totalContractPrice": 2500000,
-                "industry": 30,
-                "customerMarket": "Japan",
-                "cooperationPeriod": "Less than 12 months",
-                "softwareDevelopmentFee": 2000000,
-                "otherFees": 500000,
-                "planningStartDate": null,
-                "planningEndDate": null,
-                "businessPlanKpiDTO": {
-                    "id": 101,
-                    "businessPlanVersionId": 464,
-                    "kpiPm": null,
-                    "kpiQa": 3,
-                    "kpiMember": null
-                },
-                "projectCode": "GLBPB2500118",
-                "mvvLocationType": "Onsite",
-                "id": 464,
-                "version": 1,
-                "versionName": "Version 1",
-                "status": "Draft",
-                "permissionView": true
-            },
-            {
-                "listAM": [
-                    {
-                        "id": null,
-                        "businessPlanVersionId": 463,
-                        "memberType": "AM",
-                        "userId": 3744,
-                        "ldap": "ntmanh6",
-                        "departmentId": 40,
-                        "departmentName": "BU3",
-                        "startDate": 1772298000000,
-                        "endDate": 1803834000000,
-                        "isDefault": true
-                    }
-                ],
-                "listTeamLead": [
-                    {
-                        "id": 11568,
-                        "businessPlanVersionId": 463,
-                        "memberType": "TEAM_LEAD",
-                        "userId": 4,
-                        "ldap": "bhhieu",
-                        "departmentId": 1,
-                        "departmentName": "DU3.1",
-                        "startDate": 1767200400000,
-                        "endDate": 1835456400000,
-                        "isDefault": false
-                    }
-                ],
-                "listPreSale": [],
-                "listPreparator": [
-                    {
-                        "id": 11567,
-                        "businessPlanVersionId": 463,
-                        "memberType": "PREPARATOR",
-                        "userId": 6,
-                        "ldap": "bmthin",
-                        "departmentId": 203,
-                        "departmentName": "HNO",
-                        "startDate": 1767200400000,
-                        "endDate": 1835456400000,
-                        "isDefault": false
-                    }
-                ],
-                "listAdviser": [],
-                "listPM": [
-                    {
-                        "id": null,
-                        "businessPlanVersionId": 463,
-                        "memberType": "PM",
-                        "userId": 7873,
-                        "ldap": "nvthai3",
-                        "departmentId": 2,
-                        "departmentName": "DJ2",
-                        "startDate": 1772298000000,
-                        "endDate": 1803834000000,
-                        "isDefault": true
-                    }
-                ],
-                "businessPlanName": "Uniqlo Offshore",
-                "customerName": "MUJI",
-                "startDate": 1772298000000,
-                "endDate": 1803834000000,
-                "orderType": "T&M",
-                "recurringNew": "New",
-                "pm": "nvthai3",
-                "currency": 776,
-                "exchangeRate": 26000,
-                "totalContractPrice": 400000,
-                "industry": 30,
-                "customerMarket": "Japan",
-                "cooperationPeriod": "Less than 12 months",
-                "softwareDevelopmentFee": 400000,
-                "otherFees": 0,
-                "planningStartDate": null,
-                "planningEndDate": null,
-                "businessPlanKpiDTO": {
-                    "id": 99,
-                    "businessPlanVersionId": 463,
-                    "kpiPm": null,
-                    "kpiQa": null,
-                    "kpiMember": null
-                },
-                "projectCode": "GLBOD2500119",
-                "mvvLocationType": "Offshore",
-                "id": 463,
-                "version": 1,
-                "versionName": "Version 1",
-                "status": "Draft",
-                "permissionView": true
-            }
+        "listPreSale": [],
+        "listPreparator": [
+          {
+            "id": 11567,
+            "businessPlanVersionId": 463,
+            "memberType": "PREPARATOR",
+            "userId": 6,
+            "ldap": "bmthin",
+            "departmentId": 203,
+            "departmentName": "HNO",
+            "startDate": 1767200400000,
+            "endDate": 1835456400000,
+            "isDefault": false
+          }
         ],
-        "columnLabels": null,
-        "sectionList": null
-    },
-    "messageId": "Success",
-    "errorMessage": ""
+        "listAdviser": [],
+        "listPM": [
+          {
+            "id": null,
+            "businessPlanVersionId": 463,
+            "memberType": "PM",
+            "userId": 7873,
+            "ldap": "nvthai3",
+            "departmentId": 2,
+            "departmentName": "DJ2",
+            "startDate": 1772298000000,
+            "endDate": 1803834000000,
+            "isDefault": true
+          }
+        ],
+        "businessPlanName": "Uniqlo Offshore",
+        "customerName": "MUJI",
+        "startDate": 1772298000000,
+        "endDate": 1803834000000,
+        "orderType": "T&M",
+        "recurringNew": "New",
+        "pm": "nvthai3",
+        "currency": 776,
+        "exchangeRate": 26000,
+        "totalContractPrice": 400000,
+        "industry": 30,
+        "customerMarket": "Japan",
+        "cooperationPeriod": "Less than 12 months",
+        "softwareDevelopmentFee": 400000,
+        "otherFees": 0,
+        "planningStartDate": null,
+        "planningEndDate": null,
+        "businessPlanKpiDTO": {
+          "id": 99,
+          "businessPlanVersionId": 463,
+          "kpiPm": null,
+          "kpiQa": null,
+          "kpiMember": null
+        },
+        "projectCode": "GLBOD2500119",
+        "mvvLocationType": "Offshore",
+        "id": 463,
+        "version": 1,
+        "versionName": "Version 1",
+        "status": "Draft"
+      }
+    ],
+    "columnLabels": null,
+    "sectionList": null
+  },
+  "messageId": "Success",
+  "errorMessage": ""
 }
