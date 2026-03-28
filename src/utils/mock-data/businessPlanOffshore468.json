@@ -43,13 +43,15 @@
                 "id": 6,
                 "label": "DU1.6",
                 "index": 4,
-                "columnKey": "DELIVERY_UNIT_6"
+                "columnKey": "DELIVERY_UNIT_6",
+                "mvvType": "Offshore"
             },
             {
                 "id": 7,
                 "label": "DU1.8",
                 "index": 5,
-                "columnKey": "DELIVERY_UNIT_7"
+                "columnKey": "DELIVERY_UNIT_7",
+                "mvvType": "Offshore"
             }
         ],
         "sectionList": [

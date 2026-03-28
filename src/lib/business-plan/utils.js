@@ -160,7 +160,7 @@ export const mergeStepsByPosition = (steps, currentBuId) => {
   )
 }
 
-export const getDisplayKey = item => (item && item.compareKey) || (item && item.columnKey)
+export const getDisplayKey = item => item && item.compareKey
 
 export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   const keyCounts = {}
@@ -170,16 +170,13 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
 
   let saleCount = 0
   const duOccurrence = {}
-  let hasRenames = false
 
   const normalizedView = viewMode ? viewMode.toLowerCase() : null
 
   const resultColumns = columnLabels.map(col => {
     const isDuplicate = keyCounts[col.columnKey] > 1
-    if (isDuplicate) hasRenames = true
-    const newKey = col.mvvType ? `${col.columnKey}_${col.mvvType.toLowerCase()}` : col.columnKey
-    if (newKey !== col.columnKey) hasRenames = true
 
+    // Compute colCategory first so it can inform compareKey for duplicate DU columns.
     let colCategory
     if (col.id != null) {
       if (col.columnKey.startsWith('SALE')) {
@@ -210,25 +207,35 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
       }
     }
 
-    if (newKey === col.columnKey && !colCategory) return col
+    // Compute compareKey:
+    // - explicit mvvType takes priority
+    // - duplicate DU columns without mvvType use their colCategory suffix to stay unique
+    // - everything else keeps the raw columnKey
+    let newKey
+    if (col.mvvType) {
+      newKey = `${col.columnKey}_${col.mvvType.toLowerCase()}`
+    } else if (isDuplicate && col.columnKey.startsWith('DELIVERY_UNIT') && colCategory) {
+      const suffix = colCategory.endsWith('offshore') ? 'offshore' : 'onsite'
+      newKey = `${col.columnKey}_${suffix}`
+    } else {
+      newKey = col.columnKey
+    }
+
     return {
       ...col,
-      ...(newKey !== col.columnKey && { compareKey: newKey }),
+      compareKey: newKey,
       ...(colCategory && { colCategory }),
     }
   })
 
-  if (!hasRenames) return { columnLabels: resultColumns, sectionList }
-
-  const renamedKeysByOriginal = new Map()
+  // Build a map: originalColumnKey → [compareKey, ...] in order of appearance
+  const compareKeysByOriginal = new Map()
   for (let i = 0; i < columnLabels.length; i++) {
     const orig = columnLabels[i].columnKey
-    const renamed = resultColumns[i].compareKey
-    if (renamed) {
-      const arr = renamedKeysByOriginal.get(orig)
-      if (arr) arr.push(renamed)
-      else renamedKeysByOriginal.set(orig, [renamed])
-    }
+    const ck = resultColumns[i].compareKey
+    const arr = compareKeysByOriginal.get(orig)
+    if (arr) arr.push(ck)
+    else compareKeysByOriginal.set(orig, [ck])
   }
 
   const resultSections = sectionList.map(section => ({
@@ -238,11 +245,10 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
       return {
         ...row,
         cellList: row.cellList.map(cell => {
-          const renamedKeys = renamedKeysByOriginal.get(cell.columnKey)
-          if (!renamedKeys) return cell
-          const occ = (cellOcc[cell.columnKey] =
-            (cellOcc[cell.columnKey] || 0) + 1)
-          return { ...cell, compareKey: renamedKeys[occ - 1] }
+          const cks = compareKeysByOriginal.get(cell.columnKey)
+          if (!cks) return cell
+          const occ = (cellOcc[cell.columnKey] = (cellOcc[cell.columnKey] || 0) + 1)
+          return { ...cell, compareKey: cks[occ - 1] }
         }),
       }
     }),

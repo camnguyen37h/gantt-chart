@@ -43,13 +43,15 @@
                 "id": 2,
                 "label": "DJ2",
                 "index": 4,
-                "columnKey": "DELIVERY_UNIT_2"
+                "columnKey": "DELIVERY_UNIT_2",
+                "mvvType": "Onsite"
             },
             {
                 "id": 39,
                 "label": "DU1.12",
                 "index": 5,
-                "columnKey": "DELIVERY_UNIT_39"
+                "columnKey": "DELIVERY_UNIT_39",
+                "mvvType": "Onsite"
             }
         ],
         "sectionList": [

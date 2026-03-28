@@ -32,15 +32,11 @@ const useFormula = () => {
     ratesByLocationType,
   } = useSelector(state => state.businessPlanDetails)
 
-  const getDisplayColumnKey = item =>
-    item && item.compareKey ? item.compareKey : item && item.columnKey
+  const getDisplayColumnKey = item => item && item.compareKey
 
   const getColumnMetaByDisplayKey = displayKey => {
     const safeColumns = columns || []
-    return safeColumns.find(col => {
-      const key = col.compareKey ? col.compareKey : col.columnKey
-      return key === displayKey
-    })
+    return safeColumns.find(col => col.compareKey === displayKey)
   }
 
   const getOBLocationTypeByDisplayKey = displayKey => {
@@ -178,6 +174,12 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
       const locType = getOBLocationTypeByDisplayKey(getDisplayColumnKey(targetItem))
       if (!locType) return null
       return getCrossViewCell(locType, secKey, rowKey, 'SALE')
+    }
+    // For DU and other columns: prefer the specific locType derived from colCategory
+    // so that DUs sharing the same columnKey across Onsite/Offshore resolve correctly.
+    if (isDU(colKey)) {
+      const locType = getOBLocationTypeByDisplayKey(getDisplayColumnKey(targetItem))
+      if (locType) return getCrossViewCell(locType, secKey, rowKey, colKey)
     }
     for (let i = 0; i < LOC_TYPES.length; i++) {
       const locData = viewModeDataMap[LOC_TYPES[i]]
@@ -455,7 +457,7 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
 
   const getOBDeliveryExpenseDU = ({ targetItem, rowKey }) => {
     if (!isOB()) return undefined
-    const targetDisplayKey = targetItem.compareKey || targetItem.columnKey
+    const targetDisplayKey = targetItem.compareKey
     const perLoc = LOC_TYPES.map(locType => {
       const locData = viewModeDataMap[locType]
       if (!locData) return null
@@ -463,7 +465,7 @@ const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
         locData.businessPlanItems['DELIVERY_EXPENSES'] &&
         locData.businessPlanItems['DELIVERY_EXPENSES'].data[rowKey]
       if (!row) return null
-      const cell = row.data.find(c => (c.compareKey || c.columnKey) === targetDisplayKey)
+      const cell = row.data.find(c => c.compareKey === targetDisplayKey)
       return cell && cell.value != null ? cell.value : null
     })
     return perLoc.some(v => v !== null) ? getSum(...perLoc) : undefined
