@@ -419,7 +419,7 @@
             "rowKey": "REVENUES_TOTAL",
             "cellList": [
               {
-                "value": 6600006,
+                "value": 660006,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -430,7 +430,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 10600006,
+                "value": 660006,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -474,7 +474,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -34000000,
+                "value": -20500023,
                 "columnKey": "INTERNAL",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -485,7 +485,7 @@
                 "mvvType": null
               },
               {
-                "value": 245561000,
+                "value": -245049000,
                 "columnKey": "TOTAL",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -524,7 +524,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 15000000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -535,7 +535,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 3000000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -557,7 +557,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 0,
+                "value": -18000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
@@ -734,7 +734,7 @@
                 "mvvType": null
               },
               {
-                "value": 306000,
+                "value": 203000,
                 "columnKey": "TOTAL",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
@@ -817,7 +817,7 @@
                 "mvvType": null
               },
               {
-                "value": 408000,
+                "value": 204000,
                 "columnKey": "TOTAL",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
@@ -900,7 +900,7 @@
                 "mvvType": null
               },
               {
-                "value": 410000,
+                "value": 205000,
                 "columnKey": "TOTAL",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
@@ -968,7 +968,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 0,
+                "value": 18000000,
                 "columnKey": "SALE_169",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
@@ -979,7 +979,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 0,
+                "value": -18000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1051,7 +1051,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 0,
+                "value": 18000000,
                 "columnKey": "SALE_169",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
@@ -1062,7 +1062,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 0,
+                "value": -18000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
@@ -1141,7 +1141,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 16220000,
+                "value": 4110000,
                 "columnKey": "SALE_169",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1163,7 +1163,7 @@
                 "mvvType": null
               },
               {
-                "value": 16220000,
+                "value": 4220000,
                 "columnKey": "TOTAL",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1224,7 +1224,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 16000000,
+                "value": 4000000,
                 "columnKey": "SALE_169",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
@@ -1246,7 +1246,7 @@
                 "mvvType": null
               },
               {
-                "value": 16000000,
+                "value": 4000000,
                 "columnKey": "TOTAL",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
@@ -1375,7 +1375,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 55475015,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1386,7 +1386,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 51200015,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1408,7 +1408,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -304162164,
+                "value": -197487134,
                 "columnKey": "INTERNAL",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1419,7 +1419,7 @@
                 "mvvType": null
               },
               {
-                "value": 192007104,
+                "value": 209947104,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
@@ -1458,7 +1458,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 51375000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -1469,7 +1469,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 49500000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -1491,7 +1491,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -292762104,
+                "value": -191887104,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -1502,7 +1502,7 @@
                 "mvvType": null
               },
               {
-                "value": 191887104,
+                "value": 209887104,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
@@ -1585,7 +1585,7 @@
                 "mvvType": null
               },
               {
-                "value": 20000,
+                "value": 10000,
                 "columnKey": "TOTAL",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
@@ -1624,7 +1624,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 100002,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
@@ -1635,7 +1635,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 100002,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
@@ -1657,7 +1657,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -600008,
+                "value": -400004,
                 "columnKey": "INTERNAL",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
@@ -1668,7 +1668,7 @@
                 "mvvType": null
               },
               {
-                "value": 20000,
+                "value": 10000,
                 "columnKey": "TOTAL",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
@@ -1707,7 +1707,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 100001,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
@@ -1718,7 +1718,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 100001,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
@@ -1740,7 +1740,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -600004,
+                "value": -400002,
                 "columnKey": "INTERNAL",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
@@ -1751,7 +1751,7 @@
                 "mvvType": null
               },
               {
-                "value": 20000,
+                "value": 10000,
                 "columnKey": "TOTAL",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
@@ -1790,7 +1790,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 3600000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
@@ -1801,7 +1801,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 1200000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
@@ -1823,7 +1823,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -8400000,
+                "value": -3600000,
                 "columnKey": "INTERNAL",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
@@ -1873,7 +1873,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 100003,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
@@ -1884,7 +1884,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 100003,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
@@ -1906,7 +1906,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -600012,
+                "value": -400006,
                 "columnKey": "INTERNAL",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
@@ -1917,7 +1917,7 @@
                 "mvvType": null
               },
               {
-                "value": 20000,
+                "value": 10000,
                 "columnKey": "TOTAL",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
@@ -1956,7 +1956,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 100004,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
@@ -1967,7 +1967,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 100004,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
@@ -1989,7 +1989,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -600016,
+                "value": -400008,
                 "columnKey": "INTERNAL",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
@@ -2000,7 +2000,7 @@
                 "mvvType": null
               },
               {
-                "value": 20000,
+                "value": 10000,
                 "columnKey": "TOTAL",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
@@ -2039,7 +2039,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 100005,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2050,7 +2050,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 100005,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2072,7 +2072,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -600020,
+                "value": -400010,
                 "columnKey": "INTERNAL",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2083,7 +2083,7 @@
                 "mvvType": null
               },
               {
-                "value": 20000,
+                "value": 10000,
                 "columnKey": "TOTAL",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2107,7 +2107,7 @@
             "rowKey": "TAX_TOTAL",
             "cellList": [
               {
-                "value": 1320001.2,
+                "value": 120001,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
@@ -2118,7 +2118,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 2120001.2,
+                "value": 120001,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
@@ -2140,7 +2140,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 720001.2,
+                "value": 720001,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
@@ -2162,7 +2162,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -7300004.6,
+                "value": -4100005,
                 "columnKey": "INTERNAL",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
@@ -2173,7 +2173,7 @@
                 "mvvType": null
               },
               {
-                "value": 49612204.6,
+                "value": 49612205,
                 "columnKey": "TOTAL",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
@@ -2280,7 +2280,7 @@
             "rowKey": "DIRECT_MARGIN",
             "cellList": [
               {
-                "value": -92863562.2,
+                "value": -97663562.2,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2291,7 +2291,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -90863562.2,
+                "value": -98863562.2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2302,7 +2302,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -42915011,
+                "value": -12560004,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2313,7 +2313,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -48320010.2,
+                "value": -2880004.8,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2324,7 +2324,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 180088800,
+                "value": 174198800,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2335,7 +2335,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 270162164,
+                "value": 199087115.6,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2346,7 +2346,7 @@
                 "mvvType": null
               },
               {
-                "value": -12278308.6,
+                "value": -18730308.6,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2363,7 +2363,7 @@
             "rowKey": "DIRECT_MARGIN_BONUS",
             "cellList": [
               {
-                "value": -91663562.2,
+                "value": -96463562.2,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2374,7 +2374,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -88463562.2,
+                "value": -96463562.2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2385,7 +2385,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -88463562.2,
+                "value": 12560004,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2396,7 +2396,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -48320010.2,
+                "value": 2880004.8,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2407,7 +2407,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 196088800,
+                "value": 178198800,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2418,7 +2418,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 316910696.8,
+                "value": 195487115.6,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2429,7 +2429,7 @@
                 "mvvType": null
               },
               {
-                "value": 3721691.4,
+                "value": 14730308.6,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
@@ -2468,7 +2468,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 9066176.471,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2479,7 +2479,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 8735294.118,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2501,7 +2501,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -51663900.707,
+                "value": -33862430,
                 "columnKey": "INTERNAL",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2512,7 +2512,7 @@
                 "mvvType": null
               },
               {
-                "value": null,
+                "value": 33862430.12,
                 "columnKey": "TOTAL",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
@@ -2529,7 +2529,7 @@
             "rowKey": "INDIRECT_MARGIN",
             "cellList": [
               {
-                "value": -109794777.259,
+                "value": -114594777.259,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2540,7 +2540,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -107794777.259,
+                "value": -115794777.259,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2551,7 +2551,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -51981187.471,
+                "value": 12560004,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2562,7 +2562,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -57055304.318,
+                "value": 2880004.8,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2573,7 +2573,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 0,
+                "value": 162088800,
                 "columnKey": "SALE_169",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2584,7 +2584,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 326626046.307,
+                "value": 214949545.72,
                 "columnKey": "INTERNAL",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2595,7 +2595,7 @@
                 "mvvType": null
               },
               {
-                "value": null,
+                "value": -49260745.72,
                 "columnKey": "TOTAL",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
@@ -2612,7 +2612,7 @@
             "rowKey": "DIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": -1407.022,
+                "value": -16277.098,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2623,7 +2623,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -857.203,
+                "value": -16477.096,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2634,7 +2634,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -273.344,
+                "value": 80,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2645,7 +2645,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -1342.22,
+                "value": 80,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2656,7 +2656,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 0,
+                "value": 136.02,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2667,7 +2667,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 3879.789,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2678,7 +2678,7 @@
                 "mvvType": null
               },
               {
-                "value": null,
+                "value": -71.17,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2695,7 +2695,7 @@
             "rowKey": "DIRECT_MARGIN_BONUS_RATE",
             "cellList": [
               {
-                "value": -1388.841,
+                "value": -16077.1,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2706,7 +2706,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -834.561,
+                "value": -16077.1,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2717,7 +2717,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -250.414,
+                "value": 80,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2728,7 +2728,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -1308.887,
+                "value": 80,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2739,7 +2739,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 0,
+                "value": 148.18,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2750,7 +2750,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -261762164,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2761,7 +2761,7 @@
                 "mvvType": null
               },
               {
-                "value": null,
+                "value": -55.15,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
@@ -2778,7 +2778,7 @@
             "rowKey": "INDIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": -1663.556,
+                "value": -19098.939,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2789,7 +2789,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -1016.931,
+                "value": -19298.937,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2800,7 +2800,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -331.09,
+                "value": 80,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2811,7 +2811,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -1584.867,
+                "value": 80,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2822,7 +2822,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 0,
+                "value": 136.02,
                 "columnKey": "SALE_169",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2833,7 +2833,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 4596.444,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2844,7 +2844,7 @@
                 "mvvType": null
               },
               {
-                "value": null,
+                "value": -108.7,
                 "columnKey": "TOTAL",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
@@ -2890,7 +2890,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 18491671.667,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2901,7 +2901,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 17066671.667,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2912,7 +2912,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 9833333.333,
+                "value": 4500000,
                 "columnKey": "SALE_169",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2923,7 +2923,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -84930126.834,
+                "value": -48371783.5,
                 "columnKey": "INTERNAL",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2934,7 +2934,7 @@
                 "mvvType": null
               },
               {
-                "value": 42485480.083,
+                "value": 24706308.42,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2973,7 +2973,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 17125000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2984,7 +2984,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 16500000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -2995,7 +2995,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": 5833.333,
+                "value": 5833,
                 "columnKey": "SALE_169",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -3006,7 +3006,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -81596776,
+                "value": -47971776,
                 "columnKey": "INTERNAL",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -3017,7 +3017,7 @@
                 "mvvType": null
               },
               {
-                "value": 40801304.667,
+                "value": 23988804.67,
                 "columnKey": "TOTAL",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
@@ -3089,7 +3089,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -208.333,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
@@ -3117,7 +3117,7 @@
             "rowKey": "PRODUCTIVITY",
             "cellList": [
               {
-                "value": 1500000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
@@ -3128,7 +3128,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 2500000,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
@@ -3172,7 +3172,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -10000000,
+                "value": -6000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
@@ -3200,7 +3200,7 @@
             "rowKey": "EFFICIENCY",
             "cellList": [
               {
-                "value": -23215890.55,
+                "value": -24415891,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -3211,7 +3211,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -22715890.55,
+                "value": -24715891,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -3222,7 +3222,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": -14305003.667,
+                "value": -4186668,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -3233,7 +3233,7 @@
                 "mvvType": "Offshore"
               },
               {
-                "value": -16106670.067,
+                "value": 960002,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -3255,7 +3255,7 @@
                 "mvvType": "Onsite"
               },
               {
-                "value": 76343454.834,
+                "value": 43985112,
                 "columnKey": "INTERNAL",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
@@ -3266,7 +3266,7 @@
                 "mvvType": null
               },
               {
-                "value": -14951060.75,
+                "value": 2828110.92,
                 "columnKey": "TOTAL",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
