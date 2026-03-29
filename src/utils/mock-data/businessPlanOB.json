@@ -23,43 +23,50 @@
         "id": null,
         "label": "Total",
         "index": 1,
-        "columnKey": "TOTAL"
+        "columnKey": "TOTAL",
+        "mvvType": null
       },
       {
         "id": 169,
         "label": "BKR1",
         "index": 2,
-        "columnKey": "SALE_169"
+        "columnKey": "SALE_169",
+        "mvvType": "Onsite"
       },
       {
         "id": null,
         "label": "Internal",
         "index": 3,
-        "columnKey": "INTERNAL"
+        "columnKey": "INTERNAL",
+        "mvvType": null
       },
       {
         "id": 1,
         "label": "DU3.1",
         "index": 4,
-        "columnKey": "DELIVERY_UNIT_1"
+        "columnKey": "DELIVERY_UNIT_1",
+        "mvvType": "Onsite"
       },
       {
         "id": 39,
         "label": "DU1.12",
         "index": 5,
-        "columnKey": "DELIVERY_UNIT_39"
+        "columnKey": "DELIVERY_UNIT_39",
+        "mvvType": "Onsite"
       },
       {
         "id": 39,
         "label": "DU1.12",
         "index": 6,
-        "columnKey": "DELIVERY_UNIT_39"
+        "columnKey": "DELIVERY_UNIT_39",
+        "mvvType": "Offshore"
       },
       {
         "id": 103,
         "label": "DU1.18",
         "index": 7,
-        "columnKey": "DELIVERY_UNIT_103"
+        "columnKey": "DELIVERY_UNIT_103",
+        "mvvType": "Offshore"
       }
     ],
     "sectionList": [
@@ -73,74 +80,81 @@
             "rowKey": "UNIT_PRICE",
             "cellList": [
               {
-                "value": null,
+                "value": 6000000,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 5000000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 5000000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 3000000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": 95000000,
                 "normUnitPriceFloor": 33250000,
                 "normUnitPriceCeiling": 156750000,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 68479000,
                 "columnKey": "SALE_169",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": 98131,
                 "normUnitPriceFloor": 86355.28,
                 "normUnitPriceCeiling": 109906.72,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 68479000,
                 "columnKey": "TOTAL",
                 "rowKey": "UNIT_PRICE",
                 "normUnitPriceConfig": 98131,
                 "normUnitPriceFloor": 86355.28,
                 "normUnitPriceCeiling": 109906.72,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -149,74 +163,81 @@
             "rowKey": "MM_PRODUCTION",
             "cellList": [
               {
-                "value": null,
+                "value": 4,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 4,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 3,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 3,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 7,
                 "columnKey": "SALE_169",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 14,
                 "columnKey": "TOTAL",
                 "rowKey": "MM_PRODUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -225,74 +246,81 @@
             "rowKey": "MM_BILL",
             "cellList": [
               {
-                "value": null,
+                "value": 1,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 3,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 1,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 7,
                 "columnKey": "SALE_169",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 7,
                 "columnKey": "TOTAL",
                 "rowKey": "MM_BILL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -301,74 +329,81 @@
             "rowKey": "MM_BILL_1",
             "cellList": [
               {
-                "value": null,
+                "value": 1,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 3,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 1,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 7,
                 "columnKey": "TOTAL",
                 "rowKey": "MM_BILL_1",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }
@@ -384,74 +419,81 @@
             "rowKey": "REVENUES_TOTAL",
             "cellList": [
               {
-                "value": null,
+                "value": 6600006,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 10600006,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 15700005,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 3600006,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 245561000,
                 "columnKey": "SALE_169",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -34000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 245561000,
                 "columnKey": "TOTAL",
                 "rowKey": "REVENUES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -460,14 +502,26 @@
             "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
+              },
+              {
+                "value": 0,
+                "columnKey": "DELIVERY_UNIT_39",
+                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
+                "normUnitPriceConfig": null,
+                "normUnitPriceFloor": null,
+                "normUnitPriceCeiling": null,
+                "normBusinessPlanConfig": null,
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
                 "value": null,
@@ -477,17 +531,8 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
-              },
-              {
-                "value": null,
-                "columnKey": "DELIVERY_UNIT_39",
-                "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
-                "normUnitPriceConfig": null,
-                "normUnitPriceFloor": null,
-                "normUnitPriceCeiling": null,
-                "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
                 "value": null,
@@ -497,37 +542,41 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 800000000,
                 "columnKey": "SALE_169",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 800000000,
                 "columnKey": "TOTAL",
                 "rowKey": "SOFTWARE_PRODUCTION_REVENUES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -536,74 +585,81 @@
             "rowKey": "DEDUCTION",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -555563000,
                 "columnKey": "SALE_169",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": -555563000,
                 "columnKey": "TOTAL",
                 "rowKey": "DEDUCTION",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -612,74 +668,81 @@
             "rowKey": "ONSITE_FEE",
             "cellList": [
               {
-                "value": null,
+                "value": 200001,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200001,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 300000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 200001,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 306000,
                 "columnKey": "SALE_169",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -900003,
                 "columnKey": "INTERNAL",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 306000,
                 "columnKey": "TOTAL",
                 "rowKey": "ONSITE_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -688,74 +751,81 @@
             "rowKey": "EQUIPMENT_FEE",
             "cellList": [
               {
-                "value": null,
+                "value": 200002,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200002,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200002,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 200002,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 408000,
                 "columnKey": "SALE_169",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -800008,
                 "columnKey": "INTERNAL",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 408000,
                 "columnKey": "TOTAL",
                 "rowKey": "EQUIPMENT_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -764,74 +834,81 @@
             "rowKey": "OTHER_FEE",
             "cellList": [
               {
-                "value": null,
+                "value": 200003,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200003,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200003,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 200003,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 410000,
                 "columnKey": "SALE_169",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -800012,
                 "columnKey": "INTERNAL",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 410000,
                 "columnKey": "TOTAL",
                 "rowKey": "OTHER_FEE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }
@@ -847,74 +924,81 @@
             "rowKey": "COST_PRICE_TOTAL",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "TOTAL",
                 "rowKey": "COST_PRICE_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -923,74 +1007,81 @@
             "rowKey": "COST_OF_DU_SOLD",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "TOTAL",
                 "rowKey": "COST_OF_DU_SOLD",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }
@@ -1006,74 +1097,81 @@
             "rowKey": "SELLING_EXPENSES_TOTAL",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 16220000,
                 "columnKey": "SALE_169",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 16220000,
                 "columnKey": "TOTAL",
                 "rowKey": "SELLING_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1082,74 +1180,81 @@
             "rowKey": "INCENTIVES",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 16000000,
                 "columnKey": "SALE_169",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 16000000,
                 "columnKey": "TOTAL",
                 "rowKey": "INCENTIVES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1158,74 +1263,81 @@
             "rowKey": "AGENCY_EXPENSE",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 220000,
                 "columnKey": "SALE_169",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 220000,
                 "columnKey": "TOTAL",
                 "rowKey": "AGENCY_EXPENSE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }
@@ -1241,74 +1353,81 @@
             "rowKey": "DELIVERY_EXPENSES_TOTAL",
             "cellList": [
               {
-                "value": null,
+                "value": 98143567,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 99343567,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 55475015,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 51200015,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 140000,
                 "columnKey": "SALE_169",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -304162164,
                 "columnKey": "INTERNAL",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 192007104,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_EXPENSES_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1317,74 +1436,81 @@
             "rowKey": "DIRECT_LABOR_COST",
             "cellList": [
               {
-                "value": null,
+                "value": 95943552,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 95943552,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 51375000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 49500000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -292762104,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 191887104,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_LABOR_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1393,74 +1519,81 @@
             "rowKey": "OUTSOURCING_COST",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "TOTAL",
                 "rowKey": "OUTSOURCING_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1469,74 +1602,81 @@
             "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
             "cellList": [
               {
-                "value": null,
+                "value": 200002,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200002,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 100002,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 100002,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -600008,
                 "columnKey": "INTERNAL",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "TOTAL",
                 "rowKey": "EQUIPMENT_INTERNET_SERVER_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1545,74 +1685,81 @@
             "rowKey": "ONSITE_DEVELOPMENT_COST",
             "cellList": [
               {
-                "value": null,
+                "value": 200001,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200001,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 100001,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 100001,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -600004,
                 "columnKey": "INTERNAL",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "TOTAL",
                 "rowKey": "ONSITE_DEVELOPMENT_COST",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1621,74 +1768,81 @@
             "rowKey": "PROJECT_BONUS",
             "cellList": [
               {
-                "value": null,
+                "value": 1200000,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 2400000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 3600000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 1200000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -8400000,
                 "columnKey": "INTERNAL",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "TOTAL",
                 "rowKey": "PROJECT_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1697,74 +1851,81 @@
             "rowKey": "OVERTIME",
             "cellList": [
               {
-                "value": null,
+                "value": 200003,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200003,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 100003,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 100003,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -600012,
                 "columnKey": "INTERNAL",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "TOTAL",
                 "rowKey": "OVERTIME",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1773,74 +1934,81 @@
             "rowKey": "NON_DEDUCTION_VAT",
             "cellList": [
               {
-                "value": null,
+                "value": 200004,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200004,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 100004,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 100004,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -600016,
                 "columnKey": "INTERNAL",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "TOTAL",
                 "rowKey": "NON_DEDUCTION_VAT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -1849,74 +2017,81 @@
             "rowKey": "OTHER_EXPENSES",
             "cellList": [
               {
-                "value": null,
+                "value": 200005,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 200005,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 100005,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 100005,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "SALE_169",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -600020,
                 "columnKey": "INTERNAL",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 20000,
                 "columnKey": "TOTAL",
                 "rowKey": "OTHER_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }
@@ -1932,74 +2107,81 @@
             "rowKey": "TAX_TOTAL",
             "cellList": [
               {
-                "value": null,
+                "value": 1320001.2,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 2120001.2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 3140001,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 720001.2,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 49112200,
                 "columnKey": "SALE_169",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -7300004.6,
                 "columnKey": "INTERNAL",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 49612204.6,
                 "columnKey": "TOTAL",
                 "rowKey": "TAX_TOTAL",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2008,74 +2190,81 @@
             "rowKey": "PIC_CIT",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 40,
                 "columnKey": "TOTAL",
                 "rowKey": "PIC_CIT",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": null
               }
             ]
           }
@@ -2091,74 +2280,81 @@
             "rowKey": "DIRECT_MARGIN",
             "cellList": [
               {
-                "value": null,
+                "value": -92863562.2,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -90863562.2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -42915011,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -48320010.2,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 180088800,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 270162164,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": -12278308.6,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2167,74 +2363,81 @@
             "rowKey": "DIRECT_MARGIN_BONUS",
             "cellList": [
               {
-                "value": null,
+                "value": -91663562.2,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -88463562.2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -88463562.2,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -48320010.2,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 196088800,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 316910696.8,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 3721691.4,
                 "columnKey": "TOTAL",
                 "rowKey": "DIRECT_MARGIN_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2243,64 +2446,70 @@
             "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
             "cellList": [
               {
-                "value": null,
+                "value": 16931215.059,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 16931215.059,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 9066176.471,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 8735294.118,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -51663900.707,
                 "columnKey": "INTERNAL",
                 "rowKey": "ALLOCATION_OF_POOL_AND_UNBILLABLE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
                 "value": null,
@@ -2310,7 +2519,8 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2319,64 +2529,70 @@
             "rowKey": "INDIRECT_MARGIN",
             "cellList": [
               {
-                "value": null,
+                "value": -109794777.259,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -107794777.259,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -51981187.471,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -57055304.318,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 326626046.307,
                 "columnKey": "INTERNAL",
                 "rowKey": "INDIRECT_MARGIN",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
                 "value": null,
@@ -2386,7 +2602,8 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2395,64 +2612,70 @@
             "rowKey": "DIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": null,
+                "value": -1407.022,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -857.203,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -273.344,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -1342.22,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 3879.789,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
                 "value": null,
@@ -2462,7 +2685,8 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2471,64 +2695,70 @@
             "rowKey": "DIRECT_MARGIN_BONUS_RATE",
             "cellList": [
               {
-                "value": null,
+                "value": -1388.841,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -834.561,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -250.414,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -1308.887,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -261762164,
                 "columnKey": "INTERNAL",
                 "rowKey": "DIRECT_MARGIN_BONUS_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
                 "value": null,
@@ -2538,7 +2768,8 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 17.888,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2547,64 +2778,70 @@
             "rowKey": "INDIRECT_MARGIN_RATE",
             "cellList": [
               {
-                "value": null,
+                "value": -1663.556,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -1016.931,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -331.09,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -1584.867,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 4596.444,
                 "columnKey": "INTERNAL",
                 "rowKey": "INDIRECT_MARGIN_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
                 "value": null,
@@ -2614,7 +2851,8 @@
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }
@@ -2630,74 +2868,81 @@
             "rowKey": "DELIVERY_AVERAGE_EXPENSES",
             "cellList": [
               {
-                "value": null,
+                "value": 24535891.75,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 24835891.75,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 18491671.667,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 17066671.667,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 9833333.333,
                 "columnKey": "SALE_169",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -84930126.834,
                 "columnKey": "INTERNAL",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 42485480.083,
                 "columnKey": "TOTAL",
                 "rowKey": "DELIVERY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2706,74 +2951,81 @@
             "rowKey": "SALARY_AVERAGE_EXPENSES",
             "cellList": [
               {
-                "value": null,
+                "value": 23985888,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 23985888,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 17125000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 16500000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 5833.333,
                 "columnKey": "SALE_169",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -81596776,
                 "columnKey": "INTERNAL",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 40801304.667,
                 "columnKey": "TOTAL",
                 "rowKey": "SALARY_AVERAGE_EXPENSES",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2782,74 +3034,81 @@
             "rowKey": "BILLABLE_RATE",
             "cellList": [
               {
-                "value": null,
+                "value": 25,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 50,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 100,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 33.333,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 200,
                 "columnKey": "SALE_169",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -208.333,
                 "columnKey": "INTERNAL",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 104.167,
                 "columnKey": "TOTAL",
                 "rowKey": "BILLABLE_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": 0,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2858,74 +3117,81 @@
             "rowKey": "PRODUCTIVITY",
             "cellList": [
               {
-                "value": null,
+                "value": 1500000,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 2500000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 5000000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 1000000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -10000000,
                 "columnKey": "INTERNAL",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 125000000,
                 "columnKey": "TOTAL",
                 "rowKey": "PRODUCTIVITY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -2934,74 +3200,81 @@
             "rowKey": "EFFICIENCY",
             "cellList": [
               {
-                "value": null,
+                "value": -23215890.55,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -22715890.55,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -14305003.667,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": -16106670.067,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 76343454.834,
                 "columnKey": "INTERNAL",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": -14951060.75,
                 "columnKey": "TOTAL",
                 "rowKey": "EFFICIENCY",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -3010,74 +3283,81 @@
             "rowKey": "INCENTIVES_RATE",
             "cellList": [
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 4,
                 "columnKey": "SALE_169",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "INTERNAL",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "TOTAL",
                 "rowKey": "INCENTIVES_RATE",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -3086,74 +3366,81 @@
             "rowKey": "PRODUCTION_MM_BONUS",
             "cellList": [
               {
-                "value": null,
+                "value": 1200000,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 1200000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 1200000,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 1200000,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -4800000,
                 "columnKey": "INTERNAL",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "TOTAL",
                 "rowKey": "PRODUCTION_MM_BONUS",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           },
@@ -3162,74 +3449,81 @@
             "rowKey": "BILL_RATE_NORM",
             "cellList": [
               {
-                "value": null,
+                "value": 85,
                 "columnKey": "DELIVERY_UNIT_1",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 85,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": 85,
                 "columnKey": "DELIVERY_UNIT_39",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 85,
                 "columnKey": "DELIVERY_UNIT_103",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": true
+                "editable": true,
+                "mvvType": "Offshore"
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "SALE_169",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": "Onsite"
               },
               {
-                "value": null,
+                "value": -340,
                 "columnKey": "INTERNAL",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               },
               {
-                "value": null,
+                "value": 0,
                 "columnKey": "TOTAL",
                 "rowKey": "BILL_RATE_NORM",
                 "normUnitPriceConfig": null,
                 "normUnitPriceFloor": null,
                 "normUnitPriceCeiling": null,
                 "normBusinessPlanConfig": null,
-                "editable": false
+                "editable": false,
+                "mvvType": null
               }
             ]
           }

@@ -29,7 +29,6 @@ const useFormula = () => {
     softwareDevelopmentFee,
     viewModeDataMap,
     viewMode,
-    ratesByLocationType,
   } = useSelector(state => state.businessPlanDetails)
 
   const getDisplayColumnKey = item => item && item.compareKey
@@ -184,12 +183,6 @@ const useFormula = () => {
       if (!locType) return null
       return getCrossViewCell(locType, secKey, rowKey, 'SALE')
     }
-    if (isDU(colKey)) {
-      const locType = getOBLocationTypeByDisplayKey(
-        getDisplayColumnKey(targetItem)
-      )
-      if (locType) return getCrossViewCell(locType, secKey, rowKey, colKey)
-    }
     for (let i = 0; i < LOC_TYPES.length; i++) {
       const locData = viewModeDataMap[LOC_TYPES[i]]
       if (!locData) continue
@@ -280,19 +273,8 @@ const useFormula = () => {
       rowKey: targetItem.rowKey,
     })
 
-  const getSoftwareProductionSale = ({ targetItem } = {}) => {
-    if (isOBOrTotal()) {
-      const locType = getOBLocationTypeByDisplayKey(
-        getDisplayColumnKey(targetItem)
-      )
-      if (!locType) return undefined
-      const rates = ratesByLocationType && ratesByLocationType[locType]
-      if (!rates) return undefined
-      return getMultiplicationRes(
-        rates.exchangeRate,
-        rates.softwareDevelopmentFee
-      )
-    }
+  const getSoftwareProductionSale = () => {
+    if (isOBOrTotal()) return undefined
     return getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
   }
 
@@ -329,18 +311,9 @@ const useFormula = () => {
   }
 
   const getSoftwareProductionTotal = () => {
-    if (isOBOrTotal()) {
-      const perLoc = LOC_TYPES.map(locType => {
-        const rates = ratesByLocationType && ratesByLocationType[locType]
-        if (!rates) return null
-        return getMultiplicationRes(
-          rates.exchangeRate,
-          rates.softwareDevelopmentFee
-        )
-      })
-      if (!perLoc.some(v => v !== null)) return undefined
-      return getSum(...perLoc)
-    }
+    if (isOB())
+      return sumCrossViewTotals('REVENUES', 'SOFTWARE_PRODUCTION_REVENUES')
+    if (viewMode === 'Total') return undefined
     return getSoftwareProductionSale()
   }
 
@@ -383,7 +356,7 @@ const useFormula = () => {
     if (!onsiteRow) return undefined
     return getSum(
       ...onsiteRow.data
-        .filter(item => isSaleCol(item.columnKey))
+        .filter(item => item.columnKey.toUpperCase() !== 'TOTAL')
         .map(item => item.value)
     )
   }
