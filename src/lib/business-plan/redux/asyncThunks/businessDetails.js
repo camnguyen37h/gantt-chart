@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { ResponseStatusCode } from '../../../service/constant'
 import * as BusinessPlanAPI from '../../businessPlanApiConfig'
 import { NotificationManager } from 'react-notifications'
+import { decryptRawBpData } from '../../../crypto/decryptSectionList'
 
 export const getBusinessPlanDetail = createAsyncThunk(
   'get/getBusinessPlanDetail',
@@ -26,7 +27,7 @@ export const getCompareBusinessPlanDetail = createAsyncThunk(
       params
     )
     if (result.status === ResponseStatusCode.success) {
-      return result.data
+      return decryptRawBpData(result.data)
     } else {
       return NotificationManager.error(result.message)
     }
@@ -41,7 +42,8 @@ export const getBusinessPlanDetailByViewMode = createAsyncThunk(
       params
     )
     if (result.status === ResponseStatusCode.success) {
-      return { data: result.data, errorMessage: result.errorMessage }
+      const data = await decryptRawBpData(result.data)
+      return { data, errorMessage: result.errorMessage }
     } else {
       if (result.status === ResponseStatusCode.forbidden) {
         window.location.href = '/error/access-deny'
@@ -60,13 +62,19 @@ export const fetchAllViewModesData = createAsyncThunk(
         BusinessPlanAPI.getBusinessPlanDetailByViewMode(id, { view })
       )
     )
-    return viewModes.reduce((acc, view, index) => {
+    // Collect successful raw responses
+    const rawMap = viewModes.reduce((acc, view, index) => {
       const result = results[index]
       if (result && result.status === ResponseStatusCode.success) {
         acc[view] = result.data
       }
       return acc
     }, {})
+    // Decrypt all views in parallel
+    const decryptedEntries = await Promise.all(
+      Object.keys(rawMap).map(async view => [view, await decryptRawBpData(rawMap[view])])
+    )
+    return Object.fromEntries(decryptedEntries)
   }
 )
 
