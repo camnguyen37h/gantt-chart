@@ -1101,6 +1101,12 @@ const useFormula = () => {
         })
       )
     }
+    if (viewMode === 'Total' && isSaleCol(targetItem.columnKey)) {
+      const perLoc = LOC_TYPES.map(locType =>
+        getCrossViewCell(locType, 'MARGIN', 'INDIRECT_MARGIN', 'SALE')
+      )
+      return perLoc.some(v => v !== null) ? getSum(...perLoc) : null
+    }
     if (isOBOrTotal()) {
       const cross = getOBCrossViewCell('MARGIN', 'INDIRECT_MARGIN', targetItem)
       if (cross !== undefined) return cross
