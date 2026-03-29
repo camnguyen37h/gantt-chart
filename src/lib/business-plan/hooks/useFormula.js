@@ -417,19 +417,9 @@ const useFormula = () => {
 
   const getDUCostSaleOB = ({ targetItem }) => {
     if (!isOB()) return undefined
-    // SALE cols (including duplicate SALE) always read Offshore SALE
-    if (isSaleCol(targetItem.columnKey)) {
-      const offshoreData = viewModeDataMap['Offshore']
-      if (!offshoreData) return undefined
-      const row =
-        offshoreData.businessPlanItems['COST_PRICE'] &&
-        offshoreData.businessPlanItems['COST_PRICE'].data['COST_OF_DU_SOLD']
-      if (!row) return undefined
-      const cell = row.data.find(c => c.columnKey === 'SALE')
-      return cell && cell.value != null ? cell.value : undefined
-    }
-    // DU cols: read from the corresponding locType
-    const locType = getOBLocationTypeByDisplayKey(getDisplayColumnKey(targetItem))
+    const locType = getOBLocationTypeByDisplayKey(
+      getDisplayColumnKey(targetItem)
+    )
     if (!locType) return undefined
     const locData = viewModeDataMap[locType]
     if (!locData) return undefined
@@ -437,25 +427,14 @@ const useFormula = () => {
       locData.businessPlanItems['COST_PRICE'] &&
       locData.businessPlanItems['COST_PRICE'].data['COST_OF_DU_SOLD']
     if (!row) return undefined
-    const cell = row.data.find(c => c.columnKey === targetItem.columnKey)
+    const sourceColKey = isSaleCol(targetItem.columnKey)
+      ? 'SALE'
+      : targetItem.columnKey
+    const cell = row.data.find(c => c.columnKey === sourceColKey)
     return cell && cell.value != null ? cell.value : undefined
   }
 
-  const getDUCostInternal = () => {
-    if (isOB()) {
-      // Internal = -Σ BU Offshore = -(Offshore SALE of COST_OF_DU_SOLD)
-      const offshoreData = viewModeDataMap['Offshore']
-      if (!offshoreData) return undefined
-      const row =
-        offshoreData.businessPlanItems['COST_PRICE'] &&
-        offshoreData.businessPlanItems['COST_PRICE'].data['COST_OF_DU_SOLD']
-      if (!row) return undefined
-      const saleCell = row.data.find(c => c.columnKey === 'SALE')
-      const saleValue = saleCell && saleCell.value != null ? saleCell.value : null
-      return saleValue === null ? null : decimalNegate(saleValue)
-    }
-    return getSoftwareProductionInternal()
-  }
+  const getDUCostInternal = () => (isOB() ? 0 : getSoftwareProductionInternal())
 
   const getDUCostTotal = () => {
     if (isOB()) return 0
@@ -463,23 +442,11 @@ const useFormula = () => {
   }
 
   const getIncentiveTotal = () => {
-    if (isOB()) return getCrossViewCell('Onsite', 'SELLING_EXPENSES', 'INCENTIVES', 'TOTAL')
-    if (viewMode === 'Total') return undefined
+    if (isOBOrTotal()) return undefined
     return getIncentiveSale()
   }
 
   const getIncentiveSale = () => {
-    if (isOB()) {
-      // SALE col on OB: read Onsite SALE from cross-view
-      const onsiteData = viewModeDataMap['Onsite']
-      if (!onsiteData) return undefined
-      const row =
-        onsiteData.businessPlanItems['SELLING_EXPENSES'] &&
-        onsiteData.businessPlanItems['SELLING_EXPENSES'].data['INCENTIVES']
-      if (!row) return undefined
-      const cell = row.data.find(c => c.columnKey === 'SALE')
-      return cell ? cell.value : null
-    }
     if (isOBOrTotal()) return undefined
     const revenues = getSoftwareProductionSale()
     const rate = getItem({
@@ -495,49 +462,13 @@ const useFormula = () => {
   }
 
   const getAgencyTotal = () => {
-    if (isOB()) return sumCrossViewTotals('SELLING_EXPENSES', 'AGENCY_EXPENSE')
-    if (viewMode === 'Total') return undefined
+    if (isOBOrTotal()) return undefined
     const value = getItem({
       sectionKey: 'SELLING_EXPENSES',
       rowKey: 'AGENCY_EXPENSE',
       columnKey: 'SALE',
     }).value
     return value != null ? value : null
-  }
-
-  const getAgencyExpenseSaleOB = () => {
-    if (!isOB()) return undefined
-    // SALE col on OB: sum Onsite SALE + Offshore SALE from cross-view
-    const values = LOC_TYPES.map(locType => {
-      const locData = viewModeDataMap[locType]
-      if (!locData) return null
-      const row =
-        locData.businessPlanItems['SELLING_EXPENSES'] &&
-        locData.businessPlanItems['SELLING_EXPENSES'].data['AGENCY_EXPENSE']
-      if (!row) return null
-      const cell = row.data.find(c => c.columnKey === 'SALE')
-      return cell ? cell.value : null
-    })
-    return getSum(...values)
-  }
-
-  const resolveOBCell = (sectionKey, rowKey, item) => {
-    const locType = getOBLocationTypeByDisplayKey(getDisplayColumnKey(item))
-    if (!locType) return null
-    return getCrossViewCell(locType, sectionKey, rowKey, item.columnKey)
-  }
-
-  // Internal = -Σ DU for selling expenses: reads DU values via resolveOBCell (cross-view)
-  const getOBSellingExpenseInternal = ({ sectionKey, rowKey }) => {
-    if (!isOB()) return undefined
-    const duItems = getItems({
-      sectionKey,
-      rowKey,
-      filterCallback: item => isDU(item.columnKey),
-    })
-    if (!duItems.length) return null
-    const sum = getSum(...duItems.map(item => resolveOBCell(sectionKey, rowKey, item)))
-    return sum === null ? null : decimalNegate(sum)
   }
 
   const getDirectLaborCostTotal = ({ targetItem, sectionKey, rowKey }) => {
@@ -1455,17 +1386,16 @@ const useFormula = () => {
       SELLING_EXPENSES_TOTAL: {
         total: getTotalColumnAndSet,
         sale: getTotalColumnAndSet,
-        internal: getOBSellingExpenseInternal,
+        internal: getOBNegativeDUSumInternal,
       },
       INCENTIVES: {
         total: getIncentiveTotal,
         sale: getIncentiveSale,
-        internal: getOBSellingExpenseInternal,
+        internal: getOBNegativeDUSumInternal,
       },
       AGENCY_EXPENSE: {
         total: getAgencyTotal,
-        sale: getAgencyExpenseSaleOB,
-        internal: getOBSellingExpenseInternal,
+        internal: getOBNegativeDUSumInternal,
       },
     },
     DELIVERY_EXPENSES: {
