@@ -99,21 +99,26 @@ export const businessGeneralInformationSlice = createSlice({
         return
       }
 
-      state.generalInfos = data.generalInfos.filter(item => !!item.id) || []
+      const normalizeMvvLocationType = raw => {
+        if (!raw) return raw
+        const lower = raw.toLowerCase()
+        if (lower === 'offshore') return 'Offshore'
+        if (lower === 'onsite') return 'Onsite'
+        return raw
+      }
+      state.generalInfos =
+        data.generalInfos
+          .filter(item => !!item.id)
+          .map(info => ({
+            ...info,
+            mvvLocationType: normalizeMvvLocationType(info.mvvLocationType),
+          })) || []
       state.selectedMvvCode = data.projectCode
       state.mvvLocationTypeIdMap = (state.generalInfos || []).reduce(
-        (map, info) => {
-          if (!info.mvvLocationType || !info.projectCode) return map
-          // Normalize casing: "OffShore" → "Offshore", "OnSite"/"ONSITE" → "Onsite"
-          const raw = info.mvvLocationType
-          const normalized =
-            raw.toLowerCase() === 'offshore'
-              ? 'Offshore'
-              : raw.toLowerCase() === 'onsite'
-              ? 'Onsite'
-              : raw
-          return { ...map, [normalized]: info.id }
-        },
+        (map, info) =>
+          info.mvvLocationType && info.projectCode
+            ? { ...map, [info.mvvLocationType]: info.id }
+            : map,
         {}
       )
 

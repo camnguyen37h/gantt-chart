@@ -7,9 +7,7 @@
     "version": 1,
     "startDate": 1773939600000,
     "endDate": 1804525200000,
-    "userRoles": [
-      "DB-ADMIN"
-    ],
+    "userRoles": ["DB-ADMIN"],
     "warningMessage": [],
     "versions": [
       {
@@ -143,7 +141,7 @@
           "kpiMember": null
         },
         "projectCode": "GLBOD2500126",
-        "mvvLocationType": "Offshore",
+        "mvvLocationType": "OffShore",
         "id": 467,
         "version": 1,
         "versionName": "Version 1",
