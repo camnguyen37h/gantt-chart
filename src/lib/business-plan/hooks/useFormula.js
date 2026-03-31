@@ -865,10 +865,9 @@ const useFormula = () => {
       const taxItem = getItem({ sectionKey: 'TAX', rowKey: 'TAX_TOTAL', columnKey: colKey, compareKey: ck })
       const revenuesValue = getTotalColumnAndSet({ targetItem: revenuesItem, serviceRowKey: sectionConfig.REVENUES.newRowKey })
       const costValue = getTotalColumnAndSet({ targetItem: costItem, serviceRowKey: sectionConfig.COST_PRICE && sectionConfig.COST_PRICE.newRowKey })
-      const sellingValue = getTotalColumnAndSet({ targetItem: sellingItem, serviceRowKey: sectionConfig.SELLING_EXPENSES && sectionConfig.SELLING_EXPENSES.newRowKey })
+      const sellingValue = getSellingExpensesTotalSaleOB({ targetItem: sellingItem, serviceRowKey: sectionConfig.SELLING_EXPENSES && sectionConfig.SELLING_EXPENSES.newRowKey })
       const deliveryValue = getTotalColumnAndSet({ targetItem: deliveryItem, serviceRowKey: sectionConfig.DELIVERY_EXPENSES && sectionConfig.DELIVERY_EXPENSES.newRowKey })
-      const taxRaw = getOBTaxDU({ targetItem: taxItem })
-      const tax = taxRaw != null ? taxRaw : taxItem.value
+      const tax = getTotalTax({ targetItem: taxItem })
       const expenseSum = getSum(costValue, sellingValue, deliveryValue, tax)
       return revenuesValue != null && expenseSum != null
         ? new Decimal(revenuesValue).minus(new Decimal(expenseSum)).toNumber()
@@ -1079,27 +1078,23 @@ const useFormula = () => {
       return getSum(...duItems.map(item => getIndirectMarginDU({ targetItem: item })))
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const saleItems = getItems({
-        sectionKey: 'MARGIN',
-        rowKey: 'INDIRECT_MARGIN',
-        filterCallback: item => isSaleCol(item.columnKey),
+      const dm = getDirectMargin({
+        targetItem: getItem({
+          sectionKey: 'MARGIN',
+          rowKey: 'DIRECT_MARGIN',
+          columnKey: targetItem.columnKey,
+          compareKey: targetItem.compareKey,
+        }),
       })
-      return getSum(
-        ...saleItems.map(item => {
-          const dm = getDirectMargin({
-            targetItem: getItem({
-              sectionKey: 'MARGIN',
-              rowKey: 'DIRECT_MARGIN',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-          })
-          const alloc = getOBAllocationPoolCellValue({ targetItem: item })
-          return dm != null
-            ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber()
-            : null
-        })
+      const offshoreSellingExp = getCrossViewCell(
+        'Offshore',
+        'SELLING_EXPENSES',
+        'SELLING_EXPENSES_TOTAL',
+        'SALE'
       )
+      return dm != null
+        ? new Decimal(dm).minus(new Decimal(offshoreSellingExp || 0)).toNumber()
+        : null
     }
     if (viewMode === 'Total' && isSaleCol(targetItem.columnKey)) {
       const perLoc = LOC_TYPES.map(locType =>
@@ -1203,37 +1198,7 @@ const useFormula = () => {
       return getSum(...duItems.map(item => getDirectMarginRate({ targetItem: item })))
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const saleItems = getItems({
-        sectionKey: 'MARGIN',
-        rowKey: 'DIRECT_MARGIN_RATE',
-        filterCallback: item => isSaleCol(item.columnKey),
-      })
-      const totalDM = getSum(
-        ...saleItems.map(item =>
-          getDirectMargin({
-            targetItem: getItem({
-              sectionKey: 'MARGIN',
-              rowKey: 'DIRECT_MARGIN',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-          })
-        )
-      )
-      const totalRev = getSum(
-        ...saleItems.map(item =>
-          getTotalColumnAndSet({
-            targetItem: getItem({
-              sectionKey: 'REVENUES',
-              rowKey: 'REVENUES_TOTAL',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-            serviceRowKey: sectionConfig.REVENUES.newRowKey,
-          })
-        )
-      )
-      return decimalDividePercent(totalDM, totalRev)
+      return undefined
     }
     return getMarginRate({
       targetItem,
@@ -1279,44 +1244,7 @@ const useFormula = () => {
       return getSum(...duItems.map(item => getDirectMarginBonusRateDU({ targetItem: item })))
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const saleItems = getItems({
-        sectionKey: 'MARGIN',
-        rowKey: 'DIRECT_MARGIN_BONUS_RATE',
-        filterCallback: item => isSaleCol(item.columnKey),
-      })
-      const totalDMBonus = getSum(
-        ...saleItems.map(item => {
-          const dm = getDirectMargin({
-            targetItem: getItem({
-              sectionKey: 'MARGIN',
-              rowKey: 'DIRECT_MARGIN',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-          })
-          const projectBonus = getItem({
-            sectionKey: 'DELIVERY_EXPENSES',
-            rowKey: 'PROJECT_BONUS',
-            columnKey: item.columnKey,
-            compareKey: item.compareKey,
-          }).value
-          return getSum(dm, projectBonus)
-        })
-      )
-      const totalRev = getSum(
-        ...saleItems.map(item =>
-          getTotalColumnAndSet({
-            targetItem: getItem({
-              sectionKey: 'REVENUES',
-              rowKey: 'REVENUES_TOTAL',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-            serviceRowKey: sectionConfig.REVENUES.newRowKey,
-          })
-        )
-      )
-      return decimalDividePercent(totalDMBonus, totalRev)
+      return undefined
     }
     return getMarginRate({
       targetItem,
@@ -1353,41 +1281,7 @@ const useFormula = () => {
       return getSum(...duItems.map(item => getIndirectMarginRateDU({ targetItem: item })))
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const saleItems = getItems({
-        sectionKey: 'MARGIN',
-        rowKey: 'INDIRECT_MARGIN_RATE',
-        filterCallback: item => isSaleCol(item.columnKey),
-      })
-      const totalIM = getSum(
-        ...saleItems.map(item => {
-          const dm = getDirectMargin({
-            targetItem: getItem({
-              sectionKey: 'MARGIN',
-              rowKey: 'DIRECT_MARGIN',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-          })
-          const alloc = getOBAllocationPoolCellValue({ targetItem: item })
-          return dm != null
-            ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber()
-            : null
-        })
-      )
-      const totalRev = getSum(
-        ...saleItems.map(item =>
-          getTotalColumnAndSet({
-            targetItem: getItem({
-              sectionKey: 'REVENUES',
-              rowKey: 'REVENUES_TOTAL',
-              columnKey: item.columnKey,
-              compareKey: item.compareKey,
-            }),
-            serviceRowKey: sectionConfig.REVENUES.newRowKey,
-          })
-        )
-      )
-      return decimalDividePercent(totalIM, totalRev)
+      return undefined
     }
     return getMarginRate({
       targetItem,

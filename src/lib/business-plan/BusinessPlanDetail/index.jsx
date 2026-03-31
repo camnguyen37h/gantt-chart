@@ -317,7 +317,7 @@ function BusinessPlanDetail({ match, history }) {
       if (!isValid) return { payload: { status: '' } }
       else {
         const saveParams = {
-          businessPlanId: Number(match.params.buId),
+          businessPlanId: businessPlanVersionId,
           groupId: [Number(deliveryUnitDataDelivery.groupId)],
           isSubmit: false,
           viewType: resourceInfoTableParams.viewType,
@@ -336,7 +336,7 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
     const saveDeliveryPlanParams = {
-      businessPlanId: Number(match.params.buId),
+      businessPlanId: businessPlanVersionId,
       isSubmit: true,
       viewType: resourceInfoTableParams.viewType,
       loadDataFromType: '',

@@ -54,9 +54,12 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { generalInfos } = useSelector(
+  const { generalInfos, mvvLocationTypeIdMap } = useSelector(
     state => state.businessGeneralInformation
   )
+
+  const currentViewMode = useSelector(state => state.businessPlanDetails.viewMode)
+  const businessPlanVersionId = +mvvLocationTypeIdMap[currentViewMode] || parseInt(match.params.buId)
 
   // Mock user for demo
   const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
@@ -150,7 +153,7 @@ function BusinessPlanVersion({
 
   const onOk = async () => {
     const params = {
-      businessPlanVersionId: parseInt(match.params.buId),
+      businessPlanVersionId: businessPlanVersionId,
       generalInformation: generalInformationParams,
       sectionList: originalBusinessPlanItems,
       columnLabels,

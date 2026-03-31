@@ -225,11 +225,19 @@ const businessDetailsSlice = createSlice({
 
       state.generalInfos = data.generalInfos || []
 
+      const normalizeMvvLocationType = raw => {
+        if (!raw) return raw
+        const lower = raw.toLowerCase()
+        if (lower === 'offshore') return 'Offshore'
+        if (lower === 'onsite') return 'Onsite'
+        return raw
+      }
       const ratesByLocationType = {}
       if (data.generalInfos && data.generalInfos.length > 0) {
         data.generalInfos.forEach(function (info) {
           if (info.mvvLocationType) {
-            ratesByLocationType[info.mvvLocationType] = {
+            const key = normalizeMvvLocationType(info.mvvLocationType)
+            ratesByLocationType[key] = {
               exchangeRate: info.exchangeRate,
               softwareDevelopmentFee: info.softwareDevelopmentFee,
               otherFees: info.otherFees,
