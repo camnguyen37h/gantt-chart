@@ -95,9 +95,11 @@ const deriveCellValue = (mergedCol, onsiteCellMap, offshoreCellMap) => {
 
   if (isDUCol(colKey)) {
     if (mergedCol.mvvType === 'Onsite') {
-      return (onsiteCellMap[colKey] || {}).value ?? null
+      const v1 = (onsiteCellMap[colKey] || {}).value
+      return v1 !== undefined ? v1 : null
     }
-    return (offshoreCellMap[colKey] || {}).value ?? null
+    const v2 = (offshoreCellMap[colKey] || {}).value
+    return v2 !== undefined ? v2 : null
   }
 
   return null

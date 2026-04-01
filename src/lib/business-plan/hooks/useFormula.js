@@ -946,10 +946,10 @@ const useFormula = () => {
       const taxVal = getOBTaxInternal()
       if (revVal == null) return null
       return new Decimal(revVal)
-        .minus(new Decimal(costVal ?? 0))
-        .minus(new Decimal(sellingVal ?? 0))
-        .minus(new Decimal(deliveryVal ?? 0))
-        .minus(new Decimal(taxVal ?? 0))
+        .minus(new Decimal(costVal || 0))
+        .minus(new Decimal(sellingVal || 0))
+        .minus(new Decimal(deliveryVal || 0))
+        .minus(new Decimal(taxVal || 0))
         .toNumber()
     } else if (isOB() && isSaleCol(colKey)) {
       const ck = targetItem.compareKey
@@ -1379,7 +1379,7 @@ const useFormula = () => {
     if (locType === 'Onsite') {
       if (dm == null) return null
       const cost = getCrossViewCell('Onsite', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
-      return new Decimal(dm).plus(new Decimal(cost ?? 0)).toNumber()
+      return new Decimal(dm).plus(new Decimal(cost || 0)).toNumber()
     }
     return dm
   }
@@ -1467,7 +1467,7 @@ const useFormula = () => {
         margin = dm != null ? getSum(dm, pb, inc) : null
       } else if (marginRowKey === 'INDIRECT_MARGIN') {
         const alloc = getCrossViewCell(locType, 'MARGIN', 'ALLOCATION_OF_POOL_AND_UNBILLABLE', 'SALE')
-        margin = dm != null ? new Decimal(dm).minus(new Decimal(alloc ?? 0)).toNumber() : null
+        margin = dm != null ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber() : null
       } else {
         margin = getCrossViewCell(locType, 'MARGIN', marginRowKey, 'SALE')
       }
