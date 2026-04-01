@@ -54,7 +54,8 @@ export const getBusinessPlanDetailByViewMode = createAsyncThunk(
 export const fetchAllViewModesData = createAsyncThunk(
   'get/fetchAllViewModesData',
   async ({ id }) => {
-    const viewModes = ['Total', 'OB', 'Onsite', 'Offshore']
+    // Only fetch the two source views — Total and OB are derived on the frontend.
+    const viewModes = ['Onsite', 'Offshore']
     const results = await Promise.all(
       viewModes.map(view =>
         BusinessPlanAPI.getBusinessPlanDetailByViewMode(id, { view })

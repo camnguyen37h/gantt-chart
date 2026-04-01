@@ -7,16 +7,12 @@
  */
 
 // ==================== VIEW MODE SPECIFIC DATA ====================
-import mockBusinessPlanByViewTotal from './mock-data/businessPlanTotal.json'
-import mockBusinessPlanByViewOB from './mock-data/businessPlanOB.json'
 import mockBusinessPlanByViewOnsite from './mock-data/businessPlanOnsite.json'
 import mockBusinessPlanByViewOffshore from './mock-data/businessPlanOffshore.json'
 import mockBusinessPlanByViewOffshoreV2 from './mock-data/businessPlanOffshoreV2.json'
 import mockBusinessPlanDetail464Raw from './mock-data/businessPlanDetail464.json'
 import mockBusinessPlanDetail468Raw from './mock-data/businessPlanDetail468.json'
 import mockBusinessPlanDetail494Raw from './mock-data/businessPlanDetail494.json'
-import mockBusinessPlanTotal468Raw from './mock-data/businessPlanTotal468.json'
-import mockBusinessPlanOB468Raw from './mock-data/businessPlanOB468.json'
 import mockBusinessPlanOnsite468Raw from './mock-data/businessPlanOnsite468.json'
 import mockBusinessPlanOffshore468Raw from './mock-data/businessPlanOffshore468.json'
 import mockProductionRevenue468Raw from './mock-data/productionRevenue468.json'
@@ -3658,7 +3654,7 @@ var applyEdgeCasePatches = function (cloned) {
 }
 
 export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
-  viewMode = viewMode || 'Total'
+  viewMode = viewMode || 'Onsite'
   var id = Number(businessPlanId)
   var isV2 = V2_BUSINESS_PLAN_IDS.indexOf(id) !== -1
   var isEdgeCase = EDGE_CASE_BP_IDS.indexOf(id) !== -1
@@ -3666,13 +3662,11 @@ export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
 
   if (isReal) {
     var realDataMap = {
-      Total: mockBusinessPlanTotal468Raw,
-      OB: mockBusinessPlanOB468Raw,
       Onsite: mockBusinessPlanOnsite468Raw,
       Offshore: mockBusinessPlanOffshore468Raw,
     }
     return JSON.parse(
-      JSON.stringify(realDataMap[viewMode] || mockBusinessPlanTotal468Raw)
+      JSON.stringify(realDataMap[viewMode] || mockBusinessPlanOnsite468Raw)
     )
   }
 
@@ -3681,13 +3675,11 @@ export const getBusinessPlanDataByViewMode = (viewMode, businessPlanId) => {
     : mockBusinessPlanByViewOffshore
 
   var dataMap = {
-    Total: mockBusinessPlanByViewTotal,
-    OB: mockBusinessPlanByViewOB,
     Onsite: mockBusinessPlanByViewOnsite,
     Offshore: offshoreData,
   }
 
-  var data = dataMap[viewMode] || mockBusinessPlanByViewTotal
+  var data = dataMap[viewMode] || mockBusinessPlanByViewOnsite
   var cloned = JSON.parse(JSON.stringify(data))
 
   if (isEdgeCase && (viewMode === 'Offshore' || viewMode === 'Onsite')) {

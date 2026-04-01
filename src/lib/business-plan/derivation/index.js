@@ -1,0 +1,157 @@
+import Decimal from 'decimal.js'
+
+const safeAdd = (a, b) => {
+  if (a == null && b == null) return null
+  return new Decimal(a || 0).plus(b || 0).toNumber()
+}
+
+const isDUCol = key => key.startsWith('DELIVERY_UNIT')
+const isSaleKey = key => key.startsWith('SALE')
+
+export const mergeColumnLabels = (onsiteCols, offshoreCols) => {
+  const result = []
+
+  const totalCol = onsiteCols.find(c => c.columnKey === 'TOTAL')
+  if (totalCol) result.push({ ...totalCol })
+
+  const seenSaleIds = new Set()
+  for (const col of [...onsiteCols, ...offshoreCols]) {
+    if (isSaleKey(col.columnKey) && col.id != null && !seenSaleIds.has(col.id)) {
+      seenSaleIds.add(col.id)
+      result.push({ ...col, columnKey: `SALE_${col.id}` })
+    }
+  }
+
+  const internalCol = onsiteCols.find(c => c.columnKey === 'INTERNAL')
+  if (internalCol) result.push({ ...internalCol })
+
+  for (const col of onsiteCols) {
+    if (isDUCol(col.columnKey)) result.push({ ...col, mvvType: 'Onsite' })
+  }
+
+  for (const col of offshoreCols) {
+    if (isDUCol(col.columnKey)) result.push({ ...col, mvvType: 'Offshore' })
+  }
+
+  return result
+}
+
+const mergeSectionLists = (onsiteList, offshoreList) => {
+  const offshoreMap = {}
+  for (const sec of offshoreList) {
+    offshoreMap[sec.sectionKey] = {}
+    for (const row of sec.rowLabels) {
+      offshoreMap[sec.sectionKey][row.rowKey] = row
+    }
+  }
+
+  return onsiteList.map(onsiteSec => {
+    const offshoreRowsByKey = offshoreMap[onsiteSec.sectionKey] || {}
+    const rowKeysSeen = new Set()
+    const mergedRows = []
+
+    for (const onsiteRow of onsiteSec.rowLabels) {
+      rowKeysSeen.add(onsiteRow.rowKey)
+      mergedRows.push({
+        onsiteRow,
+        offshoreRow: offshoreRowsByKey[onsiteRow.rowKey] || null,
+      })
+    }
+
+    if (offshoreMap[onsiteSec.sectionKey]) {
+      for (const offRow of Object.values(offshoreMap[onsiteSec.sectionKey])) {
+        if (!rowKeysSeen.has(offRow.rowKey)) {
+          mergedRows.push({ onsiteRow: null, offshoreRow: offRow })
+        }
+      }
+    }
+
+    return { section: onsiteSec, mergedRows }
+  })
+}
+
+const buildCellMap = cellList => {
+  const map = {}
+  for (const cell of cellList || []) map[cell.columnKey] = cell
+  return map
+}
+
+const deriveCellValue = (mergedCol, onsiteCellMap, offshoreCellMap) => {
+  const colKey = mergedCol.columnKey
+
+  if (colKey === 'TOTAL' || colKey === 'INTERNAL') {
+    return safeAdd(
+      (onsiteCellMap[colKey] || {}).value,
+      (offshoreCellMap[colKey] || {}).value
+    )
+  }
+
+  if (isSaleKey(colKey)) {
+    return safeAdd(
+      (onsiteCellMap['SALE'] || {}).value,
+      (offshoreCellMap['SALE'] || {}).value
+    )
+  }
+
+  if (isDUCol(colKey)) {
+    if (mergedCol.mvvType === 'Onsite') {
+      return (onsiteCellMap[colKey] || {}).value ?? null
+    }
+    return (offshoreCellMap[colKey] || {}).value ?? null
+  }
+
+  return null
+}
+
+export const buildDerivedRawData = (onsiteRaw, offshoreRaw) => {
+  const onsiteCols = onsiteRaw.columnLabels || []
+  const offshoreCols = offshoreRaw.columnLabels || []
+
+  const mergedCols = mergeColumnLabels(onsiteCols, offshoreCols)
+  const sectionPairs = mergeSectionLists(
+    onsiteRaw.sectionList || [],
+    offshoreRaw.sectionList || []
+  )
+
+  const sectionList = sectionPairs.map(({ section, mergedRows }) => {
+    const rowLabels = mergedRows.map(({ onsiteRow, offshoreRow }) => {
+      const baseRow = onsiteRow || offshoreRow
+      const rowKey = baseRow.rowKey
+      const sectionKey = section.sectionKey
+
+      const onsiteCellMap = buildCellMap((onsiteRow || {}).cellList)
+      const offshoreCellMap = buildCellMap((offshoreRow || {}).cellList)
+
+      const cellList = mergedCols.map(mergedCol => {
+        const value = deriveCellValue(mergedCol, onsiteCellMap, offshoreCellMap)
+        const srcColKey =
+          mergedCol.columnKey === 'TOTAL' || mergedCol.columnKey === 'INTERNAL'
+            ? mergedCol.columnKey
+            : isSaleKey(mergedCol.columnKey)
+            ? 'SALE'
+            : mergedCol.columnKey
+        const refCell = onsiteCellMap[srcColKey] || offshoreCellMap[srcColKey] || {}
+
+        return {
+          ...refCell,
+          columnKey: mergedCol.columnKey,
+          rowKey,
+          sectionKey,
+          value,
+          editable: false,
+        }
+      })
+
+      return { ...baseRow, cellList }
+    })
+
+    return { ...section, rowLabels }
+  })
+
+  return {
+    ...onsiteRaw,
+    columnLabels: mergedCols,
+    sectionList,
+    generalInfos: null,
+  }
+}

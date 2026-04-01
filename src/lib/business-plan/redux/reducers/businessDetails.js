@@ -12,6 +12,7 @@ import {
   buildViewModeEntry,
   normalizeColumnKeys,
 } from '../../utils'
+import { buildDerivedRawData } from '../../derivation'
 
 const initialState = {
   isSaveShowed: { generalInformation: false, businessPlan: false },
@@ -301,26 +302,33 @@ const businessDetailsSlice = createSlice({
 
     builder.addCase(fetchAllViewModesData.fulfilled, (state, { payload }) => {
       state.loadingBusinessPlan = false
-      const viewModeDataMap = Object.keys(payload).reduce(function (acc, view) {
-        const rawData = payload[view]
-        if (rawData) {
-          acc[view] = buildViewModeEntry(rawData, view)
-        }
-        return acc
-      }, {})
+
+      const onsiteRaw = payload['Onsite']
+      const offshoreRaw = payload['Offshore']
+
+      // Build entries for the two fetched views
+      const viewModeDataMap = {}
+      if (onsiteRaw) viewModeDataMap['Onsite'] = buildViewModeEntry(onsiteRaw, 'Onsite')
+      if (offshoreRaw) viewModeDataMap['Offshore'] = buildViewModeEntry(offshoreRaw, 'Offshore')
+
+      // Derive Total and OB from Onsite + Offshore (no extra API calls needed)
+      if (onsiteRaw && offshoreRaw) {
+        const totalRaw = buildDerivedRawData(onsiteRaw, offshoreRaw, 'Total')
+        const obRaw = buildDerivedRawData(onsiteRaw, offshoreRaw, 'OB')
+        viewModeDataMap['Total'] = buildViewModeEntry(totalRaw, 'Total')
+        viewModeDataMap['OB'] = buildViewModeEntry(obRaw, 'OB')
+      }
+
       state.viewModeDataMap = viewModeDataMap
 
       const activeViewMode = state.viewMode
       if (activeViewMode && viewModeDataMap[activeViewMode]) {
-        applyViewModeEntry(
-          state,
-          viewModeDataMap[activeViewMode],
-          activeViewMode
-        )
-        const activeRawData = payload[activeViewMode]
-        if (activeRawData) {
-          state.version = activeRawData.version
-          state.warningMessage = activeRawData.warningMessage
+        applyViewModeEntry(state, viewModeDataMap[activeViewMode], activeViewMode)
+        // Carry version/warningMessage from Onsite (the primary source view)
+        const sourceRaw = onsiteRaw || offshoreRaw
+        if (sourceRaw) {
+          state.version = sourceRaw.version
+          state.warningMessage = sourceRaw.warningMessage
         }
       }
     })
