@@ -88,6 +88,7 @@ const BusinessPlanRevenue = forwardRef(
     const revenuePerms = useBusinessPlanPermission(revenueScope)
     const canViewRevenue = revenuePerms.canViewScope
     const canViewRevenueDetails = revenuePerms.canViewDetails
+    const canEditRevenue = revenuePerms.canEditScope
     const {
       isSaveConfirmShowed: isSaveShowed,
       updateOtherRevenuesData: updateOtherRevenues,
@@ -421,6 +422,7 @@ const BusinessPlanRevenue = forwardRef(
                 deliveryUnitDataRevenue={deliveryUnitDataRevenue}
                 keyReset={keyReset}
                 canView={canViewRevenueDetails}
+                canEdit={canEditRevenue}
               />
             </div>
           </Panel>
@@ -440,6 +442,7 @@ const BusinessPlanRevenue = forwardRef(
                   deliveryUnitDataRevenue={deliveryUnitDataRevenue}
                   keyReset={keyReset}
                   canView={canViewRevenue}
+                  canEdit={canEditRevenue}
                 />
               </div>
             </Panel>

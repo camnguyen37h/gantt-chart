@@ -45,6 +45,7 @@ const OtherRevenueTable = ({
   deliveryUnitDataRevenue,
   keyReset,
   canView,
+  canEdit,
 }) => {
   const [dataSourceTable, setDataSourceTable] = useState([])
   const [expandedKeys, setExpandedKeys] = useState([])
@@ -195,6 +196,8 @@ const OtherRevenueTable = ({
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_REVENUE_PLAN_ALL_STATUS
     ) && status !== 'Approved'
+
+  const canEditRevenue = (status === 'Draft' || canEditRevenueAllStatus) && canEdit !== false
 
   const mapRevenueDetails = (mainDataRevenue, formatRowData) => {
     const start = moment(mainDataRevenue.startDate)
@@ -458,7 +461,7 @@ const OtherRevenueTable = ({
                     <Tooltip
                       placement="leftTop"
                       title={
-                        status === 'Draft' || canEditRevenueAllStatus
+                        canEditRevenue
                           ? ''
                           : CAN_NOT_EDIT_REVENUE
                       }>
@@ -466,7 +469,7 @@ const OtherRevenueTable = ({
                         <Icon
                           type="plus-circle"
                           className={
-                            status === 'Draft' || canEditRevenueAllStatus
+                            canEditRevenue
                               ? ''
                               : 'icon-disabled-action'
                           }
@@ -487,7 +490,7 @@ const OtherRevenueTable = ({
                     <Tooltip
                       placement="leftTop"
                       title={
-                        status === 'Draft' || canEditRevenueAllStatus
+                        canEditRevenue
                           ? ''
                           : CAN_NOT_EDIT_REVENUE
                       }>
@@ -495,7 +498,7 @@ const OtherRevenueTable = ({
                         <Icon
                           type="minus-circle"
                           className={
-                            status === 'Draft' || canEditRevenueAllStatus
+                            canEditRevenue
                               ? ''
                               : 'icon-disabled-action'
                           }
