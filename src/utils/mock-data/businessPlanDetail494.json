@@ -108,7 +108,8 @@
         "id": 494,
         "version": 1,
         "versionName": "Version 1",
-        "status": "Draft"
+        "status": "Draft",
+        "mvvLinkedId": 495
       },
       {
         "listAM": [
@@ -198,7 +199,8 @@
         "id": 495,
         "version": 1,
         "versionName": "Version 1",
-        "status": "Draft"
+        "status": "Draft",
+        "mvvLinkedId": 494
       }
     ],
     "columnLabels": null,

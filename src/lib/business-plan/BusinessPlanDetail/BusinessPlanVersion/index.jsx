@@ -94,6 +94,12 @@ function BusinessPlanVersion({
     ? listVersions[listVersions.length - 1].versionId === versionId
     : null
 
+  const hasLinkedMvvMissing = generalInfos.some(
+    info =>
+      info.mvvLinkedId != null &&
+      !generalInfos.some(other => other.id === info.mvvLinkedId)
+  )
+
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
   const { listDUDelivery } = useSelector(state => state.businessPlanDelivery)
 
@@ -286,7 +292,7 @@ function BusinessPlanVersion({
               </Button>
             </Dropdown>
           )}
-          {isDraft && (isAMSubmit || isSubmit) && (
+          {isDraft && (isAMSubmit || isSubmit) && !hasLinkedMvvMissing && (
             <Tooltip title={renderTooltipButton(errorMessage)}>
               <Button
                 type="primary"
