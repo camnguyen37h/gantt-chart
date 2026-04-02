@@ -14,11 +14,23 @@ export const mergeColumnLabels = (onsiteCols, offshoreCols) => {
   const totalCol = onsiteCols.find(c => c.columnKey === 'TOTAL')
   if (totalCol) result.push({ ...totalCol })
 
+  const onsiteSaleIds = new Set(
+    onsiteCols.filter(c => isSaleKey(c.columnKey) && c.id != null).map(c => c.id)
+  )
+  const offshoreSaleIds = new Set(
+    offshoreCols.filter(c => isSaleKey(c.columnKey) && c.id != null).map(c => c.id)
+  )
   const seenSaleIds = new Set()
   for (const col of [...onsiteCols, ...offshoreCols]) {
     if (isSaleKey(col.columnKey) && col.id != null && !seenSaleIds.has(col.id)) {
       seenSaleIds.add(col.id)
-      result.push({ ...col, columnKey: `SALE_${col.id}` })
+      const shared = onsiteSaleIds.has(col.id) && offshoreSaleIds.has(col.id)
+      const saleLocType = shared
+        ? null
+        : onsiteSaleIds.has(col.id)
+        ? 'Onsite'
+        : 'Offshore'
+      result.push({ ...col, columnKey: `SALE_${col.id}`, saleLocType })
     }
   }
 
@@ -87,6 +99,14 @@ const deriveCellValue = (mergedCol, onsiteCellMap, offshoreCellMap) => {
   }
 
   if (isSaleKey(colKey)) {
+    if (mergedCol.saleLocType === 'Onsite') {
+      const v = (onsiteCellMap['SALE'] || {}).value
+      return v !== undefined ? v : null
+    }
+    if (mergedCol.saleLocType === 'Offshore') {
+      const v = (offshoreCellMap['SALE'] || {}).value
+      return v !== undefined ? v : null
+    }
     return safeAdd(
       (onsiteCellMap['SALE'] || {}).value,
       (offshoreCellMap['SALE'] || {}).value

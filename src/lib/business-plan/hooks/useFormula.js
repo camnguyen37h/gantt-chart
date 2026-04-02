@@ -51,6 +51,11 @@ const useFormula = () => {
     return null
   }
 
+  const getSaleLocType = compareKey => {
+    const col = getColumnMetaByDisplayKey(compareKey)
+    return col ? col.saleLocType : null
+  }
+
   const isOBOrTotal = () => viewMode === 'OB' || viewMode === 'Total'
   const isOB = () => viewMode === 'OB'
   const isDU = colKey => colKey.toLowerCase().includes('delivery_unit')
@@ -1274,6 +1279,7 @@ const useFormula = () => {
       return sum != null ? decimalNegate(sum) : null
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
+      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
       const dm = getDirectMargin({
         targetItem: getItem({
           sectionKey: 'MARGIN',
@@ -1282,6 +1288,7 @@ const useFormula = () => {
           compareKey: targetItem.compareKey,
         }),
       })
+      if (saleLocType === 'Onsite') return dm
       const offshoreSellingExp = getCrossViewCell(
         'Offshore',
         'SELLING_EXPENSES',
@@ -1293,6 +1300,10 @@ const useFormula = () => {
         : null
     }
     if (viewMode === 'Total' && isSaleCol(targetItem.columnKey)) {
+      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
+      if (saleLocType) {
+        return getCrossViewCell(saleLocType, 'MARGIN', 'INDIRECT_MARGIN', 'SALE')
+      }
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(locType, 'MARGIN', 'INDIRECT_MARGIN', 'SALE')
       )
@@ -1338,6 +1349,11 @@ const useFormula = () => {
     }
 
     if (isOBOrTotal() && isSaleCol(colKey)) {
+      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
+      if (saleLocType) {
+        const v = getCrossViewCell(saleLocType, 'MARGIN', rateRowKey, 'SALE')
+        return v !== null ? v : undefined
+      }
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(locType, 'MARGIN', rateRowKey, 'SALE')
       )
@@ -1455,8 +1471,10 @@ const useFormula = () => {
     return parts.some(v => v !== null) ? getSum(...parts) : null
   }
 
-  const getOBSaleRateByParts = marginRowKey => {
-    const parts = LOC_TYPES.map(locType => {
+  const getOBSaleRateByParts = (marginRowKey, targetItem) => {
+    const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
+    const locTypes = saleLocType ? [saleLocType] : LOC_TYPES
+    const parts = locTypes.map(locType => {
       const dm = getOBSaleLocTypeDM(locType)
       let margin
       if (marginRowKey === 'DIRECT_MARGIN') {
@@ -1485,7 +1503,7 @@ const useFormula = () => {
       return sum != null ? decimalNegate(sum) : null
     }
     if (isOB() && isSaleCol(colKey)) {
-      const byParts = getOBSaleRateByParts('DIRECT_MARGIN')
+      const byParts = getOBSaleRateByParts('DIRECT_MARGIN', targetItem)
       if (byParts != null) return byParts
     }
     return getMarginRate({
@@ -1521,7 +1539,7 @@ const useFormula = () => {
       return sum != null ? decimalNegate(sum) : null
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const byParts = getOBSaleRateByParts('DIRECT_MARGIN_BONUS')
+      const byParts = getOBSaleRateByParts('DIRECT_MARGIN_BONUS', targetItem)
       if (byParts != null) return byParts
     }
     return getMarginRate({
@@ -1555,7 +1573,7 @@ const useFormula = () => {
       return sum != null ? decimalNegate(sum) : null
     }
     if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const byParts = getOBSaleRateByParts('INDIRECT_MARGIN')
+      const byParts = getOBSaleRateByParts('INDIRECT_MARGIN', targetItem)
       if (byParts != null) return byParts
     }
     return getMarginRate({
@@ -1603,6 +1621,15 @@ const useFormula = () => {
 
   const getOBCrossViewRefCell = ({ targetItem, refRowKey }) => {
     if (isOBOrTotal() && isSaleCol(targetItem.columnKey)) {
+      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
+      if (saleLocType === 'Onsite') {
+        const v = getCrossViewCell('Onsite', 'REFERENCE', refRowKey, 'SALE')
+        return v !== null ? v : undefined
+      }
+      if (saleLocType === 'Offshore') {
+        const v = getCrossViewCell('Offshore', 'REFERENCE', refRowKey, 'SALE')
+        return v !== null ? v : undefined
+      }
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(locType, 'REFERENCE', refRowKey, 'SALE')
       )
@@ -1669,7 +1696,13 @@ const useFormula = () => {
 
   const getDeliveryAverageExpensesSale = ({ targetItem }) => {
     if (isOB()) {
-
+      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
+      if (saleLocType === 'Onsite') return 0
+      if (saleLocType === 'Offshore') {
+        const cost = getCrossViewCell('Offshore', 'COST_PRICE', 'COST_OF_DU_SOLD', 'SALE')
+        const mm = getCrossViewCell('Offshore', 'MAN_MONTH', 'MM_BILL', 'SALE')
+        return decimalDivide(cost, mm)
+      }
       return getSum(
         ...LOC_TYPES.map(locType => {
           if (locType === 'Onsite') return 0
