@@ -89,6 +89,7 @@ const StyledAffix = styled.div`
 function BusinessPlanDetail({ match, history }) {
   const affixRef = useRef(null)
   const businessPlanDeliveryRef = useRef(null)
+  const pendingViewModeRef = useRef(null)
   const [activeTab, setActiveTab] = useState('1')
   const [activeCollapse, setActiveCollapse] = useState('')
   const [viewMode, setViewMode] = useState('Total')
@@ -158,14 +159,17 @@ function BusinessPlanDetail({ match, history }) {
 
   useEffect(() => {
     if (generalInfos && generalInfos.length > 0 && match.params.buId) {
+      if (pendingViewModeRef.current !== null) {
+        setViewMode(pendingViewModeRef.current)
+        pendingViewModeRef.current = null
+        return
+      }
       const matchedMVV = generalInfos.find(
         info => info.id === Number(match.params.buId)
       )
       const currentMVV = matchedMVV || generalInfos[0]
-
       if (currentMVV && currentMVV.mvvLocationType) {
-        const locationType = currentMVV.mvvLocationType
-        setViewMode(locationType)
+        setViewMode(currentMVV.mvvLocationType)
       }
     }
   }, [generalInfos, match.params.buId])
@@ -191,7 +195,40 @@ function BusinessPlanDetail({ match, history }) {
     return modes
   }, [mvvLocationTypeIdMap])
 
+  const buildSectionDTO = () => {
+    if (
+      !isSaveShowed.businessPlan ||
+      !businessPlanVersionId ||
+      (viewMode !== 'Onsite' && viewMode !== 'Offshore')
+    )
+      return null
+    const sectionList = cloneDeep(originalBusinessPlanItems)
+    sectionList.forEach(section => {
+      section.rowLabels = section.rowLabels.filter(
+        row =>
+          row.label ||
+          row.cellList.some(item => item.editable && item.value !== null)
+      )
+      section.rowLabels.forEach(row => {
+        row.cellList = row.cellList.map(cell => {
+          if (!cell.compareKey) return cell
+          const c = Object.assign({}, cell)
+          delete c.compareKey
+          return c
+        })
+      })
+    })
+    const cleanColumnLabels = columnLabels.map(col => {
+      if (!col.compareKey) return col
+      const c = Object.assign({}, col)
+      delete c.compareKey
+      return c
+    })
+    return { columnLabels: cleanColumnLabels, sectionList, businessPlanVersionId, projectCode }
+  }
+
   const onSubmit = async () => {
+    const savedViewMode = viewMode
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
 
@@ -205,42 +242,8 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    if (
-      isSaveShowed.businessPlan &&
-      businessPlanVersionId &&
-      (viewMode === 'Onsite' || viewMode === 'Offshore')
-    ) {
-      const sectionList = cloneDeep(originalBusinessPlanItems)
-      sectionList.forEach(section => {
-        section.rowLabels = section.rowLabels.filter(row => {
-          if (row.label) return true
-          if (row.cellList.some(item => item.editable && item.value !== null)) {
-            return true
-          }
-          return false
-        })
-        section.rowLabels.forEach(function (row) {
-          row.cellList = row.cellList.map(function (cell) {
-            if (!cell.compareKey) return cell
-            const c = Object.assign({}, cell)
-            delete c.compareKey
-            return c
-          })
-        })
-      })
-      const cleanColumnLabels = columnLabels.map(function (col) {
-        if (!col.compareKey) return col
-        const c = Object.assign({}, col)
-        delete c.compareKey
-        return c
-      })
-      params.businessPlanSectionDTO = {
-        columnLabels: cleanColumnLabels,
-        sectionList,
-        businessPlanVersionId: businessPlanVersionId,
-        projectCode: projectCode,
-      }
-    }
+    const dto = buildSectionDTO()
+    if (dto) params.businessPlanSectionDTO = dto
 
     const onsiteInfo = generalInfos.find(
       item => item.mvvLocationType === 'Onsite'
@@ -271,7 +274,9 @@ function BusinessPlanDetail({ match, history }) {
     const isSubmit = await submit(params)
 
     if (isSubmit) {
+      pendingViewModeRef.current = savedViewMode
       await getBusinessPlanDetail(match.params.buId)
+      dispatch(setActiveViewMode({ viewMode: savedViewMode }))
       await getBusinessPlanWorkflow({
         referenceId: match.params.buId,
       })
@@ -374,6 +379,7 @@ function BusinessPlanDetail({ match, history }) {
     setLoadingSave(true)
     const savedProjectCode = projectCode
     const savedViewMode = viewMode
+    const savedBusinessPlanVersionId = businessPlanVersionId
 
     const params = {}
 
@@ -385,45 +391,12 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    if (
-      isSaveShowed.businessPlan &&
-      businessPlanVersionId &&
-      (viewMode === 'Onsite' || viewMode === 'Offshore')
-    ) {
-      const sectionList = cloneDeep(originalBusinessPlanItems)
-      sectionList.forEach(section => {
-        section.rowLabels = section.rowLabels.filter(row => {
-          if (row.label) return true
-          if (row.cellList.some(item => item.editable && item.value !== null)) {
-            return true
-          }
-          return false
-        })
-        section.rowLabels.forEach(function (row) {
-          row.cellList = row.cellList.map(function (cell) {
-            if (!cell.compareKey) return cell
-            const c = Object.assign({}, cell)
-            delete c.compareKey
-            return c
-          })
-        })
-      })
-      const cleanColumnLabels = columnLabels.map(function (col) {
-        if (!col.compareKey) return col
-        const c = Object.assign({}, col)
-        delete c.compareKey
-        return c
-      })
-      params.businessPlanSectionDTO = {
-        columnLabels: cleanColumnLabels,
-        sectionList,
-        businessPlanVersionId: businessPlanVersionId,
-        projectCode: projectCode,
-      }
-    }
+    const dto = buildSectionDTO()
+    if (dto) params.businessPlanSectionDTO = dto
 
     const saved = await saveDraft(params)
     if (saved) {
+      pendingViewModeRef.current = savedViewMode
       const res = await getBusinessPlanDetail(match.params.buId)
 
       if (res && res.payload && res.payload.data) {
@@ -446,7 +419,8 @@ function BusinessPlanDetail({ match, history }) {
         }
       }
 
-      if (businessPlanVersionId && savedViewMode !== 'Total') {
+      dispatch(setActiveViewMode({ viewMode: savedViewMode }))
+      if (savedBusinessPlanVersionId && savedViewMode !== 'Total') {
         await getBusinessPlanDetailByViewMode(match.params.buId, {
           view: savedViewMode,
         })

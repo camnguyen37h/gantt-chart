@@ -117,13 +117,12 @@ const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
   const result = existing.slice()
   const ldapIndexMap = {}
   result.forEach((approver, i) => {
-    ldapIndexMap[approver.ldap] = i
+    ldapIndexMap[`${approver.ldap}|${approver.departmentName}`] = i
   })
 
   incoming.forEach(approver => {
-    const idx = ldapIndexMap[approver.ldap]
+    const idx = ldapIndexMap[`${approver.ldap}|${approver.departmentName}`]
     if (idx !== undefined) {
-      // Same LDAP exists in both MVVs → mark as mergeApprove
       if (
         approver.referenceId != null &&
         String(approver.referenceId) === String(currentBuId)
@@ -133,7 +132,7 @@ const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
         result[idx] = { ...result[idx], mergeApprove: true }
       }
     } else {
-      ldapIndexMap[approver.ldap] = result.length
+      ldapIndexMap[`${approver.ldap}|${approver.departmentName}`] = result.length
       result.push({ ...approver })
     }
   })

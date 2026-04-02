@@ -1,5 +1,6 @@
 import { Button, Dropdown, Icon, Menu, Modal, Select, Tooltip } from 'antd'
 import React, { useCallback, useState } from 'react'
+import cloneDeep from 'lodash/cloneDeep'
 import styled from 'styled-components'
 import { statusBusinessPlanDetail } from '../constant'
 import { useBusinessPlanDetails } from '../../hooks'
@@ -152,12 +153,48 @@ function BusinessPlanVersion({
   }
 
   const onOk = async () => {
-    const params = {
-      businessPlanVersionId: businessPlanVersionId,
-      generalInformation: generalInformationParams,
-      sectionList: originalBusinessPlanItems,
-      columnLabels,
+    const currentInfo = generalInfos.find(info => info.id === businessPlanVersionId)
+    const projectCode = currentInfo && currentInfo.projectCode
+
+    const params = {}
+
+    params.generalInformation = {
+      ...generalInformationParams,
+      businessPlanVersionId: businessPlanVersionId || undefined,
+      projectCode: projectCode || undefined,
     }
+
+    if (businessPlanVersionId && (currentViewMode === 'Onsite' || currentViewMode === 'Offshore')) {
+      const sectionList = cloneDeep(originalBusinessPlanItems)
+      sectionList.forEach(section => {
+        section.rowLabels = section.rowLabels.filter(
+          row =>
+            row.label ||
+            row.cellList.some(item => item.editable && item.value !== null)
+        )
+        section.rowLabels.forEach(row => {
+          row.cellList = row.cellList.map(cell => {
+            if (!cell.compareKey) return cell
+            const c = Object.assign({}, cell)
+            delete c.compareKey
+            return c
+          })
+        })
+      })
+      const cleanColumnLabels = columnLabels.map(col => {
+        if (!col.compareKey) return col
+        const c = Object.assign({}, col)
+        delete c.compareKey
+        return c
+      })
+      params.businessPlanSectionDTO = {
+        columnLabels: cleanColumnLabels,
+        sectionList,
+        businessPlanVersionId,
+        projectCode,
+      }
+    }
+
     const res = await saveDraft(params)
     setChangeVersionModalVisible(false)
     if (res) {
