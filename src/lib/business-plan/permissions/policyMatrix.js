@@ -14,6 +14,7 @@ export const SCOPE = {
   DELIVERY_ONSITE: 'delivery_onsite',
   DELIVERY_OFFSHORE: 'delivery_offshore',
   DELIVERY: 'deliveryPlan',
+  SUBMIT: 'submit',
 }
 
 export const COL_CAT = {
@@ -34,12 +35,13 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
-    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.SUBMIT]: {},
   },
 
   [BP_ROLES.DB_BOM]: {
@@ -60,12 +62,13 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
-    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.SUBMIT]: {},
   },
 
   [BP_ROLES.DB_FC]: {
@@ -73,12 +76,13 @@ export const PERMISSION_MATRIX = {
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
-    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.SUBMIT]: {},
   },
 
   [BP_ROLES.SALE_ONSITE]: {
@@ -96,10 +100,11 @@ export const PERMISSION_MATRIX = {
       dataColumns: [],
       sections: ['REVENUES', 'DELIVERY_EXPENSES'],
     },
-    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
-    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, summaryOnly: true },
-    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, summaryOnly: true, edit: true },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.SUBMIT]: {},
   },
 
   [BP_ROLES.SALE_OFFSHORE]: {
@@ -151,8 +156,8 @@ export const PERMISSION_MATRIX = {
       columns: COL_CAT.ALL,
       edit: true,
     },
-    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
-    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
   },
 

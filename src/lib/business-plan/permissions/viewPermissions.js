@@ -1,4 +1,4 @@
-import { PERMISSION_MATRIX, COL_CAT } from './policyMatrix'
+import { PERMISSION_MATRIX, COL_CAT, SCOPE } from './policyMatrix'
 
 export const MASKED_VALUE = '*****'
 
@@ -80,3 +80,6 @@ export const canViewSection = (allRoles, scope, sectionKey) => {
   if (!policy.sections || isFullAccess(policy)) return true
   return policy.sections.includes(sectionKey)
 }
+
+export const canSubmit = allRoles =>
+  resolvePolicy(allRoles, SCOPE.SUBMIT) !== null

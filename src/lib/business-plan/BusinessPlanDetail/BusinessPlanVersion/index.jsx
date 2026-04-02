@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import styled from 'styled-components'
 import { statusBusinessPlanDetail } from '../constant'
+import { canSubmit } from '../../../permissions/viewPermissions'
 import { useBusinessPlanDetails } from '../../hooks'
 import { withRouter } from 'react-router'
 import { checkRolePermission } from '../../../../components/common/checkRolePermission'
@@ -55,12 +56,15 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { generalInfos, mvvLocationTypeIdMap } = useSelector(
+  const { generalInfos, mvvLocationTypeIdMap, userRoles } = useSelector(
     state => state.businessGeneralInformation
   )
 
-  const currentViewMode = useSelector(state => state.businessPlanDetails.viewMode)
-  const businessPlanVersionId = +mvvLocationTypeIdMap[currentViewMode] || parseInt(match.params.buId)
+  const currentViewMode = useSelector(
+    state => state.businessPlanDetails.viewMode
+  )
+  const businessPlanVersionId =
+    +mvvLocationTypeIdMap[currentViewMode] || parseInt(match.params.buId)
 
   // Mock user for demo
   const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
@@ -126,6 +130,8 @@ function BusinessPlanVersion({
     ActivityKeyConstants.SUBMIT_BUSINESS_PLAN
   )
 
+  const isRoleAllowSubmit = canSubmit(userRoles)
+
   const updateIsSaveShowedRevenue = useCallback(
     value => {
       return dispatch(setIsSaveConfirmShowed(value))
@@ -159,7 +165,9 @@ function BusinessPlanVersion({
   }
 
   const onOk = async () => {
-    const currentInfo = generalInfos.find(info => info.id === businessPlanVersionId)
+    const currentInfo = generalInfos.find(
+      info => info.id === businessPlanVersionId
+    )
     const projectCode = currentInfo && currentInfo.projectCode
 
     const params = {}
@@ -170,7 +178,10 @@ function BusinessPlanVersion({
       projectCode: projectCode || undefined,
     }
 
-    if (businessPlanVersionId && (currentViewMode === 'Onsite' || currentViewMode === 'Offshore')) {
+    if (
+      businessPlanVersionId &&
+      (currentViewMode === 'Onsite' || currentViewMode === 'Offshore')
+    ) {
       const sectionList = cloneDeep(originalBusinessPlanItems)
       sectionList.forEach(section => {
         section.rowLabels = section.rowLabels.filter(
@@ -292,7 +303,7 @@ function BusinessPlanVersion({
               </Button>
             </Dropdown>
           )}
-          {isDraft && (isAMSubmit || isSubmit) && !hasLinkedMvvMissing && (
+          {isDraft && (isAMSubmit || isSubmit || isRoleAllowSubmit) && !hasLinkedMvvMissing && (
             <Tooltip title={renderTooltipButton(errorMessage)}>
               <Button
                 type="primary"
