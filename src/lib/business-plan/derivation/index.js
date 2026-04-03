@@ -37,12 +37,24 @@ export const mergeColumnLabels = (onsiteCols, offshoreCols) => {
   const internalCol = onsiteCols.find(c => c.columnKey === 'INTERNAL')
   if (internalCol) result.push({ ...internalCol })
 
-  for (const col of onsiteCols) {
-    if (isDUCol(col.columnKey)) result.push({ ...col, mvvType: 'Onsite' })
-  }
-
-  for (const col of offshoreCols) {
-    if (isDUCol(col.columnKey)) result.push({ ...col, mvvType: 'Offshore' })
+  const onsiteDUIds = new Set(
+    onsiteCols.filter(c => isDUCol(c.columnKey) && c.id != null).map(c => c.id)
+  )
+  const offshoreDUIds = new Set(
+    offshoreCols.filter(c => isDUCol(c.columnKey) && c.id != null).map(c => c.id)
+  )
+  const seenDUIds = new Set()
+  for (const col of [...onsiteCols, ...offshoreCols]) {
+    if (!isDUCol(col.columnKey) || col.id == null) continue
+    if (seenDUIds.has(col.id)) continue
+    seenDUIds.add(col.id)
+    const shared = onsiteDUIds.has(col.id) && offshoreDUIds.has(col.id)
+    const mvvType = shared
+      ? null
+      : onsiteDUIds.has(col.id)
+      ? 'Onsite'
+      : 'Offshore'
+    result.push({ ...col, mvvType })
   }
 
   return result
@@ -118,8 +130,15 @@ const deriveCellValue = (mergedCol, onsiteCellMap, offshoreCellMap) => {
       const v1 = (onsiteCellMap[colKey] || {}).value
       return v1 !== undefined ? v1 : null
     }
-    const v2 = (offshoreCellMap[colKey] || {}).value
-    return v2 !== undefined ? v2 : null
+    if (mergedCol.mvvType === 'Offshore') {
+      const v2 = (offshoreCellMap[colKey] || {}).value
+      return v2 !== undefined ? v2 : null
+    }
+    // shared DU: sum both sides
+    return safeAdd(
+      (onsiteCellMap[colKey] || {}).value,
+      (offshoreCellMap[colKey] || {}).value
+    )
   }
 
   return null
