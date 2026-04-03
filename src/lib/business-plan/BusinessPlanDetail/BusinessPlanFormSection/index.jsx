@@ -318,12 +318,7 @@ const MetricHeaderRow = ({
         </span>
       </th>
       {(mergedColumns || []).slice(1).map(function (col) {
-        const colKey =
-          'metric-' +
-          rowKey +
-          '-' +
-          col.index +
-          (col.isCompareOnly ? '-cmp' : '')
+        const colKey = 'metric-' + rowKey + '-' + makeCellKey(col)
         if (col.isCompareOnly) {
           return <th key={colKey} style={{ backgroundColor: '#fff' }} />
         }
