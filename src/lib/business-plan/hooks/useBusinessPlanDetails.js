@@ -236,6 +236,10 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
+    // ── UI HIGHLIGHTING (selected MVV only) ──────────────────────────────────
+    // generalInformationResult is dispatched to highlight red fields on the
+    // form currently visible to the user. It only concerns the selected MVV.
+    // Actual submit-blocking for ALL MVVs is done in allMvvInfos.forEach below.
     const selectedMvvInfo = allMvvInfosFromGI.find(
       info => info.projectCode === selectedMvvCode
     )
@@ -264,9 +268,9 @@ const useBusinessPlanDetails = () => {
       listPM: listPM.length < 1 || !handleCheckAtLeastOneFilled(listPM),
     }
 
-    const resultValidateKPIBonus = handleValidateKpiBonus(
-      businessPlanKpiDTO || {}
-    )
+    const resultValidateKPIBonus = canEditSelectedGeneral
+      ? handleValidateKpiBonus(businessPlanKpiDTO || {})
+      : { kpiPm: false, kpiQa: false, kpiMember: false }
 
     dispatch(
       redux.setValidation({
@@ -289,6 +293,10 @@ const useBusinessPlanDetails = () => {
         ? offshoreGeneralPerms.canEditScope
         : onsiteGeneralPerms.canEditScope
 
+    // ── SUBMIT-BLOCKING (ALL MVVs) ────────────────────────────────────────────
+    // Build a snapshot of every MVV's data: the selected MVV gets live Redux
+    // state values; non-selected MVVs are overlaid with ratesByLocationType
+    // (which holds any edits made while that MVV was active).
     const allMvvInfos = allMvvInfosFromGI.map(info => {
       if (info.projectCode === selectedMvvCode) {
         return {
@@ -356,9 +364,9 @@ const useBusinessPlanDetails = () => {
         return
       }
 
-      const kpiValidation = handleValidateKpiBonus(
-        info.businessPlanKpiDTO || {}
-      )
+      const kpiValidation = canEditThisMvvGeneral
+        ? handleValidateKpiBonus(info.businessPlanKpiDTO || {})
+        : { kpiPm: false, kpiQa: false, kpiMember: false }
       const isKpiFieldsInvalid = Object.values(kpiValidation).some(Boolean)
 
       if (isKpiFieldsInvalid) {
