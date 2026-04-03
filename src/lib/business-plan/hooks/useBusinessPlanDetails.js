@@ -205,12 +205,13 @@ const useBusinessPlanDetails = () => {
   const validateTotalKpiBonus = (businessPlanKpiDTO, total) => {
     if (!businessPlanKpiDTO) return false
     const { kpiPm, kpiQa, kpiMember } = businessPlanKpiDTO
-    return (
-      parseFloat(total) ===
+    const sum =
       parseFloat(kpiPm || 0) +
-        parseFloat(kpiQa || 0) +
-        parseFloat(kpiMember || 0)
-    )
+      parseFloat(kpiQa || 0) +
+      parseFloat(kpiMember || 0)
+    // Use a small epsilon to handle floating-point rounding
+    // (e.g. 33.33 + 33.33 + 33.34 = 100.00000000000001 in JS)
+    return Math.abs(parseFloat(total) - sum) < 0.001
   }
 
   const handleValidate = useCallback(() => {
@@ -373,6 +374,8 @@ const useBusinessPlanDetails = () => {
         invalidKpiBonusMvvCodes.push(info.projectCode)
         return
       }
+
+      if (!canEditThisMvvGeneral) return
 
       if (!validateTotalKpiBonus(info.businessPlanKpiDTO, totalKpiBonus)) {
         invalidKpiTotalMvvCodes.push(info.projectCode)
