@@ -397,6 +397,7 @@ function CollaboratorBodyItem({
                   }}
                   icon="minus-circle"
                   className="body-item-action"
+                  disabled={!isEditInput}
                 />
               )}
             </div>
@@ -427,6 +428,7 @@ function CollaboratorBodyItem({
             }
             icon="plus-circle"
             className="body-item-button"
+            disabled={!isEditInput}
           />
         )}
       </div>
