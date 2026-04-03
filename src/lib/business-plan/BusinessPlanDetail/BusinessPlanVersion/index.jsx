@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import styled from 'styled-components'
 import { statusBusinessPlanDetail } from '../constant'
-import { canSubmit } from '../../../permissions/viewPermissions'
+import { canSubmit } from '../../permissions/viewPermissions'
 import { useBusinessPlanDetails } from '../../hooks'
 import { withRouter } from 'react-router'
 import { checkRolePermission } from '../../../../components/common/checkRolePermission'
@@ -98,10 +98,9 @@ function BusinessPlanVersion({
     ? listVersions[listVersions.length - 1].versionId === versionId
     : null
 
+  const generalInfoIdSet = new Set(Object.values(mvvLocationTypeIdMap))
   const hasLinkedMvvMissing = generalInfos.some(
-    info =>
-      info.mvvLinkedId != null &&
-      !generalInfos.some(other => other.id === info.mvvLinkedId)
+    info => info.mvvLinkedId != null && !generalInfoIdSet.has(info.mvvLinkedId)
   )
 
   const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
@@ -130,7 +129,7 @@ function BusinessPlanVersion({
     ActivityKeyConstants.SUBMIT_BUSINESS_PLAN
   )
 
-  const isRoleAllowSubmit = canSubmit(userRoles)
+  const canSubmitBP = isSubmit || (generalInfos.length === 1 ? isAMSubmit : canSubmit(userRoles))
 
   const updateIsSaveShowedRevenue = useCallback(
     value => {
@@ -303,7 +302,7 @@ function BusinessPlanVersion({
               </Button>
             </Dropdown>
           )}
-          {isDraft && (isAMSubmit || isSubmit || isRoleAllowSubmit) && !hasLinkedMvvMissing && (
+          {isDraft && canSubmitBP && !hasLinkedMvvMissing && (
             <Tooltip title={renderTooltipButton(errorMessage)}>
               <Button
                 type="primary"

@@ -194,6 +194,7 @@ const BusinessPlanDelivery = forwardRef(
       viewMode === 'Offshore' ? SCOPE.DELIVERY_OFFSHORE : SCOPE.DELIVERY_ONSITE
     const deliveryPerms = useBusinessPlanPermission(deliveryScope)
     const canViewDelivery = deliveryPerms.canViewScope
+    const canEditDelivery = deliveryPerms.canEditScope
 
     const [visible, setVisible] = useState(false)
     const [activePanelList, setActivePanelList] = useState(DEFAULT_PANELS)
@@ -423,7 +424,8 @@ const BusinessPlanDelivery = forwardRef(
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
                   canEditDeliveryPlanAllStatus) &&
-                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE &&
+                canEditDelivery
               }
               canView={canViewDelivery}
             />
@@ -438,7 +440,8 @@ const BusinessPlanDelivery = forwardRef(
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
                   canEditDeliveryPlanAllStatus) &&
-                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE &&
+                canEditDelivery
               }
               canView={canViewDelivery}
             />
@@ -451,7 +454,8 @@ const BusinessPlanDelivery = forwardRef(
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
                   canEditDeliveryPlanAllStatus) &&
-                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE &&
+                canEditDelivery
               }
               canView={canViewDelivery}
             />
