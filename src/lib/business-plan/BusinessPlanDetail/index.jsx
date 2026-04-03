@@ -561,6 +561,7 @@ function BusinessPlanDetail({ match, history }) {
                     onChange={e => setViewMode(e.target.value)}
                     activeTab={activeTab}
                     availableModes={availableModes}
+                    hideTotalAndOB={generalInfos.length === 1}
                     tab={
                       isSaveShowedDeliveryPlan || isEditingRevenuePlan ? (
                         <Tooltip
@@ -589,6 +590,7 @@ function BusinessPlanDetail({ match, history }) {
                       onChange={e => setViewMode(e.target.value)}
                       activeTab={activeTab}
                       availableModes={availableModes}
+                      hideTotalAndOB={generalInfos.length === 1}
                       tab={
                         isSaveShowedDeliveryPlan ||
                         isSaveShowed.generalInformation ||

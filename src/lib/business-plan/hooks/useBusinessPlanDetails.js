@@ -9,9 +9,13 @@ import { getDisplayKey } from '../utils'
 import moment from 'moment'
 import { DateFormat } from '../../constants/DateFormat'
 import { getUserRoleBusinessPlan } from '../redux'
+import useBusinessPlanPermission from './useBusinessPlanPermission'
+import { SCOPE } from '../permissions/policyMatrix'
 
 const useBusinessPlanDetails = () => {
   const dispatch = useDispatch()
+  const onsiteGeneralPerms = useBusinessPlanPermission(SCOPE.GENERAL_ONSITE)
+  const offshoreGeneralPerms = useBusinessPlanPermission(SCOPE.GENERAL_OFFSHORE)
   const {
     activePanel,
     loadingBusinessPlan,
@@ -231,22 +235,42 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
+    const isEmptyVal = v => v === null || v === undefined || v === ''
+
+    // Determine whether the user can edit general info for a given MVV location type.
+    // When the user lacks edit permission (fields are masked), financial-field
+    // validation is skipped — the BE is trusted to hold valid data.
+    const canEditGeneralForType = mvvLocationType =>
+      mvvLocationType === 'Offshore'
+        ? offshoreGeneralPerms.canEditScope
+        : onsiteGeneralPerms.canEditScope
+
+    const selectedMvvInfo = allMvvInfosFromGI.find(
+      info => info.projectCode === selectedMvvCode
+    )
+    const canEditSelectedGeneral = canEditGeneralForType(
+      selectedMvvInfo ? selectedMvvInfo.mvvLocationType : null
+    )
+
     const generalInformationResult = {
-      industryCurrency: !industryCurrency,
-      exchangeRate:
-        exchangeRate === null ||
-        exchangeRate === undefined ||
-        exchangeRate === '',
-      totalContractPrice:
-        totalContractPrice === null ||
-        totalContractPrice === undefined ||
-        totalContractPrice === '',
-      otherFees:
-        otherFees === null || otherFees === undefined || otherFees === '',
-      softwareDevelopmentFee:
-        softwareDevelopmentFee === null ||
-        softwareDevelopmentFee === undefined ||
-        softwareDevelopmentFee === '',
+      ...(canEditSelectedGeneral && {
+        industryCurrency: !industryCurrency,
+        exchangeRate:
+          exchangeRate === null ||
+          exchangeRate === undefined ||
+          exchangeRate === '',
+        totalContractPrice:
+          totalContractPrice === null ||
+          totalContractPrice === undefined ||
+          totalContractPrice === '',
+        otherFees:
+          otherFees === null || otherFees === undefined || otherFees === '',
+        softwareDevelopmentFee:
+          softwareDevelopmentFee === null ||
+          softwareDevelopmentFee === undefined ||
+          softwareDevelopmentFee === '',
+        industryDomain: !industryDomain,
+      }),
       listAM: listAM.length < 1 || !handleCheckAtLeastOneFilled(listAM),
       listTeamLead:
         listTeamLead.length < 1 || !handleCheckAtLeastOneFilled(listTeamLead),
@@ -254,7 +278,6 @@ const useBusinessPlanDetails = () => {
         listPreparator.length < 1 ||
         !handleCheckAtLeastOneFilled(listPreparator),
       listPM: listPM.length < 1 || !handleCheckAtLeastOneFilled(listPM),
-      industryDomain: !industryDomain,
     }
 
     const resultValidateKPIBonus = handleValidateKpiBonus(
@@ -272,8 +295,6 @@ const useBusinessPlanDetails = () => {
     const totalKpiBonus = businessPlanSettingMaxKpiSetting
       ? businessPlanSettingMaxKpiSetting.MAX_BUSINESS_PLAN_KPI_TOTAL
       : 0
-
-    const isEmptyVal = v => v === null || v === undefined || v === ''
 
     const allMvvInfos = allMvvInfosFromGI.map(info => {
       if (info.projectCode === selectedMvvCode) {
@@ -304,12 +325,17 @@ const useBusinessPlanDetails = () => {
       const listPreparatorInfo = info.listPreparator || []
       const listPMInfo = info.listPM || []
 
-      const isGeneralInfoInvalid =
-        !info.currency ||
-        isEmptyVal(info.exchangeRate) ||
-        isEmptyVal(info.softwareDevelopmentFee) ||
-        isEmptyVal(info.otherFees) ||
-        !info.industry ||
+      const canEditThisMvvGeneral = canEditGeneralForType(info.mvvLocationType)
+
+      const isFinancialFieldsInvalid =
+        canEditThisMvvGeneral &&
+        (!info.currency ||
+          isEmptyVal(info.exchangeRate) ||
+          isEmptyVal(info.softwareDevelopmentFee) ||
+          isEmptyVal(info.otherFees) ||
+          !info.industry)
+
+      const isCollaboratorsInvalid =
         listAMInfo.length < 1 ||
         !handleCheckAtLeastOneFilled(listAMInfo) ||
         listTeamLeadInfo.length < 1 ||
@@ -319,7 +345,7 @@ const useBusinessPlanDetails = () => {
         listPMInfo.length < 1 ||
         !handleCheckAtLeastOneFilled(listPMInfo)
 
-      if (isGeneralInfoInvalid) {
+      if (isFinancialFieldsInvalid || isCollaboratorsInvalid) {
         invalidGeneralMvvCodes.push(info.projectCode)
         return
       }
@@ -386,6 +412,8 @@ const useBusinessPlanDetails = () => {
     originalBusinessPlanItems,
     allMvvInfosFromGI,
     selectedMvvCode,
+    onsiteGeneralPerms.canEditScope,
+    offshoreGeneralPerms.canEditScope,
   ])
 
   const handleValidateDraft = useCallback(() => {
