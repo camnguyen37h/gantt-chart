@@ -47,6 +47,7 @@ function BusinessPlanVersion({
   const [nextId, setNextId] = useState()
   const {
     saveDraft,
+    isSaveShowed,
     versionId,
     listVersions,
     generalInformationParams,
@@ -56,7 +57,7 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { generalInfos, mvvLocationTypeIdMap, userRoles } = useSelector(
+  const { generalInfos, listGeneralInformation, mvvLocationTypeIdMap, userRoles } = useSelector(
     state => state.businessGeneralInformation
   )
 
@@ -129,7 +130,8 @@ function BusinessPlanVersion({
     ActivityKeyConstants.SUBMIT_BUSINESS_PLAN
   )
 
-  const canSubmitBP = isSubmit || (generalInfos.length === 1 ? isAMSubmit : canSubmit(userRoles))
+  const canSubmitBP =
+    isSubmit || (generalInfos.length === 1 ? isAMSubmit : canSubmit(userRoles))
 
   const updateIsSaveShowedRevenue = useCallback(
     value => {
@@ -164,23 +166,22 @@ function BusinessPlanVersion({
   }
 
   const onOk = async () => {
-    const currentInfo = generalInfos.find(
-      info => info.id === businessPlanVersionId
-    )
-    const projectCode = currentInfo && currentInfo.projectCode
-
     const params = {}
 
-    params.generalInformation = {
-      ...generalInformationParams,
-      businessPlanVersionId: businessPlanVersionId || undefined,
-      projectCode: projectCode || undefined,
+    if (isSaveShowed.generalInformation && listGeneralInformation) {
+      params.generalInformation = {
+        ...generalInformationParams,
+        businessPlanVersionId: listGeneralInformation.id || undefined,
+        projectCode: listGeneralInformation.projectCode || undefined,
+      }
     }
 
     if (
+      isSaveShowed.businessPlan &&
       businessPlanVersionId &&
       (currentViewMode === 'Onsite' || currentViewMode === 'Offshore')
     ) {
+      const projectCode = (generalInfos.find(item => +item.id === businessPlanVersionId) || {}).projectCode
       const sectionList = cloneDeep(originalBusinessPlanItems)
       sectionList.forEach(section => {
         section.rowLabels = section.rowLabels.filter(
@@ -302,12 +303,12 @@ function BusinessPlanVersion({
               </Button>
             </Dropdown>
           )}
-          {isDraft && canSubmitBP && !hasLinkedMvvMissing && (
+          {isDraft && canSubmitBP && (
             <Tooltip title={renderTooltipButton(errorMessage)}>
               <Button
                 type="primary"
                 onClick={() => setSubmitModalVisible(true)}
-                disabled={errorMessage}
+                disabled={errorMessage || hasLinkedMvvMissing}
                 loading={loadingSubmit}>
                 Submit
               </Button>
