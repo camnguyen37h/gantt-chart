@@ -24,7 +24,7 @@ const useBusinessPlanPermission = (scope, columnTypeMap) => {
   const allRoles = useMemo(() => {
     // const apiRoles = Array.isArray(userRoles) ? userRoles : []
     // return [...apiRoles, ...getSystemRoles()]
-    return ['DB-BUL-Onsite']
+    return ['DB-ADMIN']
   }, [userRoles])
 
   const resolvedMap = columnTypeMap || null
