@@ -511,10 +511,6 @@ const businessPlanDeliverySlice = createSlice({
         : []
 
       state.listDUDelivery = filteredItems
-      state.deliveryUnitDataDelivery =
-        filteredItems.length > 0 ? ALL_OPTION : {}
-      state.duValueDelivery =
-        filteredItems.length > 0 ? ALL_OPTION_VALUE : undefined
     })
 
     builder.addCase(getListDUByVersionDelivery.rejected, (state, action) => {

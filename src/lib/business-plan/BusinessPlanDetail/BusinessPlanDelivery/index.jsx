@@ -27,6 +27,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -225,6 +226,18 @@ const BusinessPlanDelivery = forwardRef(
       ActivityKeyConstants.EDIT_DELIVERY_PLAN_ALL_STATUS
     )
 
+    const showAllOption = useMemo(() => {
+      try {
+        const roles = JSON.parse(localStorage.getItem('LoginRole')) || []
+        const roleNames = roles.flatMap(r => r.activities || []).map(a => a.name)
+        return roleNames.some(
+          r => r === 'DB-ADMIN' || r === 'DB-FC' || r === 'DB-FCL' || r === 'DB-BOM'
+        )
+      } catch {
+        return false
+      }
+    }, [])
+
     useImperativeHandle(ref, () => ({
       handleSaveDraft,
     }))
@@ -378,14 +391,34 @@ const BusinessPlanDelivery = forwardRef(
     useEffect(() => {
       dispatch(resetSummaryDeliveryPlan())
       if (activePanel === 'Delivery') {
-        dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
-        dispatch(setDuValueDelivery(ALL_OPTION_VALUE))
-        dispatch(
-          getSummaryDeliveryPlan({
-            businessPlanVersionId: Number(buId),
-            groupId: '',
-          })
-        )
+        if (showAllOption) {
+          dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
+          dispatch(setDuValueDelivery(ALL_OPTION_VALUE))
+          dispatch(
+            getSummaryDeliveryPlan({
+              businessPlanVersionId: Number(buId),
+              groupId: '',
+            })
+          )
+        } else {
+          const firstDu = dataDu && dataDu[0]
+          if (firstDu) {
+            dispatch(setDeliveryUnitDataDelivery(firstDu))
+            dispatch(setDuValueDelivery(firstDu.groupId))
+            dispatch(
+              getLocationExchangeRate({
+                businessPlanVersionId: Number(buId),
+                deliveryUnit: firstDu.groupName,
+              })
+            )
+            dispatch(
+              getSummaryDeliveryPlan({
+                businessPlanVersionId: Number(buId),
+                groupId: parseInt(firstDu.groupId),
+              })
+            )
+          }
+        }
       }
     }, [activePanel, buId])
 
@@ -404,7 +437,7 @@ const BusinessPlanDelivery = forwardRef(
             dataDU={dataDu}
             duValue={duValueDelivery}
             updateIsSaveConfirmShowed={updateIsSaveConfirmShowed}
-            showAllOption
+            showAllOption={showAllOption}
           />
           <Panel style={customPanelStyle} header="Summary" key="1">
             <DeliverySummary buId={buId} canViewDelivery={canViewDelivery} />
