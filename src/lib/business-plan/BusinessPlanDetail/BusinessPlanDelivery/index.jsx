@@ -388,38 +388,26 @@ const BusinessPlanDelivery = forwardRef(
       activePanelList,
     ])
 
+    const initDeliveryWithAll = useCallback(() => {
+      dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
+      dispatch(setDuValueDelivery(ALL_OPTION_VALUE))
+      dispatch(getSummaryDeliveryPlan({ businessPlanVersionId: Number(buId), groupId: '' }))
+    }, [dispatch, buId])
+
+    const initDeliveryWithFirstDu = useCallback(() => {
+      const firstDu = dataDu && dataDu[0]
+      if (!firstDu) return
+      dispatch(setDeliveryUnitDataDelivery(firstDu))
+      dispatch(setDuValueDelivery(firstDu.groupId))
+      dispatch(getLocationExchangeRate({ businessPlanVersionId: Number(buId), deliveryUnit: firstDu.groupName }))
+      dispatch(getSummaryDeliveryPlan({ businessPlanVersionId: Number(buId), groupId: parseInt(firstDu.groupId) }))
+    }, [dispatch, buId, dataDu])
+
     useEffect(() => {
       dispatch(resetSummaryDeliveryPlan())
-      if (activePanel === 'Delivery') {
-        if (showAllOption) {
-          dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
-          dispatch(setDuValueDelivery(ALL_OPTION_VALUE))
-          dispatch(
-            getSummaryDeliveryPlan({
-              businessPlanVersionId: Number(buId),
-              groupId: '',
-            })
-          )
-        } else {
-          const firstDu = dataDu && dataDu[0]
-          if (firstDu) {
-            dispatch(setDeliveryUnitDataDelivery(firstDu))
-            dispatch(setDuValueDelivery(firstDu.groupId))
-            dispatch(
-              getLocationExchangeRate({
-                businessPlanVersionId: Number(buId),
-                deliveryUnit: firstDu.groupName,
-              })
-            )
-            dispatch(
-              getSummaryDeliveryPlan({
-                businessPlanVersionId: Number(buId),
-                groupId: parseInt(firstDu.groupId),
-              })
-            )
-          }
-        }
-      }
+      if (activePanel !== 'Delivery') return
+      if (showAllOption) initDeliveryWithAll()
+      else initDeliveryWithFirstDu()
     }, [activePanel, buId])
 
     return (
