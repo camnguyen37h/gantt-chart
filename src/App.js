@@ -10,6 +10,7 @@ import { NotificationContainer } from 'react-notifications'
 import AppHeader from './components/Layout/AppHeader'
 import Sidebar from './components/Layout/Sidebar'
 import BusinessPlanDetailPage from './pages/BusinessPlanDetailPage'
+import RelationshipOverviewPage from './pages/RelationshipOverviewPage'
 import 'react-notifications/lib/notifications.css'
 import './App.css'
 
@@ -42,6 +43,10 @@ const App = () => {
                 <Route
                   path="/delivery/business-plan-list/:buId/business-plan-detail"
                   component={BusinessPlanDetailPage}
+                />
+                <Route
+                  path="/relationship-overview"
+                  component={RelationshipOverviewPage}
                 />
               </Switch>
             </Content>
