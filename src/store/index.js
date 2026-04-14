@@ -9,6 +9,7 @@ import {
   bussinessPlanHistoryReducer,
 } from '../lib/business-plan/redux'
 import workflowApprovalReducer from '../components/workflow-approval/redux/reducer'
+import cmplanReducer from './cmplan'
 
 const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ const store = configureStore({
     bussinessPlanHistory: bussinessPlanHistoryReducer,
     businessDocuments: () => ({ listDocuments: [] }),
     workflowApproval: workflowApprovalReducer,
+    cmplan: cmplanReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

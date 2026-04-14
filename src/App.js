@@ -11,6 +11,12 @@ import AppHeader from './components/Layout/AppHeader'
 import Sidebar from './components/Layout/Sidebar'
 import BusinessPlanDetailPage from './pages/BusinessPlanDetailPage'
 import RelationshipOverviewPage from './pages/RelationshipOverviewPage'
+import CMPlanDashboardPage from './pages/CMPlan/CMPlanDashboardPage'
+import AttributeSettingsPage from './pages/CMPlan/AttributeSettingsPage'
+import ConfigurationItemsPage from './pages/CMPlan/ConfigurationItemsPage'
+import RelationshipMapPage from './pages/CMPlan/RelationshipMapPage'
+import GroupsPage from './pages/CMPlan/GroupsPage'
+import GroupMapPage from './pages/CMPlan/GroupMapPage'
 import 'react-notifications/lib/notifications.css'
 import './App.css'
 
@@ -37,7 +43,7 @@ const App = () => {
                   exact
                   path="/"
                   render={() => (
-                    <Redirect to="/delivery/business-plan-list/494/business-plan-detail" />
+                    <Redirect to="/cmplan/dashboard" />
                   )}
                 />
                 <Route
@@ -47,6 +53,41 @@ const App = () => {
                 <Route
                   path="/relationship-overview"
                   component={RelationshipOverviewPage}
+                />
+                {/* ── CMPlan Routes ───────────────────────────────────── */}
+                <Route
+                  exact
+                  path="/cmplan/dashboard"
+                  component={CMPlanDashboardPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/attribute-settings"
+                  component={AttributeSettingsPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/configuration-items"
+                  component={ConfigurationItemsPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/relationship-map"
+                  component={RelationshipMapPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/groups"
+                  component={GroupsPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/group-map"
+                  component={GroupMapPage}
+                />
+                <Route
+                  path="/cmplan"
+                  render={() => <Redirect to="/cmplan/dashboard" />}
                 />
               </Switch>
             </Content>

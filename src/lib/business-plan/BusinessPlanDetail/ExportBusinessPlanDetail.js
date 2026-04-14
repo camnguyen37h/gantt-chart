@@ -2,8 +2,8 @@ import { Spin, Table, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
-  getBusinessPlanDetail,
   setActiveViewMode,
+  setRatesByLocationType,
 } from '../redux'
 import { NotificationManager } from 'react-notifications'
 import styled from 'styled-components'
@@ -15,6 +15,7 @@ import {
 } from '../hooks'
 import { resolveValue } from './BusinessPlanFormSection/helpers'
 import { getDisplayKey } from '../utils'
+import * as BusinessPlanAPI from '../businessPlanApiConfig'
 
 const BorderTable = styled.div`
   td {
@@ -249,41 +250,61 @@ function ExportBusinessPlanDetail({ match }) {
   useEffect(() => {
     if (!idBusiness) return
     setLoading(true)
-    dispatch(getBusinessPlanDetail(idBusiness)).then(function (detailResult) {
-      const payload = detailResult.payload || {}
-      if (payload.data) {
-        const { generalInfos } = payload.data
-        if (generalInfos && Array.isArray(generalInfos)) {
-          const sortedInfos = [...generalInfos].sort(function (a, b) {
-            if (a.id.toString() === idBusiness) return -1
-            if (b.id.toString() === idBusiness) return 1
-            return a.id - b.id
-          })
-          const projectCodes = sortedInfos.map(function (info) {
-            return {
-              code: info.projectCode,
-              isMain: info.id.toString() === idBusiness,
+    BusinessPlanAPI.getBusinessPlanDetail(idBusiness)
+      .then(function (result) {
+        if (result && result.data) {
+          const { generalInfos } = result.data
+          if (generalInfos && Array.isArray(generalInfos)) {
+            const normalizeMvvLocationType = function (raw) {
+              if (!raw) return raw
+              const lower = raw.toLowerCase()
+              if (lower === 'offshore') return 'Offshore'
+              if (lower === 'onsite') return 'Onsite'
+              return raw
             }
-          })
-          setHeaderProjectCodes(projectCodes)
-          var viewModeToSet =
-            sortedInfos.length === 1 && sortedInfos[0].mvvLocationType
-              ? sortedInfos[0].mvvLocationType
-              : 'Total'
-          dispatch(setActiveViewMode({ viewMode: viewModeToSet }))
+            const rates = {}
+            generalInfos.forEach(function (info) {
+              if (info.mvvLocationType) {
+                const key = normalizeMvvLocationType(info.mvvLocationType)
+                rates[key] = {
+                  exchangeRate: info.exchangeRate,
+                  softwareDevelopmentFee: info.softwareDevelopmentFee,
+                  otherFees: info.otherFees,
+                }
+              }
+            })
+            dispatch(setRatesByLocationType(rates))
+            const sortedInfos = [...generalInfos].sort(function (a, b) {
+              if (a.id.toString() === idBusiness) return -1
+              if (b.id.toString() === idBusiness) return 1
+              return a.id - b.id
+            })
+            const projectCodes = sortedInfos.map(function (info) {
+              return {
+                code: info.projectCode,
+                isMain: info.id.toString() === idBusiness,
+              }
+            })
+            setHeaderProjectCodes(projectCodes)
+            var viewModeToSet =
+              sortedInfos.length === 1 && sortedInfos[0].mvvLocationType
+                ? normalizeMvvLocationType(sortedInfos[0].mvvLocationType)
+                : 'Total'
+            dispatch(setActiveViewMode({ viewMode: viewModeToSet }))
+          }
+        } else if (result) {
+          if (result.status === ResponseStatusCode.forbidden) {
+            window.location.href = '/error/access-deny'
+          }
+          NotificationManager.error(
+            result.message || 'Failed to fetch business plan.'
+          )
         }
-      } else if (detailResult.error) {
-        if (payload.status === ResponseStatusCode.forbidden) {
-          window.location.href = '/error/access-deny'
-        }
-        NotificationManager.error(
-          payload.message || 'Failed to fetch business plan.'
-        )
-      }
-      return fetchAllViewModesData(idBusiness)
-    }).finally(function () {
-      setLoading(false)
-    })
+        return fetchAllViewModesData(idBusiness)
+      })
+      .finally(function () {
+        setLoading(false)
+      })
   }, [idBusiness, dispatch, fetchAllViewModesData])
 
   return (

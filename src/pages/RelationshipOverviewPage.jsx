@@ -88,6 +88,7 @@ function computeLayout(nodeDefs, treeEdges) {
       }
     })
   }
+  
 
   // Bước 2: group by level, giữ thứ tự gốc của NODE_DEFS
   const nodeOrder = Object.fromEntries(nodeDefs.map((n, i) => [n.id, i]))

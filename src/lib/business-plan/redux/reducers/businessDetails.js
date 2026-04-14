@@ -210,6 +210,10 @@ const businessDetailsSlice = createSlice({
       if (!entry) return
       applyViewModeEntry(state, entry, viewMode)
     },
+
+    setRatesByLocationType: (state, { payload }) => {
+      state.ratesByLocationType = payload || {}
+    },
   },
   extraReducers: builder => {
     builder.addCase(getBusinessPlanDetail.fulfilled, (state, { payload }) => {
@@ -420,6 +424,7 @@ export const {
   setVersion,
   setActiveBusinessPlanPanel,
   setActiveViewMode,
+  setRatesByLocationType,
 } = businessDetailsSlice.actions
 
 export default businessDetailsSlice.reducer

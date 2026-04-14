@@ -1,0 +1,84 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { cmplanApi } from '../../utils/cmplan/mockCMPlanApi'
+
+// ── Async Thunks ─────────────────────────────────────────────────────────────
+export const fetchAllRelationships = createAsyncThunk(
+  'cmplan/ciRelationships/fetchAll',
+  async (_, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.getAll()
+    if (!res.success) return rejectWithValue(res.message)
+    return res.data
+  }
+)
+
+export const createRelationship = createAsyncThunk(
+  'cmplan/ciRelationships/create',
+  async (payload, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.create(payload)
+    if (!res.success) return rejectWithValue(res.message)
+    return res.data
+  }
+)
+
+export const deleteRelationship = createAsyncThunk(
+  'cmplan/ciRelationships/delete',
+  async (id, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.remove(id)
+    if (!res.success) return rejectWithValue(res.message)
+    return id
+  }
+)
+
+// ── Slice ─────────────────────────────────────────────────────────────────────
+const ciRelationshipsSlice = createSlice({
+  name: 'ciRelationships',
+  initialState: {
+    items: [],
+    loading: false,
+    submitting: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAllRelationships.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchAllRelationships.fulfilled, (state, action) => {
+        state.loading = false
+        state.items = action.payload
+      })
+      .addCase(fetchAllRelationships.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      .addCase(createRelationship.pending, (state) => {
+        state.submitting = true
+      })
+      .addCase(createRelationship.fulfilled, (state, action) => {
+        state.submitting = false
+        state.items = [...state.items, action.payload]
+      })
+      .addCase(createRelationship.rejected, (state, action) => {
+        state.submitting = false
+        state.error = action.payload
+      })
+      .addCase(deleteRelationship.fulfilled, (state, action) => {
+        state.items = state.items.filter((r) => r.id !== action.payload)
+      })
+  },
+})
+
+export default ciRelationshipsSlice.reducer
+
+// ── Selectors ─────────────────────────────────────────────────────────────────
+export const selectAllRelationships = (state) => state.cmplan.ciRelationships.items
+export const selectRelationshipsLoading = (state) => state.cmplan.ciRelationships.loading
+export const selectRelationshipsSubmitting = (state) => state.cmplan.ciRelationships.submitting
+
+/** Returns all relationships where ciId is either source or target */
+export const selectRelationshipsByCI = (ciId) => (state) =>
+  state.cmplan.ciRelationships.items.filter(
+    (r) => r.sourceId === ciId || r.targetId === ciId
+  )
