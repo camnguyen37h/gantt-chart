@@ -21,6 +21,7 @@ import {
   selectCIPagination,
   selectAttrDefsByClassId,
   fetchAllRelationships,
+  fetchAuditLogByCI,
 } from '../../store/cmplan'
 import CITable from '../../components/CMPlan/ConfigurationItems/CITable'
 import CIFilterBar from '../../components/CMPlan/ConfigurationItems/CIFilterBar'
@@ -133,6 +134,10 @@ const ConfigurationItemsPage = () => {
           notification.success({ message: 'Configuration Item updated.' })
           setModalVisible(false)
           setEditingCI(null)
+          // Refresh audit log if drawer will re-open for this CI
+          if (viewingCI?.id === id) {
+            dispatch(fetchAuditLogByCI(id))
+          }
         } else {
           notification.error({
             message: 'Update failed',
@@ -152,7 +157,7 @@ const ConfigurationItemsPage = () => {
         }
       }
     },
-    [dispatch]
+    [dispatch, viewingCI?.id]
   )
 
   const handleModalCancel = useCallback(() => {

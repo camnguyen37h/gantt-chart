@@ -4,6 +4,7 @@ import attributeDefinitionsReducer from './attributeDefinitionsSlice'
 import configurationItemsReducer from './configurationItemsSlice'
 import ciRelationshipsReducer from './ciRelationshipsSlice'
 import ciGroupsReducer from './ciGroupsSlice'
+import ciAuditLogReducer from './ciAuditLogSlice'
 
 const cmplanReducer = combineReducers({
   ciClasses: ciClassesReducer,
@@ -11,6 +12,7 @@ const cmplanReducer = combineReducers({
   configurationItems: configurationItemsReducer,
   ciRelationships: ciRelationshipsReducer,
   ciGroups: ciGroupsReducer,
+  ciAuditLog: ciAuditLogReducer,
 })
 
 export default cmplanReducer
@@ -21,3 +23,4 @@ export * from './attributeDefinitionsSlice'
 export * from './configurationItemsSlice'
 export * from './ciRelationshipsSlice'
 export * from './ciGroupsSlice'
+export * from './ciAuditLogSlice'

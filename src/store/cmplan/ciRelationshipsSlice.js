@@ -29,6 +29,15 @@ export const deleteRelationship = createAsyncThunk(
   }
 )
 
+export const updateRelationship = createAsyncThunk(
+  'cmplan/ciRelationships/update',
+  async ({ id, payload }, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.update(id, payload)
+    if (!res.success) return rejectWithValue(res.error?.message || 'Update failed')
+    return res.data
+  }
+)
+
 // ── Slice ─────────────────────────────────────────────────────────────────────
 const ciRelationshipsSlice = createSlice({
   name: 'ciRelationships',
@@ -66,6 +75,19 @@ const ciRelationshipsSlice = createSlice({
       })
       .addCase(deleteRelationship.fulfilled, (state, action) => {
         state.items = state.items.filter((r) => r.id !== action.payload)
+      })
+      .addCase(updateRelationship.pending, (state) => {
+        state.submitting = true
+      })
+      .addCase(updateRelationship.fulfilled, (state, action) => {
+        state.submitting = false
+        state.items = state.items.map((r) =>
+          r.id === action.payload.id ? action.payload : r
+        )
+      })
+      .addCase(updateRelationship.rejected, (state, action) => {
+        state.submitting = false
+        state.error = action.payload
       })
   },
 })

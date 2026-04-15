@@ -1,6 +1,7 @@
 import React from 'react'
-import { Modal, Form, Select, Input, Icon, Tag } from 'antd'
+import { Modal, Form, Select, Input, Icon, Tag, DatePicker } from 'antd'
 import { RELATIONSHIP_TYPES } from '../../../utils/cmplan/cmplanConstants'
+import moment from 'moment'
 
 const { Option } = Select
 const { TextArea } = Input
@@ -13,7 +14,7 @@ const { TextArea } = Input
  *  - sourceCI: { id, name, classIcon?, classColor? }
  *  - allCIs: array of all CIs (for target selection)
  *  - submitting: bool
- *  - onSubmit({ sourceId, targetId, relationshipType, description })
+ *  - onSubmit({ sourceId, targetId, relationshipType, description, expiredDate })
  *  - onClose()
  */
 class AddRelationshipModalInner extends React.Component {
@@ -26,6 +27,7 @@ class AddRelationshipModalInner extends React.Component {
         targetId: values.targetId,
         relationshipType: values.relationshipType,
         description: values.description || '',
+        expiredDate: values.expiredDate ? values.expiredDate.toISOString() : null,
       })
     })
   }
@@ -141,6 +143,18 @@ class AddRelationshipModalInner extends React.Component {
                 rows={2}
                 placeholder="Describe this relationship..."
                 maxLength={200}
+              />
+            )}
+          </Form.Item>
+
+          {/* Expired Date */}
+          <Form.Item label="Expired Date (optional)">
+            {getFieldDecorator('expiredDate')(
+              <DatePicker
+                style={{ width: '100%' }}
+                placeholder="No expiry"
+                disabledDate={(d) => d && d.isBefore(moment().startOf('day'))}
+                format="MM/DD/YYYY"
               />
             )}
           </Form.Item>

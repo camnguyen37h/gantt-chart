@@ -9,6 +9,7 @@ import {
   MOCK_CI_RELATIONSHIPS,
   MOCK_CI_GROUPS,
   MOCK_COMPLIANCE_POLICIES,
+  MOCK_CI_AUDIT_LOG,
 } from './mockCMPlanData'
 
 // In-memory mutable stores (reset on page refresh)
@@ -18,6 +19,20 @@ let configurationItems = [...MOCK_CONFIGURATION_ITEMS]
 let ciRelationships = [...MOCK_CI_RELATIONSHIPS]
 let ciGroups = [...MOCK_CI_GROUPS]
 let compliancePolicies = [...MOCK_COMPLIANCE_POLICIES]
+let ciAuditLog = [...MOCK_CI_AUDIT_LOG]
+
+// Helper: append an audit log entry
+const addAuditEntry = (partial) => {
+  ciAuditLog = [
+    ...ciAuditLog,
+    {
+      id: `log-${uuidv4().slice(0, 8)}`,
+      timestamp: new Date().toISOString(),
+      actor: 'current_user',
+      ...partial,
+    },
+  ]
+}
 
 const delay = (ms = 300) =>
   new Promise((resolve) => setTimeout(resolve, ms + Math.random() * 200))
@@ -195,6 +210,7 @@ const configurationItemsApi = {
       updatedAt: new Date().toISOString(),
     }
     configurationItems = [newCI, ...configurationItems]
+    addAuditEntry({ ciId: newCI.id, action: 'ci_created', meta: {} })
     return successResponse(newCI)
   },
 
@@ -202,11 +218,71 @@ const configurationItemsApi = {
     await delay()
     const index = configurationItems.findIndex((c) => c.id === id)
     if (index === -1) return errorResponse('Configuration Item not found.', 404)
+    const old = configurationItems[index]
     configurationItems = configurationItems.map((ci) =>
       ci.id === id
         ? { ...ci, ...payload, updatedAt: new Date().toISOString() }
         : ci
     )
+    // Audit 1: CI class changed
+    if (payload.ciClassId !== undefined && payload.ciClassId !== old.ciClassId) {
+      const fromClass = ciClasses.find((c) => c.id === old.ciClassId)
+      const toClass = ciClasses.find((c) => c.id === payload.ciClassId)
+      addAuditEntry({
+        ciId: id,
+        action: 'ci_class_changed',
+        meta: {
+          fromClassId: old.ciClassId,
+          fromClassName: fromClass?.label || old.ciClassId,
+          toClassId: payload.ciClassId,
+          toClassName: toClass?.label || payload.ciClassId,
+        },
+      })
+    }
+
+    // Audit 2: Status changed (own entry)
+    if (payload.status !== undefined && payload.status !== old.status) {
+      addAuditEntry({
+        ciId: id,
+        action: 'ci_status_changed',
+        meta: { changes: [{ field: 'status', from: old.status, to: payload.status }] },
+      })
+    }
+
+    // Audit 3: Basic info fields changed
+    const BASIC_FIELDS = ['name', 'owner', 'department', 'environment', 'location', 'shortDescription', 'criticality']
+    const basicChanges = BASIC_FIELDS.reduce((acc, f) => {
+      if (payload[f] !== undefined && payload[f] !== old[f]) {
+        acc.push({ field: f, from: old[f], to: payload[f] })
+      }
+      return acc
+    }, [])
+    if (basicChanges.length > 0) {
+      addAuditEntry({ ciId: id, action: 'ci_updated', meta: { changes: basicChanges } })
+    }
+
+    // Audit 4: Attribute fields changed
+    if (payload.attributes !== undefined) {
+      const oldAttrs = old.attributes || {}
+      const newAttrs = payload.attributes || {}
+      const allKeys = new Set([...Object.keys(oldAttrs), ...Object.keys(newAttrs)])
+      const attrChanges = []
+      for (const key of allKeys) {
+        if (JSON.stringify(oldAttrs[key]) !== JSON.stringify(newAttrs[key])) {
+          const attrDef = attributeDefinitions.find((a) => a.name === key)
+          attrChanges.push({ field: key, label: attrDef?.label || key, from: oldAttrs[key], to: newAttrs[key] })
+        }
+      }
+      if (attrChanges.length > 0) {
+        const ciClass = ciClasses.find((c) => c.id === (payload.ciClassId || old.ciClassId))
+        addAuditEntry({
+          ciId: id,
+          action: 'ci_attr_updated',
+          meta: { classLabel: ciClass?.label || '', changes: attrChanges },
+        })
+      }
+    }
+
     return successResponse(configurationItems.find((c) => c.id === id))
   },
 
@@ -242,16 +318,63 @@ const relationshipsApi = {
     const newRel = {
       id: `rel-${uuidv4().slice(0, 8)}`,
       ...payload,
+      expiredDate: payload.expiredDate || null,
       createdBy: 'current_user',
       createdAt: new Date().toISOString(),
     }
     ciRelationships = [...ciRelationships, newRel]
+    // Audit for both sides
+    const srcCI = configurationItems.find((c) => c.id === payload.sourceId)
+    const tgtCI = configurationItems.find((c) => c.id === payload.targetId)
+    addAuditEntry({
+      ciId: payload.sourceId, action: 'rel_added',
+      meta: { relId: newRel.id, relType: payload.relationshipType, peerId: payload.targetId, peerName: tgtCI?.name || payload.targetId, direction: 'outbound', expiredDate: newRel.expiredDate },
+    })
+    addAuditEntry({
+      ciId: payload.targetId, action: 'rel_added',
+      meta: { relId: newRel.id, relType: payload.relationshipType, peerId: payload.sourceId, peerName: srcCI?.name || payload.sourceId, direction: 'inbound', expiredDate: newRel.expiredDate },
+    })
     return successResponse(newRel)
+  },
+
+  update: async (id, payload) => {
+    await delay()
+    const rel = ciRelationships.find((r) => r.id === id)
+    if (!rel) return errorResponse('Relationship not found.', 404)
+    ciRelationships = ciRelationships.map((r) =>
+      r.id === id ? { ...r, ...payload } : r
+    )
+    if (payload.expiredDate !== undefined && payload.expiredDate !== rel.expiredDate) {
+      const srcCI = configurationItems.find((c) => c.id === rel.sourceId)
+      const tgtCI = configurationItems.find((c) => c.id === rel.targetId)
+      addAuditEntry({
+        ciId: rel.sourceId, action: 'rel_updated',
+        meta: { relId: id, relType: rel.relationshipType, peerId: rel.targetId, peerName: tgtCI?.name || rel.targetId, direction: 'outbound', changes: [{ field: 'expiredDate', from: rel.expiredDate, to: payload.expiredDate }] },
+      })
+      addAuditEntry({
+        ciId: rel.targetId, action: 'rel_updated',
+        meta: { relId: id, relType: rel.relationshipType, peerId: rel.sourceId, peerName: srcCI?.name || rel.sourceId, direction: 'inbound', changes: [{ field: 'expiredDate', from: rel.expiredDate, to: payload.expiredDate }] },
+      })
+    }
+    return successResponse(ciRelationships.find((r) => r.id === id))
   },
 
   remove: async (id) => {
     await delay()
+    const rel = ciRelationships.find((r) => r.id === id)
     ciRelationships = ciRelationships.filter((r) => r.id !== id)
+    if (rel) {
+      const srcCI = configurationItems.find((c) => c.id === rel.sourceId)
+      const tgtCI = configurationItems.find((c) => c.id === rel.targetId)
+      addAuditEntry({
+        ciId: rel.sourceId, action: 'rel_removed',
+        meta: { relId: id, relType: rel.relationshipType, peerId: rel.targetId, peerName: tgtCI?.name || rel.targetId, direction: 'outbound' },
+      })
+      addAuditEntry({
+        ciId: rel.targetId, action: 'rel_removed',
+        meta: { relId: id, relType: rel.relationshipType, peerId: rel.sourceId, peerName: srcCI?.name || rel.sourceId, direction: 'inbound' },
+      })
+    }
     return successResponse({ id })
   },
 }
@@ -378,6 +501,17 @@ const complianceApi = {
   },
 }
 
+// ── CI Audit Log ─────────────────────────────────────────────────────────────
+const ciAuditLogApi = {
+  getByCI: async (ciId) => {
+    await delay()
+    const result = ciAuditLog
+      .filter((e) => e.ciId === ciId)
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    return successResponse(result)
+  },
+}
+
 export const cmplanApi = {
   ciClasses: ciClassesApi,
   attributeDefinitions: attributeDefinitionsApi,
@@ -385,4 +519,5 @@ export const cmplanApi = {
   relationships: relationshipsApi,
   groups: groupsApi,
   compliance: complianceApi,
+  auditLog: ciAuditLogApi,
 }

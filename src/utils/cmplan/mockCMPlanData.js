@@ -1029,6 +1029,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-007',
     relationshipType: 'depends_on',
     description: 'CRM Portal calls Business Plan API',
+    expiredDate: '2026-05-14T00:00:00Z',
     createdBy: 'admin',
     createdAt: '2025-05-11T08:00:00Z',
   },
@@ -1038,6 +1039,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-004',
     relationshipType: 'depends_on',
     description: 'Business Plan API reads/writes to main PostgreSQL',
+    expiredDate: '2026-05-14T00:00:00Z',
     createdBy: 'admin',
     createdAt: '2025-02-06T08:00:00Z',
   },
@@ -1047,6 +1049,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-005',
     relationshipType: 'uses',
     description: 'API uses Redis for session caching',
+    expiredDate: null,
     createdBy: 'admin',
     createdAt: '2025-04-02T08:00:00Z',
   },
@@ -1056,6 +1059,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-001',
     relationshipType: 'runs_on',
     description: 'CRM Portal served via prod-web-01',
+    expiredDate: null,
     createdBy: 'admin',
     createdAt: '2025-05-12T08:00:00Z',
   },
@@ -1065,6 +1069,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-014',
     relationshipType: 'uses',
     description: 'API publishes events to RabbitMQ',
+    expiredDate: null,
     createdBy: 'admin',
     createdAt: '2025-08-02T08:00:00Z',
   },
@@ -1074,6 +1079,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-009',
     relationshipType: 'connects_to',
     description: 'Web servers connect through core switch',
+    expiredDate: null,
     createdBy: 'admin',
     createdAt: '2025-02-02T08:00:00Z',
   },
@@ -1083,6 +1089,7 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-013',
     relationshipType: 'runs_on',
     description: 'PostgreSQL data stored on NetApp SAN',
+    expiredDate: null,
     createdBy: 'admin',
     createdAt: '2025-02-07T08:00:00Z',
   },
@@ -1092,8 +1099,29 @@ export const MOCK_CI_RELATIONSHIPS = [
     targetId: 'ci-006',
     relationshipType: 'hosts',
     description: 'AKS cluster hosts CRM Portal containers',
+    expiredDate: '2026-12-31T00:00:00Z',
     createdBy: 'admin',
     createdAt: '2025-06-02T08:00:00Z',
+  },
+  {
+    id: 'rel-009',
+    sourceId: 'ci-011',
+    targetId: 'ci-007',
+    relationshipType: 'hosts',
+    description: 'AKS cluster hosts Business Plan API containers',
+    expiredDate: null,
+    createdBy: 'admin',
+    createdAt: '2025-06-15T08:00:00Z',
+  },
+  {
+    id: 'rel-010',
+    sourceId: 'ci-011',
+    targetId: 'ci-008',
+    relationshipType: 'hosts',
+    description: 'AKS cluster hosts CMPlan API (dev)',
+    expiredDate: null,
+    createdBy: 'admin',
+    createdAt: '2026-01-05T08:00:00Z',
   },
 ]
 
@@ -1225,5 +1253,226 @@ export const MOCK_COMPLIANCE_POLICIES = [
     isActive: true,
     createdAt: '2025-03-01T08:00:00Z',
     updatedAt: '2025-03-01T08:00:00Z',
+  },
+]
+
+// ── CI Audit Log ─────────────────────────────────────────────────────────────
+// Actions: ci_created | ci_updated | ci_status_changed | rel_added | rel_removed
+export const MOCK_CI_AUDIT_LOG = [
+  // ── prod-web-01 (ci-001) ─────────────────────────────────────────
+  {
+    id: 'log-001', ciId: 'ci-001', action: 'ci_created', actor: 'admin',
+    timestamp: '2025-01-15T09:00:00Z', meta: {},
+  },
+  {
+    id: 'log-002', ciId: 'ci-001', action: 'ci_updated', actor: 'alice.vu',
+    timestamp: '2025-03-10T14:30:00Z',
+    meta: { changes: [{ field: 'owner', from: 'admin', to: 'alice.vu' }, { field: 'department', from: 'IT', to: 'Platform Engineering' }] },
+  },
+  {
+    id: 'log-003', ciId: 'ci-001', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-02-02T08:00:00Z',
+    meta: { relId: 'rel-006', relType: 'connects_to', peerId: 'ci-009', peerName: 'Core Switch SW-01', direction: 'outbound', expiredDate: null },
+  },
+  {
+    id: 'log-004', ciId: 'ci-001', action: 'ci_status_changed', actor: 'alice.vu',
+    timestamp: '2025-09-01T07:00:00Z',
+    meta: { changes: [{ field: 'status', from: 'active', to: 'maintenance' }] },
+  },
+  {
+    id: 'log-005', ciId: 'ci-001', action: 'ci_status_changed', actor: 'alice.vu',
+    timestamp: '2025-09-03T09:30:00Z',
+    meta: { changes: [{ field: 'status', from: 'maintenance', to: 'active' }] },
+  },
+  // ── CRM Portal (ci-006) ──────────────────────────────────────────
+  {
+    id: 'log-010', ciId: 'ci-006', action: 'ci_created', actor: 'admin',
+    timestamp: '2025-01-20T10:00:00Z', meta: {},
+  },
+  {
+    id: 'log-011', ciId: 'ci-006', action: 'ci_status_changed', actor: 'john.doe',
+    timestamp: '2025-03-15T11:20:00Z',
+    meta: { changes: [{ field: 'status', from: 'active', to: 'maintenance' }] },
+  },
+  {
+    id: 'log-012', ciId: 'ci-006', action: 'ci_status_changed', actor: 'john.doe',
+    timestamp: '2025-03-16T09:00:00Z',
+    meta: { changes: [{ field: 'status', from: 'maintenance', to: 'active' }] },
+  },
+  {
+    id: 'log-013', ciId: 'ci-006', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-05-11T08:00:00Z',
+    meta: { relId: 'rel-001', relType: 'depends_on', peerId: 'ci-007', peerName: 'Business Plan API', direction: 'outbound', expiredDate: '2026-05-14T00:00:00Z' },
+  },
+  {
+    id: 'log-014', ciId: 'ci-006', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-05-12T08:00:00Z',
+    meta: { relId: 'rel-004', relType: 'runs_on', peerId: 'ci-001', peerName: 'prod-web-01', direction: 'outbound', expiredDate: null },
+  },
+  {
+    id: 'log-015', ciId: 'ci-006', action: 'rel_removed', actor: 'john.doe',
+    timestamp: '2025-11-20T14:45:00Z',
+    meta: { relId: 'rel-old-01', relType: 'connected_to', peerId: 'ci-003', peerName: 'prod-db-02', direction: 'outbound' },
+  },
+  {
+    id: 'log-016', ciId: 'ci-006', action: 'ci_updated', actor: 'john.doe',
+    timestamp: '2025-12-01T10:00:00Z',
+    meta: { changes: [{ field: 'criticality', from: 'medium', to: 'high' }] },
+  },
+  // ── Business Plan API (ci-007) ──────────────────────────────────
+  {
+    id: 'log-020', ciId: 'ci-007', action: 'ci_created', actor: 'admin',
+    timestamp: '2025-01-22T10:00:00Z', meta: {},
+  },
+  {
+    id: 'log-021', ciId: 'ci-007', action: 'ci_updated', actor: 'jane.smith',
+    timestamp: '2025-04-10T15:00:00Z',
+    meta: { changes: [{ field: 'criticality', from: 'medium', to: 'high' }] },
+  },
+  {
+    id: 'log-022', ciId: 'ci-007', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-02-06T08:00:00Z',
+    meta: { relId: 'rel-002', relType: 'depends_on', peerId: 'ci-004', peerName: 'PostgreSQL Main', direction: 'outbound', expiredDate: '2026-05-14T00:00:00Z' },
+  },
+  {
+    id: 'log-023', ciId: 'ci-007', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-04-02T08:00:00Z',
+    meta: { relId: 'rel-003', relType: 'uses', peerId: 'ci-005', peerName: 'Redis Cache-01', direction: 'outbound', expiredDate: null },
+  },
+  {
+    id: 'log-024', ciId: 'ci-007', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-08-02T08:00:00Z',
+    meta: { relId: 'rel-005', relType: 'uses', peerId: 'ci-014', peerName: 'RabbitMQ Cluster', direction: 'outbound', expiredDate: null },
+  },
+  {
+    id: 'log-025', ciId: 'ci-007', action: 'rel_removed', actor: 'jane.smith',
+    timestamp: '2026-01-10T09:15:00Z',
+    meta: { relId: 'rel-old-02', relType: 'connected_to', peerId: 'ci-002', peerName: 'prod-web-02', direction: 'inbound' },
+  },
+  // ── prod-web-01 (ci-001) — attribute & class updates ───────────────────────────────
+  {
+    id: 'log-030', ciId: 'ci-001', action: 'ci_attr_updated', actor: 'alice.vu',
+    timestamp: '2025-06-15T11:00:00Z',
+    meta: {
+      classLabel: 'Server',
+      changes: [
+        { field: 'ip_address', label: 'IP Address', from: '10.0.10.10', to: '10.0.10.15' },
+        { field: 'os_version', label: 'OS Version', from: 'Ubuntu 20.04 LTS', to: 'Ubuntu 22.04 LTS' },
+      ],
+    },
+  },
+  {
+    id: 'log-031', ciId: 'ci-001', action: 'ci_attr_updated', actor: 'alice.vu',
+    timestamp: '2025-10-20T09:30:00Z',
+    meta: {
+      classLabel: 'Server',
+      changes: [
+        { field: 'cpu_cores', label: 'CPU Cores', from: 4, to: 8 },
+        { field: 'ram_gb', label: 'RAM (GB)', from: 16, to: 32 },
+      ],
+    },
+  },
+  {
+    id: 'log-032', ciId: 'ci-001', action: 'rel_updated', actor: 'alice.vu',
+    timestamp: '2026-02-14T14:00:00Z',
+    meta: { relId: 'rel-004', relType: 'runs_on', peerId: 'ci-006', peerName: 'CRM Portal', direction: 'inbound', changes: [{ field: 'expiredDate', from: null, to: '2026-12-31T00:00:00Z' }] },
+  },
+  // ── CRM Portal (ci-006) — attr + class change ──────────────────────────────────
+  {
+    id: 'log-033', ciId: 'ci-006', action: 'ci_attr_updated', actor: 'john.doe',
+    timestamp: '2025-07-01T10:00:00Z',
+    meta: {
+      classLabel: 'Application',
+      changes: [
+        { field: 'tech_stack', label: 'Tech Stack', from: 'React 17', to: 'React 18 + Vite' },
+        { field: 'sla_tier', label: 'SLA Tier', from: 'standard', to: 'gold' },
+      ],
+    },
+  },
+  {
+    id: 'log-034', ciId: 'ci-006', action: 'ci_class_changed', actor: 'admin',
+    timestamp: '2025-08-10T08:30:00Z',
+    meta: { fromClassId: 'class-002', fromClassName: 'Application', toClassId: 'class-002', toClassName: 'Web Application' },
+  },
+  // ── Business Plan API (ci-007) — attr updates ─────────────────────────────────
+  {
+    id: 'log-035', ciId: 'ci-007', action: 'ci_attr_updated', actor: 'jane.smith',
+    timestamp: '2025-09-05T16:20:00Z',
+    meta: {
+      classLabel: 'Application',
+      changes: [
+        { field: 'api_version', label: 'API Version', from: 'v1.3.0', to: 'v1.4.0' },
+        { field: 'sla_tier', label: 'SLA Tier', from: 'gold', to: 'platinum' },
+      ],
+    },
+  },
+  {
+    id: 'log-036', ciId: 'ci-007', action: 'rel_updated', actor: 'jane.smith',
+    timestamp: '2026-03-01T10:00:00Z',
+    meta: { relId: 'rel-002', relType: 'depends_on', peerId: 'ci-004', peerName: 'PostgreSQL Main', direction: 'outbound', changes: [{ field: 'expiredDate', from: '2026-05-14T00:00:00Z', to: '2027-05-14T00:00:00Z' }] },
+  },
+  // ── Azure AKS Cluster - Prod (ci-011) ─────────────────────────────────
+  {
+    id: 'log-040', ciId: 'ci-011', action: 'ci_created', actor: 'hoangvane',
+    timestamp: '2025-06-01T08:00:00Z', meta: {},
+  },
+  {
+    id: 'log-041', ciId: 'ci-011', action: 'ci_updated', actor: 'hoangvane',
+    timestamp: '2025-08-15T10:00:00Z',
+    meta: { changes: [{ field: 'owner', from: 'admin', to: 'Hoang Van E' }, { field: 'department', from: 'IT', to: 'Platform Engineering' }] },
+  },
+  {
+    id: 'log-042', ciId: 'ci-011', action: 'ci_attr_updated', actor: 'hoangvane',
+    timestamp: '2025-10-01T09:00:00Z',
+    meta: {
+      classLabel: 'Cloud Service',
+      changes: [
+        { field: 'monthly_cost_usd', label: 'Monthly Cost (USD)', from: 2400, to: 2800 },
+        { field: 'account_id', label: 'Account ID', from: 'sub-abc-000', to: 'sub-abc-def-001' },
+      ],
+    },
+  },
+  {
+    id: 'log-043', ciId: 'ci-011', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-06-02T08:00:00Z',
+    meta: { relId: 'rel-008', relType: 'hosts', peerId: 'ci-006', peerName: 'CRM Web Portal', direction: 'outbound', expiredDate: '2026-12-31T00:00:00Z' },
+  },
+  {
+    id: 'log-044', ciId: 'ci-011', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-06-15T08:00:00Z',
+    meta: { relId: 'rel-009', relType: 'hosts', peerId: 'ci-007', peerName: 'Business Plan API Service', direction: 'outbound', expiredDate: null },
+  },
+  {
+    id: 'log-045', ciId: 'ci-011', action: 'rel_added', actor: 'admin',
+    timestamp: '2026-01-05T08:00:00Z',
+    meta: { relId: 'rel-010', relType: 'hosts', peerId: 'ci-008', peerName: 'CMPlan API Service', direction: 'outbound', expiredDate: null },
+  },
+  {
+    id: 'log-046', ciId: 'ci-011', action: 'ci_status_changed', actor: 'hoangvane',
+    timestamp: '2026-03-20T14:00:00Z',
+    meta: { changes: [{ field: 'status', from: 'active', to: 'maintenance' }] },
+  },
+  {
+    id: 'log-047', ciId: 'ci-011', action: 'ci_status_changed', actor: 'hoangvane',
+    timestamp: '2026-03-21T09:30:00Z',
+    meta: { changes: [{ field: 'status', from: 'maintenance', to: 'active' }] },
+  },
+  // ── prod-postgresql-01 (ci-004) ────────────────────────────────────
+  {
+    id: 'log-050', ciId: 'ci-004', action: 'ci_created', actor: 'admin',
+    timestamp: '2025-02-05T08:00:00Z', meta: {},
+  },
+  {
+    id: 'log-051', ciId: 'ci-004', action: 'ci_attr_updated', actor: 'levanc',
+    timestamp: '2025-09-10T11:00:00Z',
+    meta: {
+      classLabel: 'Database',
+      changes: [{ field: 'db_version', label: 'DB Version', from: '14.8', to: '15.3' }],
+    },
+  },
+  {
+    id: 'log-052', ciId: 'ci-004', action: 'rel_added', actor: 'admin',
+    timestamp: '2025-02-07T08:00:00Z',
+    meta: { relId: 'rel-007', relType: 'runs_on', peerId: 'ci-013', peerName: 'NetApp FAS - Primary SAN', direction: 'outbound', expiredDate: null },
   },
 ]
