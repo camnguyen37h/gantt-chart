@@ -24,12 +24,15 @@ const COLOR_PRESETS = [
  * Modal for creating / editing a CI Group.
  * Props: visible, editingRecord, allCIs, submitting, onSubmit, onCancel
  */
-class GroupFormModalInner extends React.Component {
-  componentDidUpdate(prevProps) {
-    const { visible, editingRecord, form } = this.props
-    if (visible && !prevProps.visible) {
+const GroupFormModalInner = ({ form, visible, editingRecord, allCIs = [], submitting, onSubmit, onCancel }) => {
+  const { getFieldDecorator, getFieldValue, setFieldsValue, resetFields, validateFields } = form
+  const selectedColor = getFieldValue('color') || '#1890ff'
+  const isEdit = !!editingRecord
+
+  useEffect(() => {
+    if (visible) {
       if (editingRecord) {
-        form.setFieldsValue({
+        setFieldsValue({
           name: editingRecord.name,
           groupType: editingRecord.groupType,
           owner: editingRecord.owner || '',
@@ -38,30 +41,23 @@ class GroupFormModalInner extends React.Component {
           ciIds: editingRecord.ciIds || [],
         })
       } else {
-        form.resetFields()
-        form.setFieldsValue({ color: '#1890ff' })
+        resetFields()
+        setFieldsValue({ color: '#1890ff' })
       }
+    } else {
+      resetFields()
     }
-    if (!visible && prevProps.visible) {
-      form.resetFields()
-    }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible])
 
-  handleOk = () => {
-    const { form, onSubmit, editingRecord } = this.props
-    form.validateFields((err, values) => {
+  const handleOk = () => {
+    validateFields((err, values) => {
       if (err) return
       onSubmit({ ...(editingRecord ? { id: editingRecord.id } : {}), ...values })
     })
   }
 
-  render() {
-    const { visible, editingRecord, allCIs = [], submitting, onCancel, form } = this.props
-    const { getFieldDecorator, getFieldValue } = form
-    const selectedColor = getFieldValue('color') || '#1890ff'
-    const isEdit = !!editingRecord
-
-    return (
+  return (
       <Modal
         visible={visible}
         title={
@@ -73,7 +69,7 @@ class GroupFormModalInner extends React.Component {
             {isEdit ? 'Edit Group' : 'Create Group'}
           </span>
         }
-        onOk={this.handleOk}
+        onOk={handleOk}
         onCancel={onCancel}
         confirmLoading={submitting}
         okText={isEdit ? 'Save Changes' : 'Create'}
@@ -181,7 +177,7 @@ class GroupFormModalInner extends React.Component {
             label={
               <span>
                 Assign Configuration Items
-                {getFieldValue('ciIds')?.length > 0 && (
+                {getFieldValue('ciIds') && getFieldValue('ciIds').length > 0 && (
                   <Tag
                     color={selectedColor}
                     style={{ marginLeft: 8, fontWeight: 600 }}
@@ -218,8 +214,7 @@ class GroupFormModalInner extends React.Component {
           </Form.Item>
         </Form>
       </Modal>
-    )
-  }
+  )
 }
 
 const GroupFormModal = Form.create({ name: 'group_form' })(GroupFormModalInner)

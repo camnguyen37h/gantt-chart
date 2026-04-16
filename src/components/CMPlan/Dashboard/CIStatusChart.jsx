@@ -12,8 +12,8 @@ import {
  * Grouped bar chart showing CI breakdown by status, criticality, environment.
  */
 const CIStatusChart = ({ stats, loading }) => {
-  const byStatus = stats?.byStatus || []
-  const byCriticality = stats?.byCriticality || []
+  const byStatus = (stats && stats.byStatus) || []
+  const byCriticality = (stats && stats.byCriticality) || []
 
   const statusOption = {
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },

@@ -17,6 +17,7 @@ import ConfigurationItemsPage from './pages/CMPlan/ConfigurationItemsPage'
 import RelationshipMapPage from './pages/CMPlan/RelationshipMapPage'
 import GroupsPage from './pages/CMPlan/GroupsPage'
 import GroupMapPage from './pages/CMPlan/GroupMapPage'
+import CIConfigPage from './pages/CMPlan/CIConfigPage'
 import 'react-notifications/lib/notifications.css'
 import './App.css'
 
@@ -84,6 +85,11 @@ const App = () => {
                   exact
                   path="/cmplan/group-map"
                   component={GroupMapPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/ci-config"
+                  component={CIConfigPage}
                 />
                 <Route
                   path="/cmplan"

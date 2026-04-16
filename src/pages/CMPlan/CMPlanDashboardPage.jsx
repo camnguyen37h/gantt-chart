@@ -69,7 +69,7 @@ const CMPlanDashboardPage = () => {
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={16}>
           <RecentCITable
-            recentItems={stats?.recent}
+            recentItems={stats && stats.recent}
             ciClasses={ciClasses}
             loading={statsLoading}
           />
@@ -88,7 +88,7 @@ const CMPlanDashboardPage = () => {
             style={{ borderRadius: 8 }}
             bodyStyle={{ padding: '8px 16px 12px' }}
           >
-            {(stats?.byClass || [])
+            {((stats && stats.byClass) || [])
               .filter((c) => c.count > 0)
               .sort((a, b) => b.count - a.count)
               .map((cls) => (
@@ -116,7 +116,7 @@ const CMPlanDashboardPage = () => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 120 }}>
                     <Progress
                       percent={
-                        stats?.total > 0
+                        stats && stats.total > 0
                           ? Math.round((cls.count / stats.total) * 100)
                           : 0
                       }

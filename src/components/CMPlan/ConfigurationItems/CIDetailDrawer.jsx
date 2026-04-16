@@ -12,7 +12,7 @@ import {
   notification,
   Spin,
   Tabs,
-  Timeline,
+  Table,
   Empty,
 }  from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
@@ -47,21 +47,21 @@ const relTypeMap = Object.fromEntries(
 
 // ── Audit helpers ─────────────────────────────────────────────────────────────
 const AUDIT_CONFIG = {
-  ci_created:        { color: 'green',   icon: 'plus-circle',     label: 'CI Created' },
+  ci_created:        { color: '#52c41a', icon: 'plus-circle',     label: 'CI Created' },
   ci_updated:        { color: '#1890ff', icon: 'edit',            label: 'CI Updated' },
   ci_status_changed: { color: '#fa8c16', icon: 'swap',            label: 'Status Changed' },
   ci_class_changed:  { color: '#722ed1', icon: 'deployment-unit', label: 'Class Changed' },
-  ci_attr_updated:   { color: '#13c2c2', icon: 'tool',            label: 'Attributes Updated' },
-  rel_added:         { color: '#52c41a', icon: 'link',            label: 'Relationship Added' },
-  rel_updated:       { color: '#fa8c16', icon: 'edit',            label: 'Relationship Updated' },
-  rel_removed:       { color: '#ff4d4f', icon: 'disconnect',      label: 'Relationship Removed' },
+  ci_attr_updated:   { color: '#13c2c2', icon: 'tool',            label: 'Attr Updated' },
+  rel_added:         { color: '#52c41a', icon: 'link',            label: 'Rel Added' },
+  rel_updated:       { color: '#fa8c16', icon: 'edit',            label: 'Rel Updated' },
+  rel_removed:       { color: '#ff4d4f', icon: 'disconnect',      label: 'Rel Removed' },
 }
 
 const FIELD_LABELS = {
   status: 'Status', criticality: 'Criticality', owner: 'Owner',
   department: 'Department', environment: 'Environment',
   location: 'Location', name: 'Name', shortDescription: 'Description',
-  expiredDate: 'Expired Date',
+  expiredDate: 'Expired Date', ciClass: 'CI Class',
 }
 
 const HISTORY_FILTERS = [
@@ -71,200 +71,168 @@ const HISTORY_FILTERS = [
   { label: 'Relationships', value: ['rel_added', 'rel_updated', 'rel_removed'] },
 ]
 
-function groupByDate(entries) {
-  const today = new Date().toDateString()
-  const yesterday = new Date(Date.now() - 86400000).toDateString()
-  const groups = new Map()
-  entries.forEach((entry) => {
-    const d = new Date(entry.timestamp)
-    const key = d.toDateString()
-    const label =
-      key === today ? 'Today' :
-      key === yesterday ? 'Yesterday' :
-      d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-    if (!groups.has(label)) groups.set(label, [])
-    groups.get(label).push(entry)
-  })
-  return Array.from(groups.entries()).map(([label, items]) => ({ label, items }))
+function formatVal(v) {
+  if (v === null || v === undefined) return '—'
+  if (typeof v === 'boolean') return v ? 'Yes' : 'No'
+  if (Array.isArray(v)) return v.join(', ')
+  return String(v)
 }
 
-function formatCellValue(field, value) {
-  if (value === null || value === undefined) return '—'
-  if (field === 'expiredDate') return value ? new Date(value).toLocaleDateString('en-GB') : 'No expiry'
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
-  if (Array.isArray(value)) return value.join(', ')
-  return String(value)
-}
+// One row per audit entry; changes[] is used in the expandable sub-table
+function buildAuditRows(entries) {
+  return entries.map((entry) => {
+    const cfg = AUDIT_CONFIG[entry.action] || { color: '#8c8c8c', icon: 'info-circle', label: entry.action }
+    const { meta, action } = entry
+    let changes = []
 
-const TABLE_TH = {
-  padding: '4px 8px', fontSize: 11, fontWeight: 600, color: '#8c8c8c',
-  background: '#fafafa', borderBottom: '1px solid #f0f0f0', textAlign: 'left',
-  whiteSpace: 'nowrap',
-}
-const TABLE_TD = { padding: '4px 8px', fontSize: 11, borderBottom: '1px solid #f5f5f5', verticalAlign: 'top' }
-
-function ChangesTable({ changes, getFieldLabel }) {
-  const [open, setOpen] = React.useState(false)
-  const count = changes.length
-  return (
-    <div style={{ marginTop: 5 }}>
-      <span
-        role="button"
-        onClick={() => setOpen((o) => !o)}
-        style={{ cursor: 'pointer', fontSize: 11, color: '#1890ff', userSelect: 'none', display: 'inline-flex', alignItems: 'center', gap: 3 }}
-      >
-        <Icon type={open ? 'caret-up' : 'caret-down'} />
-        {count} field{count !== 1 ? 's' : ''} changed
-      </span>
-      {open && (
-        <table style={{ width: '100%', marginTop: 6, borderCollapse: 'collapse', tableLayout: 'fixed' }}>
-          <colgroup>
-            <col style={{ width: '32%' }} />
-            <col style={{ width: '34%' }} />
-            <col style={{ width: '34%' }} />
-          </colgroup>
-          <thead>
-            <tr>
-              <th style={TABLE_TH}>Field</th>
-              <th style={{ ...TABLE_TH, color: '#cf1322' }}>Old value</th>
-              <th style={{ ...TABLE_TH, color: '#389e0d' }}>New value</th>
-            </tr>
-          </thead>
-          <tbody>
-            {changes.map((c, i) => (
-              <tr key={i}>
-                <td style={{ ...TABLE_TD, color: '#595959', fontWeight: 500 }}>
-                  {getFieldLabel ? getFieldLabel(c) : (FIELD_LABELS[c.field] || c.field)}
-                </td>
-                <td style={{ ...TABLE_TD, color: '#cf1322', background: '#fff1f0', wordBreak: 'break-all' }}>
-                  <span style={{ textDecoration: 'line-through', opacity: 0.85 }}>
-                    {formatCellValue(c.field, c.from)}
-                  </span>
-                </td>
-                <td style={{ ...TABLE_TD, color: '#389e0d', background: '#f6ffed', fontWeight: 500, wordBreak: 'break-all' }}>
-                  {formatCellValue(c.field, c.to)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  )
-}
-
-function AuditEntry({ entry }) {
-  const cfg = AUDIT_CONFIG[entry.action] || { color: '#8c8c8c', icon: 'info-circle', label: entry.action }
-  const ts = new Date(entry.timestamp)
-  const timeStr = ts.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  const { meta, action } = entry
-
-  let summary = null   // always-visible one-liner
-  let detail  = null   // collapsible table (if applicable)
-
-  if (action === 'ci_created') {
-    summary = <span style={{ color: '#52c41a', fontSize: 11 }}>CI was created in the system.</span>
-
-  } else if (action === 'ci_updated' || action === 'ci_status_changed') {
-    const changes = meta?.changes || []
-    summary = (
-      <span style={{ fontSize: 11, color: '#8c8c8c' }}>
-        {changes.map((c) => FIELD_LABELS[c.field] || c.field).join(', ')}
-      </span>
-    )
-    detail = <ChangesTable changes={changes} getFieldLabel={(c) => FIELD_LABELS[c.field] || c.field} />
-
-  } else if (action === 'ci_class_changed') {
-    summary = (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
-        <Tag style={{ marginBottom: 0, fontSize: 11 }}>{meta.fromClassName}</Tag>
-        <Icon type="arrow-right" style={{ color: '#722ed1', fontSize: 10 }} />
-        <Tag color="purple" style={{ marginBottom: 0, fontSize: 11 }}>{meta.toClassName}</Tag>
-      </span>
-    )
-
-  } else if (action === 'ci_attr_updated') {
-    const changes = meta?.changes || []
-    summary = (
-      <span style={{ fontSize: 11, color: '#8c8c8c' }}>
-        {meta.classLabel && <Tag style={{ fontSize: 10, marginBottom: 0, marginRight: 4 }}>{meta.classLabel}</Tag>}
-        {changes.map((c) => c.label || c.field).join(', ')}
-      </span>
-    )
-    detail = <ChangesTable changes={changes} getFieldLabel={(c) => c.label || c.field} />
-
-  } else if (action === 'rel_added') {
-    const dir = meta.direction === 'outbound' ? '→' : '←'
-    summary = (
-      <span style={{ fontSize: 11, color: '#595959', display: 'inline-flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
-        <span style={{ color: '#52c41a', fontWeight: 700 }}>{dir}</span>
-        <Tag color="geekblue" style={{ marginBottom: 0, fontSize: 10 }}>{relTypeMap[meta.relType] || meta.relType}</Tag>
-        <strong>{meta.peerName}</strong>
-        {meta.expiredDate && (
-          <Tag color="warning" style={{ fontSize: 10, marginBottom: 0 }}>
-            expires {new Date(meta.expiredDate).toLocaleDateString('en-GB')}
-          </Tag>
-        )}
-      </span>
-    )
-
-  } else if (action === 'rel_updated') {
-    const dir = meta.direction === 'outbound' ? '→' : '←'
-    const changes = meta?.changes || []
-    summary = (
-      <span style={{ fontSize: 11, color: '#595959', display: 'inline-flex', alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
-        <span style={{ color: '#fa8c16', fontWeight: 700 }}>{dir}</span>
-        <Tag color="orange" style={{ marginBottom: 0, fontSize: 10 }}>{relTypeMap[meta.relType] || meta.relType}</Tag>
-        <strong>{meta.peerName}</strong>
-      </span>
-    )
-    if (changes.length > 0) {
-      detail = <ChangesTable changes={changes} getFieldLabel={(c) => FIELD_LABELS[c.field] || c.field} />
+    if (action === 'ci_class_changed') {
+      changes = [{ field: 'CI Class', from: meta.fromClassName, to: meta.toClassName }]
+    } else if (action === 'ci_updated' || action === 'ci_status_changed') {
+      changes = ((meta && meta.changes) || []).map((c) => ({
+        field: FIELD_LABELS[c.field] || c.field, from: formatVal(c.from), to: formatVal(c.to),
+      }))
+    } else if (action === 'ci_attr_updated') {
+      changes = ((meta && meta.changes) || []).map((c) => ({
+        field: c.label || c.field, from: formatVal(c.from), to: formatVal(c.to),
+      }))
+    } else if (action === 'rel_updated') {
+      changes = ((meta && meta.changes) || []).map((c) => ({
+        field: FIELD_LABELS[c.field] || c.field,
+        from: c.field === 'expiredDate' ? (c.from ? new Date(c.from).toLocaleDateString('en-GB') : 'No expiry') : formatVal(c.from),
+        to:   c.field === 'expiredDate' ? (c.to   ? new Date(c.to).toLocaleDateString('en-GB')   : 'No expiry') : formatVal(c.to),
+      }))
     }
 
-  } else if (action === 'rel_removed') {
-    const dir = meta.direction === 'outbound' ? '→' : '←'
-    summary = (
-      <span style={{ fontSize: 11, color: '#8c8c8c', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-        <span style={{ color: '#ff4d4f', fontWeight: 700 }}>{dir}</span>
-        <Tag color="error" style={{ marginBottom: 0, fontSize: 10 }}>{relTypeMap[meta.relType] || meta.relType}</Tag>
-        <span style={{ textDecoration: 'line-through' }}>{meta.peerName}</span>
-        <Tag color="error" style={{ fontSize: 10, marginBottom: 0 }}>removed</Tag>
-      </span>
-    )
-  }
-
-  return (
-    <Timeline.Item
-      color={cfg.color}
-      dot={<Icon type={cfg.icon} style={{ fontSize: 13, color: cfg.color }} />}
-    >
-      <div style={{ paddingBottom: 2 }}>
-        {/* Header row */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}>
-          <span style={{ fontWeight: 600, fontSize: 12, color: '#262626' }}>{cfg.label}</span>
-          <span style={{ fontSize: 11, color: '#bfbfbf' }}>by {entry.actor}</span>
-          <Tooltip title={ts.toLocaleString('en-GB')}>
-            <span style={{ fontSize: 11, color: '#bfbfbf', cursor: 'default' }}>{timeStr}</span>
-          </Tooltip>
-        </div>
-        {/* Summary line */}
-        {summary && <div style={{ marginTop: 3 }}>{summary}</div>}
-        {/* Collapsible diff table */}
-        {detail}
-      </div>
-    </Timeline.Item>
-  )
+    return { key: entry.id, entry, cfg, changes }
+  })
 }
+
+const DIFF_COLUMNS = [
+  {
+    title: 'Field',
+    dataIndex: 'field',
+    width: 140,
+    render: (v) => <span style={{ fontSize: 11, fontWeight: 500, color: '#595959' }}>{v}</span>,
+  },
+  {
+    title: <span style={{ color: '#cf1322' }}>Old value</span>,
+    dataIndex: 'from',
+    render: (v) => (
+      <span style={{ fontSize: 11, color: '#cf1322', textDecoration: 'line-through' }}>{v}</span>
+    ),
+  },
+  {
+    title: <span style={{ color: '#389e0d' }}>New value</span>,
+    dataIndex: 'to',
+    render: (v) => (
+      <span style={{ fontSize: 11, color: '#389e0d', fontWeight: 500 }}>{v}</span>
+    ),
+  },
+]
+
+const HISTORY_COLUMNS = [
+  {
+    title: 'Date / Time',
+    width: 110,
+    render: (_, row) => {
+      const ts = new Date(row.entry.timestamp)
+      return (
+        <div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: '#262626', lineHeight: 1.4 }}>
+            {ts.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+          </div>
+          <div style={{ fontSize: 11, color: '#8c8c8c' }}>
+            {ts.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+          </div>
+          <div style={{ fontSize: 10, color: '#bfbfbf', marginTop: 2 }}>by {row.entry.actor}</div>
+        </div>
+      )
+    },
+  },
+  {
+    title: 'Action',
+    width: 170,
+    render: (_, row) => {
+      const { entry, cfg } = row
+      const { action, meta } = entry
+      const isRel = ['rel_added', 'rel_updated', 'rel_removed'].includes(action)
+      const dirColor = action === 'rel_removed' ? '#ff4d4f' : action === 'rel_updated' ? '#fa8c16' : '#52c41a'
+      return (
+        <div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <Icon type={cfg.icon} style={{ color: cfg.color, fontSize: 11 }} />
+            <span style={{ fontSize: 11, fontWeight: 600, color: cfg.color }}>{cfg.label}</span>
+          </div>
+          {isRel && (
+            <div style={{ marginTop: 3, display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
+              <span style={{ color: dirColor, fontWeight: 700, fontSize: 12 }}>
+                {meta.direction === 'outbound' ? '→' : '←'}
+              </span>
+              <Tag style={{ fontSize: 9, marginBottom: 0, padding: '0 4px' }}>
+                {relTypeMap[meta.relType] || meta.relType}
+              </Tag>
+              <span style={{
+                fontSize: 11, color: action === 'rel_removed' ? '#8c8c8c' : '#595959',
+                textDecoration: action === 'rel_removed' ? 'line-through' : 'none',
+                maxWidth: 90, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'inline-block',
+              }}>
+                {meta.peerName}
+              </span>
+            </div>
+          )}
+          {action === 'ci_attr_updated' && meta.classLabel && (
+            <Tag style={{ marginTop: 2, fontSize: 9, marginBottom: 0, padding: '0 4px' }}>{meta.classLabel}</Tag>
+          )}
+        </div>
+      )
+    },
+  },
+  {
+    title: 'Summary',
+    render: (_, row) => {
+      const { changes, entry: { action, meta } } = row
+      if (changes.length === 0) {
+        // ci_created, rel_added, rel_removed — no diff
+        if (action === 'ci_created') return <span style={{ fontSize: 11, color: '#52c41a' }}>CI created in the system</span>
+        if (action === 'rel_added') {
+          return (
+            <span style={{ fontSize: 11, color: '#595959' }}>
+              Relationship established
+              {meta.expiredDate && (
+                <Tag color="warning" style={{ marginLeft: 6, fontSize: 10, marginBottom: 0, padding: '0 4px' }}>
+                  expires {new Date(meta.expiredDate).toLocaleDateString('en-GB')}
+                </Tag>
+              )}
+            </span>
+          )
+        }
+        if (action === 'rel_removed') return <span style={{ fontSize: 11, color: '#ff4d4f' }}>Relationship removed</span>
+        return <span style={{ fontSize: 11, color: '#bfbfbf' }}>—</span>
+      }
+      // Has diffs — show field list as a hint
+      return (
+        <span style={{ fontSize: 11, color: '#8c8c8c' }}>
+          {changes.map((c) => c.field).join(', ')}
+          <span style={{
+            marginLeft: 6, fontSize: 10, background: '#f0f0f0',
+            borderRadius: 8, padding: '1px 6px', color: '#595959',
+          }}>
+            {changes.length} field{changes.length !== 1 ? 's' : ''}
+          </span>
+        </span>
+      )
+    },
+  },
+]
 
 // ── Main Component ────────────────────────────────────────────────────────────
 const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
   const dispatch = useDispatch()
   const ciClasses = useSelector(selectCIClasses)
-  const relations = useSelector(selectRelationshipsByCI(ci?.id || ''))
+  const relations = useSelector(selectRelationshipsByCI((ci && ci.id) || ''))
   const submitting = useSelector(selectRelationshipsSubmitting)
-  const auditEntries = useSelector(selectAuditLogByCI(ci?.id || ''))
-  const auditLoading = useSelector(selectAuditLogLoading(ci?.id || ''))
+  const auditEntries = useSelector(selectAuditLogByCI((ci && ci.id) || ''))
+  const auditLoading = useSelector(selectAuditLogLoading((ci && ci.id) || ''))
 
   const [drawerTab, setDrawerTab] = useState('overview')
   const [historyFilter, setHistoryFilter] = useState(null)
@@ -326,37 +294,45 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
     })
     dispatch(fetchAuditLogByCI(ci.id))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, ci?.id])
+  }, [visible, ci ? ci.id : null])
 
   const ciClass = ci ? ciClasses.find((c) => c.id === ci.ciClassId) : null
   const attrDefMap = Object.fromEntries((ci ? attrDefs : []).map((a) => [a.name, a]))
 
-  // ── History content (computed pre-JSX to avoid IIFE in render) ──────────────
+  // ── History table rows ───────────────────────────────────────────────────────
   const filteredAudit = historyFilter
     ? auditEntries.filter((e) => historyFilter.includes(e.action))
     : auditEntries
-  const auditGroups = groupByDate(filteredAudit)
-  const renderHistoryContent = filteredAudit.length === 0 ? (
-    <Empty
-      image={Empty.PRESENTED_IMAGE_SIMPLE}
-      description={auditEntries.length === 0 ? 'No history recorded yet' : 'No events match this filter'}
-      style={{ padding: '24px 0' }}
+  const historyRows = buildAuditRows(filteredAudit)
+  const renderHistoryContent = (
+    <Table
+      size="small"
+      bordered
+      dataSource={historyRows}
+      columns={HISTORY_COLUMNS}
+      rowKey="key"
+      pagination={historyRows.length > 25 ? { pageSize: 25, size: 'small', showSizeChanger: false } : false}
+      expandedRowRender={(row) => (
+        <Table
+          size="small"
+          dataSource={row.changes.map((c, i) => ({ ...c, key: i }))}
+          columns={DIFF_COLUMNS}
+          pagination={false}
+          showHeader
+          style={{ margin: 0 }}
+        />
+      )}
+      rowExpandable={(row) => row.changes.length > 0}
+      locale={{
+        emptyText: (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={auditEntries.length === 0 ? 'No history recorded yet' : 'No events match this filter'}
+            style={{ padding: '20px 0' }}
+          />
+        ),
+      }}
     />
-  ) : (
-    <div>
-      {auditGroups.map(({ label, items }) => (
-        <div key={label}>
-          <Divider orientation="left" style={{ fontSize: 11, color: '#8c8c8c', margin: '12px 0 8px' }}>
-            {label}
-          </Divider>
-          <Timeline style={{ paddingLeft: 4 }}>
-            {items.map((entry) => (
-              <AuditEntry key={entry.id} entry={entry} />
-            ))}
-          </Timeline>
-        </div>
-      ))}
-    </div>
   )
 
   const renderAttrValue = (key, value) => {
@@ -396,16 +372,16 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
           ci ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Icon
-                type={ciClass?.icon || 'profile'}
-                style={{
-                  fontSize: 20, color: ciClass?.color || '#1890ff',
-                  backgroundColor: `${ciClass?.color || '#1890ff'}15`,
+              type={(ciClass && ciClass.icon) || 'profile'}
+              style={{
+                fontSize: 20, color: (ciClass && ciClass.color) || '#1890ff',
+                backgroundColor: `${(ciClass && ciClass.color) || '#1890ff'}15`,
                   padding: 6, borderRadius: 6,
                 }}
               />
               <div>
                 <div style={{ fontWeight: 600, fontSize: 15 }}>{ci.name}</div>
-                <div style={{ fontSize: 12, color: '#8c8c8c', fontWeight: 400 }}>{ciClass?.label}</div>
+                <div style={{ fontSize: 12, color: '#8c8c8c', fontWeight: 400 }}>{ciClass && ciClass.label}</div>
               </div>
             </div>
           ) : (
@@ -488,8 +464,8 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
               {ci.attributes && Object.keys(ci.attributes).length > 0 && (
                 <>
                   <Divider orientation="left" style={{ fontSize: 12, marginTop: 20 }}>
-                    <Icon type={ciClass?.icon || 'profile'} style={{ color: ciClass?.color, marginRight: 4 }} />
-                    {ciClass?.label} Attributes
+                    <Icon type={(ciClass && ciClass.icon) || 'profile'} style={{ color: ciClass && ciClass.color, marginRight: 4 }} />
+                    {ciClass && ciClass.label} Attributes
                   </Divider>
                   <Descriptions column={1} size="small" bordered>
                     {Object.entries(ci.attributes).map(([key, value]) => {
@@ -497,7 +473,7 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
                       return (
                         <Descriptions.Item
                           key={key}
-                          label={<Tooltip title={`key: ${key}`}>{def?.label || key}</Tooltip>}
+                          label={<Tooltip title={`key: ${key}`}>{(def && def.label) || key}</Tooltip>}
                         >
                           {renderAttrValue(key, value)}
                         </Descriptions.Item>
@@ -551,7 +527,7 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
                     const isSource = rel.sourceId === ci.id
                     const peerId = isSource ? rel.targetId : rel.sourceId
                     const peerCI = allCIsForSelect.find((c) => c.id === peerId)
-                    const peerName = peerCI?.name || peerId
+                    const peerName = (peerCI && peerCI.name) || peerId
                     const isExpired = rel.expiredDate && new Date(rel.expiredDate) < new Date()
 
                     return (
@@ -629,7 +605,7 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
             }
             key="history"
           >
-            <div style={{ padding: '12px 24px 24px' }}>
+            <div style={{ padding: '12px 16px 16px' }}>
               {/* Filter chips + refresh */}
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center', marginBottom: 12 }}>
                 {HISTORY_FILTERS.map((f) => (
@@ -673,8 +649,8 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
           sourceCI={{
             id: ci.id,
             name: ci.name,
-            classIcon: ciClass?.icon,
-            classColor: ciClass?.color,
+            classIcon: ciClass && ciClass.icon,
+            classColor: ciClass && ciClass.color,
           }}
           allCIs={allCIsForSelect}
           submitting={submitting}

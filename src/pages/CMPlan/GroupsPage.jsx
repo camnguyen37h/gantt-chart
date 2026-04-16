@@ -182,7 +182,7 @@ const GroupsPage = () => {
       const result = await dispatch(deleteCIGroup(id))
       if (deleteCIGroup.fulfilled.match(result)) {
         notification.success({ message: 'Group deleted.' })
-        if (viewingGroup?.id === id) setDrawerVisible(false)
+        if (viewingGroup && viewingGroup.id === id) setDrawerVisible(false)
       } else {
         notification.error({ message: 'Failed to delete group.' })
       }
@@ -198,7 +198,7 @@ const GroupsPage = () => {
         result = await dispatch(updateCIGroup({ id, payload }))
         if (updateCIGroup.fulfilled.match(result)) {
           notification.success({ message: 'Group updated.' })
-          if (viewingGroup?.id === id) setViewingGroup(result.payload)
+          if (viewingGroup && viewingGroup.id === id) setViewingGroup(result.payload)
           setModalVisible(false)
         } else {
           notification.error({ message: 'Update failed.' })

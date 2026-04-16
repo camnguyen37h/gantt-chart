@@ -181,10 +181,10 @@ const CINodePanel = ({ ci, ciClasses, relationships, allCIItems }) => {
       <div style={{ marginBottom: 12 }}>
         <CIStatusBadge status={ci.ciStatus || ci.status} />
         <Tag
-          color={cls?.color}
+          color={cls && cls.color}
           style={{ marginLeft: 6, marginBottom: 0, fontWeight: 500 }}
         >
-          {cls?.label}
+          {cls && cls.label}
         </Tag>
       </div>
 
@@ -232,7 +232,7 @@ const CINodePanel = ({ ci, ciClasses, relationships, allCIItems }) => {
                     {relTypeMap[rel.relationshipType] || rel.relationshipType}
                   </Tag>
                   <span style={{ color: '#595959', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {peer?.name || peerId}
+                    {(peer && peer.name) || peerId}
                   </span>
                 </div>
               )
@@ -413,11 +413,11 @@ const RelationshipMapPage = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Icon
                     type={
-                      ciClasses.find((c) => c.id === selectedNode.ciClassId)?.icon ||
+                      (ciClasses.find((c) => c.id === selectedNode.ciClassId) && ciClasses.find((c) => c.id === selectedNode.ciClassId).icon) ||
                       'profile'
                     }
                     style={{
-                      color: ciClasses.find((c) => c.id === selectedNode.ciClassId)?.color,
+                      color: ciClasses.find((c) => c.id === selectedNode.ciClassId) && ciClasses.find((c) => c.id === selectedNode.ciClassId).color,
                     }}
                   />
                   <span

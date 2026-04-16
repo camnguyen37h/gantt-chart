@@ -9,11 +9,13 @@ import {
   Divider,
   Alert,
   Icon,
+  Button,
 } from 'antd'
 import { useSelector } from 'react-redux'
 import {
   selectCIClasses,
   selectAttrDefsByClassId,
+  selectCIRuleConfigs,
 } from '../../../store/cmplan'
 import CIDynamicFields from './CIDynamicFields'
 import {
@@ -32,54 +34,61 @@ const { TextArea } = Input
  * Modal form for creating or editing a Configuration Item.
  * Renders dynamic attribute fields based on the selected CI class.
  */
-class CIFormModalInner extends React.Component {
-  state = { selectedClassId: null }
+const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, submitting }) => {
+  const ciClasses = useSelector(selectCIClasses)
+  const allRuleConfigs = useSelector(selectCIRuleConfigs)
+  const [selectedClassId, setSelectedClassId] = useState(null)
 
-  componentDidUpdate(prevProps) {
-    const { visible, editingRecord, form } = this.props
-    if (visible && !prevProps.visible) {
-      if (editingRecord) {
-        this.setState({ selectedClassId: editingRecord.ciClassId })
-        const { attributes = {}, tags = [], ...rest } = editingRecord
-        form.setFieldsValue({
-          ciClassId: rest.ciClassId,
-          name: rest.name,
-          shortDescription: rest.shortDescription || '',
-          status: rest.status,
-          criticality: rest.criticality,
-          owner: rest.owner || '',
-          department: rest.department || '',
-          location: rest.location || '',
-          environment: rest.environment,
-          tags,
-          // Attribute fields are keyed as "attributes.<name>"
-          ...Object.fromEntries(
-            Object.entries(attributes).map(([k, v]) => [`attributes.${k}`, v])
-          ),
-        })
-      } else {
-        this.setState({ selectedClassId: null })
-        form.resetFields()
-      }
+  useEffect(() => {
+    if (visible && editingRecord) {
+      setSelectedClassId(editingRecord.ciClassId)
+    } else if (!visible) {
+      setSelectedClassId(null)
     }
-  }
+  }, [visible, editingRecord])
 
-  handleClassChange = (classId) => {
-    const { form } = this.props
-    this.setState({ selectedClassId: classId })
-    // Clear previously filled attribute fields
-    const attrKeys = Object.keys(form.getFieldsValue()).filter((k) =>
-      k.startsWith('attributes.')
-    )
+  const attrDefs = useSelector(selectAttrDefsByClassId(selectedClassId))
+  const validationRules = allRuleConfigs.filter((r) => r.category === 'validation_rule')
+
+  const { getFieldDecorator } = form
+  const isEditing = Boolean(editingRecord)
+  const selectedClass = ciClasses.find((c) => c.id === selectedClassId)
+
+  useEffect(() => {
+    if (!visible) return
+    if (editingRecord) {
+      const { attributes = {}, tags = [], ...rest } = editingRecord
+      form.setFieldsValue({
+        ciClassId: rest.ciClassId,
+        name: rest.name,
+        shortDescription: rest.shortDescription || '',
+        status: rest.status,
+        criticality: rest.criticality,
+        owner: rest.owner || '',
+        department: rest.department || '',
+        location: rest.location || '',
+        environment: rest.environment,
+        tags,
+        ...Object.fromEntries(
+          Object.entries(attributes).map(([k, v]) => [`attributes.${k}`, v])
+        ),
+      })
+    } else {
+      form.resetFields()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible])
+
+  const handleClassChange = (classId) => {
+    setSelectedClassId(classId)
+    const attrKeys = Object.keys(form.getFieldsValue()).filter((k) => k.startsWith('attributes.'))
     const cleared = Object.fromEntries(attrKeys.map((k) => [k, undefined]))
     form.setFieldsValue(cleared)
   }
 
-  handleSubmit = () => {
-    const { form, onSubmit, editingRecord } = this.props
+  const handleSubmit = () => {
     form.validateFields((err, values) => {
       if (err) return
-      // Reconstruct attributes from "attributes.<key>" flat keys
       const attributes = {}
       const topLevel = {}
       Object.entries(values).forEach(([key, val]) => {
@@ -100,24 +109,7 @@ class CIFormModalInner extends React.Component {
     })
   }
 
-  render() {
-    const {
-      visible,
-      onCancel,
-      editingRecord,
-      form,
-      submitting,
-      ciClasses,
-    } = this.props
-    const { selectedClassId } = this.state
-    const { getFieldDecorator } = form
-    const isEditing = Boolean(editingRecord)
-
-    // Get attribute definitions selector inline (passed via props from parent)
-    const attrDefs = this.props.attrDefs || []
-    const selectedClass = ciClasses.find((c) => c.id === selectedClassId)
-
-    return (
+  return (
       <Modal
         visible={visible}
         title={
@@ -133,23 +125,17 @@ class CIFormModalInner extends React.Component {
         onCancel={onCancel}
         destroyOnClose
         footer={[
-          <button
-            key="cancel"
-            className="ant-btn"
-            onClick={onCancel}
-            disabled={submitting}
-          >
+          <Button key="cancel" onClick={onCancel} disabled={submitting}>
             Cancel
-          </button>,
-          <button
+          </Button>,
+          <Button
             key="submit"
-            className={`ant-btn ant-btn-primary${submitting ? ' ant-btn-loading' : ''}`}
-            onClick={this.handleSubmit}
-            disabled={submitting}
+            type="primary"
+            loading={submitting}
+            onClick={handleSubmit}
           >
-            {submitting && <Icon type="loading" style={{ marginRight: 6 }} />}
             {isEditing ? 'Save Changes' : 'Create CI'}
-          </button>,
+          </Button>,
         ]}
         bodyStyle={{ maxHeight: '72vh', overflowY: 'auto' }}
       >
@@ -168,7 +154,7 @@ class CIFormModalInner extends React.Component {
                 })(
                   <Select
                     placeholder="Select class..."
-                    onChange={this.handleClassChange}
+                    onChange={handleClassChange}
                     disabled={isEditing}
                     showSearch
                     optionFilterProp="children"
@@ -312,15 +298,16 @@ class CIFormModalInner extends React.Component {
             <>
               <Divider orientation="left" style={{ fontSize: 13 }}>
                 <Icon
-                  type={selectedClass?.icon || 'profile'}
-                  style={{ marginRight: 4, color: selectedClass?.color }}
+                  type={(selectedClass && selectedClass.icon) || 'profile'}
+                  style={{ marginRight: 4, color: selectedClass && selectedClass.color }}
                 />
-                {selectedClass?.label} Attributes
+                {selectedClass && selectedClass.label} Attributes
               </Divider>
               <CIDynamicFields
                 attrDefs={attrDefs}
                 form={form}
-                initialValues={editingRecord?.attributes || {}}
+                initialValues={(editingRecord && editingRecord.attributes) || {}}
+                validationRules={validationRules}
               />
             </>
           )}
@@ -336,42 +323,10 @@ class CIFormModalInner extends React.Component {
           )}
         </Form>
       </Modal>
-    )
-  }
-}
-
-// Wrapper component to inject Redux selectors into the class-based modal
-const CIFormModalWrapper = (props) => {
-  const { editingRecord, visible } = props
-  const ciClasses = useSelector(selectCIClasses)
-
-  // Track which class is selected for attribute loading
-  const [selectedClassId, setSelectedClassId] = useState(
-    editingRecord?.ciClassId || null
-  )
-
-  useEffect(() => {
-    if (visible && editingRecord) {
-      setSelectedClassId(editingRecord.ciClassId)
-    } else if (!visible) {
-      setSelectedClassId(null)
-    }
-  }, [visible, editingRecord])
-
-  const attrDefs = useSelector(selectAttrDefsByClassId(selectedClassId))
-
-  return (
-    <CIFormModalInner
-      {...props}
-      ciClasses={ciClasses}
-      attrDefs={attrDefs}
-      selectedClassIdOverride={selectedClassId}
-      onClassChange={setSelectedClassId}
-    />
   )
 }
 
 // HoC wrapping for Form.create
-const CIFormModal = Form.create({ name: 'ci_form' })(CIFormModalWrapper)
+const CIFormModal = Form.create({ name: 'ci_form' })(CIFormModalInner)
 
 export default CIFormModal

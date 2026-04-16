@@ -11,16 +11,17 @@ const { TextArea } = Input
  *
  * Props:
  *  - visible: bool
- *  - sourceCI: { id, name, classIcon?, classColor? }
+ *  - sourceCI: { id, name, classIcon, classColor }
  *  - allCIs: array of all CIs (for target selection)
  *  - submitting: bool
  *  - onSubmit({ sourceId, targetId, relationshipType, description, expiredDate })
  *  - onClose()
  */
-class AddRelationshipModalInner extends React.Component {
-  handleOk = () => {
-    const { form, onSubmit, sourceCI } = this.props
-    form.validateFields((err, values) => {
+const AddRelationshipModalInner = ({ form, visible, sourceCI, allCIs = [], submitting, onSubmit, onClose }) => {
+  const { getFieldDecorator, validateFields, resetFields } = form
+
+  const handleOk = () => {
+    validateFields((err, values) => {
       if (err) return
       onSubmit({
         sourceId: sourceCI.id,
@@ -32,16 +33,12 @@ class AddRelationshipModalInner extends React.Component {
     })
   }
 
-  handleCancel = () => {
-    this.props.form.resetFields()
-    this.props.onClose()
+  const handleCancel = () => {
+    resetFields()
+    onClose()
   }
 
-  render() {
-    const { visible, sourceCI, allCIs = [], submitting, form } = this.props
-    const { getFieldDecorator } = form
-
-    return (
+  return (
       <Modal
         visible={visible}
         title={
@@ -50,8 +47,8 @@ class AddRelationshipModalInner extends React.Component {
             Add Relationship
           </span>
         }
-        onOk={this.handleOk}
-        onCancel={this.handleCancel}
+        onOk={handleOk}
+        onCancel={handleCancel}
         confirmLoading={submitting}
         okText="Add"
         destroyOnClose
@@ -73,10 +70,10 @@ class AddRelationshipModalInner extends React.Component {
               }}
             >
               <Icon
-                type={sourceCI?.classIcon || 'profile'}
-                style={{ color: sourceCI?.classColor || '#1890ff' }}
+                type={(sourceCI && sourceCI.classIcon) || 'profile'}
+                style={{ color: (sourceCI && sourceCI.classColor) || '#1890ff' }}
               />
-              <span style={{ fontWeight: 500 }}>{sourceCI?.name}</span>
+              <span style={{ fontWeight: 500 }}>{sourceCI && sourceCI.name}</span>
               <Tag color="blue" style={{ marginLeft: 'auto', marginBottom: 0 }}>
                 Source
               </Tag>
@@ -126,7 +123,7 @@ class AddRelationshipModalInner extends React.Component {
                 }
               >
                 {allCIs
-                  .filter((c) => c.id !== sourceCI?.id)
+                  .filter((c) => c.id !== (sourceCI && sourceCI.id))
                   .map((c) => (
                     <Option key={c.id} value={c.id}>
                       {c.name}
@@ -160,8 +157,7 @@ class AddRelationshipModalInner extends React.Component {
           </Form.Item>
         </Form>
       </Modal>
-    )
-  }
+  )
 }
 
 const AddRelationshipModal = Form.create({ name: 'add_relationship_form' })(

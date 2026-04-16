@@ -48,7 +48,7 @@ const buildGroupGraphOption = (groups, allCIs) => {
       },
       // extra for tooltip
       gOwner: g.owner || '—',
-      gType: GROUP_TYPE_MAP[g.groupType]?.label || g.groupType,
+      gType: (GROUP_TYPE_MAP[g.groupType] && GROUP_TYPE_MAP[g.groupType].label) || g.groupType,
       gColor: g.color,
       gDescription: g.description || '',
       ciIds: g.ciIds || [],
@@ -71,7 +71,7 @@ const buildGroupGraphOption = (groups, allCIs) => {
             source: a.id,
             target: b.id,
             sharedCount: shared.length,
-            sharedNames: shared.map((id) => ciMap[id]?.name || id).join(', '),
+            sharedNames: shared.map((id) => (ciMap[id] && ciMap[id].name) || id).join(', '),
             lineStyle: { width: Math.min(shared.length * 1.5, 6), opacity: 0.6 },
             label: {
               show: true,

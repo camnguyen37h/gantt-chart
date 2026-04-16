@@ -5,6 +5,7 @@ import {
   fetchCIClasses,
   fetchAttributeDefinitions,
   fetchConfigurationItems,
+  fetchCIRuleConfigs,
   createConfigurationItem,
   updateConfigurationItem,
   deleteConfigurationItem,
@@ -45,15 +46,17 @@ const ConfigurationItemsPage = () => {
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [viewingCI, setViewingCI] = useState(null)
 
+  const viewingCIClassId = viewingCI ? viewingCI.ciClassId : null
   // Attr defs for detail drawer (based on viewing CI class)
   const viewingCIAttrDefs = useSelector(
-    selectAttrDefsByClassId(viewingCI?.ciClassId || null)
+    selectAttrDefsByClassId(viewingCIClassId)
   )
 
   // Load initial data
   useEffect(() => {
     dispatch(fetchCIClasses())
     dispatch(fetchAttributeDefinitions())
+    dispatch(fetchCIRuleConfigs())
     dispatch(fetchAllRelationships())
   }, [dispatch])
 
@@ -135,13 +138,13 @@ const ConfigurationItemsPage = () => {
           setModalVisible(false)
           setEditingCI(null)
           // Refresh audit log if drawer will re-open for this CI
-          if (viewingCI?.id === id) {
+          if (viewingCI && viewingCI.id === id) {
             dispatch(fetchAuditLogByCI(id))
           }
         } else {
           notification.error({
             message: 'Update failed',
-            description: result.payload?.message,
+            description: result.payload && result.payload.message,
           })
         }
       } else {
@@ -152,12 +155,12 @@ const ConfigurationItemsPage = () => {
         } else {
           notification.error({
             message: 'Create failed',
-            description: result.payload?.message,
+            description: result.payload && result.payload.message,
           })
         }
       }
     },
-    [dispatch, viewingCI?.id]
+    [dispatch, viewingCI ? viewingCI.id : null]
   )
 
   const handleModalCancel = useCallback(() => {

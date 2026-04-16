@@ -40,7 +40,7 @@ const StatCard = ({ title, value, icon, color, subtitle, loading }) => (
               color: '#262626',
             }}
           >
-            {value ?? '—'}
+            {value !== undefined && value !== null ? value : '—'}
           </div>
           <div style={{ fontSize: 13, color: '#595959', marginTop: 4 }}>{title}</div>
           {subtitle && (
@@ -56,10 +56,10 @@ const StatCard = ({ title, value, icon, color, subtitle, loading }) => (
  * Row of KPI stat cards for the CMPlan dashboard.
  */
 const CIStatsCards = ({ stats, loading }) => {
-  const total = stats?.total ?? 0
-  const byStatus = Object.fromEntries((stats?.byStatus || []).map((s) => [s.status, s.count]))
+  const total = (stats && stats.total) || 0
+  const byStatus = Object.fromEntries(((stats && stats.byStatus) || []).map((s) => [s.status, s.count]))
   const byCriticality = Object.fromEntries(
-    (stats?.byCriticality || []).map((s) => [s.criticality, s.count])
+    ((stats && stats.byCriticality) || []).map((s) => [s.criticality, s.count])
   )
 
   const cards = [
@@ -72,21 +72,21 @@ const CIStatsCards = ({ stats, loading }) => {
     },
     {
       title: 'Active CIs',
-      value: byStatus.active ?? 0,
+      value: byStatus.active || 0,
       icon: 'check-circle',
       color: '#52c41a',
       subtitle: `${total > 0 ? Math.round(((byStatus.active || 0) / total) * 100) : 0}% of total`,
     },
     {
       title: 'In Maintenance',
-      value: byStatus.maintenance ?? 0,
+      value: byStatus.maintenance || 0,
       icon: 'tool',
       color: '#faad14',
       subtitle: 'Currently being serviced',
     },
     {
       title: 'Critical CIs',
-      value: byCriticality.critical ?? 0,
+      value: byCriticality.critical || 0,
       icon: 'warning',
       color: '#f5222d',
       subtitle: 'Highest priority items',

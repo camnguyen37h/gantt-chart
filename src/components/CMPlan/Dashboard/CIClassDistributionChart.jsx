@@ -6,7 +6,7 @@ import ReactECharts from 'echarts-for-react'
  * Donut chart showing CI distribution by class.
  */
 const CIClassDistributionChart = ({ stats, loading }) => {
-  const byClass = (stats?.byClass || []).filter((c) => c.count > 0)
+  const byClass = ((stats && stats.byClass) || []).filter((c) => c.count > 0)
 
   const option = {
     tooltip: {

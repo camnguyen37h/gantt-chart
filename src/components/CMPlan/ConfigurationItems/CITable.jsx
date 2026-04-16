@@ -50,7 +50,7 @@ const CITable = ({
                 width: 36,
                 height: 36,
                 borderRadius: 8,
-                background: `${cls?.color || '#1890ff'}18`,
+                background: `${(cls && cls.color) || '#1890ff'}18`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -58,8 +58,8 @@ const CITable = ({
               }}
             >
               <Icon
-                type={cls?.icon || 'profile'}
-                style={{ color: cls?.color || '#1890ff', fontSize: 16 }}
+                type={(cls && cls.icon) || 'profile'}
+                style={{ color: (cls && cls.color) || '#1890ff', fontSize: 16 }}
               />
             </div>
             <div style={{ minWidth: 0 }}>
@@ -77,7 +77,7 @@ const CITable = ({
                 {record.name}
               </div>
               <div style={{ fontSize: 11, color: '#8c8c8c' }}>
-                {cls?.label || record.ciClassId}
+                {(cls && cls.label) || record.ciClassId}
               </div>
             </div>
           </div>

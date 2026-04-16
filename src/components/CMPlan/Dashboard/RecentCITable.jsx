@@ -26,7 +26,7 @@ const RecentCITable = ({ recentItems, ciClasses, loading }) => {
                 width: 28,
                 height: 28,
                 borderRadius: 6,
-                background: `${cls?.color || '#1890ff'}18`,
+                background: `${(cls && cls.color) || '#1890ff'}18`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -34,15 +34,15 @@ const RecentCITable = ({ recentItems, ciClasses, loading }) => {
               }}
             >
               <Icon
-                type={cls?.icon || 'profile'}
-                style={{ color: cls?.color || '#1890ff', fontSize: 13 }}
+                type={(cls && cls.icon) || 'profile'}
+                style={{ color: (cls && cls.color) || '#1890ff', fontSize: 13 }}
               />
             </div>
             <div>
               <div style={{ fontWeight: 600, fontSize: 12, color: '#262626' }}>
                 {record.name}
               </div>
-              <div style={{ fontSize: 10, color: '#8c8c8c' }}>{cls?.label}</div>
+              <div style={{ fontSize: 10, color: '#8c8c8c' }}>{cls && cls.label}</div>
             </div>
           </div>
         )

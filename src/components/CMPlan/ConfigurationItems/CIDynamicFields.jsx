@@ -15,11 +15,23 @@ const { TextArea } = Input
  * Used inside CIFormModal when a CI class is selected.
  *
  * @param {Object} props
- * @param {Array}  props.attrDefs   - Attribute definitions for the selected class
- * @param {Object} props.form       - AntD Form instance
- * @param {Object} props.initialValues - Existing CI attributes for edit mode
+ * @param {Array}  props.attrDefs        - Attribute definitions for the selected class
+ * @param {Object} props.form            - AntD Form instance
+ * @param {Object} props.initialValues   - Existing CI attributes for edit mode
+ * @param {Array}  props.validationRules - CI Rule Configs with category=validation_rule
  */
-const CIDynamicFields = ({ attrDefs, form, initialValues = {} }) => {
+
+function tryBuildRegex(raw) {
+  if (!raw) return null
+  const m = String(raw).match(/^\/(.+)\/([gimsuy]*)$/)
+  try {
+    return m ? new RegExp(m[1], m[2]) : new RegExp(raw)
+  } catch (e) {
+    return null
+  }
+}
+
+const CIDynamicFields = ({ attrDefs, form, initialValues = {}, validationRules = [] }) => {
   const { getFieldDecorator } = form
 
   if (!attrDefs || attrDefs.length === 0) return null
@@ -37,11 +49,26 @@ const CIDynamicFields = ({ attrDefs, form, initialValues = {} }) => {
     } = attr
 
     const fieldKey = `attributes.${name}`
-    const initialValue = initialValues[name] ?? defaultValue ?? undefined
+    const rawInitial = initialValues[name]
+    const initialValue = (rawInitial !== undefined && rawInitial !== null) ? rawInitial : defaultValue
 
     const rules = []
     if (isRequired) {
       rules.push({ required: true, message: `${label} is required` })
+    }
+
+    // Apply regex validation rule from CI Configuration if assigned
+    if (attr.validationRuleId) {
+      const rule = validationRules.find((r) => r.id === attr.validationRuleId)
+      if (rule) {
+        const re = tryBuildRegex(rule.value)
+        if (re) {
+          rules.push({
+            pattern: re,
+            message: rule.description || `${label}: invalid format (${rule.name})`,
+          })
+        }
+      }
     }
 
     let fieldElement
@@ -127,7 +154,7 @@ const CIDynamicFields = ({ attrDefs, form, initialValues = {} }) => {
             placeholder={placeholder || 'https://...'}
           />
         )
-        if (isRequired) {
+        if (!attr.validationRuleId) {
           rules.push({ type: 'url', message: 'Please enter a valid URL' })
         }
         break
@@ -140,7 +167,7 @@ const CIDynamicFields = ({ attrDefs, form, initialValues = {} }) => {
             placeholder={placeholder || 'user@example.com'}
           />
         )
-        if (isRequired) {
+        if (!attr.validationRuleId) {
           rules.push({ type: 'email', message: 'Please enter a valid email' })
         }
         break
@@ -151,10 +178,13 @@ const CIDynamicFields = ({ attrDefs, form, initialValues = {} }) => {
             placeholder={placeholder || '192.168.1.1'}
           />
         )
-        rules.push({
-          pattern: /^(\d{1,3}\.){3}\d{1,3}$/,
-          message: 'Enter a valid IPv4 address',
-        })
+        // Basic IP format only applied when no CI Config rule is assigned
+        if (!attr.validationRuleId) {
+          rules.push({
+            pattern: /^(\d{1,3}\.){3}\d{1,3}$/,
+            message: 'Enter a valid IPv4 address',
+          })
+        }
         break
 
       case 'text':

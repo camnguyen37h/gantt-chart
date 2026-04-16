@@ -16,6 +16,7 @@ const AttributeDefinitionTable = ({
   onToggleActive,
   ciClassLabel,
   isGlobal = false,
+  validationRules = [],
 }) => {
   const handleDelete = useCallback(
     (id) => {
@@ -98,6 +99,24 @@ const AttributeDefinitionTable = ({
       key: 'type',
       width: 160,
       render: (type) => <AttributeTypeTag type={type} />,
+    },
+    {
+      title: 'Validation Rule',
+      dataIndex: 'validationRuleId',
+      key: 'validationRuleId',
+      width: 180,
+      render: (ruleId) => {
+        if (!ruleId) return <span style={{ color: '#bfbfbf' }}>—</span>
+        const rule = validationRules.find((r) => r.id === ruleId)
+        if (!rule) return <span style={{ color: '#bfbfbf' }}>—</span>
+        return (
+          <Tooltip title={rule.value}>
+            <Tag color="geekblue" style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {rule.name}
+            </Tag>
+          </Tooltip>
+        )
+      },
     },
     {
       title: 'Default',

@@ -10,6 +10,7 @@ import {
   MOCK_CI_GROUPS,
   MOCK_COMPLIANCE_POLICIES,
   MOCK_CI_AUDIT_LOG,
+  MOCK_CI_RULE_CONFIGS,
 } from './mockCMPlanData'
 
 // In-memory mutable stores (reset on page refresh)
@@ -18,6 +19,7 @@ let attributeDefinitions = [...MOCK_ATTRIBUTE_DEFINITIONS]
 let configurationItems = [...MOCK_CONFIGURATION_ITEMS]
 let ciRelationships = [...MOCK_CI_RELATIONSHIPS]
 let ciGroups = [...MOCK_CI_GROUPS]
+let ciRuleConfigs = [...MOCK_CI_RULE_CONFIGS]
 let compliancePolicies = [...MOCK_COMPLIANCE_POLICIES]
 let ciAuditLog = [...MOCK_CI_AUDIT_LOG]
 
@@ -512,6 +514,43 @@ const ciAuditLogApi = {
   },
 }
 
+// ── CI Rule Config ───────────────────────────────────────────────────────────
+const ciRuleConfigApi = {
+  getAll: async ({ category, name, value } = {}) => {
+    await delay()
+    let result = [...ciRuleConfigs]
+    if (category) result = result.filter((r) => r.category === category)
+    if (name) result = result.filter((r) => r.name.toLowerCase().includes(name.toLowerCase()))
+    if (value) result = result.filter((r) => r.value.toLowerCase().includes(value.toLowerCase()))
+    return successResponse(result.sort((a, b) => a.createdAt.localeCompare(b.createdAt)))
+  },
+
+  create: async (payload) => {
+    await delay()
+    const now = new Date().toISOString()
+    const created = { id: `cr-${uuidv4().slice(0, 8)}`, ...payload, createdAt: now, updatedAt: now }
+    ciRuleConfigs = [...ciRuleConfigs, created]
+    return successResponse(created)
+  },
+
+  update: async (id, payload) => {
+    await delay()
+    const idx = ciRuleConfigs.findIndex((r) => r.id === id)
+    if (idx === -1) return errorResponse('Rule config not found', 404)
+    const updated = { ...ciRuleConfigs[idx], ...payload, updatedAt: new Date().toISOString() }
+    ciRuleConfigs = ciRuleConfigs.map((r) => (r.id === id ? updated : r))
+    return successResponse(updated)
+  },
+
+  remove: async (id) => {
+    await delay()
+    const exists = ciRuleConfigs.find((r) => r.id === id)
+    if (!exists) return errorResponse('Rule config not found', 404)
+    ciRuleConfigs = ciRuleConfigs.filter((r) => r.id !== id)
+    return successResponse({ id })
+  },
+}
+
 export const cmplanApi = {
   ciClasses: ciClassesApi,
   attributeDefinitions: attributeDefinitionsApi,
@@ -520,4 +559,5 @@ export const cmplanApi = {
   groups: groupsApi,
   compliance: complianceApi,
   auditLog: ciAuditLogApi,
+  ciRuleConfig: ciRuleConfigApi,
 }

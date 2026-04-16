@@ -11,7 +11,7 @@ const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false)
   const location = useLocation()
 
-  const onCollapse = useCallback((value) => {
+  const onCollapse = useCallback(value => {
     setCollapsed(value)
   }, [])
 
@@ -26,19 +26,19 @@ const Sidebar = () => {
       collapsed={collapsed}
       onCollapse={onCollapse}
       width={240}
-      className="sidebar"
-    >
+      className="sidebar">
       <div className="sidebar-header">
         <Icon type="arrow-left" className="back-icon" />
-        {!collapsed && <span className="sidebar-title">Back to Project List</span>}
+        {!collapsed && (
+          <span className="sidebar-title">Back to Project List</span>
+        )}
       </div>
 
       <Menu
         mode="inline"
         selectedKeys={[location.pathname]}
         defaultOpenKeys={defaultOpenKeys}
-        className="sidebar-menu"
-      >
+        className="sidebar-menu">
         {/* ── Project Management ───────────────────────────────────────────── */}
         <AntSubMenu
           key="project-sub"
@@ -47,8 +47,7 @@ const Sidebar = () => {
               <Icon type="project" />
               <span>Project Mgmt</span>
             </span>
-          }
-        >
+          }>
           {[
             { key: '/project-overview', icon: 'bar-chart', title: 'Overview' },
             { key: '/project-schedule', icon: 'calendar', title: 'Schedule' },
@@ -57,11 +56,19 @@ const Sidebar = () => {
             { key: '/project-resources', icon: 'folder', title: 'Resources' },
             { key: '/project-kpi', icon: 'line-chart', title: 'KPI' },
             { key: '/project-inputs', icon: 'edit', title: 'Inputs' },
-            { key: '/project-information', icon: 'info-circle', title: 'Information' },
+            {
+              key: '/project-information',
+              icon: 'info-circle',
+              title: 'Information',
+            },
             { key: '/project-issues', icon: 'warning', title: 'Issues' },
-            { key: '/project-risks', icon: 'exclamation-circle', title: 'Risks' },
+            {
+              key: '/project-risks',
+              icon: 'exclamation-circle',
+              title: 'Risks',
+            },
             { key: '/project-monitoring', icon: 'eye', title: 'Monitoring' },
-          ].map((item) => (
+          ].map(item => (
             <Menu.Item key={item.key}>
               <Link to={item.key}>
                 <Icon type={item.icon} />
@@ -79,8 +86,7 @@ const Sidebar = () => {
               <Icon type="cluster" style={{ color: '#722ed1' }} />
               <span>CMPlan</span>
             </span>
-          }
-        >
+          }>
           <Menu.Item key="/cmplan/dashboard">
             <Link to="/cmplan/dashboard">
               <Icon type="dashboard" />
@@ -91,12 +97,6 @@ const Sidebar = () => {
             <Link to="/cmplan/configuration-items">
               <Icon type="database" />
               <span>Config Items</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="/cmplan/attribute-settings">
-            <Link to="/cmplan/attribute-settings">
-              <Icon type="setting" />
-              <span>Attr. Settings</span>
             </Link>
           </Menu.Item>
           <Menu.Item key="/cmplan/relationship-map">
@@ -117,23 +117,35 @@ const Sidebar = () => {
               <span>Group Map</span>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/cmplan/attribute-settings">
+            <Link to="/cmplan/attribute-settings">
+              <Icon type="setting" />
+              <span>Attr. Settings</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/cmplan/ci-config">
+            <Link to="/cmplan/ci-config">
+              <Icon type="tool" />
+              <span>CI Configuration</span>
+            </Link>
+          </Menu.Item>
         </AntSubMenu>
 
         {/* ── Existing Delivery ────────────────────────────────────────────── */}
-        <Menu.Item
-          key="/delivery/business-plan-list/494/business-plan-detail"
-        >
-          <Link to="/delivery/business-plan-list/494/business-plan-detail">
-            <Icon type="fund" />
-            <span>Business Plan</span>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="/relationship-overview">
-          <Link to="/relationship-overview">
-            <Icon type="share-alt" />
-            <span>Relationships</span>
-          </Link>
-        </Menu.Item>
+        {/*<Menu.Item*/}
+        {/*  key="/delivery/business-plan-list/494/business-plan-detail"*/}
+        {/*>*/}
+        {/*  <Link to="/delivery/business-plan-list/494/business-plan-detail">*/}
+        {/*    <Icon type="fund" />*/}
+        {/*    <span>Business Plan</span>*/}
+        {/*  </Link>*/}
+        {/*</Menu.Item>*/}
+        {/*<Menu.Item key="/relationship-overview">*/}
+        {/*  <Link to="/relationship-overview">*/}
+        {/*    <Icon type="share-alt" />*/}
+        {/*    <span>Relationships</span>*/}
+        {/*  </Link>*/}
+        {/*</Menu.Item>*/}
       </Menu>
     </Sider>
   )

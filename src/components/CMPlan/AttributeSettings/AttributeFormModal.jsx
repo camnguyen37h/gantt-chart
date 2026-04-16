@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   Form,
@@ -12,95 +12,89 @@ import {
   Alert,
   Row,
   Col,
+  Tooltip,
 } from 'antd'
 import { ATTR_TYPES } from '../../../utils/cmplan/cmplanConstants'
+
+// Types for which a regex validation rule is meaningful
+const TEXT_INPUT_TYPES = ['text', 'textarea', 'url', 'email', 'ip_address']
 
 const { Option } = Select
 const { TextArea } = Input
 
-/**
- * Modal for creating or editing an Attribute Definition.
- * Uses AntD v3 Form.create() pattern passed via wrappedComponentRef.
- */
-class AttributeFormModalInner extends React.Component {
-  state = {
-    optionInput: '',
-    options: [],
-  }
+const AttributeFormModalInner = ({
+  form,
+  visible,
+  onCancel,
+  editingRecord,
+  submitting,
+  ciClassLabel,
+  ciClassId,
+  onSubmit,
+  validationRules = [],
+}) => {
+  const [optionInput, setOptionInput] = useState('')
+  const [options, setOptions] = useState([])
+  const { getFieldDecorator, getFieldValue, setFieldsValue, resetFields, validateFields } = form
 
-  componentDidUpdate(prevProps) {
-    const { visible, editingRecord, form } = this.props
-    if (visible && !prevProps.visible) {
-      if (editingRecord) {
-        const { options, ...rest } = editingRecord
-        this.setState({ options: options || [] })
-        form.setFieldsValue({
-          name: rest.name,
-          label: rest.label,
-          type: rest.type,
-          isRequired: rest.isRequired,
-          defaultValue: rest.defaultValue || '',
-          placeholder: rest.placeholder || '',
-          description: rest.description || '',
-          sortOrder: rest.sortOrder,
-        })
-      } else {
-        this.setState({ options: [] })
-        form.resetFields()
-      }
+  useEffect(() => {
+    if (!visible) return
+    if (editingRecord) {
+      const { options: existingOptions, ...rest } = editingRecord
+      setOptions(existingOptions || [])
+      setFieldsValue({
+        name: rest.name,
+        label: rest.label,
+        type: rest.type,
+        isRequired: rest.isRequired,
+        defaultValue: rest.defaultValue || '',
+        placeholder: rest.placeholder || '',
+        description: rest.description || '',
+        sortOrder: rest.sortOrder,
+        validationRuleId: rest.validationRuleId ? rest.validationRuleId : undefined,
+      })
+    } else {
+      setOptions([])
+      resetFields()
     }
-  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible])
 
-  handleAddOption = () => {
-    const { optionInput } = this.state
+  const handleAddOption = () => {
     if (!optionInput.trim()) return
     const newOption = {
       label: optionInput.trim(),
       value: optionInput.trim().toLowerCase().replace(/\s+/g, '_'),
     }
-    this.setState((prev) => ({
-      options: [...prev.options, newOption],
-      optionInput: '',
-    }))
+    setOptions((prev) => [...prev, newOption])
+    setOptionInput('')
   }
 
-  handleRemoveOption = (value) => {
-    this.setState((prev) => ({
-      options: prev.options.filter((o) => o.value !== value),
-    }))
+  const handleRemoveOption = (value) => {
+    setOptions((prev) => prev.filter((o) => o.value !== value))
   }
 
-  handleSubmit = () => {
-    const { form, onSubmit, editingRecord, ciClassId } = this.props
-    const { options } = this.state
-    form.validateFields((err, values) => {
+  const handleSubmit = () => {
+    validateFields((err, values) => {
       if (err) return
       const hasOptions = ['select', 'multiselect'].includes(values.type)
+      const supportsValidationRule = TEXT_INPUT_TYPES.includes(values.type)
       onSubmit({
         ...values,
         ciClassId: ciClassId || null,
         options: hasOptions ? options : null,
+        validationRuleId: supportsValidationRule ? (values.validationRuleId || null) : null,
         ...(editingRecord ? { id: editingRecord.id } : {}),
       })
     })
   }
 
-  render() {
-    const {
-      visible,
-      onCancel,
-      editingRecord,
-      form,
-      submitting,
-      ciClassLabel,
-    } = this.props
-    const { getFieldDecorator, getFieldValue } = form
-    const { options, optionInput } = this.state
-    const isEditing = Boolean(editingRecord)
-    const currentType = getFieldValue('type')
-    const showOptions = ['select', 'multiselect'].includes(currentType)
+  const isEditing = Boolean(editingRecord)
+  const currentType = getFieldValue('type')
+  const showOptions = ['select', 'multiselect'].includes(currentType)
+  const showValidationRule = TEXT_INPUT_TYPES.includes(currentType)
 
-    return (
+  return (
       <Modal
         visible={visible}
         title={
@@ -128,7 +122,7 @@ class AttributeFormModalInner extends React.Component {
             key="submit"
             type="primary"
             loading={submitting}
-            onClick={this.handleSubmit}
+            onClick={handleSubmit}
           >
             {isEditing ? 'Save Changes' : 'Create Attribute'}
           </Button>,
@@ -208,6 +202,47 @@ class AttributeFormModalInner extends React.Component {
           </Row>
 
           <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                label={
+                  <span>
+                    Validation Rule
+                    <Tooltip title="Select a regex rule from CI Configuration to validate this field's value when creating/editing a CI. Only available for text-based types.">
+                      <Icon type="question-circle" style={{ marginLeft: 6, color: '#bfbfbf', fontSize: 12 }} />
+                    </Tooltip>
+                  </span>
+                }
+                extra={
+                  !showValidationRule && currentType
+                    ? 'Validation rules are only supported for: text, textarea, url, email, ip_address types.'
+                    : null
+                }
+              >
+                {getFieldDecorator('validationRuleId')(
+                  <Select
+                    placeholder={showValidationRule ? 'None (no regex validation)' : 'Select a text-based type first'}
+                    allowClear
+                    disabled={!showValidationRule}
+                    style={{ width: '100%' }}
+                  >
+                    {validationRules.map((rule) => (
+                      <Option key={rule.id} value={rule.id}>
+                        <span style={{ fontWeight: 500 }}>{rule.name}</span>
+                        <code style={{
+                          marginLeft: 8, fontSize: 11, color: '#389e0d',
+                          background: '#f6ffed', padding: '1px 5px', borderRadius: 3,
+                        }}>
+                          {rule.value}
+                        </code>
+                      </Option>
+                    ))}
+                  </Select>
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="Placeholder Text">
                 {getFieldDecorator('placeholder')(
@@ -282,7 +317,7 @@ class AttributeFormModalInner extends React.Component {
                     <Icon
                       type="close-circle"
                       style={{ color: '#f5222d', cursor: 'pointer' }}
-                      onClick={() => this.handleRemoveOption(opt.value)}
+                      onClick={() => handleRemoveOption(opt.value)}
                     />
                   </div>
                 ))}
@@ -292,10 +327,10 @@ class AttributeFormModalInner extends React.Component {
                 <Input
                   placeholder="Add option label (e.g. Production)"
                   value={optionInput}
-                  onChange={(e) => this.setState({ optionInput: e.target.value })}
-                  onPressEnter={this.handleAddOption}
+                  onChange={(e) => setOptionInput(e.target.value)}
+                  onPressEnter={handleAddOption}
                 />
-                <Button onClick={this.handleAddOption} icon="plus">
+                <Button onClick={handleAddOption} icon="plus">
                   Add
                 </Button>
               </div>
@@ -306,12 +341,7 @@ class AttributeFormModalInner extends React.Component {
           )}
         </Form>
       </Modal>
-    )
-  }
+  )
 }
-
-const AttributeFormModal = Form.create({ name: 'attribute_form' })(
-  AttributeFormModalInner
-)
-
+const AttributeFormModal = Form.create({ name: 'attribute_form' })(AttributeFormModalInner)
 export default AttributeFormModal

@@ -19,6 +19,8 @@ import {
   selectAllAttributeDefinitions,
   selectAttrDefsLoading,
   selectAttrDefsGroupedByClass,
+  fetchCIRuleConfigs,
+  selectCIRuleConfigs,
 } from '../../store/cmplan'
 import AttributeDefinitionTable from '../../components/CMPlan/AttributeSettings/AttributeDefinitionTable'
 import AttributeFormModal from '../../components/CMPlan/AttributeSettings/AttributeFormModal'
@@ -36,6 +38,8 @@ const AttributeSettingsPage = () => {
   const allAttrDefs = useSelector(selectAllAttributeDefinitions)
   const attrDefsLoading = useSelector(selectAttrDefsLoading)
   const groupedAttrDefs = useSelector(selectAttrDefsGroupedByClass)
+  const allRuleConfigs = useSelector(selectCIRuleConfigs)
+  const validationRules = allRuleConfigs.filter((r) => r.category === 'validation_rule')
 
   // Master-detail selection
   const [selectedId, setSelectedId] = useState('global')
@@ -54,6 +58,7 @@ const AttributeSettingsPage = () => {
   useEffect(() => {
     dispatch(fetchCIClasses())
     dispatch(fetchAttributeDefinitions())
+    dispatch(fetchCIRuleConfigs())
   }, [dispatch])
 
   const handleAdd = useCallback(() => {
@@ -74,7 +79,7 @@ const AttributeSettingsPage = () => {
       } else {
         notification.error({
           message: 'Delete failed',
-          description: result.payload?.message,
+          description: result.payload && result.payload.message,
         })
       }
     },
@@ -110,7 +115,7 @@ const AttributeSettingsPage = () => {
           } else {
             notification.error({
               message: 'Update failed',
-              description: result.payload?.message,
+              description: result.payload && result.payload.message,
             })
           }
         } else {
@@ -121,7 +126,7 @@ const AttributeSettingsPage = () => {
           } else {
             notification.error({
               message: 'Create failed',
-              description: result.payload?.message,
+              description: result.payload && result.payload.message,
             })
           }
         }
@@ -159,7 +164,7 @@ const AttributeSettingsPage = () => {
       } else {
         notification.error({
           message: 'Delete failed',
-          description: result.payload?.message,
+          description: result.payload && result.payload.message,
         })
       }
     },
@@ -178,7 +183,7 @@ const AttributeSettingsPage = () => {
         } else {
           notification.error({
             message: 'Update failed',
-            description: result.payload?.message,
+            description: result.payload && result.payload.message,
           })
         }
       } else {
@@ -190,7 +195,7 @@ const AttributeSettingsPage = () => {
         } else {
           notification.error({
             message: 'Create failed',
-            description: result.payload?.message,
+            description: result.payload && result.payload.message,
           })
         }
       }
@@ -206,7 +211,7 @@ const AttributeSettingsPage = () => {
   // Derived values for the selected class
   const selectedClass = selectedId === 'global' ? null : ciClasses.find((c) => c.id === selectedId)
   const modalCiClassId = selectedId === 'global' ? null : selectedId
-  const modalCiClassLabel = selectedId === 'global' ? 'Global' : selectedClass?.label
+  const modalCiClassLabel = selectedId === 'global' ? 'Global' : (selectedClass && selectedClass.label)
 
   // Filtered + paginated class list for the left panel
   const filteredClasses = useMemo(() => {
@@ -305,7 +310,7 @@ const AttributeSettingsPage = () => {
                 </span>
                 <span className="attr-class-item-label">Global</span>
                 <Badge
-                  count={groupedAttrDefs.global?.length || 0}
+                  count={(groupedAttrDefs.global && groupedAttrDefs.global.length) || 0}
                   style={{ backgroundColor: '#faad14' }}
                 />
               </div>
@@ -331,7 +336,7 @@ const AttributeSettingsPage = () => {
                   </span>
                   <span className="attr-class-item-label">{cls.label}</span>
                   <Badge
-                    count={groupedAttrDefs[cls.id]?.length || 0}
+                    count={(groupedAttrDefs[cls.id] && groupedAttrDefs[cls.id].length) || 0}
                     style={{ backgroundColor: cls.color }}
                   />
                   <span className="attr-class-item-actions">
@@ -347,7 +352,7 @@ const AttributeSettingsPage = () => {
                         <span>
                           Delete <strong>{cls.label}</strong>?<br />
                           <span style={{ color: '#ff4d4f', fontSize: 12 }}>
-                            {groupedAttrDefs[cls.id]?.length || 0} attribute(s) will also be removed.
+                            {(groupedAttrDefs[cls.id] && groupedAttrDefs[cls.id].length) || 0} attribute(s) will also be removed.
                           </span>
                         </span>
                       }
@@ -401,7 +406,7 @@ const AttributeSettingsPage = () => {
                     </div>
                   </div>
                   <Badge
-                    count={groupedAttrDefs.global?.length || 0}
+                    count={(groupedAttrDefs.global && groupedAttrDefs.global.length) || 0}
                     style={{ backgroundColor: '#faad14', fontSize: 13, height: 22, lineHeight: '22px', borderRadius: 11, padding: '0 9px' }}
                   />
                 </div>
@@ -416,6 +421,7 @@ const AttributeSettingsPage = () => {
                   dataSource={groupedAttrDefs.global || []}
                   loading={attrDefsLoading}
                   isGlobal
+                  validationRules={validationRules}
                   onAdd={handleAdd}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
@@ -451,7 +457,7 @@ const AttributeSettingsPage = () => {
                     </div>
                   </div>
                   <Badge
-                    count={groupedAttrDefs[selectedClass.id]?.length || 0}
+                    count={(groupedAttrDefs[selectedClass.id] && groupedAttrDefs[selectedClass.id].length) || 0}
                     style={{
                       backgroundColor: selectedClass.color,
                       fontSize: 13, height: 22, lineHeight: '22px',
@@ -473,6 +479,7 @@ const AttributeSettingsPage = () => {
                   dataSource={groupedAttrDefs[selectedClass.id] || []}
                   loading={attrDefsLoading}
                   ciClassLabel={selectedClass.label}
+                  validationRules={validationRules}
                   onAdd={handleAdd}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
@@ -496,6 +503,7 @@ const AttributeSettingsPage = () => {
         onSubmit={handleModalSubmit}
         onCancel={handleModalCancel}
         submitting={submitting}
+        validationRules={validationRules}
       />
 
       <CIClassFormModal

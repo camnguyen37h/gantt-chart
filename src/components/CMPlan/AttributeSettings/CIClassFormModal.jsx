@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   Modal,
   Form,
@@ -59,32 +59,28 @@ function labelToSlug(label = '') {
     .replace(/[^a-z0-9_]/g, '')
 }
 
-class CIClassFormModalInner extends Component {
-  handleSubmit = (e) => {
+const CIClassFormModalInner = ({ form, visible, onCancel, submitting, editingRecord, onSubmit }) => {
+  const { getFieldDecorator, getFieldValue, setFieldsValue, validateFields } = form
+  const isEdit = !!editingRecord
+  const previewIcon = getFieldValue('icon') || 'appstore'
+  const previewColor = getFieldValue('color') || '#1890ff'
+
+  const handleSubmit = (e) => {
     e.preventDefault()
-    const { form, onSubmit } = this.props
-    form.validateFields((err, values) => {
+    validateFields((err, values) => {
       if (err) return
       onSubmit(values)
     })
   }
 
-  handleLabelChange = (e) => {
-    const { form, editingRecord } = this.props
+  const handleLabelChange = (e) => {
     // Only auto-fill name if this is a new record
     if (!editingRecord) {
-      form.setFieldsValue({ name: labelToSlug(e.target.value) })
+      setFieldsValue({ name: labelToSlug(e.target.value) })
     }
   }
 
-  render() {
-    const { form, visible, onCancel, submitting, editingRecord } = this.props
-    const { getFieldDecorator, getFieldValue } = form
-    const isEdit = !!editingRecord
-    const previewIcon = getFieldValue('icon') || 'appstore'
-    const previewColor = getFieldValue('color') || '#1890ff'
-
-    return (
+  return (
       <Modal
         title={
           <span>
@@ -93,14 +89,14 @@ class CIClassFormModalInner extends Component {
           </span>
         }
         visible={visible}
-        onOk={this.handleSubmit}
+        onOk={handleSubmit}
         onCancel={onCancel}
         confirmLoading={submitting}
         okText={isEdit ? 'Save Changes' : 'Create Class'}
         destroyOnClose
         width={560}
       >
-        <Form layout="vertical" onSubmit={this.handleSubmit}>
+        <Form layout="vertical" onSubmit={handleSubmit}>
           <Row gutter={16}>
             <Col span={14}>
               <Form.Item label="Display Label">
@@ -112,7 +108,7 @@ class CIClassFormModalInner extends Component {
                 })(
                   <Input
                     placeholder="e.g. Virtual Machine"
-                    onChange={this.handleLabelChange}
+                    onChange={handleLabelChange}
                   />
                 )}
               </Form.Item>
@@ -260,8 +256,7 @@ class CIClassFormModalInner extends Component {
           </Row>
         </Form>
       </Modal>
-    )
-  }
+  )
 }
 
 const CIClassFormModal = Form.create({ name: 'ci_class_form' })(CIClassFormModalInner)
