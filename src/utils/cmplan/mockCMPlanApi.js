@@ -11,6 +11,7 @@ import {
   MOCK_COMPLIANCE_POLICIES,
   MOCK_CI_AUDIT_LOG,
   MOCK_CI_RULE_CONFIGS,
+  MOCK_CRM_DIRECTIONS,
 } from './mockCMPlanData'
 
 // In-memory mutable stores (reset on page refresh)
@@ -20,6 +21,7 @@ let configurationItems = [...MOCK_CONFIGURATION_ITEMS]
 let ciRelationships = [...MOCK_CI_RELATIONSHIPS]
 let ciGroups = [...MOCK_CI_GROUPS]
 let ciRuleConfigs = [...MOCK_CI_RULE_CONFIGS]
+let crmDirections = [...MOCK_CRM_DIRECTIONS]
 let compliancePolicies = [...MOCK_COMPLIANCE_POLICIES]
 let ciAuditLog = [...MOCK_CI_AUDIT_LOG]
 
@@ -551,6 +553,55 @@ const ciRuleConfigApi = {
   },
 }
 
+// ── CRM Directions ───────────────────────────────────────────────────────────
+const crmDirectionApi = {
+  getAll: async ({ sourceCIType, destinationCIType, jiraType } = {}) => {
+    await delay()
+    let result = [...crmDirections]
+    if (sourceCIType) result = result.filter((d) => d.sourceCIType === sourceCIType)
+    if (destinationCIType) result = result.filter((d) => d.destinationCIType === destinationCIType)
+    if (jiraType) result = result.filter((d) => d.jiraType === jiraType)
+    return successResponse(result.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)))
+  },
+
+  create: async (payload) => {
+    await delay()
+    const now = new Date().toISOString()
+    const created = {
+      id: 'crm-dir-' + uuidv4().slice(0, 8),
+      ...payload,
+      createdBy: 'current_user',
+      updatedBy: 'current_user',
+      createdAt: now,
+      updatedAt: now,
+    }
+    crmDirections = [...crmDirections, created]
+    return successResponse(created)
+  },
+
+  update: async (id, payload) => {
+    await delay()
+    const index = crmDirections.findIndex((d) => d.id === id)
+    if (index === -1) return errorResponse('CRM direction not found', 404)
+    const updated = {
+      ...crmDirections[index],
+      ...payload,
+      updatedBy: 'current_user',
+      updatedAt: new Date().toISOString(),
+    }
+    crmDirections = crmDirections.map((d) => (d.id === id ? updated : d))
+    return successResponse(updated)
+  },
+
+  remove: async (id) => {
+    await delay()
+    const exists = crmDirections.find((d) => d.id === id)
+    if (!exists) return errorResponse('CRM direction not found', 404)
+    crmDirections = crmDirections.filter((d) => d.id !== id)
+    return successResponse({ id })
+  },
+}
+
 export const cmplanApi = {
   ciClasses: ciClassesApi,
   attributeDefinitions: attributeDefinitionsApi,
@@ -560,4 +611,5 @@ export const cmplanApi = {
   compliance: complianceApi,
   auditLog: ciAuditLogApi,
   ciRuleConfig: ciRuleConfigApi,
+  crmDirection: crmDirectionApi,
 }

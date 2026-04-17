@@ -1,25 +1,25 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Table, Button, Input, Select, Card,
+  Table, Button, Select, Card,
   Popconfirm, notification, Tag, Icon,
   Spin, Tooltip,
 } from 'antd'
 import {
-  fetchCIRuleConfigs,
-  createCIRuleConfig,
-  updateCIRuleConfig,
-  deleteCIRuleConfig,
-  selectCIRuleConfigs,
-  selectCIRuleConfigLoading,
-  selectCIRuleConfigSubmitting,
+  fetchCRMDirections,
+  createCRMDirection,
+  updateCRMDirection,
+  deleteCRMDirection,
+  selectCRMDirections,
+  selectCRMDirectionLoading,
+  selectCRMDirectionSubmitting,
 } from '../../store/cmplan'
 import {
-  RULE_CONFIG_CATEGORIES,
-  RULE_CONFIG_CATEGORY_COLORS,
-  RULE_CONFIG_CATEGORY_VALUES,
+  CRM_SOURCE_CI_TYPES,
+  CRM_DESTINATION_CI_TYPES,
+  CRM_JIRA_TYPES,
 } from '../../utils/cmplan/cmplanConstants'
-import CIConfigFormModal from '../../components/CMPlan/CIConfig/CIConfigFormModal'
+import CRMDirectionFormModal from '../../components/CMPlan/CRMConfig/CRMDirectionFormModal'
 import './CMPlan.css'
 
 const { Option } = Select
@@ -30,66 +30,71 @@ const PAGE_SIZE = 10
 
 const FILTER_TYPE = {
   SELECT: 'select',
-  INPUT: 'input',
 }
 
 const MATCH_MODE = {
   EXACT: 'exact',
-  INCLUDES: 'includes',
 }
 
 const COLUMN_WIDTH = {
-  CATEGORY: 155,
-  NAME: 170,
-  VALUE_CODE_MAX: 340,
-  ACTION: 80,
+  SOURCE_CI_TYPE: 160,
+  DESTINATION_CI_TYPE: 180,
+  JIRA_TYPE: 130,
+  UPDATED_AT: 150,
+  UPDATED_BY: 120,
+  ACTION: 100,
 }
 
-const STAT_COLORS = {
-  VALIDATION_RULE: '#52c41a',
-  RELATIONSHIP_TYPE: '#722ed1',
+const TAG_COLORS = {
+  SOURCE_CI: 'blue',
+  DESTINATION_CI: 'green',
+  JIRA: 'orange',
 }
 
 // ── Filter config (declarative) ──────────────────────────────────────────────
 
 const FILTER_CONFIG = [
   {
-    key: 'category',
-    dataIndex: 'category',
+    key: 'sourceCIType',
+    dataIndex: 'sourceCIType',
     type: FILTER_TYPE.SELECT,
-    controlProps: { placeholder: 'Search Category', allowClear: true },
-    options: RULE_CONFIG_CATEGORIES,
+    controlProps: { placeholder: 'Source CI Type', allowClear: true },
+    options: CRM_SOURCE_CI_TYPES,
     matchMode: MATCH_MODE.EXACT,
   },
   {
-    key: 'name',
-    dataIndex: 'name',
-    type: FILTER_TYPE.INPUT,
-    controlProps: {
-      placeholder: 'Name',
-      prefix: <Icon type="search" style={{ color: '#bfbfbf' }} />,
-      allowClear: true,
-    },
-    matchMode: MATCH_MODE.INCLUDES,
+    key: 'destinationCIType',
+    dataIndex: 'destinationCIType',
+    type: FILTER_TYPE.SELECT,
+    controlProps: { placeholder: 'Destination CI Type', allowClear: true },
+    options: CRM_DESTINATION_CI_TYPES,
+    matchMode: MATCH_MODE.EXACT,
+  },
+  {
+    key: 'jiraType',
+    dataIndex: 'jiraType',
+    type: FILTER_TYPE.SELECT,
+    controlProps: { placeholder: 'Jira Type', allowClear: true },
+    options: CRM_JIRA_TYPES,
+    matchMode: MATCH_MODE.EXACT,
   },
 ]
 
 const INITIAL_FILTER_VALUES = FILTER_CONFIG.reduce((result, filter) => {
-  result[filter.key] = filter.type === FILTER_TYPE.SELECT ? undefined : ''
+  result[filter.key] = undefined
   return result
 }, {})
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const getCategoryLabel = (categoryValue) => {
-  const matched = RULE_CONFIG_CATEGORIES.find((category) => category.value === categoryValue)
-  return matched ? matched.label : categoryValue
+const getLabelFromOptions = (options, value) => {
+  const matched = options.find((option) => option.value === value)
+  return matched ? matched.label : value
 }
 
 const countActiveFilters = (filterValues) => {
   return FILTER_CONFIG.filter((filter) => {
-    const currentValue = filterValues[filter.key]
-    return currentValue !== undefined && currentValue !== ''
+    return filterValues[filter.key] !== undefined
   }).length
 }
 
@@ -97,10 +102,8 @@ const applyFilters = (items, filterValues) => {
   return items.filter((item) => {
     return FILTER_CONFIG.every((filter) => {
       const filterValue = filterValues[filter.key]
-      if (filterValue === undefined || filterValue === null || filterValue === '') return true
-      if (filter.matchMode === MATCH_MODE.EXACT) return item[filter.dataIndex] === filterValue
-      const fieldText = String(item[filter.dataIndex] || '').toLowerCase()
-      return fieldText.includes(String(filterValue).toLowerCase())
+      if (filterValue === undefined || filterValue === null) return true
+      return item[filter.dataIndex] === filterValue
     })
   })
 }
@@ -109,59 +112,64 @@ const paginateData = (data, currentPage, pageSize) => {
   return data.slice((currentPage - 1) * pageSize, currentPage * pageSize)
 }
 
+const formatDate = (dateString) => {
+  if (!dateString) return '—'
+  const date = new Date(dateString)
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return day + '/' + month + '/' + year
+}
+
 // ── Column definitions ───────────────────────────────────────────────────────
 
 const buildColumns = (onEdit, onDelete) => [
   {
-    title: 'Category',
-    dataIndex: 'category',
-    width: COLUMN_WIDTH.CATEGORY,
-    render: (categoryValue) => (
-      <Tag color={RULE_CONFIG_CATEGORY_COLORS[categoryValue]} style={{ fontSize: 11, margin: 0 }}>
-        {getCategoryLabel(categoryValue)}
+    title: 'Source CI Type',
+    dataIndex: 'sourceCIType',
+    width: COLUMN_WIDTH.SOURCE_CI_TYPE,
+    sorter: (rowA, rowB) => rowA.sourceCIType.localeCompare(rowB.sourceCIType),
+    render: (value) => (
+      <Tag color={TAG_COLORS.SOURCE_CI} style={{ margin: 0 }}>
+        {getLabelFromOptions(CRM_SOURCE_CI_TYPES, value)}
       </Tag>
     ),
   },
   {
-    title: 'Name',
-    dataIndex: 'name',
-    width: COLUMN_WIDTH.NAME,
-    sorter: (rowA, rowB) => rowA.name.localeCompare(rowB.name),
-    render: (text) => <span style={{ fontWeight: 600 }}>{text}</span>,
+    title: 'Destination CI Type',
+    dataIndex: 'destinationCIType',
+    width: COLUMN_WIDTH.DESTINATION_CI_TYPE,
+    sorter: (rowA, rowB) => rowA.destinationCIType.localeCompare(rowB.destinationCIType),
+    render: (value) => (
+      <Tag color={TAG_COLORS.DESTINATION_CI} style={{ margin: 0 }}>
+        {getLabelFromOptions(CRM_DESTINATION_CI_TYPES, value)}
+      </Tag>
+    ),
   },
   {
-    title: 'Value',
-    dataIndex: 'value',
-    render: (text, record) => {
-      const isRegex = record.category === RULE_CONFIG_CATEGORY_VALUES.VALIDATION_RULE
-      return (
-        <Tooltip title={text} placement="topLeft">
-          <code style={{
-            display: 'inline-block',
-            maxWidth: COLUMN_WIDTH.VALUE_CODE_MAX,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            verticalAlign: 'middle',
-            fontSize: 11,
-            background: isRegex ? '#f6ffed' : '#f9f0ff',
-            color: isRegex ? '#389e0d' : '#531dab',
-            padding: '2px 8px',
-            borderRadius: 3,
-            border: '1px solid ' + (isRegex ? '#b7eb8f' : '#d3adf7'),
-          }}>
-            {text}
-          </code>
-        </Tooltip>
-      )
-    },
+    title: 'Jira Type',
+    dataIndex: 'jiraType',
+    width: COLUMN_WIDTH.JIRA_TYPE,
+    render: (value) => (
+      <Tag color={TAG_COLORS.JIRA} style={{ margin: 0 }}>
+        {getLabelFromOptions(CRM_JIRA_TYPES, value)}
+      </Tag>
+    ),
   },
   {
-    title: 'Description',
-    dataIndex: 'description',
-    render: (text) => {
-      if (!text) return <span style={{ color: '#d9d9d9' }}>—</span>
-      return <span style={{ color: '#8c8c8c', fontSize: 12 }}>{text}</span>
+    title: 'Update At',
+    dataIndex: 'updatedAt',
+    width: COLUMN_WIDTH.UPDATED_AT,
+    sorter: (rowA, rowB) => rowA.updatedAt.localeCompare(rowB.updatedAt),
+    render: (value) => <span style={{ color: '#8c8c8c', fontSize: 12 }}>{formatDate(value)}</span>,
+  },
+  {
+    title: 'Update By',
+    dataIndex: 'updatedBy',
+    width: COLUMN_WIDTH.UPDATED_BY,
+    render: (value) => {
+      if (!value) return <span style={{ color: '#d9d9d9' }}>—</span>
+      return <span style={{ fontWeight: 500 }}>{value}</span>
     },
   },
   {
@@ -180,7 +188,7 @@ const buildColumns = (onEdit, onDelete) => [
           />
         </Tooltip>
         <Popconfirm
-          title="Delete this config?"
+          title="Delete this direction?"
           okText="Delete"
           okType="danger"
           cancelText="Cancel"
@@ -202,11 +210,11 @@ const buildColumns = (onEdit, onDelete) => [
 
 // ── Page Component ───────────────────────────────────────────────────────────
 
-const CIConfigPage = () => {
+const CRMConfigPage = () => {
   const dispatch = useDispatch()
-  const allItems = useSelector(selectCIRuleConfigs)
-  const loading = useSelector(selectCIRuleConfigLoading)
-  const submitting = useSelector(selectCIRuleConfigSubmitting)
+  const allItems = useSelector(selectCRMDirections)
+  const loading = useSelector(selectCRMDirectionLoading)
+  const submitting = useSelector(selectCRMDirectionSubmitting)
 
   const [filterValues, setFilterValues] = useState(INITIAL_FILTER_VALUES)
   const [pendingFilters, setPendingFilters] = useState(INITIAL_FILTER_VALUES)
@@ -215,23 +223,12 @@ const CIConfigPage = () => {
   const [editingRecord, setEditingRecord] = useState(null)
 
   useEffect(() => {
-    dispatch(fetchCIRuleConfigs())
+    dispatch(fetchCRMDirections())
   }, [dispatch])
 
   // ── Derived data ─────────────────────────────────────────────────────────
 
   const activeFilterCount = countActiveFilters(filterValues)
-
-  const stats = useMemo(() => {
-    let validationRuleCount = 0
-    let relationshipTypeCount = 0
-    for (let index = 0; index < allItems.length; index++) {
-      const category = allItems[index].category
-      if (category === RULE_CONFIG_CATEGORY_VALUES.VALIDATION_RULE) validationRuleCount++
-      else if (category === RULE_CONFIG_CATEGORY_VALUES.RELATIONSHIP_TYPE) relationshipTypeCount++
-    }
-    return { total: allItems.length, validationRuleCount, relationshipTypeCount }
-  }, [allItems])
 
   const filteredItems = useMemo(
     () => applyFilters(allItems, filterValues),
@@ -285,7 +282,7 @@ const CIConfigPage = () => {
   // ── CRUD handlers ────────────────────────────────────────────────────────
 
   const handleDelete = useCallback((recordId) => {
-    dispatch(deleteCIRuleConfig(recordId)).then((result) => {
+    dispatch(deleteCRMDirection(recordId)).then((result) => {
       if (result.error) {
         notification.error({
           message: 'Delete failed',
@@ -299,8 +296,8 @@ const CIConfigPage = () => {
 
   const handleSubmit = useCallback((formValues) => {
     const action = editingRecord
-      ? updateCIRuleConfig({ id: editingRecord.id, payload: formValues })
-      : createCIRuleConfig(formValues)
+      ? updateCRMDirection({ id: editingRecord.id, payload: formValues })
+      : createCRMDirection(formValues)
 
     dispatch(action).then((result) => {
       if (result.error) {
@@ -330,30 +327,18 @@ const CIConfigPage = () => {
     <div className="cmplan-page">
       <div className="cmplan-page-header">
         <div className="cmplan-page-header-left">
-          <Icon type="setting" className="cmplan-page-header-icon" />
+          <Icon type="api" className="cmplan-page-header-icon" />
           <div>
-            <p className="cmplan-page-title">CI Rule Configuration</p>
+            <p className="cmplan-page-title">CRM Configuration</p>
             <p className="cmplan-page-subtitle">
-              Manage validation rules and relationship types used across CI definitions.
+              Manage direction mappings between Source CI, Destination CI, and Jira ticket types.
             </p>
           </div>
         </div>
         <div className="cmplan-page-header-stats">
           <div className="cmplan-stat-pill">
-            <span className="cmplan-stat-pill-value">{stats.total}</span>
-            <span className="cmplan-stat-pill-label">Total</span>
-          </div>
-          <div className="cmplan-stat-pill">
-            <span className="cmplan-stat-pill-value" style={{ color: STAT_COLORS.VALIDATION_RULE }}>
-              {stats.validationRuleCount}
-            </span>
-            <span className="cmplan-stat-pill-label">Validation Rules</span>
-          </div>
-          <div className="cmplan-stat-pill">
-            <span className="cmplan-stat-pill-value" style={{ color: STAT_COLORS.RELATIONSHIP_TYPE }}>
-              {stats.relationshipTypeCount}
-            </span>
-            <span className="cmplan-stat-pill-label">Relationship Types</span>
+            <span className="cmplan-stat-pill-value">{allItems.length}</span>
+            <span className="cmplan-stat-pill-label">Total Directions</span>
           </div>
         </div>
       </div>
@@ -363,25 +348,16 @@ const CIConfigPage = () => {
           <div style={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', flexWrap: 'wrap' }}>
             {FILTER_CONFIG.map((filter) => (
               <div key={filter.key} style={{ width: 200, marginRight: 8, marginBottom: 4 }}>
-                {filter.type === FILTER_TYPE.SELECT ? (
-                  <Select
-                    {...filter.controlProps}
-                    style={{ width: '100%' }}
-                    value={pendingFilters[filter.key]}
-                    onChange={(selectedValue) => handlePendingFilterChange(filter.key, selectedValue)}
-                  >
-                    {(filter.options || []).map((option) => (
-                      <Option key={option.value} value={option.value}>{option.label}</Option>
-                    ))}
-                  </Select>
-                ) : (
-                  <Input
-                    {...filter.controlProps}
-                    value={pendingFilters[filter.key]}
-                    onChange={(event) => handlePendingFilterChange(filter.key, event.target.value)}
-                    onPressEnter={handleSearch}
-                  />
-                )}
+                <Select
+                  {...filter.controlProps}
+                  style={{ width: '100%' }}
+                  value={pendingFilters[filter.key]}
+                  onChange={(selectedValue) => handlePendingFilterChange(filter.key, selectedValue)}
+                >
+                  {(filter.options || []).map((option) => (
+                    <Option key={option.value} value={option.value}>{option.label}</Option>
+                  ))}
+                </Select>
               </div>
             ))}
             <div style={{ whiteSpace: 'nowrap', marginBottom: 4 }}>
@@ -409,7 +385,7 @@ const CIConfigPage = () => {
               onClick={handleOpenCreateModal}
               style={{ display: 'inline-flex', alignItems: 'center' }}
             >
-              New CI RuleConfig
+              Create Direction
             </Button>
           </div>
         </div>
@@ -437,8 +413,8 @@ const CIConfigPage = () => {
                 <div style={{ padding: '32px 0', color: '#bfbfbf' }}>
                   <Icon type="inbox" style={{ fontSize: 32, marginBottom: 8, display: 'block' }} />
                   {activeFilterCount > 0
-                    ? 'No records match the current filters'
-                    : 'No CI rule configs yet'}
+                    ? 'No directions match the current filters'
+                    : 'No CRM directions yet'}
                 </div>
               ),
             }}
@@ -446,7 +422,7 @@ const CIConfigPage = () => {
         </Spin>
       </Card>
 
-      <CIConfigFormModal
+      <CRMDirectionFormModal
         visible={modalVisible}
         editingRecord={editingRecord}
         submitting={submitting}
@@ -457,4 +433,4 @@ const CIConfigPage = () => {
   )
 }
 
-export default CIConfigPage
+export default CRMConfigPage

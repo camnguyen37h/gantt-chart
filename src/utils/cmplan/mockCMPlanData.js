@@ -1590,3 +1590,57 @@ export const MOCK_CI_RULE_CONFIGS = [
     updatedAt: '2025-01-10T08:00:00Z',
   },
 ]
+
+// ── CRM Directions ───────────────────────────────────────────────────────────
+export const MOCK_CRM_DIRECTIONS = [
+  {
+    id: 'crm-dir-001',
+    sourceCIType: 'user',
+    destinationCIType: 'email',
+    jiraType: 'user',
+    createdBy: 'admin',
+    updatedBy: 'kdquan',
+    createdAt: '2024-11-15T09:00:00Z',
+    updatedAt: '2024-12-06T14:30:00Z',
+  },
+  {
+    id: 'crm-dir-002',
+    sourceCIType: 'account',
+    destinationCIType: 'contact',
+    jiraType: 'task',
+    createdBy: 'admin',
+    updatedBy: 'admin',
+    createdAt: '2024-11-20T10:00:00Z',
+    updatedAt: '2024-11-20T10:00:00Z',
+  },
+  {
+    id: 'crm-dir-003',
+    sourceCIType: 'lead',
+    destinationCIType: 'opportunity',
+    jiraType: 'story',
+    createdBy: 'kdquan',
+    updatedBy: 'kdquan',
+    createdAt: '2024-12-01T11:00:00Z',
+    updatedAt: '2024-12-05T16:00:00Z',
+  },
+  {
+    id: 'crm-dir-004',
+    sourceCIType: 'contact',
+    destinationCIType: 'account',
+    jiraType: 'bug',
+    createdBy: 'admin',
+    updatedBy: 'thnguyen',
+    createdAt: '2024-12-02T08:30:00Z',
+    updatedAt: '2024-12-04T09:15:00Z',
+  },
+  {
+    id: 'crm-dir-005',
+    sourceCIType: 'user',
+    destinationCIType: 'lead',
+    jiraType: 'epic',
+    createdBy: 'thnguyen',
+    updatedBy: 'thnguyen',
+    createdAt: '2024-12-03T13:00:00Z',
+    updatedAt: '2024-12-03T13:00:00Z',
+  },
+]

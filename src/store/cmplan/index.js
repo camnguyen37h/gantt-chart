@@ -6,6 +6,7 @@ import ciRelationshipsReducer from './ciRelationshipsSlice'
 import ciGroupsReducer from './ciGroupsSlice'
 import ciAuditLogReducer from './ciAuditLogSlice'
 import ciRuleConfigReducer from './ciRuleConfigSlice'
+import crmDirectionReducer from './crmDirectionSlice'
 
 const cmplanReducer = combineReducers({
   ciClasses: ciClassesReducer,
@@ -15,6 +16,7 @@ const cmplanReducer = combineReducers({
   ciGroups: ciGroupsReducer,
   ciAuditLog: ciAuditLogReducer,
   ciRuleConfig: ciRuleConfigReducer,
+  crmDirection: crmDirectionReducer,
 })
 
 export default cmplanReducer
@@ -27,3 +29,4 @@ export * from './ciRelationshipsSlice'
 export * from './ciGroupsSlice'
 export * from './ciAuditLogSlice'
 export * from './ciRuleConfigSlice'
+export * from './crmDirectionSlice'

@@ -177,3 +177,47 @@ export const GROUP_TYPES = [
 export const GROUP_TYPE_MAP = Object.fromEntries(
   GROUP_TYPES.map((t) => [t.value, t])
 )
+
+// ── CI Rule Config ───────────────────────────────────────────────────────────
+export const RULE_CONFIG_CATEGORY_VALUES = {
+  VALIDATION_RULE: 'validation_rule',
+  RELATIONSHIP_TYPE: 'relationship_type',
+}
+
+export const RULE_CONFIG_CATEGORIES = [
+  { value: RULE_CONFIG_CATEGORY_VALUES.VALIDATION_RULE,   label: 'Validation Rule' },
+  { value: RULE_CONFIG_CATEGORY_VALUES.RELATIONSHIP_TYPE, label: 'Relationship Type' },
+]
+
+export const RULE_CONFIG_CATEGORY_COLORS = {
+  [RULE_CONFIG_CATEGORY_VALUES.VALIDATION_RULE]:   'geekblue',
+  [RULE_CONFIG_CATEGORY_VALUES.RELATIONSHIP_TYPE]: 'purple',
+}
+
+// ── CRM Direction ────────────────────────────────────────────────────────────
+export const CRM_SOURCE_CI_TYPES = [
+  { value: 'user',          label: 'User' },
+  { value: 'email',         label: 'Email' },
+  { value: 'account',       label: 'Account' },
+  { value: 'contact',       label: 'Contact' },
+  { value: 'lead',          label: 'Lead' },
+  { value: 'opportunity',   label: 'Opportunity' },
+]
+
+export const CRM_DESTINATION_CI_TYPES = [
+  { value: 'user',          label: 'User' },
+  { value: 'email',         label: 'Email' },
+  { value: 'account',       label: 'Account' },
+  { value: 'contact',       label: 'Contact' },
+  { value: 'lead',          label: 'Lead' },
+  { value: 'opportunity',   label: 'Opportunity' },
+]
+
+export const CRM_JIRA_TYPES = [
+  { value: 'user',    label: 'User' },
+  { value: 'bug',     label: 'Bug' },
+  { value: 'task',    label: 'Task' },
+  { value: 'story',   label: 'Story' },
+  { value: 'epic',    label: 'Epic' },
+  { value: 'subtask', label: 'Sub-task' },
+]

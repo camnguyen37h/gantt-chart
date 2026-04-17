@@ -83,7 +83,7 @@ const Sidebar = () => {
           key="cmplan-sub"
           title={
             <span>
-              <Icon type="cluster" style={{ color: '#722ed1' }} />
+              <Icon type="deployment-unit" style={{ color: '#722ed1' }} />
               <span>CMPlan</span>
             </span>
           }>
@@ -127,6 +127,12 @@ const Sidebar = () => {
             <Link to="/cmplan/ci-config">
               <Icon type="tool" />
               <span>CI Configuration</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/cmplan/crm-config">
+            <Link to="/cmplan/crm-config">
+              <Icon type="api" />
+              <span>CRM Configuration</span>
             </Link>
           </Menu.Item>
         </AntSubMenu>
