@@ -19,6 +19,8 @@ import GroupsPage from './pages/CMPlan/GroupsPage'
 import GroupMapPage from './pages/CMPlan/GroupMapPage'
 import CIConfigPage from './pages/CMPlan/CIConfigPage'
 import CRMConfigPage from './pages/CMPlan/CRMConfigPage'
+import BulkAddRelationshipPage from './pages/CMPlan/BulkAddRelationshipPage'
+import RelationshipListPage from './pages/CMPlan/RelationshipListPage'
 import 'react-notifications/lib/notifications.css'
 import './App.css'
 
@@ -96,6 +98,16 @@ const App = () => {
                   exact
                   path="/cmplan/crm-config"
                   component={CRMConfigPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/bulk-add-relationships"
+                  component={BulkAddRelationshipPage}
+                />
+                <Route
+                  exact
+                  path="/cmplan/relationships"
+                  component={RelationshipListPage}
                 />
                 <Route
                   path="/cmplan"

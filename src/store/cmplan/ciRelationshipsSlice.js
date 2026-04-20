@@ -38,11 +38,30 @@ export const updateRelationship = createAsyncThunk(
   }
 )
 
+export const fetchExistingRelationshipPairs = createAsyncThunk(
+  'cmplan/ciRelationships/fetchExistingPairs',
+  async (_, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.getExistingPairs()
+    if (!res.success) return rejectWithValue(res.message)
+    return res.data
+  }
+)
+
+export const bulkCreateRelationships = createAsyncThunk(
+  'cmplan/ciRelationships/bulkCreate',
+  async (relationships, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.bulkCreate(relationships)
+    if (!res.success) return rejectWithValue(res.error && res.error.message || 'Bulk create failed')
+    return res.data
+  }
+)
+
 // ── Slice ─────────────────────────────────────────────────────────────────────
 const ciRelationshipsSlice = createSlice({
   name: 'ciRelationships',
   initialState: {
     items: [],
+    existingPairs: [],
     loading: false,
     submitting: false,
     error: null,
@@ -89,6 +108,31 @@ const ciRelationshipsSlice = createSlice({
         state.submitting = false
         state.error = action.payload
       })
+      .addCase(fetchExistingRelationshipPairs.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchExistingRelationshipPairs.fulfilled, (state, action) => {
+        state.loading = false
+        state.existingPairs = action.payload
+      })
+      .addCase(fetchExistingRelationshipPairs.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      .addCase(bulkCreateRelationships.pending, (state) => {
+        state.submitting = true
+      })
+      .addCase(bulkCreateRelationships.fulfilled, (state, action) => {
+        state.submitting = false
+        state.items = [...state.items, ...action.payload.created]
+        // Use pair strings returned by API directly — no FE string construction
+        state.existingPairs = [...state.existingPairs, ...action.payload.createdPairs]
+      })
+      .addCase(bulkCreateRelationships.rejected, (state, action) => {
+        state.submitting = false
+        state.error = action.payload
+      })
   },
 })
 
@@ -96,6 +140,7 @@ export default ciRelationshipsSlice.reducer
 
 // ── Selectors ─────────────────────────────────────────────────────────────────
 export const selectAllRelationships = (state) => state.cmplan.ciRelationships.items
+export const selectExistingRelationshipPairs = (state) => state.cmplan.ciRelationships.existingPairs
 export const selectRelationshipsLoading = (state) => state.cmplan.ciRelationships.loading
 export const selectRelationshipsSubmitting = (state) => state.cmplan.ciRelationships.submitting
 

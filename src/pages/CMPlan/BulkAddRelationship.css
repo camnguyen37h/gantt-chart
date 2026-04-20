@@ -1,0 +1,530 @@
+/* ── Bulk Add Relationship Page ────────────────────────────────────────────── */
+
+/* Page header */
+.bulk-rel-page-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.bulk-rel-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.bulk-rel-page-subtitle {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin: 0;
+}
+
+/* Overlap warning */
+.bulk-rel-warning {
+  background: #fff7e6;
+  border: 1px solid #ffe58f;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #ad6800;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Selection Panels ─────────────────────────────────────────────────────── */
+.bulk-rel-panels {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bulk-rel-panel {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #e6e9f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.bulk-rel-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef0f5;
+  background: #fafbfd;
+}
+
+.bulk-rel-panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #434343;
+}
+
+.bulk-rel-panel-count {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+.bulk-rel-panel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+  flex-wrap: wrap;
+}
+
+.bulk-rel-panel-list {
+  overflow-y: auto;
+  background: #fff;
+}
+
+.bulk-rel-panel-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid #f5f6f8;
+}
+
+.bulk-rel-panel-item:hover {
+  background: #f0f5ff;
+}
+
+.bulk-rel-panel-item--selected {
+  background: #e6f7ff;
+}
+
+.bulk-rel-panel-item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.bulk-rel-panel-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bulk-rel-panel-item-class {
+  font-size: 11px;
+  color: #8c8c8c;
+  margin-top: 1px;
+}
+
+.bulk-rel-panel-tags {
+  padding: 10px 14px;
+  border-top: 1px solid #eef0f5;
+  background: #fafbfd;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+/* ── Rules Section ────────────────────────────────────────────────────────── */
+.bulk-rel-rules-section {
+  background: #fff;
+  border: 1px solid #e6e9f0;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.bulk-rel-rules-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef0f5;
+  background: #fafbfd;
+}
+
+.bulk-rel-rules-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #434343;
+}
+
+.bulk-rel-rules-count {
+  font-size: 12px;
+  color: #5b6abf;
+  font-weight: 600;
+}
+
+.bulk-rel-rules-list {
+  padding: 16px 18px;
+}
+
+.bulk-rel-rule-card {
+  border: 1px solid #e6e9f0;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.bulk-rel-rule-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafbfd;
+}
+
+.bulk-rel-rule-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #52c41a;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.bulk-rel-rule-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #434343;
+}
+
+.bulk-rel-rule-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 18px 16px;
+  flex-wrap: wrap;
+}
+
+.bulk-rel-rule-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bulk-rel-rule-field--targets {
+  flex: 1;
+  min-width: 200px;
+}
+
+.bulk-rel-rule-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8c8c8c;
+}
+
+/* Direction toggle — custom pill buttons */
+.bulk-rel-rule-direction-toggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bulk-rel-dir-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #fff;
+  color: #595959;
+  border-right: 1px solid #d9d9d9;
+  user-select: none;
+}
+
+.bulk-rel-dir-btn:last-child {
+  border-right: none;
+}
+
+.bulk-rel-dir-btn:hover {
+  background: #f0f5ff;
+}
+
+.bulk-rel-dir-btn--active {
+  background: #5b6abf;
+  color: #fff;
+  border-color: #5b6abf;
+}
+
+.bulk-rel-dir-btn--active:hover {
+  background: #4a59a8;
+}
+
+.bulk-rel-rule-target-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 12px;
+  background: #fafbfd;
+  border: 1px dashed #d9dce6;
+  border-radius: 6px;
+  min-height: 40px;
+  align-items: center;
+}
+
+.bulk-rel-add-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-top: 1px dashed #d9dce6;
+  color: #5b6abf;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bulk-rel-add-rule:hover {
+  background: #f0f0ff;
+}
+
+/* ── Preview Section ──────────────────────────────────────────────────────── */
+.bulk-rel-preview-section {
+  background: #fff;
+  border: 1px solid #e6e9f0;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.bulk-rel-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #eef0f5;
+  background: #fafbfd;
+}
+
+.bulk-rel-preview-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #434343;
+}
+
+.bulk-rel-preview-count {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-weight: 500;
+}
+
+.bulk-rel-preview-list {
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.bulk-rel-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 12px;
+}
+
+/* Divider: right border on left-column items (odd) */
+.bulk-rel-preview-grid > .bulk-rel-preview-row:nth-child(odd) {
+  margin-right: 32px;
+}
+
+.bulk-rel-preview-row {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 13px;
+  transition: background 0.1s;
+  border-bottom: 1px solid #f5f6f8;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.bulk-rel-preview-row--alt {
+  background: #fafbfd;
+}
+
+.bulk-rel-preview-row:hover {
+  background: #f0f5ff;
+}
+
+.bulk-rel-preview-row--duplicate {
+  background: #fee2e2 !important;
+  border-left: 3px solid #ef4444;
+}
+
+.bulk-rel-preview-row--duplicate:hover {
+  background: #fecaca !important;
+}
+
+.bulk-rel-preview-row--duplicate .bulk-rel-tag-source,
+.bulk-rel-preview-row--duplicate .bulk-rel-tag-target {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.bulk-rel-preview-row--duplicate .bulk-rel-tag-type {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.bulk-rel-preview-row--duplicate .bulk-rel-preview-arrow {
+  opacity: 0.4;
+}
+
+.bulk-rel-preview-arrow {
+  margin: 0 10px;
+  color: #bfbfbf;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Preview tags — custom styled */
+.bulk-rel-tag-source {
+  background: #e8f4fd;
+  color: #1a6fb5;
+  border: 1px solid #b3d9f2;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.bulk-rel-tag-type {
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.bulk-rel-tag-target {
+  background: #e8fce8;
+  color: #2d8a2d;
+  border: 1px solid #b3e6b3;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+.bulk-rel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #fafbfd;
+  border: 1px solid #e6e9f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.bulk-rel-footer-summary {
+  font-size: 13px;
+  color: #595959;
+}
+
+.bulk-rel-footer-summary strong {
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.bulk-rel-footer-actions {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Apply button — indigo/purple like Claude reference */
+.bulk-rel-apply-btn {
+  background: #5b6abf !important;
+  border-color: #5b6abf !important;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 0 20px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.bulk-rel-apply-btn:hover,
+.bulk-rel-apply-btn:focus {
+  background: #4a59a8 !important;
+  border-color: #4a59a8 !important;
+}
+
+.bulk-rel-apply-btn[disabled] {
+  background: #d9d9d9 !important;
+  border-color: #d9d9d9 !important;
+  color: #fff !important;
+}
+
+/* ── Validation Errors ────────────────────────────────────────────────────── */
+.bulk-rel-validation-errors {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: #fff1f0;
+  border: 1px solid #ffccc7;
+  border-radius: 10px;
+}
+
+.bulk-rel-validation-error-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #cf1322;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .bulk-rel-panels {
+    flex-direction: column;
+  }
+
+  .bulk-rel-rule-body {
+    gap: 16px;
+  }
+
+  .bulk-rel-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bulk-rel-preview-grid > .bulk-rel-preview-row:nth-child(odd) {
+    border-right: none;
+    margin-right: 0;
+  }
+
+  .bulk-rel-preview-grid > .bulk-rel-preview-row:nth-child(even) {
+    margin-left: 0;
+  }
+}

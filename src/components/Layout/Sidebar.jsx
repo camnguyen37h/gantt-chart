@@ -105,6 +105,12 @@ const Sidebar = () => {
               <span>Relationship Map</span>
             </Link>
           </Menu.Item>
+          <Menu.Item key="/cmplan/relationships">
+            <Link to="/cmplan/relationships">
+              <Icon type="deployment-unit" />
+              <span>Relationships</span>
+            </Link>
+          </Menu.Item>
           <Menu.Item key="/cmplan/groups">
             <Link to="/cmplan/groups">
               <Icon type="cluster" />
@@ -133,6 +139,12 @@ const Sidebar = () => {
             <Link to="/cmplan/crm-config">
               <Icon type="api" />
               <span>CRM Configuration</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/cmplan/bulk-add-relationships">
+            <Link to="/cmplan/bulk-add-relationships">
+              <Icon type="share-alt" />
+              <span>Bulk Add Relationships</span>
             </Link>
           </Menu.Item>
         </AntSubMenu>

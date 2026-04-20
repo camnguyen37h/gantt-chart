@@ -381,6 +381,70 @@ const relationshipsApi = {
     }
     return successResponse({ id })
   },
+
+  /**
+   * Lightweight endpoint — returns existing relationship keys as string[]
+   * Format: "sourceId-relationshipType-targetId"
+   */
+  getExistingPairs: async () => {
+    await delay()
+    const pairs = ciRelationships.map(
+      (r) => r.sourceId + '-' + r.relationshipType + '-' + r.targetId
+    )
+    return successResponse(pairs)
+  },
+
+  bulkCreate: async (relationships) => {
+    await delay(500)
+    if (!Array.isArray(relationships) || relationships.length === 0) {
+      return errorResponse('No relationships provided.', 400)
+    }
+    const created = []
+    const skippedDuplicates = []
+    for (const payload of relationships) {
+      const duplicate = ciRelationships.find(
+        (r) =>
+          r.sourceId === payload.sourceId &&
+          r.targetId === payload.targetId &&
+          r.relationshipType === payload.relationshipType
+      )
+      if (duplicate) {
+        skippedDuplicates.push(payload)
+        continue
+      }
+      const newRel = {
+        id: 'rel-' + uuidv4().slice(0, 8),
+        sourceId: payload.sourceId,
+        targetId: payload.targetId,
+        relationshipType: payload.relationshipType,
+        description: payload.description || '',
+        expiredDate: payload.expiredDate || null,
+        createdBy: 'current_user',
+        createdAt: new Date().toISOString(),
+      }
+      ciRelationships = [...ciRelationships, newRel]
+      created.push(newRel)
+      const srcCI = configurationItems.find((c) => c.id === payload.sourceId)
+      const tgtCI = configurationItems.find((c) => c.id === payload.targetId)
+      addAuditEntry({
+        ciId: payload.sourceId, action: 'rel_added',
+        meta: { relId: newRel.id, relType: payload.relationshipType, peerId: payload.targetId, peerName: (tgtCI && tgtCI.name) || payload.targetId, direction: 'outbound' },
+      })
+      addAuditEntry({
+        ciId: payload.targetId, action: 'rel_added',
+        meta: { relId: newRel.id, relType: payload.relationshipType, peerId: payload.sourceId, peerName: (srcCI && srcCI.name) || payload.sourceId, direction: 'inbound' },
+      })
+    }
+    return successResponse({
+      created,
+      createdPairs: created.map(
+        (r) => r.sourceId + '-' + r.relationshipType + '-' + r.targetId
+      ),
+      skippedDuplicates: skippedDuplicates.length,
+      totalCreated: created.length,
+      totalRequested: relationships.length,
+    })
+  },
 }
 
 // ── Groups ────────────────────────────────────────────────────────────────────
