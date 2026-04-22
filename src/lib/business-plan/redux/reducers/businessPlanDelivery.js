@@ -511,6 +511,12 @@ const businessPlanDeliverySlice = createSlice({
         : []
 
       state.listDUDelivery = filteredItems
+      // Reset selection to the first DU whenever the list reloads
+      // (e.g. after switching Onsite/Offshore view mode).
+      state.deliveryUnitDataDelivery =
+        filteredItems.length > 0 ? filteredItems[0] : {}
+      state.duValueDelivery =
+        filteredItems.length > 0 ? filteredItems[0].groupId : undefined
     })
 
     builder.addCase(getListDUByVersionDelivery.rejected, (state, action) => {
