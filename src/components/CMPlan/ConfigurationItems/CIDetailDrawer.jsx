@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import {
   Drawer,
   Descriptions,
@@ -660,6 +661,44 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
       )}
     </>
   )
+}
+
+CIDetailDrawer.propTypes = {
+  ci: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    ciClassId: PropTypes.string,
+    status: PropTypes.string,
+    criticality: PropTypes.string,
+    owner: PropTypes.string,
+    department: PropTypes.string,
+    environment: PropTypes.string,
+    location: PropTypes.string,
+    shortDescription: PropTypes.string,
+    complianceStatus: PropTypes.string,
+    createdBy: PropTypes.string,
+    updatedBy: PropTypes.string,
+    createdAt: PropTypes.string,
+    updatedAt: PropTypes.string,
+    attributes: PropTypes.object,
+  }),
+  visible: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  attrDefs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      key: PropTypes.string,
+      name: PropTypes.string,
+      type: PropTypes.string,
+      options: PropTypes.array,
+    })
+  ),
+}
+
+CIDetailDrawer.defaultProps = {
+  ci: null,
+  attrDefs: [],
 }
 
 export default CIDetailDrawer

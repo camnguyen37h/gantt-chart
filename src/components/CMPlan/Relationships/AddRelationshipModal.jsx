@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Modal, Form, Select, Input, Icon, Tag, DatePicker } from 'antd'
 import { RELATIONSHIP_TYPES } from '../../../utils/cmplan/cmplanConstants'
 import moment from 'moment'
@@ -160,8 +161,49 @@ const AddRelationshipModalInner = ({ form, visible, sourceCI, allCIs = [], submi
   )
 }
 
+AddRelationshipModalInner.propTypes = {
+  form: PropTypes.shape({
+    getFieldDecorator: PropTypes.func.isRequired,
+    validateFields: PropTypes.func.isRequired,
+    resetFields: PropTypes.func.isRequired,
+  }).isRequired,
+  visible: PropTypes.bool.isRequired,
+  sourceCI: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    classIcon: PropTypes.string,
+    classColor: PropTypes.string,
+  }).isRequired,
+  allCIs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ),
+  submitting: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+}
+
+AddRelationshipModalInner.defaultProps = {
+  allCIs: [],
+}
+
 const AddRelationshipModal = Form.create({ name: 'add_relationship_form' })(
   AddRelationshipModalInner
 )
+
+AddRelationshipModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  sourceCI: AddRelationshipModalInner.propTypes.sourceCI,
+  allCIs: AddRelationshipModalInner.propTypes.allCIs,
+  submitting: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+}
+
+AddRelationshipModal.defaultProps = {
+  allCIs: [],
+}
 
 export default AddRelationshipModal

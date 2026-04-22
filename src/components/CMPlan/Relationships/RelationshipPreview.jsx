@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { Tag, Empty } from 'antd'
 import { RELATIONSHIP_TYPE_COLORS } from '../../../utils/cmplan/bulkRelationshipConstants'
 import { getRelTypeLabel } from '../../../utils/cmplan/bulkRelationshipUtils'
@@ -66,6 +67,21 @@ const RelationshipPreview = ({
       </div>
     </div>
   )
+}
+
+RelationshipPreview.propTypes = {
+  previewItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      sourceId: PropTypes.string,
+      targetId: PropTypes.string,
+      relationshipType: PropTypes.string.isRequired,
+      sourceName: PropTypes.string.isRequired,
+      targetName: PropTypes.string.isRequired,
+      isDuplicate: PropTypes.bool.isRequired,
+      ruleId: PropTypes.string,
+    })
+  ).isRequired,
+  totalCount: PropTypes.number.isRequired,
 }
 
 export default RelationshipPreview

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react'
+import PropTypes from 'prop-types'
 import { Input, Select, Checkbox, Tag, Icon, Empty } from 'antd'
 import {
   CI_ENVIRONMENT_LABELS,
@@ -216,6 +217,31 @@ const CISelectionPanel = ({
       )}
     </div>
   )
+}
+
+CISelectionPanel.propTypes = {
+  title: PropTypes.string.isRequired,
+  allCIs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      ciClassId: PropTypes.string,
+      status: PropTypes.string,
+      shortDescription: PropTypes.string,
+      environment: PropTypes.string,
+    })
+  ).isRequired,
+  ciClasses: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      name: PropTypes.string,
+      icon: PropTypes.string,
+      color: PropTypes.string,
+    })
+  ).isRequired,
+  selectedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onSelectionChange: PropTypes.func.isRequired,
 }
 
 export default CISelectionPanel

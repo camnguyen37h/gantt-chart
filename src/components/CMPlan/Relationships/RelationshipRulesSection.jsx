@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import PropTypes from 'prop-types'
 import { Select, Button, Icon, Tag } from 'antd'
 import { RELATIONSHIP_TYPES } from '../../../utils/cmplan/cmplanConstants'
 import { DIRECTION_OUT, DIRECTION_IN } from '../../../utils/cmplan/bulkRelationshipConstants'
@@ -99,6 +100,24 @@ const RelationshipRuleCard = ({
   )
 }
 
+RelationshipRuleCard.propTypes = {
+  rule: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    relationshipType: PropTypes.string,
+    direction: PropTypes.oneOf([DIRECTION_OUT, DIRECTION_IN]).isRequired,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+  targetCIs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  canRemove: PropTypes.bool.isRequired,
+}
+
 const RelationshipRulesSection = ({
   rules,
   targetCIs,
@@ -133,6 +152,25 @@ const RelationshipRulesSection = ({
       </div>
     </div>
   )
+}
+
+RelationshipRulesSection.propTypes = {
+  rules: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      relationshipType: PropTypes.string,
+      direction: PropTypes.oneOf([DIRECTION_OUT, DIRECTION_IN]).isRequired,
+    })
+  ).isRequired,
+  targetCIs: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onUpdateRule: PropTypes.func.isRequired,
+  onRemoveRule: PropTypes.func.isRequired,
+  onAddRule: PropTypes.func.isRequired,
 }
 
 export default RelationshipRulesSection
