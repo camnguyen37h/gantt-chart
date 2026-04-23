@@ -10,9 +10,6 @@ import {
   createCIRuleConfig,
   updateCIRuleConfig,
   deleteCIRuleConfig,
-  selectCIRuleConfigs,
-  selectCIRuleConfigLoading,
-  selectCIRuleConfigSubmitting,
 } from '../../store/cmplan'
 import {
   RULE_CONFIG_CATEGORIES,
@@ -204,9 +201,9 @@ const buildColumns = (onEdit, onDelete) => [
 
 const CIConfigPage = () => {
   const dispatch = useDispatch()
-  const allItems = useSelector(selectCIRuleConfigs)
-  const loading = useSelector(selectCIRuleConfigLoading)
-  const submitting = useSelector(selectCIRuleConfigSubmitting)
+  const allItems = useSelector(state => state.cmplan.ciRuleConfig.items)
+  const loading = useSelector(state => state.cmplan.ciRuleConfig.loading)
+  const submitting = useSelector(state => state.cmplan.ciRuleConfig.submitting)
 
   const [filterValues, setFilterValues] = useState(INITIAL_FILTER_VALUES)
   const [pendingFilters, setPendingFilters] = useState(INITIAL_FILTER_VALUES)

@@ -9,10 +9,7 @@ import { useHistory } from 'react-router-dom'
 import {
   fetchAllRelationships,
   deleteRelationship,
-  selectAllRelationships,
-  selectRelationshipsLoading,
   fetchConfigurationItems,
-  selectCIItems,
 } from '../../store/cmplan'
 import {
   RELATIONSHIP_TYPES,
@@ -278,9 +275,9 @@ const buildColumns = (onDelete) => [
 const RelationshipListPage = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const allRelationships = useSelector(selectAllRelationships)
-  const ciItems = useSelector(selectCIItems)
-  const loading = useSelector(selectRelationshipsLoading)
+  const allRelationships = useSelector(state => state.cmplan.ciRelationships.items)
+  const ciItems = useSelector(state => state.cmplan.configurationItems.items)
+  const loading = useSelector(state => state.cmplan.ciRelationships.loading)
 
   const [filterValues, setFilterValues] = useState(INITIAL_FILTER_VALUES)
   const [pendingFilters, setPendingFilters] = useState(INITIAL_FILTER_VALUES)

@@ -1,10 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
-import { RELATIONSHIP_TYPES } from './cmplanConstants'
 import {
-  DEFAULT_RELATIONSHIP_TYPE,
-  DIRECTION_OUT,
-  MAX_SOURCE_CIS,
-  MAX_TARGET_CIS,
   MAX_RELATIONSHIPS_PER_BATCH,
 } from './bulkRelationshipConstants'
 
@@ -12,17 +7,11 @@ import {
 
 export const createEmptyRule = () => ({
   id: uuidv4(),
-  relationshipType: DEFAULT_RELATIONSHIP_TYPE,
-  direction: DIRECTION_OUT,
+  relationshipType: null,
 })
 
 export const buildRelationshipKey = (sourceId, relType, targetId) =>
   sourceId + '-' + relType + '-' + targetId
-
-export const getRelTypeLabel = (value) => {
-  const found = RELATIONSHIP_TYPES.find((t) => t.value === value)
-  return found ? found.label : value
-}
 
 const buildCIMap = (allCIs) => {
   const ciMap = {}
@@ -32,9 +21,61 @@ const buildCIMap = (allCIs) => {
   return ciMap
 }
 
+// ── CI Type Relationship processing ──────────────────────────────────────────
+
+/** Unique list of source CI types (value + label) from the triple matrix. */
+export const extractUniqueSourceTypes = (ciTypeRelationships) => {
+  const map = new Map()
+  ciTypeRelationships.forEach((r) => {
+    if (!map.has(r.ciTypeSource)) {
+      map.set(r.ciTypeSource, { value: r.ciTypeSource, label: r.ciTypeSourceValue || r.ciTypeSource })
+    }
+  })
+  return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label))
+}
+
+/** Unique list of target CI types (value + label) from the triple matrix. */
+export const extractUniqueTargetTypes = (ciTypeRelationships) => {
+  const map = new Map()
+  ciTypeRelationships.forEach((r) => {
+    if (!map.has(r.ciTypeTarget)) {
+      map.set(r.ciTypeTarget, { value: r.ciTypeTarget, label: r.ciTypeTargetValue || r.ciTypeTarget })
+    }
+  })
+  return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label))
+}
+
+/** Unique relationship-type options (value + label) across the full matrix. */
+export const extractAllRelationshipTypeOptions = (ciTypeRelationships) => {
+  const map = new Map()
+  ciTypeRelationships.forEach((r) => {
+    if (!map.has(r.typeConnection)) {
+      map.set(r.typeConnection, { value: r.typeConnection, label: r.typeConnectionValue })
+    }
+  })
+  return Array.from(map.values()).sort((a, b) => a.label.localeCompare(b.label))
+}
+
+/** Relationship-type values valid for a given (source, target) pair. */
+export const getValidRelationshipTypes = (ciTypeRelationships, sourceType, targetType) => {
+  if (!sourceType || !targetType) return new Set()
+  const set = new Set()
+  ciTypeRelationships.forEach((r) => {
+    if (r.ciTypeSource === sourceType && r.ciTypeTarget === targetType) {
+      set.add(r.typeConnection)
+    }
+  })
+  return set
+}
+
+export const getRelTypeLabel = (value, relTypeOptions) => {
+  const found = (relTypeOptions || []).find((t) => t.value === value)
+  return found ? found.label : value
+}
+
 // ── Preview generation ───────────────────────────────────────────────────────
 
-export const generatePreviewItems = (sourceCIs, targetCIs, rules, existingPairs, allCIs) => {
+export const generatePreviewItems = (sourceIds, targetIds, rules, existingPairs, allCIs) => {
   const ciMap = buildCIMap(allCIs)
   const existingKeys = new Set(existingPairs)
   const items = []
@@ -43,26 +84,23 @@ export const generatePreviewItems = (sourceCIs, targetCIs, rules, existingPairs,
   rules.forEach((rule) => {
     if (!rule.relationshipType) return
 
-    sourceCIs.forEach((sourceId) => {
-      targetCIs.forEach((targetId) => {
+    sourceIds.forEach((sourceId) => {
+      targetIds.forEach((targetId) => {
         if (sourceId === targetId) return
 
-        const actualSource = rule.direction === DIRECTION_OUT ? sourceId : targetId
-        const actualTarget = rule.direction === DIRECTION_OUT ? targetId : sourceId
-        const key = buildRelationshipKey(actualSource, rule.relationshipType, actualTarget)
-
+        const key = buildRelationshipKey(sourceId, rule.relationshipType, targetId)
         if (seenKeys.has(key)) return
         seenKeys.add(key)
 
-        const srcCI = ciMap[actualSource]
-        const tgtCI = ciMap[actualTarget]
+        const srcCI = ciMap[sourceId]
+        const tgtCI = ciMap[targetId]
 
         items.push({
-          sourceId: actualSource,
-          targetId: actualTarget,
+          sourceId,
+          targetId,
           relationshipType: rule.relationshipType,
-          sourceName: (srcCI && srcCI.name) || actualSource,
-          targetName: (tgtCI && tgtCI.name) || actualTarget,
+          sourceName: (srcCI && srcCI.name) || sourceId,
+          targetName: (tgtCI && tgtCI.name) || targetId,
           isDuplicate: existingKeys.has(key),
           ruleId: rule.id,
         })
@@ -75,8 +113,19 @@ export const generatePreviewItems = (sourceCIs, targetCIs, rules, existingPairs,
 
 // ── Validation ───────────────────────────────────────────────────────────────
 
-export const validateBulkRelationships = (sourceIds, targetIds, rules, newItemCount) => {
+export const validateBulkRelationships = ({
+  sourceType,
+  targetType,
+  sourceIds,
+  targetIds,
+  rules,
+  newItemCount,
+  validRelTypes,
+}) => {
   const errors = []
+
+  if (!sourceType) errors.push('Please select a source CI Type.')
+  if (!targetType) errors.push('Please select a target CI Type.')
 
   if (sourceIds.length === 0) {
     errors.push('Please select at least one source CI.')
@@ -84,30 +133,35 @@ export const validateBulkRelationships = (sourceIds, targetIds, rules, newItemCo
   if (targetIds.length === 0) {
     errors.push('Please select at least one target CI.')
   }
-  if (sourceIds.length > MAX_SOURCE_CIS) {
-    errors.push('Maximum ' + MAX_SOURCE_CIS + ' source CIs allowed.')
-  }
-  if (targetIds.length > MAX_TARGET_CIS) {
-    errors.push('Maximum ' + MAX_TARGET_CIS + ' target CIs allowed.')
-  }
 
   const hasValidRule = rules.some((r) => r.relationshipType)
   if (!hasValidRule) {
     errors.push('At least one rule must have a relationship type selected.')
   }
 
-  const ruleKeys = new Set()
+  // Each rule must reference a relationship type valid for the current (source,target) pair.
+  if (sourceType && targetType && validRelTypes) {
+    rules.forEach((r, idx) => {
+      if (r.relationshipType && !validRelTypes.has(r.relationshipType)) {
+        errors.push(
+          'Rule #' + (idx + 1) + ': relationship type is not available for the selected source \u2192 target CI Types.'
+        )
+      }
+    })
+  }
+
+  // Disallow duplicate relationship types across rules.
+  const seenTypes = new Set()
   rules.forEach((r) => {
     if (r.relationshipType) {
-      const rKey = r.relationshipType + '|' + r.direction
-      if (ruleKeys.has(rKey)) {
-        errors.push('Duplicate rule detected: same type and direction. Remove or change one.')
+      if (seenTypes.has(r.relationshipType)) {
+        errors.push('Duplicate rule detected: same relationship type used more than once.')
       }
-      ruleKeys.add(rKey)
+      seenTypes.add(r.relationshipType)
     }
   })
 
-  if (newItemCount === 0 && sourceIds.length > 0 && targetIds.length > 0) {
+  if (newItemCount === 0 && sourceIds.length > 0 && targetIds.length > 0 && hasValidRule) {
     errors.push('All generated relationships already exist. Nothing new to create.')
   }
 
@@ -144,3 +198,4 @@ export const buildSummaryParts = (sourceIds, targetIds, rules, newItemCount) => 
     total: newItemCount,
   }
 }
+

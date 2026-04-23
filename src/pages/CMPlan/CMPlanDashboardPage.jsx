@@ -3,26 +3,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, Card, Icon, Progress, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import {
-  fetchCIClasses,
+  fetchCITypes,
   fetchDashboardStats,
-  selectCIClasses,
-  selectDashboardStats,
-  selectStatsLoading,
 } from '../../store/cmplan'
 import CIStatsCards from '../../components/CMPlan/Dashboard/CIStatsCards'
-import CIClassDistributionChart from '../../components/CMPlan/Dashboard/CIClassDistributionChart'
+import CITypeDistributionChart from '../../components/CMPlan/Dashboard/CITypeDistributionChart'
 import CIStatusChart from '../../components/CMPlan/Dashboard/CIStatusChart'
 import RecentCITable from '../../components/CMPlan/Dashboard/RecentCITable'
 import './CMPlan.css'
 
 const CMPlanDashboardPage = () => {
   const dispatch = useDispatch()
-  const ciClasses = useSelector(selectCIClasses)
-  const stats = useSelector(selectDashboardStats)
-  const statsLoading = useSelector(selectStatsLoading)
+  const ciTypes = useSelector(state => state.cmplan.ciTypes.items)
+  const stats = useSelector(state => state.cmplan.configurationItems.dashboardStats)
+  const statsLoading = useSelector(state => state.cmplan.configurationItems.statsLoading)
 
   useEffect(() => {
-    dispatch(fetchCIClasses())
+    dispatch(fetchCITypes())
     dispatch(fetchDashboardStats())
   }, [dispatch])
 
@@ -58,7 +55,7 @@ const CMPlanDashboardPage = () => {
       {/* Charts Row */}
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={10}>
-          <CIClassDistributionChart stats={stats} loading={statsLoading} />
+          <CITypeDistributionChart stats={stats} loading={statsLoading} />
         </Col>
         <Col xs={24} lg={14}>
           <CIStatusChart stats={stats} loading={statsLoading} />
@@ -70,7 +67,7 @@ const CMPlanDashboardPage = () => {
         <Col xs={24} lg={16}>
           <RecentCITable
             recentItems={stats && stats.recent}
-            ciClasses={ciClasses}
+            ciTypes={ciTypes}
             loading={statsLoading}
           />
         </Col>

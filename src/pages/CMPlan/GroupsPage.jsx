@@ -23,10 +23,6 @@ import {
   createCIGroup,
   updateCIGroup,
   deleteCIGroup,
-  selectCIGroups,
-  selectCIGroupsLoading,
-  selectCIGroupsSubmitting,
-  selectCIItems,
 } from '../../store/cmplan'
 import { GROUP_TYPE_MAP } from '../../utils/cmplan/cmplanConstants'
 import GroupFormModal from '../../components/CMPlan/Groups/GroupFormModal'
@@ -144,10 +140,10 @@ const GroupDetailDrawer = ({ group, visible, onClose, onEdit, allCIs }) => {
 // ── Main page ─────────────────────────────────────────────────────────────────
 const GroupsPage = () => {
   const dispatch = useDispatch()
-  const groups = useSelector(selectCIGroups)
-  const loading = useSelector(selectCIGroupsLoading)
-  const submitting = useSelector(selectCIGroupsSubmitting)
-  const allCIs = useSelector(selectCIItems)
+  const groups = useSelector(state => state.cmplan.ciGroups.items)
+  const loading = useSelector(state => state.cmplan.ciGroups.loading)
+  const submitting = useSelector(state => state.cmplan.ciGroups.submitting)
+  const allCIs = useSelector(state => state.cmplan.configurationItems.items)
 
   const [modalVisible, setModalVisible] = useState(false)
   const [editingGroup, setEditingGroup] = useState(null)

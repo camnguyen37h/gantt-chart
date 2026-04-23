@@ -28,8 +28,8 @@ const AttributeFormModalInner = ({
   onCancel,
   editingRecord,
   submitting,
-  ciClassLabel,
-  ciClassId,
+  ciTypeLabel,
+  ciTypeId,
   onSubmit,
   validationRules = [],
 }) => {
@@ -81,7 +81,7 @@ const AttributeFormModalInner = ({
       const supportsValidationRule = TEXT_INPUT_TYPES.includes(values.type)
       onSubmit({
         ...values,
-        ciClassId: ciClassId || null,
+        ciTypeId: ciTypeId || null,
         options: hasOptions ? options : null,
         validationRuleId: supportsValidationRule ? (values.validationRuleId || null) : null,
         ...(editingRecord ? { id: editingRecord.id } : {}),
@@ -104,9 +104,9 @@ const AttributeFormModalInner = ({
               style={{ marginRight: 8, color: '#1890ff' }}
             />
             {isEditing ? 'Edit Attribute Definition' : 'New Attribute Definition'}
-            {ciClassLabel && (
+            {ciTypeLabel && (
               <span style={{ fontSize: 12, color: '#8c8c8c', marginLeft: 8 }}>
-                — {ciClassLabel}
+                — {ciTypeLabel}
               </span>
             )}
           </span>

@@ -24,13 +24,13 @@ const CITable = ({
   loading,
   total,
   pagination,
-  ciClasses,
+  ciTypes,
   onEdit,
   onDelete,
   onView,
   onPageChange,
 }) => {
-  const ciClassMap = Object.fromEntries(ciClasses.map((c) => [c.id, c]))
+  const ciTypeMap = Object.fromEntries(ciTypes.map((c) => [c.id, c]))
 
   const columns = [
     {
@@ -39,7 +39,7 @@ const CITable = ({
       fixed: 'left',
       width: 260,
       render: (_, record) => {
-        const cls = ciClassMap[record.ciClassId]
+        const cls = ciTypeMap[record.ciTypeId]
         return (
           <div
             style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
@@ -77,7 +77,7 @@ const CITable = ({
                 {record.name}
               </div>
               <div style={{ fontSize: 11, color: '#8c8c8c' }}>
-                {(cls && cls.label) || record.ciClassId}
+                {(cls && cls.label) || record.ciTypeId}
               </div>
             </div>
           </div>

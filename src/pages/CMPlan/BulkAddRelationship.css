@@ -311,6 +311,34 @@
   background: #f0f0ff;
 }
 
+.bulk-rel-add-rule--disabled {
+  cursor: not-allowed;
+  color: #bfbfbf;
+}
+
+.bulk-rel-add-rule--disabled:hover {
+  background: transparent;
+}
+
+.bulk-rel-warning--error {
+  background: #fff1f0;
+  border-color: #ffccc7;
+  color: #cf1322;
+}
+
+.bulk-rel-rule-warning {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  color: #cf1322;
+  margin-top: 6px;
+}
+
+.bulk-rel-rule-field--type {
+  flex: 1;
+  min-width: 260px;
+}
+
 /* ── Preview Section ──────────────────────────────────────────────────────── */
 .bulk-rel-preview-section {
   background: #fff;

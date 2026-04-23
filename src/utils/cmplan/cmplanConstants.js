@@ -1,7 +1,7 @@
 // CMPlan Constants — enums, label maps, color maps
 // Convention: all values are snake_case strings matching DB enums
 
-export const CI_CLASS_ICONS = {
+export const CI_TYPE_ICONS = {
   server: 'hdd',
   database: 'database',
   application: 'appstore',
@@ -12,7 +12,7 @@ export const CI_CLASS_ICONS = {
   middleware: 'api',
 }
 
-export const CI_CLASS_COLORS = {
+export const CI_TYPE_COLORS = {
   server: '#1890ff',
   database: '#722ed1',
   application: '#13c2c2',

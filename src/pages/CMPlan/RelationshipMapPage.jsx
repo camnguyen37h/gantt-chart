@@ -14,14 +14,9 @@ import {
 } from 'antd'
 import ReactECharts from 'echarts-for-react'
 import {
-  fetchCIClasses,
+  fetchCITypes,
   fetchConfigurationItems,
-  selectCIClasses,
-  selectCIItems,
-  selectCILoading,
   fetchAllRelationships,
-  selectAllRelationships,
-  selectRelationshipsLoading,
 } from '../../store/cmplan'
 import {
   CI_STATUS_LABELS,
@@ -39,17 +34,17 @@ const relTypeMap = Object.fromEntries(
 )
 
 // ── Build ECharts graph option ─────────────────────────────────────────────
-const buildGraphOption = (ciItems, relationships, ciClasses) => {
-  const classMap = Object.fromEntries(ciClasses.map((c) => [c.id, c]))
+const buildGraphOption = (ciItems, relationships, ciTypes) => {
+  const typeMap = Object.fromEntries(ciTypes.map((c) => [c.id, c]))
 
-  const categories = ciClasses.map((c) => ({
+  const categories = ciTypes.map((c) => ({
     name: c.label,
     itemStyle: { color: c.color },
   }))
 
   const nodes = ciItems.map((ci) => {
-    const cls = classMap[ci.ciClassId] || {}
-    const categoryIdx = ciClasses.findIndex((c) => c.id === ci.ciClassId)
+    const cls = typeMap[ci.ciTypeId] || {}
+    const categoryIdx = ciTypes.findIndex((c) => c.id === ci.ciTypeId)
     const size =
       ci.criticality === 'critical'
         ? 44
@@ -69,7 +64,7 @@ const buildGraphOption = (ciItems, relationships, ciClasses) => {
       // Extra data for tooltip
       ciStatus: ci.status,
       ciCriticality: ci.criticality,
-      ciClass: cls.label || ci.ciClassId,
+      ciType: cls.label || ci.ciTypeId,
       ciOwner: ci.owner || '—',
     }
   })
@@ -98,7 +93,7 @@ const buildGraphOption = (ciItems, relationships, ciClasses) => {
           const statusColor = CI_STATUS_COLORS[d.ciStatus] || '#d9d9d9'
           return [
             `<b style="font-size:13px">${d.name}</b>`,
-            `<span style="color:#8c8c8c">Class:</span> ${d.ciClass}`,
+            `<span style="color:#8c8c8c">Class:</span> ${d.ciType}`,
             `<span style="color:#8c8c8c">Status:</span> <span style="color:${statusColor};font-weight:600">${CI_STATUS_LABELS[d.ciStatus] || d.ciStatus}</span>`,
             `<span style="color:#8c8c8c">Criticality:</span> ${CI_CRITICALITY_LABELS[d.ciCriticality] || d.ciCriticality}`,
             `<span style="color:#8c8c8c">Owner:</span> ${d.ciOwner}`,
@@ -168,9 +163,9 @@ const buildGraphOption = (ciItems, relationships, ciClasses) => {
 }
 
 // ── Selected CI side panel ─────────────────────────────────────────────────
-const CINodePanel = ({ ci, ciClasses, relationships, allCIItems }) => {
+const CINodePanel = ({ ci, ciTypes, relationships, allCIItems }) => {
   if (!ci) return null
-  const cls = ciClasses.find((c) => c.id === ci.ciClassId)
+  const cls = ciTypes.find((c) => c.id === ci.ciTypeId)
   const rels = relationships.filter(
     (r) => r.sourceId === ci.id || r.targetId === ci.id
   )
@@ -247,24 +242,24 @@ const CINodePanel = ({ ci, ciClasses, relationships, allCIItems }) => {
 // ── Main page ─────────────────────────────────────────────────────────────
 const RelationshipMapPage = () => {
   const dispatch = useDispatch()
-  const ciClasses = useSelector(selectCIClasses)
-  const ciItems = useSelector(selectCIItems)
-  const ciLoading = useSelector(selectCILoading)
-  const relationships = useSelector(selectAllRelationships)
-  const relLoading = useSelector(selectRelationshipsLoading)
+  const ciTypes = useSelector(state => state.cmplan.ciTypes.items)
+  const ciItems = useSelector(state => state.cmplan.configurationItems.items)
+  const ciLoading = useSelector(state => state.cmplan.configurationItems.loading)
+  const relationships = useSelector(state => state.cmplan.ciRelationships.items)
+  const relLoading = useSelector(state => state.cmplan.ciRelationships.loading)
 
-  const [filterClassId, setFilterClassId] = useState(null)
+  const [filterTypeId, setFilterTypeId] = useState(null)
   const [selectedNode, setSelectedNode] = useState(null)
 
   useEffect(() => {
-    dispatch(fetchCIClasses())
+    dispatch(fetchCITypes())
     dispatch(fetchAllRelationships())
     dispatch(fetchConfigurationItems({ page: 1, pageSize: 200 }))
   }, [dispatch])
 
   // Apply class filter
-  const visibleItems = filterClassId
-    ? ciItems.filter((ci) => ci.ciClassId === filterClassId)
+  const visibleItems = filterTypeId
+    ? ciItems.filter((ci) => ci.ciTypeId === filterTypeId)
     : ciItems
 
   const visibleCIIds = new Set(visibleItems.map((ci) => ci.id))
@@ -272,7 +267,7 @@ const RelationshipMapPage = () => {
     (r) => visibleCIIds.has(r.sourceId) && visibleCIIds.has(r.targetId)
   )
 
-  const graphOption = buildGraphOption(visibleItems, visibleRels, ciClasses)
+  const graphOption = buildGraphOption(visibleItems, visibleRels, ciTypes)
   const loading = ciLoading || relLoading
 
   const handleNodeClick = useCallback(
@@ -330,13 +325,13 @@ const RelationshipMapPage = () => {
           Filter by Class:
         </span>
         <Select
-          value={filterClassId}
-          onChange={setFilterClassId}
+          value={filterTypeId}
+          onChange={setFilterTypeId}
           allowClear
           placeholder="All Classes"
           style={{ width: 200 }}
         >
-          {ciClasses.map((c) => (
+          {ciTypes.map((c) => (
             <Option key={c.id} value={c.id}>
               <Icon type={c.icon} style={{ color: c.color, marginRight: 6 }} />
               {c.label}
@@ -345,11 +340,11 @@ const RelationshipMapPage = () => {
         </Select>
         <span style={{ marginLeft: 'auto', color: '#8c8c8c', fontSize: 12 }}>
           Showing {visibleItems.length} nodes / {visibleRels.length} edges
-          {filterClassId && (
+          {filterTypeId && (
             <Button
               type="link"
               size="small"
-              onClick={() => setFilterClassId(null)}
+              onClick={() => setFilterTypeId(null)}
               style={{ padding: '0 4px' }}
             >
               Clear
@@ -413,11 +408,11 @@ const RelationshipMapPage = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <Icon
                     type={
-                      (ciClasses.find((c) => c.id === selectedNode.ciClassId) && ciClasses.find((c) => c.id === selectedNode.ciClassId).icon) ||
+                      (ciTypes.find((c) => c.id === selectedNode.ciTypeId) && ciTypes.find((c) => c.id === selectedNode.ciTypeId).icon) ||
                       'profile'
                     }
                     style={{
-                      color: ciClasses.find((c) => c.id === selectedNode.ciClassId) && ciClasses.find((c) => c.id === selectedNode.ciClassId).color,
+                      color: ciTypes.find((c) => c.id === selectedNode.ciTypeId) && ciTypes.find((c) => c.id === selectedNode.ciTypeId).color,
                     }}
                   />
                   <span
@@ -446,7 +441,7 @@ const RelationshipMapPage = () => {
             >
               <CINodePanel
                 ci={selectedNode}
-                ciClasses={ciClasses}
+                ciTypes={ciTypes}
                 relationships={visibleRels}
                 allCIItems={visibleItems}
               />

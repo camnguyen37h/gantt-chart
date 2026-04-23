@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import {
   Drawer,
@@ -18,14 +18,9 @@ import {
 }  from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  selectCIClasses,
-  selectRelationshipsByCI,
-  selectRelationshipsSubmitting,
   createRelationship,
   deleteRelationship,
   fetchAuditLogByCI,
-  selectAuditLogByCI,
-  selectAuditLogLoading,
 } from '../../../store/cmplan'
 import { cmplanApi } from '../../../utils/cmplan/mockCMPlanApi'
 import CIStatusBadge from './CIStatusBadge'
@@ -51,7 +46,7 @@ const AUDIT_CONFIG = {
   ci_created:        { color: '#52c41a', icon: 'plus-circle',     label: 'CI Created' },
   ci_updated:        { color: '#1890ff', icon: 'edit',            label: 'CI Updated' },
   ci_status_changed: { color: '#fa8c16', icon: 'swap',            label: 'Status Changed' },
-  ci_class_changed:  { color: '#722ed1', icon: 'deployment-unit', label: 'Class Changed' },
+  ci_type_changed:  { color: '#722ed1', icon: 'deployment-unit', label: 'Type Changed' },
   ci_attr_updated:   { color: '#13c2c2', icon: 'tool',            label: 'Attr Updated' },
   rel_added:         { color: '#52c41a', icon: 'link',            label: 'Rel Added' },
   rel_updated:       { color: '#fa8c16', icon: 'edit',            label: 'Rel Updated' },
@@ -62,12 +57,12 @@ const FIELD_LABELS = {
   status: 'Status', criticality: 'Criticality', owner: 'Owner',
   department: 'Department', environment: 'Environment',
   location: 'Location', name: 'Name', shortDescription: 'Description',
-  expiredDate: 'Expired Date', ciClass: 'CI Class',
+  expiredDate: 'Expired Date', ciType: 'CI Type',
 }
 
 const HISTORY_FILTERS = [
   { label: 'All',           value: null },
-  { label: 'CI Info',       value: ['ci_created', 'ci_updated', 'ci_status_changed', 'ci_class_changed'] },
+  { label: 'CI Info',       value: ['ci_created', 'ci_updated', 'ci_status_changed', 'ci_type_changed'] },
   { label: 'Attributes',    value: ['ci_attr_updated'] },
   { label: 'Relationships', value: ['rel_added', 'rel_updated', 'rel_removed'] },
 ]
@@ -86,8 +81,8 @@ function buildAuditRows(entries) {
     const { meta, action } = entry
     let changes = []
 
-    if (action === 'ci_class_changed') {
-      changes = [{ field: 'CI Class', from: meta.fromClassName, to: meta.toClassName }]
+    if (action === 'ci_type_changed') {
+      changes = [{ field: 'CI Type', from: meta.fromTypeName, to: meta.toTypeName }]
     } else if (action === 'ci_updated' || action === 'ci_status_changed') {
       changes = ((meta && meta.changes) || []).map((c) => ({
         field: FIELD_LABELS[c.field] || c.field, from: formatVal(c.from), to: formatVal(c.to),
@@ -181,8 +176,8 @@ const HISTORY_COLUMNS = [
               </span>
             </div>
           )}
-          {action === 'ci_attr_updated' && meta.classLabel && (
-            <Tag style={{ marginTop: 2, fontSize: 9, marginBottom: 0, padding: '0 4px' }}>{meta.classLabel}</Tag>
+          {action === 'ci_attr_updated' && meta.typeLabel && (
+            <Tag style={{ marginTop: 2, fontSize: 9, marginBottom: 0, padding: '0 4px' }}>{meta.typeLabel}</Tag>
           )}
         </div>
       )
@@ -229,11 +224,19 @@ const HISTORY_COLUMNS = [
 // ── Main Component ────────────────────────────────────────────────────────────
 const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
   const dispatch = useDispatch()
-  const ciClasses = useSelector(selectCIClasses)
-  const relations = useSelector(selectRelationshipsByCI((ci && ci.id) || ''))
-  const submitting = useSelector(selectRelationshipsSubmitting)
-  const auditEntries = useSelector(selectAuditLogByCI((ci && ci.id) || ''))
-  const auditLoading = useSelector(selectAuditLogLoading((ci && ci.id) || ''))
+  const ciId = (ci && ci.id) || ''
+  const ciTypes = useSelector(state => state.cmplan.ciTypes.items)
+  const allRelationships = useSelector(state => state.cmplan.ciRelationships.items)
+  const submitting = useSelector(state => state.cmplan.ciRelationships.submitting)
+  const auditByCI = useSelector(state => state.cmplan.ciAuditLog.byCI)
+  const auditLoadingMap = useSelector(state => state.cmplan.ciAuditLog.loading)
+
+  const relations = useMemo(
+    () => allRelationships.filter((r) => r.sourceId === ciId || r.targetId === ciId),
+    [allRelationships, ciId]
+  )
+  const auditEntries = auditByCI[ciId] || []
+  const auditLoading = auditLoadingMap[ciId] || false
 
   const [drawerTab, setDrawerTab] = useState('overview')
   const [historyFilter, setHistoryFilter] = useState(null)
@@ -297,7 +300,7 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, ci ? ci.id : null])
 
-  const ciClass = ci ? ciClasses.find((c) => c.id === ci.ciClassId) : null
+  const ciType = ci ? ciTypes.find((c) => c.id === ci.ciTypeId) : null
   const attrDefMap = Object.fromEntries((ci ? attrDefs : []).map((a) => [a.name, a]))
 
   // ── History table rows ───────────────────────────────────────────────────────
@@ -373,16 +376,16 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
           ci ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Icon
-              type={(ciClass && ciClass.icon) || 'profile'}
+              type={(ciType && ciType.icon) || 'profile'}
               style={{
-                fontSize: 20, color: (ciClass && ciClass.color) || '#1890ff',
-                backgroundColor: `${(ciClass && ciClass.color) || '#1890ff'}15`,
+                fontSize: 20, color: (ciType && ciType.color) || '#1890ff',
+                backgroundColor: `${(ciType && ciType.color) || '#1890ff'}15`,
                   padding: 6, borderRadius: 6,
                 }}
               />
               <div>
                 <div style={{ fontWeight: 600, fontSize: 15 }}>{ci.name}</div>
-                <div style={{ fontSize: 12, color: '#8c8c8c', fontWeight: 400 }}>{ciClass && ciClass.label}</div>
+                <div style={{ fontSize: 12, color: '#8c8c8c', fontWeight: 400 }}>{ciType && ciType.label}</div>
               </div>
             </div>
           ) : (
@@ -465,8 +468,8 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
               {ci.attributes && Object.keys(ci.attributes).length > 0 && (
                 <>
                   <Divider orientation="left" style={{ fontSize: 12, marginTop: 20 }}>
-                    <Icon type={(ciClass && ciClass.icon) || 'profile'} style={{ color: ciClass && ciClass.color, marginRight: 4 }} />
-                    {ciClass && ciClass.label} Attributes
+                    <Icon type={(ciType && ciType.icon) || 'profile'} style={{ color: ciType && ciType.color, marginRight: 4 }} />
+                    {ciType && ciType.label} Attributes
                   </Divider>
                   <Descriptions column={1} size="small" bordered>
                     {Object.entries(ci.attributes).map(([key, value]) => {
@@ -650,8 +653,8 @@ const CIDetailDrawer = ({ ci, visible, onClose, onEdit, attrDefs = [] }) => {
           sourceCI={{
             id: ci.id,
             name: ci.name,
-            classIcon: ciClass && ciClass.icon,
-            classColor: ciClass && ciClass.color,
+            typeIcon: ciType && ciType.icon,
+            typeColor: ciType && ciType.color,
           }}
           allCIs={allCIsForSelect}
           submitting={submitting}
@@ -667,7 +670,7 @@ CIDetailDrawer.propTypes = {
   ci: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
-    ciClassId: PropTypes.string,
+    ciTypeId: PropTypes.string,
     status: PropTypes.string,
     criticality: PropTypes.string,
     owner: PropTypes.string,

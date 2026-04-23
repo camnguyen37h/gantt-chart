@@ -10,15 +10,15 @@ import {
 /**
  * Shows the 5 most recently updated CIs on the Dashboard.
  */
-const RecentCITable = ({ recentItems, ciClasses, loading }) => {
-  const ciClassMap = Object.fromEntries((ciClasses || []).map((c) => [c.id, c]))
+const RecentCITable = ({ recentItems, ciTypes, loading }) => {
+  const ciTypeMap = Object.fromEntries((ciTypes || []).map((c) => [c.id, c]))
 
   const columns = [
     {
       title: 'Name',
       key: 'name',
       render: (_, record) => {
-        const cls = ciClassMap[record.ciClassId]
+        const cls = ciTypeMap[record.ciTypeId]
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div

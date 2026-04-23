@@ -1,32 +1,126 @@
-import React, { useCallback } from 'react'
+﻿import React, { useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Select, Button, Icon, Tag } from 'antd'
-import { RELATIONSHIP_TYPES } from '../../../utils/cmplan/cmplanConstants'
-import { DIRECTION_OUT, DIRECTION_IN } from '../../../utils/cmplan/bulkRelationshipConstants'
+import { Button, Icon, Select, Tooltip } from 'antd'
 
 const { Option } = Select
 
-const RelationshipRuleCard = ({
+const TYPE_SELECT_WIDTH = 260
+const DISABLED_LABEL_STYLE = { color: '#bfbfbf' }
+
+// --- Pure helpers ---------------------------------------------------------
+
+const collectUsedTypes = (rules) => {
+  const set = new Set()
+  rules.forEach((r) => {
+    if (r.relationshipType) set.add(r.relationshipType)
+  })
+  return set
+}
+
+const buildOptionDisabledReason = ({
+  optionValue,
+  ruleRelType,
+  sourceType,
+  targetType,
+  validRelTypes,
+  isUsedByOther,
+}) => {
+  if (!sourceType || !targetType) {
+    return 'Select both source and target CI Types first.'
+  }
+  if (!validRelTypes.has(optionValue)) {
+    return 'Not available for ' + sourceType + ' \u2192 ' + targetType + '.'
+  }
+  if (optionValue !== ruleRelType && isUsedByOther) {
+    return 'Already used by another rule.'
+  }
+  return null
+}
+
+// --- Internal subcomponents ----------------------------------------------
+
+const TypeOption = ({ option, ruleRelType, sourceType, targetType, validRelTypes, usedTypes }) => {
+  const isUsedByOther = usedTypes.has(option.value) && option.value !== ruleRelType
+  const disabledReason = buildOptionDisabledReason({
+    optionValue: option.value,
+    ruleRelType,
+    sourceType,
+    targetType,
+    validRelTypes,
+    isUsedByOther,
+  })
+  const isDisabled = Boolean(disabledReason)
+  const labelNode = (
+    <span style={isDisabled ? DISABLED_LABEL_STYLE : undefined}>{option.label}</span>
+  )
+
+  if (!isDisabled) return labelNode
+  return (
+    <Tooltip title={disabledReason} placement="right">
+      {labelNode}
+    </Tooltip>
+  )
+}
+
+TypeOption.propTypes = {
+  option: PropTypes.shape({
+    value: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+  }).isRequired,
+  ruleRelType: PropTypes.string,
+  sourceType: PropTypes.string,
+  targetType: PropTypes.string,
+  validRelTypes: PropTypes.instanceOf(Set).isRequired,
+  usedTypes: PropTypes.instanceOf(Set).isRequired,
+}
+
+TypeOption.defaultProps = {
+  ruleRelType: null,
+  sourceType: undefined,
+  targetType: undefined,
+}
+
+const RuleCard = ({
   rule,
   index,
-  targetCIs,
   onUpdate,
   onRemove,
   canRemove,
+  relTypeOptions,
+  validRelTypes,
+  usedTypes,
+  sourceType,
+  targetType,
 }) => {
   const handleTypeChange = useCallback(
     (value) => {
-      onUpdate(rule.id, { relationshipType: value })
+      onUpdate(rule.id, { relationshipType: value || null })
     },
     [rule.id, onUpdate]
   )
 
-  const handleDirectionChange = useCallback(
-    (direction) => {
-      onUpdate(rule.id, { direction })
-    },
-    [rule.id, onUpdate]
+  const handleRemove = useCallback(() => {
+    onRemove(rule.id)
+  }, [rule.id, onRemove])
+
+  const isCurrentInvalid = Boolean(
+    rule.relationshipType
+      && sourceType
+      && targetType
+      && !validRelTypes.has(rule.relationshipType)
   )
+
+  const isOptionDisabled = (optionValue) => {
+    const reason = buildOptionDisabledReason({
+      optionValue,
+      ruleRelType: rule.relationshipType,
+      sourceType,
+      targetType,
+      validRelTypes,
+      isUsedByOther: usedTypes.has(optionValue) && optionValue !== rule.relationshipType,
+    })
+    return Boolean(reason)
+  }
 
   return (
     <div className="bulk-rel-rule-card">
@@ -38,116 +132,125 @@ const RelationshipRuleCard = ({
             type="link"
             icon="close"
             size="small"
-            onClick={() => onRemove(rule.id)}
+            onClick={handleRemove}
             style={{ marginLeft: 'auto', color: '#8c8c8c' }}
           />
         )}
       </div>
 
       <div className="bulk-rel-rule-body">
-        <div className="bulk-rel-rule-field">
-          <span className="bulk-rel-rule-field-label">TYPE</span>
+        <div className="bulk-rel-rule-field bulk-rel-rule-field--type">
+          <span className="bulk-rel-rule-field-label">RELATIONSHIP TYPE</span>
           <Select
-            value={rule.relationshipType}
+            value={rule.relationshipType || undefined}
             onChange={handleTypeChange}
-            style={{ width: 180 }}
-            placeholder="Select type..."
+            style={{ width: TYPE_SELECT_WIDTH }}
+            placeholder="Select relationship type..."
+            allowClear
           >
-            {RELATIONSHIP_TYPES.map((t) => (
-              <Option key={t.value} value={t.value}>
-                {t.label}
+            {relTypeOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value} disabled={isOptionDisabled(opt.value)}>
+                <TypeOption
+                  option={opt}
+                  ruleRelType={rule.relationshipType}
+                  sourceType={sourceType}
+                  targetType={targetType}
+                  validRelTypes={validRelTypes}
+                  usedTypes={usedTypes}
+                />
               </Option>
             ))}
           </Select>
-        </div>
-
-        <div className="bulk-rel-rule-field">
-          <span className="bulk-rel-rule-field-label">DIRECTION</span>
-          <div className="bulk-rel-rule-direction-toggle">
-            <div
-              className={'bulk-rel-dir-btn' + (rule.direction === DIRECTION_OUT ? ' bulk-rel-dir-btn--active' : '')}
-              onClick={() => handleDirectionChange(DIRECTION_OUT)}
-            >
-              <Icon type="arrow-right" /> Out
-            </div>
-            <div
-              className={'bulk-rel-dir-btn' + (rule.direction === DIRECTION_IN ? ' bulk-rel-dir-btn--active' : '')}
-              onClick={() => handleDirectionChange(DIRECTION_IN)}
-            >
-              <Icon type="arrow-left" /> In
-            </div>
-          </div>
-        </div>
-
-        <div className="bulk-rel-rule-field bulk-rel-rule-field--targets">
-          <span className="bulk-rel-rule-field-label" style={{ color: '#13c2c2' }}>
-            TARGET CIS — OVERRIDDEN BY PANEL SELECTION ABOVE
-          </span>
-          <div className="bulk-rel-rule-target-tags">
-            {targetCIs.length === 0 ? (
-              <span style={{ color: '#bfbfbf', fontSize: 12 }}>No target CIs selected</span>
-            ) : (
-              targetCIs.map((ci) => (
-                <Tag key={ci.id} color="cyan" style={{ marginBottom: 4 }}>
-                  {ci.name}
-                </Tag>
-              ))
-            )}
-          </div>
+          {isCurrentInvalid && (
+            <span className="bulk-rel-rule-warning">
+              <Icon type="warning" style={{ marginRight: 4 }} />
+              This relationship type is not valid for the selected CI Types.
+            </span>
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-RelationshipRuleCard.propTypes = {
+RuleCard.propTypes = {
   rule: PropTypes.shape({
     id: PropTypes.string.isRequired,
     relationshipType: PropTypes.string,
-    direction: PropTypes.oneOf([DIRECTION_OUT, DIRECTION_IN]).isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
-  targetCIs: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
   onUpdate: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
   canRemove: PropTypes.bool.isRequired,
+  relTypeOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  validRelTypes: PropTypes.instanceOf(Set).isRequired,
+  usedTypes: PropTypes.instanceOf(Set).isRequired,
+  sourceType: PropTypes.string,
+  targetType: PropTypes.string,
 }
+
+RuleCard.defaultProps = {
+  sourceType: undefined,
+  targetType: undefined,
+}
+
+// --- Main component -------------------------------------------------------
 
 const RelationshipRulesSection = ({
   rules,
-  targetCIs,
+  relTypeOptions,
+  validRelTypes,
+  sourceType,
+  targetType,
   onUpdateRule,
   onRemoveRule,
   onAddRule,
 }) => {
+  const usedTypes = useMemo(() => collectUsedTypes(rules), [rules])
+
+  const canAddRule = useMemo(() => {
+    if (!sourceType || !targetType) return false
+    if (validRelTypes.size === 0) return false
+    return usedTypes.size < validRelTypes.size
+  }, [sourceType, targetType, validRelTypes, usedTypes])
+
+  const ruleCountLabel = rules.length === 1 ? 'rule' : 'rules'
+
   return (
     <div className="bulk-rel-rules-section">
       <div className="bulk-rel-rules-header">
         <span className="bulk-rel-rules-title">RELATIONSHIP RULES</span>
-        <span className="bulk-rel-rules-count">{rules.length} rule{rules.length !== 1 ? 's' : ''}</span>
+        <span className="bulk-rel-rules-count">{rules.length} {ruleCountLabel}</span>
       </div>
 
       <div className="bulk-rel-rules-list">
         {rules.map((rule, index) => (
-          <RelationshipRuleCard
+          <RuleCard
             key={rule.id}
             rule={rule}
             index={index}
-            targetCIs={targetCIs}
             onUpdate={onUpdateRule}
             onRemove={onRemoveRule}
             canRemove={rules.length > 1}
+            relTypeOptions={relTypeOptions}
+            validRelTypes={validRelTypes}
+            usedTypes={usedTypes}
+            sourceType={sourceType}
+            targetType={targetType}
           />
         ))}
       </div>
 
-      <div className="bulk-rel-add-rule" onClick={onAddRule}>
-        <Icon type="plus" style={{ marginRight: 6, color: '#1890ff' }} />
+      <div
+        className={'bulk-rel-add-rule' + (canAddRule ? '' : ' bulk-rel-add-rule--disabled')}
+        onClick={canAddRule ? onAddRule : undefined}
+      >
+        <Icon type="plus" style={{ marginRight: 6, color: canAddRule ? '#1890ff' : '#bfbfbf' }} />
         <span>Add another rule</span>
       </div>
     </div>
@@ -159,18 +262,25 @@ RelationshipRulesSection.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       relationshipType: PropTypes.string,
-      direction: PropTypes.oneOf([DIRECTION_OUT, DIRECTION_IN]).isRequired,
     })
   ).isRequired,
-  targetCIs: PropTypes.arrayOf(
+  relTypeOptions: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
     })
   ).isRequired,
+  validRelTypes: PropTypes.instanceOf(Set).isRequired,
+  sourceType: PropTypes.string,
+  targetType: PropTypes.string,
   onUpdateRule: PropTypes.func.isRequired,
   onRemoveRule: PropTypes.func.isRequired,
   onAddRule: PropTypes.func.isRequired,
+}
+
+RelationshipRulesSection.defaultProps = {
+  sourceType: undefined,
+  targetType: undefined,
 }
 
 export default RelationshipRulesSection

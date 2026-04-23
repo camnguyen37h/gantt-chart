@@ -2,9 +2,9 @@
 // Follows the DB schema defined in cmplan-database-design.md
 
 // ── CI Classes ───────────────────────────────────────────────────────────────
-export const MOCK_CI_CLASSES = [
+export const MOCK_CI_TYPES = [
   {
-    id: 'class-001',
+    id: 'type-001',
     name: 'server',
     label: 'Server',
     icon: 'hdd',
@@ -16,7 +16,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-002',
+    id: 'type-002',
     name: 'database',
     label: 'Database',
     icon: 'database',
@@ -28,7 +28,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-003',
+    id: 'type-003',
     name: 'application',
     label: 'Application',
     icon: 'appstore',
@@ -40,7 +40,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-004',
+    id: 'type-004',
     name: 'network_device',
     label: 'Network Device',
     icon: 'cluster',
@@ -52,7 +52,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-005',
+    id: 'type-005',
     name: 'cloud_service',
     label: 'Cloud Service',
     icon: 'cloud',
@@ -64,7 +64,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-006',
+    id: 'type-006',
     name: 'virtual_machine',
     label: 'Virtual Machine',
     icon: 'desktop',
@@ -76,7 +76,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-007',
+    id: 'type-007',
     name: 'storage',
     label: 'Storage',
     icon: 'save',
@@ -88,7 +88,7 @@ export const MOCK_CI_CLASSES = [
     updatedAt: '2025-01-01T00:00:00Z',
   },
   {
-    id: 'class-008',
+    id: 'type-008',
     name: 'middleware',
     label: 'Middleware',
     icon: 'api',
@@ -102,12 +102,12 @@ export const MOCK_CI_CLASSES = [
 ]
 
 // ── Attribute Definitions ─────────────────────────────────────────────────────
-// ciClassId: null = global (applies to all classes)
+// ciTypeId: null = global (applies to all classes)
 export const MOCK_ATTRIBUTE_DEFINITIONS = [
   // ── Global attributes ────────────────────────────────────────────────────
   {
     id: 'attr-g-001',
-    ciClassId: null,
+    ciTypeId: null,
     name: 'owner_email',
     label: 'Owner Email',
     type: 'email',
@@ -123,7 +123,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-g-002',
-    ciClassId: null,
+    ciTypeId: null,
     name: 'support_team',
     label: 'Support Team',
     type: 'text',
@@ -139,7 +139,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-g-003',
-    ciClassId: null,
+    ciTypeId: null,
     name: 'lifecycle_phase',
     label: 'Lifecycle Phase',
     type: 'select',
@@ -160,7 +160,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-g-004',
-    ciClassId: null,
+    ciTypeId: null,
     name: 'sla_tier',
     label: 'SLA Tier',
     type: 'select',
@@ -181,7 +181,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-g-005',
-    ciClassId: null,
+    ciTypeId: null,
     name: 'cost_center',
     label: 'Cost Center',
     type: 'text',
@@ -199,7 +199,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   // ── Server attributes ────────────────────────────────────────────────────
   {
     id: 'attr-s-001',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'hostname',
     label: 'Hostname',
     type: 'text',
@@ -216,7 +216,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-002',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'ip_address',
     label: 'IP Address',
     type: 'ip_address',
@@ -233,7 +233,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-003',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'os_type',
     label: 'OS Type',
     type: 'select',
@@ -254,7 +254,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-004',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'os_version',
     label: 'OS Version',
     type: 'text',
@@ -270,7 +270,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-005',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'cpu_cores',
     label: 'CPU Cores',
     type: 'number',
@@ -286,7 +286,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-006',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'ram_gb',
     label: 'RAM (GB)',
     type: 'number',
@@ -302,7 +302,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-007',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'managed_by',
     label: 'Managed By',
     type: 'select',
@@ -324,7 +324,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-s-008',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'is_virtualized',
     label: 'Virtualized',
     type: 'checkbox',
@@ -342,7 +342,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   // ── Database attributes ──────────────────────────────────────────────────
   {
     id: 'attr-d-001',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'db_type',
     label: 'Database Type',
     type: 'select',
@@ -367,7 +367,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-d-002',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'db_version',
     label: 'DB Version',
     type: 'text',
@@ -383,7 +383,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-d-003',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'host_server',
     label: 'Host Server',
     type: 'text',
@@ -399,7 +399,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-d-004',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'port',
     label: 'Port',
     type: 'number',
@@ -415,7 +415,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-d-005',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'schema_count',
     label: 'Schema Count',
     type: 'number',
@@ -431,7 +431,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-d-006',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'backup_schedule',
     label: 'Backup Schedule',
     type: 'select',
@@ -454,7 +454,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   // ── Application attributes ───────────────────────────────────────────────
   {
     id: 'attr-a-001',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'app_version',
     label: 'App Version',
     type: 'text',
@@ -470,7 +470,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-a-002',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'tech_stack',
     label: 'Tech Stack',
     type: 'multiselect',
@@ -497,7 +497,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-a-003',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'deployment_type',
     label: 'Deployment Type',
     type: 'select',
@@ -519,7 +519,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-a-004',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'repository_url',
     label: 'Repository URL',
     type: 'url',
@@ -535,7 +535,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-a-005',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'dev_team',
     label: 'Development Team',
     type: 'text',
@@ -553,7 +553,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   // ── Cloud Service attributes ─────────────────────────────────────────────
   {
     id: 'attr-c-001',
-    ciClassId: 'class-005',
+    ciTypeId: 'cloud_service',
     name: 'cloud_provider',
     label: 'Cloud Provider',
     type: 'select',
@@ -575,7 +575,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-c-002',
-    ciClassId: 'class-005',
+    ciTypeId: 'cloud_service',
     name: 'region',
     label: 'Region',
     type: 'text',
@@ -591,7 +591,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-c-003',
-    ciClassId: 'class-005',
+    ciTypeId: 'cloud_service',
     name: 'account_id',
     label: 'Account / Subscription ID',
     type: 'text',
@@ -607,7 +607,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
   },
   {
     id: 'attr-c-004',
-    ciClassId: 'class-005',
+    ciTypeId: 'cloud_service',
     name: 'monthly_cost_usd',
     label: 'Est. Monthly Cost (USD)',
     type: 'number',
@@ -627,7 +627,7 @@ export const MOCK_ATTRIBUTE_DEFINITIONS = [
 export const MOCK_CONFIGURATION_ITEMS = [
   {
     id: 'ci-001',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'prod-web-01',
     shortDescription: 'Production web server (primary)',
     status: 'active',
@@ -660,7 +660,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-002',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'prod-web-02',
     shortDescription: 'Production web server (secondary, load balanced)',
     status: 'active',
@@ -690,7 +690,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-003',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     name: 'stage-app-01',
     shortDescription: 'Staging application server',
     status: 'active',
@@ -719,7 +719,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-004',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'prod-postgresql-01',
     shortDescription: 'Primary production PostgreSQL cluster',
     status: 'active',
@@ -747,7 +747,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-005',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'prod-redis-cache',
     shortDescription: 'Redis in-memory cache cluster for session & hot data',
     status: 'active',
@@ -774,7 +774,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-006',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'CRM Web Portal',
     shortDescription: 'Customer Relationship Management web frontend',
     status: 'active',
@@ -801,7 +801,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-007',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'Business Plan API Service',
     shortDescription: 'Backend REST API for Business Plan module',
     status: 'active',
@@ -828,7 +828,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-008',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     name: 'CMPlan API Service',
     shortDescription: 'Backend for CMPlan CMDB module',
     status: 'pending',
@@ -854,7 +854,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-009',
-    ciClassId: 'class-004',
+    ciTypeId: 'network_device',
     name: 'Core Switch DC1',
     shortDescription: 'Cisco Nexus core switch, DC1 spine',
     status: 'active',
@@ -877,7 +877,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-010',
-    ciClassId: 'class-005',
+    ciTypeId: 'cloud_service',
     name: 'AWS S3 - Media Storage',
     shortDescription: 'S3 bucket for user-uploaded media and assets',
     status: 'active',
@@ -903,7 +903,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-011',
-    ciClassId: 'class-005',
+    ciTypeId: 'cloud_service',
     name: 'Azure AKS Cluster - Prod',
     shortDescription: 'Production Kubernetes cluster on Azure AKS',
     status: 'active',
@@ -929,7 +929,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-012',
-    ciClassId: 'class-006',
+    ciTypeId: 'virtual_machine',
     name: 'VM-worker-01',
     shortDescription: 'Worker VM for batch processing jobs',
     status: 'maintenance',
@@ -952,7 +952,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-013',
-    ciClassId: 'class-007',
+    ciTypeId: 'storage',
     name: 'NetApp FAS - Primary SAN',
     shortDescription: 'NetApp FAS8700 primary SAN storage array',
     status: 'active',
@@ -974,7 +974,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-014',
-    ciClassId: 'class-008',
+    ciTypeId: 'middleware',
     name: 'RabbitMQ Cluster',
     shortDescription: 'Message broker for async event processing',
     status: 'active',
@@ -996,7 +996,7 @@ export const MOCK_CONFIGURATION_ITEMS = [
   },
   {
     id: 'ci-015',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     name: 'dev-mongodb-01',
     shortDescription: 'Development MongoDB instance',
     status: 'inactive',
@@ -1170,7 +1170,7 @@ export const MOCK_COMPLIANCE_POLICIES = [
     id: 'pol-001',
     name: 'CI Must Have Owner',
     description: 'Every CI must have an owner email defined.',
-    ciClassId: null,
+    ciTypeId: null,
     rules: [
       {
         id: 'rule-001',
@@ -1189,7 +1189,7 @@ export const MOCK_COMPLIANCE_POLICIES = [
     id: 'pol-002',
     name: 'Server Must Have OS Info',
     description: 'All server CIs must specify OS type and version.',
-    ciClassId: 'class-001',
+    ciTypeId: 'server',
     rules: [
       {
         id: 'rule-002',
@@ -1215,7 +1215,7 @@ export const MOCK_COMPLIANCE_POLICIES = [
     id: 'pol-003',
     name: 'Database Must Have Backup Schedule',
     description: 'Production/staging databases must have a backup schedule defined.',
-    ciClassId: 'class-002',
+    ciTypeId: 'database',
     rules: [
       {
         id: 'rule-004',
@@ -1241,7 +1241,7 @@ export const MOCK_COMPLIANCE_POLICIES = [
     id: 'pol-004',
     name: 'Application Must Have Repository',
     description: 'All application CIs should link to a source repository.',
-    ciClassId: 'class-003',
+    ciTypeId: 'application',
     rules: [
       {
         id: 'rule-006',
@@ -1356,7 +1356,7 @@ export const MOCK_CI_AUDIT_LOG = [
     id: 'log-030', ciId: 'ci-001', action: 'ci_attr_updated', actor: 'alice.vu',
     timestamp: '2025-06-15T11:00:00Z',
     meta: {
-      classLabel: 'Server',
+      typeLabel: 'Server',
       changes: [
         { field: 'ip_address', label: 'IP Address', from: '10.0.10.10', to: '10.0.10.15' },
         { field: 'os_version', label: 'OS Version', from: 'Ubuntu 20.04 LTS', to: 'Ubuntu 22.04 LTS' },
@@ -1367,7 +1367,7 @@ export const MOCK_CI_AUDIT_LOG = [
     id: 'log-031', ciId: 'ci-001', action: 'ci_attr_updated', actor: 'alice.vu',
     timestamp: '2025-10-20T09:30:00Z',
     meta: {
-      classLabel: 'Server',
+      typeLabel: 'Server',
       changes: [
         { field: 'cpu_cores', label: 'CPU Cores', from: 4, to: 8 },
         { field: 'ram_gb', label: 'RAM (GB)', from: 16, to: 32 },
@@ -1384,7 +1384,7 @@ export const MOCK_CI_AUDIT_LOG = [
     id: 'log-033', ciId: 'ci-006', action: 'ci_attr_updated', actor: 'john.doe',
     timestamp: '2025-07-01T10:00:00Z',
     meta: {
-      classLabel: 'Application',
+      typeLabel: 'Application',
       changes: [
         { field: 'tech_stack', label: 'Tech Stack', from: 'React 17', to: 'React 18 + Vite' },
         { field: 'sla_tier', label: 'SLA Tier', from: 'standard', to: 'gold' },
@@ -1392,16 +1392,16 @@ export const MOCK_CI_AUDIT_LOG = [
     },
   },
   {
-    id: 'log-034', ciId: 'ci-006', action: 'ci_class_changed', actor: 'admin',
+    id: 'log-034', ciId: 'ci-006', action: 'ci_type_changed', actor: 'admin',
     timestamp: '2025-08-10T08:30:00Z',
-    meta: { fromClassId: 'class-002', fromClassName: 'Application', toClassId: 'class-002', toClassName: 'Web Application' },
+    meta: { fromTypeId: 'type-002', fromTypeName: 'Application', toTypeId: 'type-002', toTypeName: 'Web Application' },
   },
   // ── Business Plan API (ci-007) — attr updates ─────────────────────────────────
   {
     id: 'log-035', ciId: 'ci-007', action: 'ci_attr_updated', actor: 'jane.smith',
     timestamp: '2025-09-05T16:20:00Z',
     meta: {
-      classLabel: 'Application',
+      typeLabel: 'Application',
       changes: [
         { field: 'api_version', label: 'API Version', from: 'v1.3.0', to: 'v1.4.0' },
         { field: 'sla_tier', label: 'SLA Tier', from: 'gold', to: 'platinum' },
@@ -1427,7 +1427,7 @@ export const MOCK_CI_AUDIT_LOG = [
     id: 'log-042', ciId: 'ci-011', action: 'ci_attr_updated', actor: 'hoangvane',
     timestamp: '2025-10-01T09:00:00Z',
     meta: {
-      classLabel: 'Cloud Service',
+      typeLabel: 'Cloud Service',
       changes: [
         { field: 'monthly_cost_usd', label: 'Monthly Cost (USD)', from: 2400, to: 2800 },
         { field: 'account_id', label: 'Account ID', from: 'sub-abc-000', to: 'sub-abc-def-001' },
@@ -1468,7 +1468,7 @@ export const MOCK_CI_AUDIT_LOG = [
     id: 'log-051', ciId: 'ci-004', action: 'ci_attr_updated', actor: 'levanc',
     timestamp: '2025-09-10T11:00:00Z',
     meta: {
-      classLabel: 'Database',
+      typeLabel: 'Database',
       changes: [{ field: 'db_version', label: 'DB Version', from: '14.8', to: '15.3' }],
     },
   },
@@ -1643,4 +1643,30 @@ export const MOCK_CRM_DIRECTIONS = [
     createdAt: '2024-12-03T13:00:00Z',
     updatedAt: '2024-12-03T13:00:00Z',
   },
+]
+
+// ── CI Type Relationships ─────────────────────────────────────────────────────
+// Each row defines an allowed (sourceType, relationshipType, targetType) triple.
+// ciType values match the canonical CI type name; *Value fields carry the human-readable label.
+export const MOCK_CI_TYPE_RELATIONSHIPS = [
+  { id: 1,  ciTypeSource: 'application',     ciTypeSourceValue: 'Application',     ciTypeTarget: 'server',          ciTypeTargetValue: 'Server',          typeConnection: 'runs_on',     typeConnectionValue: 'Runs On' },
+  { id: 2,  ciTypeSource: 'application',     ciTypeSourceValue: 'Application',     ciTypeTarget: 'database',        ciTypeTargetValue: 'Database',        typeConnection: 'depends_on',  typeConnectionValue: 'Depends On' },
+  { id: 3,  ciTypeSource: 'application',     ciTypeSourceValue: 'Application',     ciTypeTarget: 'middleware',      ciTypeTargetValue: 'Middleware',      typeConnection: 'uses',        typeConnectionValue: 'Uses' },
+  { id: 4,  ciTypeSource: 'application',     ciTypeSourceValue: 'Application',     ciTypeTarget: 'cloud_service',   ciTypeTargetValue: 'Cloud Service',   typeConnection: 'uses',        typeConnectionValue: 'Uses' },
+  { id: 5,  ciTypeSource: 'server',          ciTypeSourceValue: 'Server',          ciTypeTarget: 'network_device',  ciTypeTargetValue: 'Network Device',  typeConnection: 'connects_to', typeConnectionValue: 'Connects To' },
+  { id: 6,  ciTypeSource: 'server',          ciTypeSourceValue: 'Server',          ciTypeTarget: 'storage',         ciTypeTargetValue: 'Storage',         typeConnection: 'uses',        typeConnectionValue: 'Uses' },
+  { id: 7,  ciTypeSource: 'network_device',  ciTypeSourceValue: 'Network Device',  ciTypeTarget: 'server',          ciTypeTargetValue: 'Server',          typeConnection: 'connects_to', typeConnectionValue: 'Connects To' },
+  { id: 8,  ciTypeSource: 'virtual_machine', ciTypeSourceValue: 'Virtual Machine', ciTypeTarget: 'server',          ciTypeTargetValue: 'Server',          typeConnection: 'runs_on',     typeConnectionValue: 'Runs On' },
+  { id: 9,  ciTypeSource: 'virtual_machine', ciTypeSourceValue: 'Virtual Machine', ciTypeTarget: 'storage',         ciTypeTargetValue: 'Storage',         typeConnection: 'uses',        typeConnectionValue: 'Uses' },
+  { id: 10, ciTypeSource: 'cloud_service',   ciTypeSourceValue: 'Cloud Service',   ciTypeTarget: 'application',     ciTypeTargetValue: 'Application',     typeConnection: 'hosts',       typeConnectionValue: 'Hosts' },
+  { id: 11, ciTypeSource: 'cloud_service',   ciTypeSourceValue: 'Cloud Service',   ciTypeTarget: 'database',        ciTypeTargetValue: 'Database',        typeConnection: 'hosts',       typeConnectionValue: 'Hosts' },
+  { id: 12, ciTypeSource: 'database',        ciTypeSourceValue: 'Database',        ciTypeTarget: 'server',          ciTypeTargetValue: 'Server',          typeConnection: 'runs_on',     typeConnectionValue: 'Runs On' },
+  { id: 13, ciTypeSource: 'database',        ciTypeSourceValue: 'Database',        ciTypeTarget: 'storage',         ciTypeTargetValue: 'Storage',         typeConnection: 'uses',        typeConnectionValue: 'Uses' },
+  { id: 14, ciTypeSource: 'middleware',      ciTypeSourceValue: 'Middleware',      ciTypeTarget: 'server',          ciTypeTargetValue: 'Server',          typeConnection: 'runs_on',     typeConnectionValue: 'Runs On' },
+  { id: 15, ciTypeSource: 'middleware',      ciTypeSourceValue: 'Middleware',      ciTypeTarget: 'application',     ciTypeTargetValue: 'Application',     typeConnection: 'connects_to', typeConnectionValue: 'Connects To' },
+  { id: 16, ciTypeSource: 'server',          ciTypeSourceValue: 'Server',          ciTypeTarget: 'server',          ciTypeTargetValue: 'Server',          typeConnection: 'backs_up',    typeConnectionValue: 'Backs Up' },
+  { id: 17, ciTypeSource: 'application',     ciTypeSourceValue: 'Application',     ciTypeTarget: 'application',     ciTypeTargetValue: 'Application',     typeConnection: 'depends_on',  typeConnectionValue: 'Depends On' },
+  { id: 18, ciTypeSource: 'network_device',  ciTypeSourceValue: 'Network Device',  ciTypeTarget: 'network_device',  ciTypeTargetValue: 'Network Device',  typeConnection: 'connects_to', typeConnectionValue: 'Connects To' },
+  { id: 19, ciTypeSource: 'cloud_service',   ciTypeSourceValue: 'Cloud Service',   ciTypeTarget: 'cloud_service',   ciTypeTargetValue: 'Cloud Service',   typeConnection: 'depends_on',  typeConnectionValue: 'Depends On' },
+  { id: 20, ciTypeSource: 'application',     ciTypeSourceValue: 'Application',     ciTypeTarget: 'network_device',  ciTypeTargetValue: 'Network Device',  typeConnection: 'monitors',    typeConnectionValue: 'Monitors' },
 ]

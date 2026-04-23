@@ -1,0 +1,19 @@
+{
+    "httpStatus": 200,
+    "data": [
+        {
+            "id": 5,
+            "name": "NETWORK",
+            "status": "ACTIVE",
+            "projectId": 1,
+            "attributePrimaryId": 16,
+            "attributePrimary": null,
+            "uniqueValue": "10.0.0.12,8080,{ \"label\": \"IP\", \"value\": \"IP\" },Internet",
+            "modifiedBy": "txdat2",
+            "modifiedAt": "2026-04-22T15:52:54",
+            "detailList": null
+        }
+    ],
+    "messageId": "Success",
+    "errorMessage": ""
+}

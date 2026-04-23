@@ -3,7 +3,7 @@
 
 import { v4 as uuidv4 } from 'uuid'
 import {
-  MOCK_CI_CLASSES,
+  MOCK_CI_TYPES,
   MOCK_ATTRIBUTE_DEFINITIONS,
   MOCK_CONFIGURATION_ITEMS,
   MOCK_CI_RELATIONSHIPS,
@@ -12,10 +12,11 @@ import {
   MOCK_CI_AUDIT_LOG,
   MOCK_CI_RULE_CONFIGS,
   MOCK_CRM_DIRECTIONS,
+  MOCK_CI_TYPE_RELATIONSHIPS,
 } from './mockCMPlanData'
 
 // In-memory mutable stores (reset on page refresh)
-let ciClasses = [...MOCK_CI_CLASSES]
+let ciTypes = [...MOCK_CI_TYPES]
 let attributeDefinitions = [...MOCK_ATTRIBUTE_DEFINITIONS]
 let configurationItems = [...MOCK_CONFIGURATION_ITEMS]
 let ciRelationships = [...MOCK_CI_RELATIONSHIPS]
@@ -24,6 +25,7 @@ let ciRuleConfigs = [...MOCK_CI_RULE_CONFIGS]
 let crmDirections = [...MOCK_CRM_DIRECTIONS]
 let compliancePolicies = [...MOCK_COMPLIANCE_POLICIES]
 let ciAuditLog = [...MOCK_CI_AUDIT_LOG]
+let ciTypeRelationships = [...MOCK_CI_TYPE_RELATIONSHIPS]
 
 // Helper: append an audit log entry
 const addAuditEntry = (partial) => {
@@ -53,47 +55,47 @@ const errorResponse = (message, code = 400) => ({
 })
 
 // ── CI Classes ───────────────────────────────────────────────────────────────
-const ciClassesApi = {
+const ciTypesApi = {
   getAll: async () => {
     await delay()
-    return successResponse([...ciClasses].sort((a, b) => a.sortOrder - b.sortOrder))
+    return successResponse([...ciTypes].sort((a, b) => a.sortOrder - b.sortOrder))
   },
 
   create: async (payload) => {
     await delay()
-    const exists = ciClasses.find((c) => c.name === payload.name)
+    const exists = ciTypes.find((c) => c.name === payload.name)
     if (exists) return errorResponse('A CI class with this name already exists.', 409)
     const newClass = {
       id: `class-${uuidv4().slice(0, 6)}`,
       ...payload,
-      sortOrder: ciClasses.length + 1,
+      sortOrder: ciTypes.length + 1,
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
-    ciClasses = [...ciClasses, newClass]
+    ciTypes = [...ciTypes, newClass]
     return successResponse(newClass)
   },
 
   update: async (id, payload) => {
     await delay()
-    const index = ciClasses.findIndex((c) => c.id === id)
+    const index = ciTypes.findIndex((c) => c.id === id)
     if (index === -1) return errorResponse('CI class not found.', 404)
-    ciClasses = ciClasses.map((c) =>
+    ciTypes = ciTypes.map((c) =>
       c.id === id ? { ...c, ...payload, updatedAt: new Date().toISOString() } : c
     )
-    return successResponse(ciClasses.find((c) => c.id === id))
+    return successResponse(ciTypes.find((c) => c.id === id))
   },
 
   remove: async (id) => {
     await delay()
-    const hasItems = configurationItems.some((ci) => ci.ciClassId === id)
+    const hasItems = configurationItems.some((ci) => ci.ciTypeId === id)
     if (hasItems)
       return errorResponse(
         'Cannot delete CI class: there are existing Configuration Items of this class.',
         409
       )
-    ciClasses = ciClasses.filter((c) => c.id !== id)
+    ciTypes = ciTypes.filter((c) => c.id !== id)
     return successResponse({ id })
   },
 }
@@ -103,9 +105,9 @@ const attributeDefinitionsApi = {
   getAll: async (filters = {}) => {
     await delay()
     let result = [...attributeDefinitions]
-    if (filters.ciClassId !== undefined) {
+    if (filters.ciTypeId !== undefined) {
       result = result.filter(
-        (a) => a.ciClassId === filters.ciClassId || a.ciClassId === null
+        (a) => a.ciTypeId === filters.ciTypeId || a.ciTypeId === null
       )
     }
     if (filters.isActive !== undefined) {
@@ -114,10 +116,10 @@ const attributeDefinitionsApi = {
     return successResponse(result.sort((a, b) => a.sortOrder - b.sortOrder))
   },
 
-  getByClassId: async (ciClassId) => {
+  getByClassId: async (ciTypeId) => {
     await delay()
     const result = attributeDefinitions
-      .filter((a) => a.ciClassId === ciClassId || a.ciClassId === null)
+      .filter((a) => a.ciTypeId === ciTypeId || a.ciTypeId === null)
       .sort((a, b) => a.sortOrder - b.sortOrder)
     return successResponse(result)
   },
@@ -157,7 +159,7 @@ const configurationItemsApi = {
   getAll: async (params = {}) => {
     await delay()
     const {
-      ciClassId,
+      ciTypeId,
       status,
       criticality,
       environment,
@@ -168,7 +170,7 @@ const configurationItemsApi = {
 
     let result = [...configurationItems].filter((ci) => ci.status !== 'retired' || status === 'retired')
 
-    if (ciClassId) result = result.filter((ci) => ci.ciClassId === ciClassId)
+    if (ciTypeId) result = result.filter((ci) => ci.ciTypeId === ciTypeId)
     if (status) result = result.filter((ci) => ci.status === status)
     if (criticality) result = result.filter((ci) => ci.criticality === criticality)
     if (environment) result = result.filter((ci) => ci.environment === environment)
@@ -200,6 +202,19 @@ const configurationItemsApi = {
     return successResponse({ ...ci, relations })
   },
 
+  /**
+   * Mirrors the "Ci By Ci Type" mock API — returns CIs whose ciTypeId matches the given ciType name.
+   * ciType is a type name string (e.g. 'server', 'application').
+   */
+  getByType: async (ciType) => {
+    await delay()
+    if (!ciType) return successResponse([])
+    const result = configurationItems
+      .filter((ci) => ci.ciTypeId === ciType && ci.status !== 'retired')
+      .sort((a, b) => a.name.localeCompare(b.name))
+    return successResponse(result)
+  },
+
   create: async (payload) => {
     await delay()
     const newCI = {
@@ -229,17 +244,17 @@ const configurationItemsApi = {
         : ci
     )
     // Audit 1: CI class changed
-    if (payload.ciClassId !== undefined && payload.ciClassId !== old.ciClassId) {
-      const fromClass = ciClasses.find((c) => c.id === old.ciClassId)
-      const toClass = ciClasses.find((c) => c.id === payload.ciClassId)
+    if (payload.ciTypeId !== undefined && payload.ciTypeId !== old.ciTypeId) {
+      const fromType = ciTypes.find((c) => c.id === old.ciTypeId)
+      const toType = ciTypes.find((c) => c.id === payload.ciTypeId)
       addAuditEntry({
         ciId: id,
-        action: 'ci_class_changed',
+        action: 'ci_type_changed',
         meta: {
-          fromClassId: old.ciClassId,
-          fromClassName: fromClass?.label || old.ciClassId,
-          toClassId: payload.ciClassId,
-          toClassName: toClass?.label || payload.ciClassId,
+          fromTypeId: old.ciTypeId,
+          fromTypeName: fromType?.label || old.ciTypeId,
+          toTypeId: payload.ciTypeId,
+          toTypeName: toType?.label || payload.ciTypeId,
         },
       })
     }
@@ -278,11 +293,11 @@ const configurationItemsApi = {
         }
       }
       if (attrChanges.length > 0) {
-        const ciClass = ciClasses.find((c) => c.id === (payload.ciClassId || old.ciClassId))
+        const ciType = ciTypes.find((c) => c.id === (payload.ciTypeId || old.ciTypeId))
         addAuditEntry({
           ciId: id,
           action: 'ci_attr_updated',
-          meta: { classLabel: ciClass?.label || '', changes: attrChanges },
+          meta: { typeLabel: ciType?.label || '', changes: attrChanges },
         })
       }
     }
@@ -530,11 +545,11 @@ const complianceApi = {
     await delay()
     const activeCIs = configurationItems.filter((ci) => ci.status !== 'retired')
 
-    const byClass = ciClasses.map((cls) => ({
+    const byClass = ciTypes.map((cls) => ({
       classId: cls.id,
       className: cls.label,
       color: cls.color,
-      count: activeCIs.filter((ci) => ci.ciClassId === cls.id).length,
+      count: activeCIs.filter((ci) => ci.ciTypeId === cls.id).length,
     }))
 
     const byStatus = ['active', 'inactive', 'maintenance', 'pending'].map((s) => ({
@@ -666,8 +681,20 @@ const crmDirectionApi = {
   },
 }
 
+// ── CI Type Relationships ─────────────────────────────────────────────────────
+const ciTypeRelationshipsApi = {
+  /**
+   * Mirrors the "Ci Type Relationship" mock API — returns the full matrix of
+   * (ciTypeSource, typeConnection, ciTypeTarget) triples the system considers valid.
+   */
+  getAll: async () => {
+    await delay()
+    return successResponse([...ciTypeRelationships])
+  },
+}
+
 export const cmplanApi = {
-  ciClasses: ciClassesApi,
+  ciTypes: ciTypesApi,
   attributeDefinitions: attributeDefinitionsApi,
   configurationItems: configurationItemsApi,
   relationships: relationshipsApi,
@@ -676,4 +703,5 @@ export const cmplanApi = {
   auditLog: ciAuditLogApi,
   ciRuleConfig: ciRuleConfigApi,
   crmDirection: crmDirectionApi,
+  ciTypeRelationships: ciTypeRelationshipsApi,
 }

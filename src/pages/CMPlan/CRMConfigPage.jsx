@@ -10,9 +10,6 @@ import {
   createCRMDirection,
   updateCRMDirection,
   deleteCRMDirection,
-  selectCRMDirections,
-  selectCRMDirectionLoading,
-  selectCRMDirectionSubmitting,
 } from '../../store/cmplan'
 import {
   CRM_SOURCE_CI_TYPES,
@@ -212,9 +209,9 @@ const buildColumns = (onEdit, onDelete) => [
 
 const CRMConfigPage = () => {
   const dispatch = useDispatch()
-  const allItems = useSelector(selectCRMDirections)
-  const loading = useSelector(selectCRMDirectionLoading)
-  const submitting = useSelector(selectCRMDirectionSubmitting)
+  const allItems = useSelector(state => state.cmplan.crmDirection.items)
+  const loading = useSelector(state => state.cmplan.crmDirection.loading)
+  const submitting = useSelector(state => state.cmplan.crmDirection.submitting)
 
   const [filterValues, setFilterValues] = useState(INITIAL_FILTER_VALUES)
   const [pendingFilters, setPendingFilters] = useState(INITIAL_FILTER_VALUES)

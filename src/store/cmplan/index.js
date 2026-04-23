@@ -1,15 +1,18 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import ciClassesReducer from './ciClassesSlice'
-import attributeDefinitionsReducer from './attributeDefinitionsSlice'
-import configurationItemsReducer from './configurationItemsSlice'
-import ciRelationshipsReducer from './ciRelationshipsSlice'
-import ciGroupsReducer from './ciGroupsSlice'
-import ciAuditLogReducer from './ciAuditLogSlice'
-import ciRuleConfigReducer from './ciRuleConfigSlice'
-import crmDirectionReducer from './crmDirectionSlice'
+import {
+  ciTypesReducer,
+  attributeDefinitionsReducer,
+  configurationItemsReducer,
+  ciRelationshipsReducer,
+  ciGroupsReducer,
+  ciAuditLogReducer,
+  ciRuleConfigReducer,
+  crmDirectionReducer,
+  ciTypeRelationshipsReducer,
+} from './reducers'
 
 const cmplanReducer = combineReducers({
-  ciClasses: ciClassesReducer,
+  ciTypes: ciTypesReducer,
   attributeDefinitions: attributeDefinitionsReducer,
   configurationItems: configurationItemsReducer,
   ciRelationships: ciRelationshipsReducer,
@@ -17,16 +20,11 @@ const cmplanReducer = combineReducers({
   ciAuditLog: ciAuditLogReducer,
   ciRuleConfig: ciRuleConfigReducer,
   crmDirection: crmDirectionReducer,
+  ciTypeRelationships: ciTypeRelationshipsReducer,
 })
 
 export default cmplanReducer
 
-// Re-export actions & thunks for convenience
-export * from './ciClassesSlice'
-export * from './attributeDefinitionsSlice'
-export * from './configurationItemsSlice'
-export * from './ciRelationshipsSlice'
-export * from './ciGroupsSlice'
-export * from './ciAuditLogSlice'
-export * from './ciRuleConfigSlice'
-export * from './crmDirectionSlice'
+// Re-export thunks, selectors, and actions for convenient imports.
+export * from './asyncThunks'
+export * from './reducers'

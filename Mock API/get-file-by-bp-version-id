@@ -1,9 +1,0 @@
-{
-    "httpStatus": 200,
-    "data": {
-        "documentDtoList": [],
-        "total": 0
-    },
-    "messageId": "Success",
-    "errorMessage": ""
-}

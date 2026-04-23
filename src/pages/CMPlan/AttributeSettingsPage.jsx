@@ -5,26 +5,19 @@ import {
   Input, Pagination, Empty, notification,
 } from 'antd'
 import {
-  fetchCIClasses,
-  createCIClass,
-  updateCIClass,
-  deleteCIClass,
+  fetchCITypes,
+  createCIType,
+  updateCIType,
+  deleteCIType,
   fetchAttributeDefinitions,
   createAttributeDefinition,
   updateAttributeDefinition,
   deleteAttributeDefinition,
-  selectCIClasses,
-  selectCIClassesLoading,
-  selectCIClassesSubmitting,
-  selectAllAttributeDefinitions,
-  selectAttrDefsLoading,
-  selectAttrDefsGroupedByClass,
   fetchCIRuleConfigs,
-  selectCIRuleConfigs,
 } from '../../store/cmplan'
 import AttributeDefinitionTable from '../../components/CMPlan/AttributeSettings/AttributeDefinitionTable'
 import AttributeFormModal from '../../components/CMPlan/AttributeSettings/AttributeFormModal'
-import CIClassFormModal from '../../components/CMPlan/AttributeSettings/CIClassFormModal'
+import CITypeFormModal from '../../components/CMPlan/AttributeSettings/CITypeFormModal'
 import './CMPlan.css'
 
 const CLASS_PAGE_SIZE = 12
@@ -32,13 +25,24 @@ const CLASS_PAGE_SIZE = 12
 const AttributeSettingsPage = () => {
   const dispatch = useDispatch()
 
-  const ciClasses = useSelector(selectCIClasses)
-  const ciClassesLoading = useSelector(selectCIClassesLoading)
-  const ciClassesSubmitting = useSelector(selectCIClassesSubmitting)
-  const allAttrDefs = useSelector(selectAllAttributeDefinitions)
-  const attrDefsLoading = useSelector(selectAttrDefsLoading)
-  const groupedAttrDefs = useSelector(selectAttrDefsGroupedByClass)
-  const allRuleConfigs = useSelector(selectCIRuleConfigs)
+  const ciTypes = useSelector(state => state.cmplan.ciTypes.items)
+  const ciTypesLoading = useSelector(state => state.cmplan.ciTypes.loading)
+  const ciTypesSubmitting = useSelector(state => state.cmplan.ciTypes.submitting)
+  const allAttrDefs = useSelector(state => state.cmplan.attributeDefinitions.items)
+  const attrDefsLoading = useSelector(state => state.cmplan.attributeDefinitions.loading)
+  const allRuleConfigs = useSelector(state => state.cmplan.ciRuleConfig.items)
+  const groupedAttrDefs = useMemo(() => {
+    const grouped = { global: [] }
+    allAttrDefs.forEach((a) => {
+      if (a.ciTypeId === null) {
+        grouped.global.push(a)
+      } else {
+        if (!grouped[a.ciTypeId]) grouped[a.ciTypeId] = []
+        grouped[a.ciTypeId].push(a)
+      }
+    })
+    return grouped
+  }, [allAttrDefs])
   const validationRules = allRuleConfigs.filter((r) => r.category === 'validation_rule')
 
   // Master-detail selection
@@ -56,7 +60,7 @@ const AttributeSettingsPage = () => {
   const [editingClass, setEditingClass] = useState(null)
 
   useEffect(() => {
-    dispatch(fetchCIClasses())
+    dispatch(fetchCITypes())
     dispatch(fetchAttributeDefinitions())
     dispatch(fetchCIRuleConfigs())
   }, [dispatch])
@@ -157,8 +161,8 @@ const AttributeSettingsPage = () => {
   const handleDeleteClass = useCallback(
     async (id, e) => {
       e.stopPropagation()
-      const result = await dispatch(deleteCIClass(id))
-      if (deleteCIClass.fulfilled.match(result)) {
+      const result = await dispatch(deleteCIType(id))
+      if (deleteCIType.fulfilled.match(result)) {
         notification.success({ message: 'CI class deleted.' })
         setSelectedId((prev) => (prev === id ? 'global' : prev))
       } else {
@@ -176,8 +180,8 @@ const AttributeSettingsPage = () => {
       let result
       if (editingClass) {
         const { name, ...payload } = values // name (slug) cannot be changed
-        result = await dispatch(updateCIClass({ id: editingClass.id, payload }))
-        if (updateCIClass.fulfilled.match(result)) {
+        result = await dispatch(updateCIType({ id: editingClass.id, payload }))
+        if (updateCIType.fulfilled.match(result)) {
           notification.success({ message: 'CI class updated.' })
           setClassModalVisible(false)
         } else {
@@ -187,8 +191,8 @@ const AttributeSettingsPage = () => {
           })
         }
       } else {
-        result = await dispatch(createCIClass(values))
-        if (createCIClass.fulfilled.match(result)) {
+        result = await dispatch(createCIType(values))
+        if (createCIType.fulfilled.match(result)) {
           notification.success({ message: 'CI class created.' })
           setClassModalVisible(false)
           setSelectedId(result.payload.id)
@@ -209,22 +213,22 @@ const AttributeSettingsPage = () => {
   }, [])
 
   // Derived values for the selected class
-  const selectedClass = selectedId === 'global' ? null : ciClasses.find((c) => c.id === selectedId)
-  const modalCiClassId = selectedId === 'global' ? null : selectedId
-  const modalCiClassLabel = selectedId === 'global' ? 'Global' : (selectedClass && selectedClass.label)
+  const selectedType = selectedId === 'global' ? null : ciTypes.find((c) => c.id === selectedId)
+  const modalCiTypeId = selectedId === 'global' ? null : selectedId
+  const modalCiTypeLabel = selectedId === 'global' ? 'Global' : (selectedType && selectedType.label)
 
   // Filtered + paginated class list for the left panel
   const filteredClasses = useMemo(() => {
     const q = classSearch.trim().toLowerCase()
-    return q ? ciClasses.filter((c) => c.label.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)) : ciClasses
-  }, [ciClasses, classSearch])
+    return q ? ciTypes.filter((c) => c.label.toLowerCase().includes(q) || c.name.toLowerCase().includes(q)) : ciTypes
+  }, [ciTypes, classSearch])
 
   const pagedClasses = useMemo(() => {
     const start = (classPage - 1) * CLASS_PAGE_SIZE
     return filteredClasses.slice(start, start + CLASS_PAGE_SIZE)
   }, [filteredClasses, classPage])
 
-  if (ciClassesLoading) {
+  if (ciTypesLoading) {
     return (
       <div className="cmplan-loading-center">
         <Spin size="large" tip="Loading CI classes..." />
@@ -248,7 +252,7 @@ const AttributeSettingsPage = () => {
         </div>
         <div className="cmplan-page-header-stats">
           <div className="cmplan-stat-pill">
-            <span className="cmplan-stat-pill-value">{ciClasses.length}</span>
+            <span className="cmplan-stat-pill-value">{ciTypes.length}</span>
             <span className="cmplan-stat-pill-label">CI Classes</span>
           </div>
           <div className="cmplan-stat-pill">
@@ -257,7 +261,7 @@ const AttributeSettingsPage = () => {
           </div>
           <div className="cmplan-stat-pill">
             <span className="cmplan-stat-pill-value">
-              {allAttrDefs.filter((a) => a.ciClassId === null).length}
+              {allAttrDefs.filter((a) => a.ciTypeId === null).length}
             </span>
             <span className="cmplan-stat-pill-label">Global</span>
           </div>
@@ -428,20 +432,20 @@ const AttributeSettingsPage = () => {
                   onToggleActive={handleToggleActive}
                 />
               </div>
-            ) : selectedClass ? (
+            ) : selectedType ? (
               <div className="attr-settings-right-inner">
                 {/* Class header */}
                 <div className="attr-settings-detail-header">
                   <span
                     className="attr-settings-detail-icon"
-                    style={{ color: selectedClass.color, background: selectedClass.color + '20' }}
+                    style={{ color: selectedType.color, background: selectedType.color + '20' }}
                   >
-                    <Icon type={selectedClass.icon} style={{ fontSize: 18 }} />
+                    <Icon type={selectedType.icon} style={{ fontSize: 18 }} />
                   </span>
                   <div style={{ flex: 1 }}>
                     <div className="attr-settings-detail-title">
-                      {selectedClass.label}
-                      {!selectedClass.isActive && (
+                      {selectedType.label}
+                      {!selectedType.isActive && (
                         <span style={{ marginLeft: 8, fontSize: 11, color: '#8c8c8c', fontWeight: 400 }}>
                           (inactive)
                         </span>
@@ -449,17 +453,17 @@ const AttributeSettingsPage = () => {
                     </div>
                     <div className="attr-settings-detail-sub">
                       <code style={{ fontSize: 11, background: '#f5f5f5', padding: '1px 6px', borderRadius: 3 }}>
-                        {selectedClass.name}
+                        {selectedType.name}
                       </code>
-                      {selectedClass.description && (
-                        <span style={{ marginLeft: 8, color: '#8c8c8c' }}>{selectedClass.description}</span>
+                      {selectedType.description && (
+                        <span style={{ marginLeft: 8, color: '#8c8c8c' }}>{selectedType.description}</span>
                       )}
                     </div>
                   </div>
                   <Badge
-                    count={(groupedAttrDefs[selectedClass.id] && groupedAttrDefs[selectedClass.id].length) || 0}
+                    count={(groupedAttrDefs[selectedType.id] && groupedAttrDefs[selectedType.id].length) || 0}
                     style={{
-                      backgroundColor: selectedClass.color,
+                      backgroundColor: selectedType.color,
                       fontSize: 13, height: 22, lineHeight: '22px',
                       borderRadius: 11, padding: '0 9px',
                     }}
@@ -469,16 +473,16 @@ const AttributeSettingsPage = () => {
                       icon="edit"
                       size="small"
                       style={{ marginLeft: 8 }}
-                      onClick={(e) => handleOpenEditClass(selectedClass, e)}
+                      onClick={(e) => handleOpenEditClass(selectedType, e)}
                     >
                       Edit Class
                     </Button>
                   </Tooltip>
                 </div>
                 <AttributeDefinitionTable
-                  dataSource={groupedAttrDefs[selectedClass.id] || []}
+                  dataSource={groupedAttrDefs[selectedType.id] || []}
                   loading={attrDefsLoading}
-                  ciClassLabel={selectedClass.label}
+                  ciTypeLabel={selectedType.label}
                   validationRules={validationRules}
                   onAdd={handleAdd}
                   onEdit={handleEdit}
@@ -498,18 +502,18 @@ const AttributeSettingsPage = () => {
       <AttributeFormModal
         visible={modalVisible}
         editingRecord={editingRecord}
-        ciClassId={modalCiClassId}
-        ciClassLabel={modalCiClassLabel}
+        ciTypeId={modalCiTypeId}
+        ciTypeLabel={modalCiTypeLabel}
         onSubmit={handleModalSubmit}
         onCancel={handleModalCancel}
         submitting={submitting}
         validationRules={validationRules}
       />
 
-      <CIClassFormModal
+      <CITypeFormModal
         visible={classModalVisible}
         editingRecord={editingClass}
-        submitting={ciClassesSubmitting}
+        submitting={ciTypesSubmitting}
         onSubmit={handleClassModalSubmit}
         onCancel={handleClassModalCancel}
       />

@@ -1,16 +1,8 @@
 // ── Limits ───────────────────────────────────────────────────────────────────
 
-export const MAX_SOURCE_CIS = 50
-export const MAX_TARGET_CIS = 50
+
 export const MAX_RULES = 10
 export const MAX_RELATIONSHIPS_PER_BATCH = 500
-
-// ── Defaults ─────────────────────────────────────────────────────────────────
-
-export const DEFAULT_RELATIONSHIP_TYPE = 'contains'
-
-export const DIRECTION_OUT = 'out'
-export const DIRECTION_IN = 'in'
 
 // ── Display ──────────────────────────────────────────────────────────────────
 
@@ -24,3 +16,4 @@ export const RELATIONSHIP_TYPE_COLORS = {
   monitors: '#722ed1',
   backs_up: '#eb2f96',
 }
+

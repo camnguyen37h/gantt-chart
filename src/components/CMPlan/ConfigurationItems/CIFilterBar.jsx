@@ -15,14 +15,14 @@ const { Search } = Input
  */
 const CIFilterBar = ({
   filters,
-  ciClasses,
+  ciTypes,
   onFilterChange,
   onReset,
   total,
   loading,
 }) => {
   const hasActiveFilters =
-    filters.ciClassId ||
+    filters.ciTypeId ||
     filters.status ||
     filters.criticality ||
     filters.environment ||
@@ -55,12 +55,12 @@ const CIFilterBar = ({
         <Col xs={12} md={4}>
           <Select
             placeholder="All Classes"
-            value={filters.ciClassId || undefined}
-            onChange={(v) => onFilterChange({ ciClassId: v })}
+            value={filters.ciTypeId || undefined}
+            onChange={(v) => onFilterChange({ ciTypeId: v })}
             allowClear
             style={{ width: '100%' }}
           >
-            {ciClasses.map((cls) => (
+            {ciTypes.map((cls) => (
               <Option key={cls.id} value={cls.id}>
                 <Icon
                   type={cls.icon}

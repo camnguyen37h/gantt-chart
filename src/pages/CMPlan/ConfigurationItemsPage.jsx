@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Card, notification, Icon } from 'antd'
 import {
-  fetchCIClasses,
+  fetchCITypes,
   fetchAttributeDefinitions,
   fetchConfigurationItems,
   fetchCIRuleConfigs,
@@ -13,14 +13,6 @@ import {
   setFilters,
   resetFilters,
   setPagination,
-  selectCIClasses,
-  selectCIItems,
-  selectCITotal,
-  selectCILoading,
-  selectCISubmitting,
-  selectCIFilters,
-  selectCIPagination,
-  selectAttrDefsByClassId,
   fetchAllRelationships,
   fetchAuditLogByCI,
 } from '../../store/cmplan'
@@ -34,27 +26,32 @@ const ConfigurationItemsPage = () => {
   const dispatch = useDispatch()
 
   // State
-  const ciClasses = useSelector(selectCIClasses)
-  const items = useSelector(selectCIItems)
-  const total = useSelector(selectCITotal)
-  const loading = useSelector(selectCILoading)
-  const submitting = useSelector(selectCISubmitting)
-  const filters = useSelector(selectCIFilters)
-  const pagination = useSelector(selectCIPagination)
+  const ciTypes = useSelector(state => state.cmplan.ciTypes.items)
+  const items = useSelector(state => state.cmplan.configurationItems.items)
+  const total = useSelector(state => state.cmplan.configurationItems.total)
+  const loading = useSelector(state => state.cmplan.configurationItems.loading)
+  const submitting = useSelector(state => state.cmplan.configurationItems.submitting)
+  const filters = useSelector(state => state.cmplan.configurationItems.filters)
+  const pagination = useSelector(state => state.cmplan.configurationItems.pagination)
+  const allAttrDefs = useSelector(state => state.cmplan.attributeDefinitions.items)
   const [modalVisible, setModalVisible] = useState(false)
   const [editingCI, setEditingCI] = useState(null)
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [viewingCI, setViewingCI] = useState(null)
 
-  const viewingCIClassId = viewingCI ? viewingCI.ciClassId : null
+  const viewingCITypeId = viewingCI ? viewingCI.ciTypeId : null
   // Attr defs for detail drawer (based on viewing CI class)
-  const viewingCIAttrDefs = useSelector(
-    selectAttrDefsByClassId(viewingCIClassId)
+  const viewingCIAttrDefs = useMemo(
+    () =>
+      allAttrDefs
+        .filter((a) => a.ciTypeId === viewingCITypeId || a.ciTypeId === null)
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [allAttrDefs, viewingCITypeId]
   )
 
   // Load initial data
   useEffect(() => {
-    dispatch(fetchCIClasses())
+    dispatch(fetchCITypes())
     dispatch(fetchAttributeDefinitions())
     dispatch(fetchCIRuleConfigs())
     dispatch(fetchAllRelationships())
@@ -190,7 +187,7 @@ const ConfigurationItemsPage = () => {
       <Card className="cmplan-card" bodyStyle={{ padding: '16px 20px' }}>
         <CIFilterBar
           filters={filters}
-          ciClasses={ciClasses}
+          ciTypes={ciTypes}
           onFilterChange={handleFilterChange}
           onReset={handleResetFilters}
           total={total}
@@ -202,7 +199,7 @@ const ConfigurationItemsPage = () => {
           loading={loading}
           total={total}
           pagination={pagination}
-          ciClasses={ciClasses}
+          ciTypes={ciTypes}
           onEdit={handleEdit}
           onDelete={handleDelete}
           onView={handleView}

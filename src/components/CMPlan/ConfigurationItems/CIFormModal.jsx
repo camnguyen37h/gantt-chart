@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Modal,
   Form,
@@ -12,11 +12,6 @@ import {
   Button,
 } from 'antd'
 import { useSelector } from 'react-redux'
-import {
-  selectCIClasses,
-  selectAttrDefsByClassId,
-  selectCIRuleConfigs,
-} from '../../../store/cmplan'
 import CIDynamicFields from './CIDynamicFields'
 import {
   CI_STATUS,
@@ -35,31 +30,38 @@ const { TextArea } = Input
  * Renders dynamic attribute fields based on the selected CI class.
  */
 const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, submitting }) => {
-  const ciClasses = useSelector(selectCIClasses)
-  const allRuleConfigs = useSelector(selectCIRuleConfigs)
-  const [selectedClassId, setSelectedClassId] = useState(null)
+  const ciTypes = useSelector(state => state.cmplan.ciTypes.items)
+  const allRuleConfigs = useSelector(state => state.cmplan.ciRuleConfig.items)
+  const allAttrDefs = useSelector(state => state.cmplan.attributeDefinitions.items)
+  const [selectedTypeId, setSelectedTypeId] = useState(null)
 
   useEffect(() => {
     if (visible && editingRecord) {
-      setSelectedClassId(editingRecord.ciClassId)
+      setSelectedTypeId(editingRecord.ciTypeId)
     } else if (!visible) {
-      setSelectedClassId(null)
+      setSelectedTypeId(null)
     }
   }, [visible, editingRecord])
 
-  const attrDefs = useSelector(selectAttrDefsByClassId(selectedClassId))
+  const attrDefs = useMemo(
+    () =>
+      allAttrDefs
+        .filter((a) => a.ciTypeId === selectedTypeId || a.ciTypeId === null)
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [allAttrDefs, selectedTypeId]
+  )
   const validationRules = allRuleConfigs.filter((r) => r.category === 'validation_rule')
 
   const { getFieldDecorator } = form
   const isEditing = Boolean(editingRecord)
-  const selectedClass = ciClasses.find((c) => c.id === selectedClassId)
+  const selectedType = ciTypes.find((c) => c.id === selectedTypeId)
 
   useEffect(() => {
     if (!visible) return
     if (editingRecord) {
       const { attributes = {}, tags = [], ...rest } = editingRecord
       form.setFieldsValue({
-        ciClassId: rest.ciClassId,
+        ciTypeId: rest.ciTypeId,
         name: rest.name,
         shortDescription: rest.shortDescription || '',
         status: rest.status,
@@ -80,7 +82,7 @@ const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, su
   }, [visible])
 
   const handleClassChange = (classId) => {
-    setSelectedClassId(classId)
+    setSelectedTypeId(classId)
     const attrKeys = Object.keys(form.getFieldsValue()).filter((k) => k.startsWith('attributes.'))
     const cleared = Object.fromEntries(attrKeys.map((k) => [k, undefined]))
     form.setFieldsValue(cleared)
@@ -149,7 +151,7 @@ const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, su
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item label="CI Class">
-                {getFieldDecorator('ciClassId', {
+                {getFieldDecorator('ciTypeId', {
                   rules: [{ required: true, message: 'CI class is required' }],
                 })(
                   <Select
@@ -159,7 +161,7 @@ const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, su
                     showSearch
                     optionFilterProp="children"
                   >
-                    {ciClasses.map((cls) => (
+                    {ciTypes.map((cls) => (
                       <Option key={cls.id} value={cls.id}>
                         <Icon
                           type={cls.icon}
@@ -294,14 +296,14 @@ const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, su
           </Row>
 
           {/* ── Dynamic Class Attributes ─────────────────────────────────── */}
-          {selectedClassId && attrDefs.length > 0 && (
+          {selectedTypeId && attrDefs.length > 0 && (
             <>
               <Divider orientation="left" style={{ fontSize: 13 }}>
                 <Icon
-                  type={(selectedClass && selectedClass.icon) || 'profile'}
-                  style={{ marginRight: 4, color: selectedClass && selectedClass.color }}
+                  type={(selectedType && selectedType.icon) || 'profile'}
+                  style={{ marginRight: 4, color: selectedType && selectedType.color }}
                 />
-                {selectedClass && selectedClass.label} Attributes
+                {selectedType && selectedType.label} Attributes
               </Divider>
               <CIDynamicFields
                 attrDefs={attrDefs}
@@ -312,7 +314,7 @@ const CIFormModalInner = ({ form, visible, editingRecord, onSubmit, onCancel, su
             </>
           )}
 
-          {selectedClassId && attrDefs.length === 0 && (
+          {selectedTypeId && attrDefs.length === 0 && (
             <Alert
               type="info"
               showIcon

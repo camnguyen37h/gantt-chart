@@ -16,10 +16,6 @@ import ReactECharts from 'echarts-for-react'
 import {
   fetchCIGroups,
   fetchConfigurationItems,
-  selectCIGroups,
-  selectCIGroupsLoading,
-  selectCIItems,
-  selectCILoading,
 } from '../../store/cmplan'
 import { GROUP_TYPE_MAP, CI_STATUS_LABELS } from '../../utils/cmplan/cmplanConstants'
 import './CMPlan.css'
@@ -235,10 +231,10 @@ const GroupPanel = ({ group, allCIs, onClose }) => {
 // ── Main page ─────────────────────────────────────────────────────────────────
 const GroupMapPage = () => {
   const dispatch = useDispatch()
-  const groups = useSelector(selectCIGroups)
-  const groupsLoading = useSelector(selectCIGroupsLoading)
-  const allCIs = useSelector(selectCIItems)
-  const cisLoading = useSelector(selectCILoading)
+  const groups = useSelector(state => state.cmplan.ciGroups.items)
+  const groupsLoading = useSelector(state => state.cmplan.ciGroups.loading)
+  const allCIs = useSelector(state => state.cmplan.configurationItems.items)
+  const cisLoading = useSelector(state => state.cmplan.configurationItems.loading)
 
   const [filterType, setFilterType] = useState(null)
   const [selectedGroup, setSelectedGroup] = useState(null)

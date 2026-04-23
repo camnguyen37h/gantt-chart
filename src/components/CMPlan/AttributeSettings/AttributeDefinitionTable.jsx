@@ -14,7 +14,7 @@ const AttributeDefinitionTable = ({
   onEdit,
   onDelete,
   onToggleActive,
-  ciClassLabel,
+  ciTypeLabel,
   isGlobal = false,
   validationRules = [],
 }) => {
@@ -246,7 +246,7 @@ const AttributeDefinitionTable = ({
             ) : (
               <>
                 <Icon type="profile" style={{ marginRight: 6, color: '#1890ff' }} />
-                Attributes specific to <strong>{ciClassLabel}</strong>
+                Attributes specific to <strong>{ciTypeLabel}</strong>
               </>
             )}
           </span>
