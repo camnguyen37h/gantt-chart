@@ -1,11 +1,9 @@
 ﻿import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Empty, Tag } from 'antd'
-import { RELATIONSHIP_TYPE_COLORS } from '../../../utils/cmplan/bulkRelationshipConstants'
 import { getRelTypeLabel } from '../../../utils/cmplan/bulkRelationshipUtils'
 
-const ARROW = '\u2192'
-const DEFAULT_REL_TYPE_COLOR = '#1890ff'
+const ARROW = '→'
 
 const countDuplicates = (items) => {
   let count = 0
@@ -53,12 +51,11 @@ const RelationshipPreview = ({ previewItems, totalCount, relTypeOptions }) => {
           <div className="bulk-rel-preview-grid">
             {previewItems.map((item, index) => {
               const relTypeLabel = getRelTypeLabel(item.relationshipType, relTypeOptions)
-              const relTypeColor = RELATIONSHIP_TYPE_COLORS[item.relationshipType] || DEFAULT_REL_TYPE_COLOR
               return (
                 <div key={buildRowKey(item)} className={buildRowClassName(index, item.isDuplicate)}>
                   <Tag className="bulk-rel-tag-source">{item.sourceName}</Tag>
                   <span className="bulk-rel-preview-arrow">{ARROW}</span>
-                  <Tag color={relTypeColor} className="bulk-rel-tag-type">{relTypeLabel}</Tag>
+                  <Tag className="bulk-rel-tag-type">{relTypeLabel}</Tag>
                   <span className="bulk-rel-preview-arrow">{ARROW}</span>
                   <Tag className="bulk-rel-tag-target">{item.targetName}</Tag>
                   {item.isDuplicate && (

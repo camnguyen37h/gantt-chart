@@ -186,6 +186,8 @@ const useBulkRelationshipForm = () => {
       sourceId: item.sourceId,
       targetId: item.targetId,
       relationshipType: item.relationshipType,
+      appliedDate: item.appliedDate,
+      expiredDate: item.expiredDate,
     }))
     return dispatch(bulkCreateRelationships(payload))
   }, [dispatch, newItems])

@@ -214,17 +214,53 @@
 }
 
 .bulk-rel-rule-body {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.2fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.bulk-rel-rule-section {
   display: flex;
-  align-items: flex-start;
-  gap: 28px;
-  padding: 18px 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #fafbfd;
+  border: 1px solid #eef0f5;
+  border-radius: 8px;
+}
+
+.bulk-rel-rule-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #5b6abf;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.bulk-rel-rule-section-title .anticon {
+  font-size: 13px;
+}
+
+.bulk-rel-rule-section-hint {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 500;
+  color: #bfbfbf;
+  text-transform: none;
+  letter-spacing: 0;
+  font-style: italic;
 }
 
 .bulk-rel-rule-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
 }
 
 .bulk-rel-rule-field--targets {
@@ -233,11 +269,21 @@
 }
 
 .bulk-rel-rule-field-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #8c8c8c;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #595959;
+}
+
+.bulk-rel-rule-remove {
+  margin-left: auto !important;
+  color: #bfbfbf !important;
+  transition: color 0.15s;
+}
+
+.bulk-rel-rule-remove:hover {
+  color: #ff4d4f !important;
 }
 
 /* Direction toggle — custom pill buttons */
@@ -334,9 +380,49 @@
   margin-top: 6px;
 }
 
+.bulk-rel-rule-required {
+  color: #ff4d4f;
+  margin-left: 3px;
+  font-weight: 700;
+}
+
+.bulk-rel-rule-datepicker--error .ant-calendar-picker-input {
+  border-color: #ff4d4f !important;
+}
+
+.bulk-rel-rule-datepicker--error .ant-calendar-picker-input:hover,
+.bulk-rel-rule-datepicker--error .ant-calendar-picker-input:focus {
+  border-color: #ff7875 !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.12) !important;
+}
+
 .bulk-rel-rule-field--type {
-  flex: 1;
+  flex: 1 1 260px;
   min-width: 260px;
+  max-width: 420px;
+}
+
+.bulk-rel-rule-field--date {
+  min-width: 170px;
+}
+
+.bulk-rel-rule-validity {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.bulk-rel-rule-validity-arrow {
+  color: #bfbfbf;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 34px;
+}
+
+@media (max-width: 900px) {
+  .bulk-rel-rule-body {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Preview Section ──────────────────────────────────────────────────────── */
@@ -439,25 +525,29 @@
   font-size: 14px;
 }
 
-/* Preview tags — custom styled */
+/* Preview tags — aligned with CI panel palette (#deebff / #0647a6) */
 .bulk-rel-tag-source {
-  background: #e8f4fd;
-  color: #1a6fb5;
-  border: 1px solid #b3d9f2;
+  background: #deebff;
+  color: #0647a6;
+  border: 1px solid transparent;
   border-radius: 4px;
   font-weight: 500;
   font-size: 12px;
 }
 
 .bulk-rel-tag-type {
+  background: #f4f0ff;
+  color: #5b6abf;
+  border: 1px solid transparent;
+  border-radius: 4px;
   font-weight: 600;
   font-size: 12px;
 }
 
 .bulk-rel-tag-target {
-  background: #e8fce8;
-  color: #2d8a2d;
-  border: 1px solid #b3e6b3;
+  background: #deebff;
+  color: #0647a6;
+  border: 1px solid transparent;
   border-radius: 4px;
   font-weight: 500;
   font-size: 12px;

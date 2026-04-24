@@ -8,6 +8,8 @@ import {
 export const createEmptyRule = () => ({
   id: uuidv4(),
   relationshipType: null,
+  appliedDate: null,
+  expiredDate: null,
 })
 
 export const buildRelationshipKey = (sourceId, relType, targetId) =>
@@ -99,6 +101,8 @@ export const generatePreviewItems = (sourceIds, targetIds, rules, existingPairs,
           sourceId,
           targetId,
           relationshipType: rule.relationshipType,
+          appliedDate: rule.appliedDate || null,
+          expiredDate: rule.expiredDate || null,
           sourceName: (srcCI && srcCI.name) || sourceId,
           targetName: (tgtCI && tgtCI.name) || targetId,
           isDuplicate: existingKeys.has(key),
@@ -149,6 +153,20 @@ export const validateBulkRelationships = ({
       }
     })
   }
+
+  // Applied Date and Expired Date are required per rule.
+  rules.forEach((r, idx) => {
+    if (!r.relationshipType) return
+    if (!r.appliedDate) {
+      errors.push('Rule #' + (idx + 1) + ': Applied Date is required.')
+    }
+    if (!r.expiredDate) {
+      errors.push('Rule #' + (idx + 1) + ': Expired Date is required.')
+    }
+    if (r.appliedDate && r.expiredDate && new Date(r.expiredDate) < new Date(r.appliedDate)) {
+      errors.push('Rule #' + (idx + 1) + ': Expired Date must be on or after Applied Date.')
+    }
+  })
 
   // Disallow duplicate relationship types across rules.
   const seenTypes = new Set()
