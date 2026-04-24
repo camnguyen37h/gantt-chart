@@ -104,8 +104,6 @@ const BulkAddRelationshipPage = () => {
           sourceType={form.sourceType}
           targetType={form.targetType}
           onUpdateRule={form.updateRule}
-          onRemoveRule={form.removeRule}
-          onAddRule={form.addRule}
         />
 
         <RelationshipPreview

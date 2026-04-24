@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { notification } from 'antd'
 import {
   bulkCreateRelationships,
   fetchCIsByType,
   fetchCITypeRelationships,
   fetchExistingRelationshipPairs,
 } from '../../store/cmplan'
-import {
-  MAX_RULES,
-} from '../../utils/cmplan/bulkRelationshipConstants'
 import {
   buildSummaryParts,
   createEmptyRule,
@@ -113,23 +109,6 @@ const useBulkRelationshipForm = () => {
     setRules((prev) => prev.map((r) => (r.id === ruleId ? Object.assign({}, r, updates) : r)))
   }, [])
 
-  const removeRule = useCallback((ruleId) => {
-    setRules((prev) => (prev.length <= 1 ? prev : prev.filter((r) => r.id !== ruleId)))
-  }, [])
-
-  const addRule = useCallback(() => {
-    setRules((prev) => {
-      if (prev.length >= MAX_RULES) {
-        notification.warning({
-          message: 'Rule Limit',
-          description: 'Maximum ' + MAX_RULES + ' rules allowed per batch.',
-        })
-        return prev
-      }
-      return prev.concat(createEmptyRule())
-    })
-  }, [])
-
   // ── Preview & validation ──
   const previewItems = useMemo(
     () => generatePreviewItems(sourceIds, targetIds, rules, existingPairs, previewCIs),
@@ -222,8 +201,6 @@ const useBulkRelationshipForm = () => {
     setSourceSelection: setSourceIds,
     setTargetSelection: setTargetIds,
     updateRule,
-    removeRule,
-    addRule,
     resetForm,
     submitBulkRelationships,
   }

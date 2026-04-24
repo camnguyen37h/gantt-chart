@@ -396,6 +396,16 @@
   box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.12) !important;
 }
 
+.bulk-rel-rule-select--error .ant-select-selection {
+  border-color: #ff4d4f !important;
+}
+
+.bulk-rel-rule-select--error .ant-select-selection:hover,
+.bulk-rel-rule-select--error.ant-select-focused .ant-select-selection {
+  border-color: #ff7875 !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.12) !important;
+}
+
 .bulk-rel-rule-field--type {
   flex: 1 1 260px;
   min-width: 260px;
@@ -580,7 +590,15 @@
 .bulk-rel-footer-actions {
   display: flex;
   align-items: center;
+  gap: 8px;
   white-space: nowrap;
+}
+
+.bulk-rel-footer-actions .ant-btn {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
 }
 
 /* Apply button — indigo/purple like Claude reference */

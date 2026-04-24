@@ -1,6 +1,6 @@
 ﻿import React, { useCallback, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, DatePicker, Icon, Select, Tooltip } from 'antd'
+import { DatePicker, Icon, Select, Tooltip } from 'antd'
 import moment from 'moment'
 
 const { Option } = Select
@@ -30,7 +30,7 @@ const buildOptionDisabledReason = ({
     return 'Select both source and target CI Types first.'
   }
   if (!validRelTypes.has(optionValue)) {
-    return 'Not available for ' + sourceType + ' \u2192 ' + targetType + '.'
+    return 'Not available for ' + sourceType + ' → ' + targetType + '.'
   }
   if (optionValue !== ruleRelType && isUsedByOther) {
     return 'Already used by another rule.'
@@ -44,24 +44,24 @@ const RuleCard = ({
   rule,
   index,
   onUpdate,
-  onRemove,
-  canRemove,
   relTypeOptions,
   validRelTypes,
   usedTypes,
   sourceType,
   targetType,
 }) => {
+  const [touched, setTouched] = useState({ type: false, applied: false, expired: false })
+  const touchType = useCallback(() => setTouched((t) => (t.type ? t : { ...t, type: true })), [])
+  const touchApplied = useCallback(() => setTouched((t) => (t.applied ? t : { ...t, applied: true })), [])
+  const touchExpired = useCallback(() => setTouched((t) => (t.expired ? t : { ...t, expired: true })), [])
+
   const handleTypeChange = useCallback(
     (value) => {
+      setTouched((t) => (t.type ? t : { ...t, type: true }))
       onUpdate(rule.id, { relationshipType: value || null })
     },
     [rule.id, onUpdate]
   )
-
-  const [touched, setTouched] = useState({ applied: false, expired: false })
-  const touchApplied = useCallback(() => setTouched((t) => (t.applied ? t : { ...t, applied: true })), [])
-  const touchExpired = useCallback(() => setTouched((t) => (t.expired ? t : { ...t, expired: true })), [])
 
   const handleAppliedDateChange = useCallback(
     (date) => {
@@ -93,10 +93,6 @@ const RuleCard = ({
     [appliedMoment]
   )
 
-  const handleRemove = useCallback(() => {
-    onRemove(rule.id)
-  }, [rule.id, onRemove])
-
   const isCurrentInvalid = Boolean(
     rule.relationshipType
       && sourceType
@@ -104,9 +100,9 @@ const RuleCard = ({
       && !validRelTypes.has(rule.relationshipType)
   )
 
-  const hasRelType = Boolean(rule.relationshipType)
-  const showAppliedError = hasRelType && touched.applied && !rule.appliedDate
-  const showExpiredError = hasRelType && touched.expired && !rule.expiredDate
+  const showTypeRequiredError = touched.type && !rule.relationshipType
+  const showAppliedError = touched.applied && !rule.appliedDate
+  const showExpiredError = touched.expired && !rule.expiredDate
 
   const isOptionDisabled = (optionValue) => {
     const reason = buildOptionDisabledReason({
@@ -146,15 +142,6 @@ const RuleCard = ({
       <div className="bulk-rel-rule-header">
         <span className="bulk-rel-rule-number">{index + 1}</span>
         <span className="bulk-rel-rule-label">Relationship Rule</span>
-        {canRemove && (
-          <Button
-            type="link"
-            icon="close"
-            size="small"
-            onClick={handleRemove}
-            className="bulk-rel-rule-remove"
-          />
-        )}
       </div>
 
       <div className="bulk-rel-rule-body">
@@ -164,13 +151,18 @@ const RuleCard = ({
             <span>Configuration</span>
           </div>
           <div className="bulk-rel-rule-field">
-            <span className="bulk-rel-rule-field-label">Relationship Type</span>
+            <span className="bulk-rel-rule-field-label">
+              Relationship Type
+              <span className="bulk-rel-rule-required">*</span>
+            </span>
             <Select
               value={rule.relationshipType || undefined}
               onChange={handleTypeChange}
+              onBlur={touchType}
               style={{ width: '100%' }}
               placeholder="Select relationship type..."
               allowClear
+              className={showTypeRequiredError ? 'bulk-rel-rule-select--error' : undefined}
             >
               {relTypeOptions.map((opt) => (
                 <Option key={opt.value} value={opt.value} disabled={isOptionDisabled(opt.value)}>
@@ -178,6 +170,9 @@ const RuleCard = ({
                 </Option>
               ))}
             </Select>
+            {showTypeRequiredError && (
+              <span className="bulk-rel-rule-warning">Relationship Type is required.</span>
+            )}
             {isCurrentInvalid && (
               <span className="bulk-rel-rule-warning">
                 <Icon type="warning" style={{ marginRight: 4 }} />
@@ -249,8 +244,6 @@ RuleCard.propTypes = {
   }).isRequired,
   index: PropTypes.number.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  onRemove: PropTypes.func.isRequired,
-  canRemove: PropTypes.bool.isRequired,
   relTypeOptions: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string.isRequired,
@@ -277,35 +270,22 @@ const RelationshipRulesSection = ({
   sourceType,
   targetType,
   onUpdateRule,
-  onRemoveRule,
-  onAddRule,
 }) => {
   const usedTypes = useMemo(() => collectUsedTypes(rules), [rules])
-
-  const canAddRule = useMemo(() => {
-    if (!sourceType || !targetType) return false
-    if (validRelTypes.size === 0) return false
-    return usedTypes.size < validRelTypes.size
-  }, [sourceType, targetType, validRelTypes, usedTypes])
-
-  const ruleCountLabel = rules.length === 1 ? 'rule' : 'rules'
 
   return (
     <div className="bulk-rel-rules-section">
       <div className="bulk-rel-rules-header">
-        <span className="bulk-rel-rules-title">RELATIONSHIP RULES</span>
-        <span className="bulk-rel-rules-count">{rules.length} {ruleCountLabel}</span>
+        <span className="bulk-rel-rules-title">RELATIONSHIP RULE</span>
       </div>
 
       <div className="bulk-rel-rules-list">
-        {rules.map((rule, index) => (
+        {rules.slice(0, 1).map((rule, index) => (
           <RuleCard
             key={rule.id}
             rule={rule}
             index={index}
             onUpdate={onUpdateRule}
-            onRemove={onRemoveRule}
-            canRemove={rules.length > 1}
             relTypeOptions={relTypeOptions}
             validRelTypes={validRelTypes}
             usedTypes={usedTypes}
@@ -313,14 +293,6 @@ const RelationshipRulesSection = ({
             targetType={targetType}
           />
         ))}
-      </div>
-
-      <div
-        className={'bulk-rel-add-rule' + (canAddRule ? '' : ' bulk-rel-add-rule--disabled')}
-        onClick={canAddRule ? onAddRule : undefined}
-      >
-        <Icon type="plus" style={{ marginRight: 6, color: canAddRule ? '#1890ff' : '#bfbfbf' }} />
-        <span>Add another rule</span>
       </div>
     </div>
   )
@@ -345,8 +317,6 @@ RelationshipRulesSection.propTypes = {
   sourceType: PropTypes.string,
   targetType: PropTypes.string,
   onUpdateRule: PropTypes.func.isRequired,
-  onRemoveRule: PropTypes.func.isRequired,
-  onAddRule: PropTypes.func.isRequired,
 }
 
 RelationshipRulesSection.defaultProps = {

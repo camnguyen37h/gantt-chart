@@ -19,9 +19,9 @@ const BulkRelationshipFooter = ({
       <div className="bulk-rel-footer-summary">
         <span>
           <strong>{srcCount}</strong> source CI{pluralSuffix(srcCount)}
-          {' \u00D7 '}
+          {' × '}
           <strong>{tgtCount}</strong> target CI{pluralSuffix(tgtCount)}
-          {' \u00D7 '}
+          {' × '}
           <strong>{ruleCount}</strong> rule{pluralSuffix(ruleCount)}
           {' = '}
           <strong>{total}</strong> relationship{pluralSuffix(total)}
@@ -33,11 +33,7 @@ const BulkRelationshipFooter = ({
         )}
       </div>
       <div className="bulk-rel-footer-actions">
-        <Button
-          icon="reload"
-          onClick={onReset}
-          style={{ marginRight: 8, display: 'inline-flex', alignItems: 'center' }}
-        >
+        <Button icon="reload" onClick={onReset}>
           Reset
         </Button>
         <Button
@@ -46,9 +42,8 @@ const BulkRelationshipFooter = ({
           loading={submitting}
           disabled={applyDisabled}
           className="bulk-rel-apply-btn"
-          style={{ display: 'inline-flex', alignItems: 'center' }}
         >
-          Apply Relationships {'\u2192'}
+          Apply Relationships →
         </Button>
       </div>
     </div>

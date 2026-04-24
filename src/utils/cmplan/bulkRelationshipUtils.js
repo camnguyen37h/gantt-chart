@@ -148,7 +148,7 @@ export const validateBulkRelationships = ({
     rules.forEach((r, idx) => {
       if (r.relationshipType && !validRelTypes.has(r.relationshipType)) {
         errors.push(
-          'Rule #' + (idx + 1) + ': relationship type is not available for the selected source \u2192 target CI Types.'
+          'Rule #' + (idx + 1) + ': relationship type is not available for the selected source → target CI Types.'
         )
       }
     })
@@ -156,7 +156,6 @@ export const validateBulkRelationships = ({
 
   // Applied Date and Expired Date are required per rule.
   rules.forEach((r, idx) => {
-    if (!r.relationshipType) return
     if (!r.appliedDate) {
       errors.push('Rule #' + (idx + 1) + ': Applied Date is required.')
     }
