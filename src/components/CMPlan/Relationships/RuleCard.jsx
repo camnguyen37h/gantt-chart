@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { DatePicker, Icon, Select, Tooltip } from 'antd'
 import moment from 'moment'
@@ -59,6 +59,19 @@ const RuleCard = ({
   const pEndMoment = useMemo(() => toMoment(pEndDate), [pEndDate])
 
   const [touched, setTouched] = useState(INITIAL_TOUCHED)
+
+  // ── Pre-fill defaults on first load when project dates are available ──
+  useEffect(() => {
+    if (!pStartMoment && !pEndMoment) return
+    const updates = {}
+    if (!rule.appliedDate && pStartMoment) updates.appliedDate = toIso(pStartMoment)
+    if (!rule.expiredDate && pEndMoment) updates.expiredDate = toIso(pEndMoment)
+    if (Object.keys(updates).length > 0) onUpdate(rule.id, updates)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pStartMoment, pEndMoment])
+  // ^ intentionally excludes rule.appliedDate / rule.expiredDate so this only
+  //   runs when the project range first becomes available, not on every change.
+
   const markType = useCallback(
     () => setTouched((prev) => (prev.type ? prev : { ...prev, type: true })),
     []
