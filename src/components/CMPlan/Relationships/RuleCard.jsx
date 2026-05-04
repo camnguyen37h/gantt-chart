@@ -14,20 +14,12 @@ const INITIAL_TOUCHED = { type: false, applied: false, expired: false }
 const toMoment = (iso) => (iso ? moment(iso) : null)
 const toIso = (date) => (date ? date.toISOString() : null)
 
-// Returns true if `current` falls outside the inclusive [min, max] day window.
-const isOutsideRange = (current, min, max) => {
-  if (!current) return false
-  if (min && current.isBefore(min.clone().startOf('day'))) return true
-  if (max && current.isAfter(max.clone().endOf('day'))) return true
+// Returns true if `date` falls outside the inclusive [min, max] day window.
+const isOutsideProjectRange = (date, min, max) => {
+  if (!date) return false
+  if (min && date.isBefore(min.clone().startOf('day'))) return true
+  if (max && date.isAfter(max.clone().endOf('day'))) return true
   return false
-}
-
-// Clamp a moment to be inside [min, max]. Returns the original if already in range.
-const clampMoment = (date, min, max) => {
-  if (!date) return date
-  if (min && date.isBefore(min.clone().startOf('day'))) return min.clone()
-  if (max && date.isAfter(max.clone().endOf('day'))) return max.clone()
-  return date
 }
 
 const RelationshipTypeOptionLabel = ({ option, disabledReason }) => {
@@ -91,10 +83,11 @@ const RuleCard = ({
   const handleAppliedDateChange = useCallback(
     (date) => {
       markApplied()
-      // If user manually types a value outside the project window, snap it back
-      // into [pStartDate, pEndDate] so we never persist an invalid date.
-      const safe = clampMoment(date, pStartMoment, pEndMoment)
-      onUpdate(rule.id, { appliedDate: toIso(safe) })
+      // If manually typed outside [pStart, pEnd] → reset to pStartDate (the default).
+      const resolved = isOutsideProjectRange(date, pStartMoment, pEndMoment)
+        ? pStartMoment
+        : date
+      onUpdate(rule.id, { appliedDate: toIso(resolved) })
     },
     [rule.id, onUpdate, markApplied, pStartMoment, pEndMoment]
   )
@@ -102,8 +95,11 @@ const RuleCard = ({
   const handleExpiredDateChange = useCallback(
     (date) => {
       markExpired()
-      const safe = clampMoment(date, pStartMoment, pEndMoment)
-      onUpdate(rule.id, { expiredDate: toIso(safe) })
+      // If manually typed outside [pStart, pEnd] → reset to pEndDate (the default).
+      const resolved = isOutsideProjectRange(date, pStartMoment, pEndMoment)
+        ? pEndMoment
+        : date
+      onUpdate(rule.id, { expiredDate: toIso(resolved) })
     },
     [rule.id, onUpdate, markExpired, pStartMoment, pEndMoment]
   )
@@ -126,7 +122,7 @@ const RuleCard = ({
   const disabledAppliedDate = useCallback(
     (current) => {
       if (!current) return false
-      if (isOutsideRange(current, pStartMoment, pEndMoment)) return true
+      if (isOutsideProjectRange(current, pStartMoment, pEndMoment)) return true
       if (expiredMoment && current.isAfter(expiredMoment.clone().endOf('day'))) return true
       return false
     },
@@ -139,7 +135,7 @@ const RuleCard = ({
   const disabledExpiredDate = useCallback(
     (current) => {
       if (!current) return false
-      if (isOutsideRange(current, pStartMoment, pEndMoment)) return true
+      if (isOutsideProjectRange(current, pStartMoment, pEndMoment)) return true
       if (appliedMoment && current.isBefore(appliedMoment.clone().startOf('day'))) return true
       return false
     },
