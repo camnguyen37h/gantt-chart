@@ -1,70 +1,28 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Checkbox, Empty, Icon, Input, Select, Spin, Tag } from 'antd'
-import { CI_ENVIRONMENT_LABELS } from '../../../utils/cmplan/cmplanConstants'
+import { Checkbox, Empty, Icon, Input, Select, Spin } from 'antd'
+import CIListItem from './CIListItem'
+import SelectedCITagList from './SelectedCITagList'
+import {
+  computeSelectionState,
+  mergeUniqueIds,
+  removeIds,
+} from './CISelectionPanel.helpers'
 
 const { Option } = Select
 
 const PANEL_LIST_HEIGHT = 320
-const DEFAULT_ICON = 'profile'
-const TRANSPARENT_BORDER = 'transparent'
-const CI_ITEM_TAG_STYLE = {
-  backgroundColor: '#deebff',
-  color: '#0647a6',
+const SEARCH_INPUT_STYLE = { width: 180, marginLeft: 'auto' }
+const SEARCH_PREFIX_STYLE = { color: '#bfbfbf' }
+const TYPE_SELECT_STYLE = { minWidth: 160 }
+
+const resolveLabel = (types, value) => {
+  const found = types.find((type) => type.value === value)
+  return found ? found.label : value
 }
 
-// --- Pure helpers ---------------------------------------------------------
-
-const matchesQuery = (ci, query) => {
-  if (ci.name.toLowerCase().includes(query)) return true
-  const description = ci.shortDescription || ''
-  return description.toLowerCase().includes(query)
-}
-
-const filterCIs = (cis, searchText) => {
-  const trimmed = searchText.trim()
-  if (!trimmed) return cis
-  const query = trimmed.toLowerCase()
-  return cis.filter((ci) => matchesQuery(ci, query))
-}
-
-const computeSelectionState = (filteredCIs, selectedIdSet) => {
-  if (filteredCIs.length === 0) return { allSelected: false, indeterminate: false }
-  let selectedCount = 0
-  for (let i = 0; i < filteredCIs.length; i += 1) {
-    if (selectedIdSet.has(filteredCIs[i].id)) selectedCount += 1
-  }
-  return {
-    allSelected: selectedCount === filteredCIs.length,
-    indeterminate: selectedCount > 0 && selectedCount < filteredCIs.length,
-  }
-}
-
-// --- Internal subcomponents ----------------------------------------------
-
-const EnvironmentTag = ({ environment }) => {
-  const label = CI_ENVIRONMENT_LABELS[environment]
-  if (!label) return null
-  return (
-    <Tag
-      style={{
-        marginLeft: 'auto',
-        marginBottom: 0,
-        fontSize: 11,
-        background: CI_ITEM_TAG_STYLE.backgroundColor,
-        borderColor: TRANSPARENT_BORDER,
-        color: CI_ITEM_TAG_STYLE.color,
-      }}
-    >
-      {label}
-    </Tag>
-  )
-}
-
-EnvironmentTag.propTypes = { environment: PropTypes.string }
-EnvironmentTag.defaultProps = { environment: undefined }
-
-// --- Main component -------------------------------------------------------
+const buildEmptyDescription = (ciType) =>
+  ciType ? 'No CIs found for this type' : 'Select a CI Type to load items'
 
 const CISelectionPanel = ({
   title,
@@ -75,36 +33,31 @@ const CISelectionPanel = ({
   loading,
   selectedIds,
   onSelectionChange,
+  searchText,
+  onSearch,
 }) => {
-  const [searchText, setSearchText] = useState('')
-
   const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
-  const filteredCIs = useMemo(() => filterCIs(cis, searchText), [cis, searchText])
   const selectionState = useMemo(
-    () => computeSelectionState(filteredCIs, selectedIdSet),
-    [filteredCIs, selectedIdSet]
+    () => computeSelectionState(cis, selectedIdSet),
+    [cis, selectedIdSet]
+  )
+  const selectedCIs = useMemo(
+    () => cis.filter((ci) => selectedIdSet.has(ci.id)),
+    [cis, selectedIdSet]
   )
 
-  const resolveTypeLabel = useCallback(
-    (type) => {
-      const found = availableTypes.find((t) => t.value === type)
-      return found ? found.label : type
-    },
-    [availableTypes]
-  )
+  const ciTypeLabel = ciType ? resolveLabel(availableTypes, ciType) : ''
 
   const handleSelectAll = useCallback(
     (event) => {
-      const filteredIds = filteredCIs.map((ci) => ci.id)
+      const cisIds = cis.map((ci) => ci.id)
       if (event.target.checked) {
-        const merged = Array.from(new Set(selectedIds.concat(filteredIds)))
-        onSelectionChange(merged)
+        onSelectionChange(mergeUniqueIds(selectedIds, cisIds))
         return
       }
-      const filteredIdSet = new Set(filteredIds)
-      onSelectionChange(selectedIds.filter((id) => !filteredIdSet.has(id)))
+      onSelectionChange(removeIds(selectedIds, cisIds))
     },
-    [filteredCIs, selectedIds, onSelectionChange]
+    [cis, selectedIds, onSelectionChange]
   )
 
   const handleToggleCI = useCallback(
@@ -119,21 +72,14 @@ const CISelectionPanel = ({
   )
 
   const handleRemoveTag = useCallback(
-    (ciId) => {
-      onSelectionChange(selectedIds.filter((id) => id !== ciId))
-    },
+    (ciId) => onSelectionChange(selectedIds.filter((id) => id !== ciId)),
     [selectedIds, onSelectionChange]
   )
 
-  const selectedCIs = useMemo(
-    () => cis.filter((ci) => selectedIdSet.has(ci.id)),
-    [cis, selectedIdSet]
+  const handleSearchChange = useCallback(
+    (event) => onSearch(event.target.value),
+    [onSearch]
   )
-
-  const ciTypeLabel = resolveTypeLabel(ciType) || ''
-  const emptyDescription = ciType
-    ? 'No CIs found for this type'
-    : 'Select a CI Type to load items'
 
   return (
     <div className="bulk-rel-panel">
@@ -148,7 +94,7 @@ const CISelectionPanel = ({
           onChange={onTypeChange}
           placeholder="Select CI Type"
           size="small"
-          style={{ minWidth: 160 }}
+          style={TYPE_SELECT_STYLE}
           showSearch
           optionFilterProp="children"
         >
@@ -162,71 +108,44 @@ const CISelectionPanel = ({
           checked={selectionState.allSelected}
           indeterminate={selectionState.indeterminate}
           onChange={handleSelectAll}
-          disabled={filteredCIs.length === 0}
+          disabled={cis.length === 0}
         >
           Select all
         </Checkbox>
         <Input
           placeholder="Search CI name..."
-          prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
+          prefix={<Icon type="search" style={SEARCH_PREFIX_STYLE} />}
           value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
+          onChange={handleSearchChange}
           allowClear
           size="small"
-          style={{ width: 180, marginLeft: 'auto' }}
+          style={SEARCH_INPUT_STYLE}
         />
       </div>
 
-      <div className="bulk-rel-panel-list" style={{ maxHeight: PANEL_LIST_HEIGHT }}>
+      <div className="bulk-rel-panel-list" style={{ height: PANEL_LIST_HEIGHT }}>
         <Spin spinning={loading}>
-          {filteredCIs.length === 0 ? (
+          {cis.length === 0 ? (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={emptyDescription}
+              description={buildEmptyDescription(ciType)}
               style={{ margin: '40px 0' }}
             />
           ) : (
-            filteredCIs.map((ci) => {
-              const isSelected = selectedIdSet.has(ci.id)
-              return (
-                <div
-                  key={ci.id}
-                  className={'bulk-rel-panel-item' + (isSelected ? ' bulk-rel-panel-item--selected' : '')}
-                  onClick={() => handleToggleCI(ci.id)}
-                >
-                  <Checkbox checked={isSelected} style={{ marginRight: 10 }} />
-                  <Icon type={DEFAULT_ICON} style={{ color: CI_ITEM_TAG_STYLE.color, fontSize: 16, marginRight: 8 }} />
-                  <div className="bulk-rel-panel-item-info">
-                    <span className="bulk-rel-panel-item-name">{ci.name}</span>
-                    <span className="bulk-rel-panel-item-class">{ciTypeLabel}</span>
-                  </div>
-                  <EnvironmentTag environment={ci.environment} />
-                </div>
-              )
-            })
+            cis.map((ci) => (
+              <CIListItem
+                key={ci.id}
+                ci={ci}
+                ciTypeLabel={ciTypeLabel}
+                isSelected={selectedIdSet.has(ci.id)}
+                onToggle={handleToggleCI}
+              />
+            ))
           )}
         </Spin>
       </div>
 
-      {selectedCIs.length > 0 && (
-        <div className="bulk-rel-panel-tags">
-          {selectedCIs.map((ci) => (
-            <Tag
-              key={ci.id}
-              closable
-              onClose={() => handleRemoveTag(ci.id)}
-              style={{
-                marginBottom: 4,
-                background: CI_ITEM_TAG_STYLE.backgroundColor,
-                borderColor: TRANSPARENT_BORDER,
-                color: CI_ITEM_TAG_STYLE.color,
-              }}
-            >
-              {ci.name}
-            </Tag>
-          ))}
-        </div>
-      )}
+      <SelectedCITagList selectedCIs={selectedCIs} onRemove={handleRemoveTag} />
     </div>
   )
 }
@@ -252,11 +171,14 @@ CISelectionPanel.propTypes = {
   loading: PropTypes.bool,
   selectedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelectionChange: PropTypes.func.isRequired,
+  searchText: PropTypes.string,
+  onSearch: PropTypes.func.isRequired,
 }
 
 CISelectionPanel.defaultProps = {
   ciType: undefined,
   loading: false,
+  searchText: '',
 }
 
 export default CISelectionPanel

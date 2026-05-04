@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Icon, Modal, notification } from 'antd'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
   bulkCreateRelationships,
   fetchCIsByType,
@@ -7,18 +8,37 @@ import {
   fetchExistingRelationshipPairs,
 } from '../../store/cmplan'
 import {
-  buildSummaryParts,
-  createEmptyRule,
   extractAllRelationshipTypeOptions,
   extractUniqueSourceTypes,
   extractUniqueTargetTypes,
-  generatePreviewItems,
   getValidRelationshipTypes,
-  validateBulkRelationships,
-} from '../../utils/cmplan/bulkRelationshipUtils'
+} from '../../utils/cmplan/ciTypeRelationshipMappers'
+import { generatePreviewItems } from '../../utils/cmplan/bulkRelationshipPreview'
+import { validateBulkRelationships } from '../../utils/cmplan/bulkRelationshipValidation'
+import {
+  buildConfirmContent,
+  buildSuccessDescription,
+  buildSummaryParts,
+} from '../../utils/cmplan/bulkRelationshipFormatters'
+import { createEmptyRule } from '../../utils/cmplan/bulkRelationshipFactories'
+import useProjectBasicInfo from './useProjectBasicInfo'
 
-const EMPTY_LIST = []
-const EMPTY_CI_TYPE_SLICE = { items: EMPTY_LIST, loading: false }
+const EMPTY_LIST = Object.freeze([])
+const EMPTY_CI_TYPE_SLICE = Object.freeze({ items: EMPTY_LIST, loading: false })
+const INITIAL_FILTER = Object.freeze({ ciType: undefined, searchText: '' })
+const CI_FETCH_DEBOUNCE_MS = 300
+const CONFIRM_ICON_STYLE = { color: '#722ed1' }
+
+const selectFormState = (state) => ({
+  existingPairs: state.cmplan.ciRelationships.existingPairs,
+  relsLoading: state.cmplan.ciRelationships.loading,
+  submitting: state.cmplan.ciRelationships.submitting,
+  ciTypeRels: state.cmplan.ciTypeRelationships.items,
+  typeRelsLoading: state.cmplan.ciTypeRelationships.loading,
+  cisByType: state.cmplan.ciTypeRelationships.cisByType,
+})
+
+const buildInitialRules = () => [createEmptyRule()]
 
 const mergeCIsById = (primary, secondary) => {
   const map = new Map()
@@ -27,165 +47,270 @@ const mergeCIsById = (primary, secondary) => {
   return Array.from(map.values())
 }
 
-// Centralized state + derived data for the Bulk Add Relationships screen.
-const useBulkRelationshipForm = () => {
+const splitNewAndDuplicates = (previewItems) => {
+  const newItems = []
+  let duplicateCount = 0
+  previewItems.forEach((item) => {
+    if (item.isDuplicate) duplicateCount += 1
+    else newItems.push(item)
+  })
+  return { newItems, duplicateCount }
+}
+
+const toBulkPayload = (items) =>
+  items.map((item) => ({
+    sourceId: item.sourceId,
+    targetId: item.targetId,
+    relationshipType: item.relationshipType,
+    appliedDate: item.appliedDate,
+    expiredDate: item.expiredDate,
+  }))
+
+const resolveSlice = (cisByType, ciType) =>
+  (ciType && cisByType[ciType]) || EMPTY_CI_TYPE_SLICE
+
+/**
+ * Aggregates all state for the Bulk Add Relationships screen: source/target
+ * CI selection, rules, derived preview/validation, and the confirm-and-submit
+ * flow. Returns the full data + handlers shape consumed by the page.
+ *
+ * @param {Object} options
+ * @param {Function} options.onSubmitSuccess Invoked after a successful bulk
+ *   create completes (typically used to navigate away from the page).
+ */
+const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   const dispatch = useDispatch()
+  const {
+    existingPairs,
+    relsLoading,
+    submitting,
+    ciTypeRels,
+    typeRelsLoading,
+    cisByType,
+  } = useSelector(selectFormState, shallowEqual)
+  const { pStartDate, pEndDate } = useProjectBasicInfo()
 
-  // ── Redux selectors ──
-  const existingPairs = useSelector(state => state.cmplan.ciRelationships.existingPairs)
-  const relsLoading = useSelector(state => state.cmplan.ciRelationships.loading)
-  const submitting = useSelector(state => state.cmplan.ciRelationships.submitting)
-  const ciTypeRels = useSelector(state => state.cmplan.ciTypeRelationships.items)
-  const typeRelsLoading = useSelector(state => state.cmplan.ciTypeRelationships.loading)
-  const cisByType = useSelector(state => state.cmplan.ciTypeRelationships.cisByType)
-
-  // ── Local form state ──
-  const [sourceType, setSourceType] = useState(undefined)
-  const [targetType, setTargetType] = useState(undefined)
-  const [sourceIds, setSourceIds] = useState(EMPTY_LIST)
-  const [targetIds, setTargetIds] = useState(EMPTY_LIST)
-  const [rules, setRules] = useState(() => [createEmptyRule()])
-
-  // ── Derived: CI type catalogues and valid relationship types ──
+  // ── CI Type catalogues ────────────────────────────────────────────────
   const sourceTypes = useMemo(() => extractUniqueSourceTypes(ciTypeRels), [ciTypeRels])
   const targetTypes = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
-  const relTypeOptions = useMemo(() => extractAllRelationshipTypeOptions(ciTypeRels), [ciTypeRels])
-  const validRelTypes = useMemo(
-    () => getValidRelationshipTypes(ciTypeRels, sourceType, targetType),
-    [ciTypeRels, sourceType, targetType]
+  const relTypeOptions = useMemo(
+    () => extractAllRelationshipTypeOptions(ciTypeRels),
+    [ciTypeRels]
   )
 
-  // ── Per-type CI lists from redux cache ──
+  // ── Source / Target panel state ───────────────────────────────────────
+  const [sourceFilter, setSourceFilter] = useState(INITIAL_FILTER)
+  const [targetFilter, setTargetFilter] = useState(INITIAL_FILTER)
+  const [sourceIds, setSourceIds] = useState(EMPTY_LIST)
+  const [targetIds, setTargetIds] = useState(EMPTY_LIST)
+
   const sourceSlice = useMemo(
-    () => (sourceType && cisByType[sourceType]) || EMPTY_CI_TYPE_SLICE,
-    [cisByType, sourceType]
+    () => resolveSlice(cisByType, sourceFilter.ciType),
+    [cisByType, sourceFilter.ciType]
   )
   const targetSlice = useMemo(
-    () => (targetType && cisByType[targetType]) || EMPTY_CI_TYPE_SLICE,
-    [cisByType, targetType]
+    () => resolveSlice(cisByType, targetFilter.ciType),
+    [cisByType, targetFilter.ciType]
   )
 
-  // ── Bootstrap catalogues once ──
+  // ── Rules state ───────────────────────────────────────────────────────
+  const [rules, setRules] = useState(buildInitialRules)
+  const updateRule = useCallback((ruleId, updates) => {
+    setRules((prev) =>
+      prev.map((rule) => (rule.id === ruleId ? { ...rule, ...updates } : rule))
+    )
+  }, [])
+  const resetRules = useCallback(() => setRules(buildInitialRules()), [])
+
+  // ── Bootstrap reference data once on mount ────────────────────────────
   useEffect(() => {
     dispatch(fetchExistingRelationshipPairs())
     dispatch(fetchCITypeRelationships())
   }, [dispatch])
 
-  // ── Auto-select first source/target type after catalogue is ready ──
+  // ── Auto-pick the first CI type once each catalogue is loaded ─────────
   useEffect(() => {
-    if (!sourceType && sourceTypes.length > 0) setSourceType(sourceTypes[0].value)
-  }, [sourceType, sourceTypes])
+    if (sourceFilter.ciType || sourceTypes.length === 0) return
+    setSourceFilter({ ciType: sourceTypes[0].value, searchText: '' })
+  }, [sourceFilter.ciType, sourceTypes])
 
   useEffect(() => {
-    if (!targetType && targetTypes.length > 0) setTargetType(targetTypes[0].value)
-  }, [targetType, targetTypes])
+    if (targetFilter.ciType || targetTypes.length === 0) return
+    setTargetFilter({ ciType: targetTypes[0].value, searchText: '' })
+  }, [targetFilter.ciType, targetTypes])
 
-  // ── Load CIs per selected type and reset its current selection ──
+  // ── Reset selected CIs whenever the panel's CI type changes ───────────
   useEffect(() => {
-    if (!sourceType) return
-    dispatch(fetchCIsByType(sourceType))
+    if (!sourceFilter.ciType) return
     setSourceIds(EMPTY_LIST)
-  }, [sourceType, dispatch])
+  }, [sourceFilter.ciType])
 
   useEffect(() => {
-    if (!targetType) return
-    dispatch(fetchCIsByType(targetType))
+    if (!targetFilter.ciType) return
     setTargetIds(EMPTY_LIST)
-  }, [targetType, dispatch])
+  }, [targetFilter.ciType])
 
-  // ── Reset rules when the pair changes (old rule may be invalid) ──
+  // ── Reset rules when the (source, target) type pair changes ───────────
   useEffect(() => {
-    setRules([createEmptyRule()])
-  }, [sourceType, targetType])
+    resetRules()
+  }, [sourceFilter.ciType, targetFilter.ciType, resetRules])
 
-  // ── CI catalogue used by the preview to resolve labels ──
+  // ── Debounced CI list fetches on any filter change ────────────────────
+  useEffect(() => {
+    if (!sourceFilter.ciType) return undefined
+    const timer = setTimeout(
+      () => dispatch(fetchCIsByType({
+        ciType: sourceFilter.ciType,
+        searchText: sourceFilter.searchText,
+      })),
+      CI_FETCH_DEBOUNCE_MS
+    )
+    return () => clearTimeout(timer)
+  }, [sourceFilter.ciType, sourceFilter.searchText, dispatch])
+
+  useEffect(() => {
+    if (!targetFilter.ciType) return undefined
+    const timer = setTimeout(
+      () => dispatch(fetchCIsByType({
+        ciType: targetFilter.ciType,
+        searchText: targetFilter.searchText,
+      })),
+      CI_FETCH_DEBOUNCE_MS
+    )
+    return () => clearTimeout(timer)
+  }, [targetFilter.ciType, targetFilter.searchText, dispatch])
+
+  // ── Filter handlers ───────────────────────────────────────────────────
+  const setSourceType = useCallback((ciType) => {
+    setSourceFilter({ ciType, searchText: '' })
+  }, [])
+  const setTargetType = useCallback((ciType) => {
+    setTargetFilter({ ciType, searchText: '' })
+  }, [])
+  const setSourceSearch = useCallback((searchText) => {
+    setSourceFilter((prev) => ({ ...prev, searchText }))
+  }, [])
+  const setTargetSearch = useCallback((searchText) => {
+    setTargetFilter((prev) => ({ ...prev, searchText }))
+  }, [])
+
+  // ── Derived: valid relationship types + preview catalogues ────────────
+  const validRelTypes = useMemo(
+    () => getValidRelationshipTypes(ciTypeRels, sourceFilter.ciType, targetFilter.ciType),
+    [ciTypeRels, sourceFilter.ciType, targetFilter.ciType]
+  )
+
   const previewCIs = useMemo(
     () => mergeCIsById(sourceSlice.items, targetSlice.items),
     [sourceSlice.items, targetSlice.items]
   )
 
-  // ── Rule handlers ──
-  const updateRule = useCallback((ruleId, updates) => {
-    setRules((prev) => prev.map((r) => (r.id === ruleId ? Object.assign({}, r, updates) : r)))
-  }, [])
-
-  // ── Preview & validation ──
   const previewItems = useMemo(
     () => generatePreviewItems(sourceIds, targetIds, rules, existingPairs, previewCIs),
     [sourceIds, targetIds, rules, existingPairs, previewCIs]
   )
 
-  const { newItems, duplicateCount } = useMemo(() => {
-    const news = []
-    let duplicates = 0
-    previewItems.forEach((item) => {
-      if (item.isDuplicate) duplicates += 1
-      else news.push(item)
-    })
-    return { newItems: news, duplicateCount: duplicates }
-  }, [previewItems])
+  const { newItems, duplicateCount } = useMemo(
+    () => splitNewAndDuplicates(previewItems),
+    [previewItems]
+  )
 
   const validationErrors = useMemo(
-    () =>
-      validateBulkRelationships({
-        sourceType,
-        targetType,
-        sourceIds,
-        targetIds,
-        rules,
-        newItemCount: newItems.length,
-        validRelTypes,
-      }),
-    [sourceType, targetType, sourceIds, targetIds, rules, newItems.length, validRelTypes]
+    () => validateBulkRelationships({
+      sourceType: sourceFilter.ciType,
+      targetType: targetFilter.ciType,
+      sourceIds,
+      targetIds,
+      rules,
+      newItemCount: newItems.length,
+      validRelTypes,
+      pStartDate,
+      pEndDate,
+    }),
+    [sourceFilter.ciType, targetFilter.ciType, sourceIds, targetIds, rules, newItems.length, validRelTypes, pStartDate, pEndDate]
   )
 
   const hasInvalidRelType = useMemo(() => {
-    if (!sourceType || !targetType) return false
-    return rules.some((r) => r.relationshipType && !validRelTypes.has(r.relationshipType))
-  }, [rules, sourceType, targetType, validRelTypes])
+    if (!sourceFilter.ciType || !targetFilter.ciType) return false
+    return rules.some(
+      (rule) => rule.relationshipType && !validRelTypes.has(rule.relationshipType)
+    )
+  }, [rules, sourceFilter.ciType, targetFilter.ciType, validRelTypes])
 
   const summaryParts = useMemo(
     () => buildSummaryParts(sourceIds, targetIds, rules, newItems.length),
     [sourceIds, targetIds, rules, newItems.length]
   )
 
-  const applyDisabled = validationErrors.length > 0 || hasInvalidRelType
-  const isBootstrapping = relsLoading || typeRelsLoading
-
-  // ── Reset whole form to initial ──
+  // ── Reset & submit ────────────────────────────────────────────────────
   const resetForm = useCallback(() => {
     setSourceIds(EMPTY_LIST)
     setTargetIds(EMPTY_LIST)
-    setRules([createEmptyRule()])
-  }, [])
+    setSourceFilter((prev) => ({ ...prev, searchText: '' }))
+    setTargetFilter((prev) => ({ ...prev, searchText: '' }))
+    resetRules()
+  }, [resetRules])
 
-  // ── Submit ──
-  const submitBulkRelationships = useCallback(() => {
-    const payload = newItems.map((item) => ({
-      sourceId: item.sourceId,
-      targetId: item.targetId,
-      relationshipType: item.relationshipType,
-      appliedDate: item.appliedDate,
-      expiredDate: item.expiredDate,
-    }))
-    return dispatch(bulkCreateRelationships(payload))
-  }, [dispatch, newItems])
+  const submitBulkRelationships = useCallback(
+    () => dispatch(bulkCreateRelationships(toBulkPayload(newItems))),
+    [dispatch, newItems]
+  )
+
+  const confirmAndSubmit = useCallback(() => {
+    if (validationErrors.length > 0) {
+      notification.error({
+        message: 'Validation Failed',
+        description: validationErrors[0],
+      })
+      return
+    }
+    Modal.confirm({
+      title: 'Confirm Bulk Create',
+      content: buildConfirmContent(newItems.length, duplicateCount),
+      okText: 'Apply Relationships',
+      okType: 'primary',
+      cancelText: 'Cancel',
+      icon: <Icon type="exclamation-circle" style={CONFIRM_ICON_STYLE} />,
+      onOk: () =>
+        submitBulkRelationships().then((action) => {
+          if (action.error) {
+            notification.error({
+              message: 'Bulk Create Failed',
+              description: (action.payload && action.payload) || 'An error occurred.',
+            })
+            return
+          }
+          notification.success({
+            message: 'Relationships Created',
+            description: buildSuccessDescription(action.payload),
+          })
+          if (onSubmitSuccess) onSubmitSuccess()
+        }),
+    })
+  }, [validationErrors, newItems.length, duplicateCount, submitBulkRelationships, onSubmitSuccess])
 
   return {
-    // data
-    sourceType,
-    targetType,
+    // CI Type catalogues
+    sourceType: sourceFilter.ciType,
+    targetType: targetFilter.ciType,
     sourceTypes,
     targetTypes,
+    // CI lists
     sourceCIs: sourceSlice.items,
     targetCIs: targetSlice.items,
     sourceLoading: sourceSlice.loading,
     targetLoading: targetSlice.loading,
+    // Selections
     sourceIds,
     targetIds,
+    // Search
+    sourceSearch: sourceFilter.searchText,
+    targetSearch: targetFilter.searchText,
+    // Rules
     rules,
     relTypeOptions,
     validRelTypes,
+    // Derived
     previewItems,
     newItems,
     duplicateCount,
@@ -193,16 +318,18 @@ const useBulkRelationshipForm = () => {
     hasInvalidRelType,
     summaryParts,
     submitting,
-    isBootstrapping,
-    applyDisabled,
-    // handlers
+    isBootstrapping: relsLoading || typeRelsLoading,
+    applyDisabled: validationErrors.length > 0 || hasInvalidRelType,
+    // Handlers
     setSourceType,
     setTargetType,
     setSourceSelection: setSourceIds,
     setTargetSelection: setTargetIds,
+    setSourceSearch,
+    setTargetSearch,
     updateRule,
     resetForm,
-    submitBulkRelationships,
+    confirmAndSubmit,
   }
 }
 

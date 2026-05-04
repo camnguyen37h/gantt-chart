@@ -11,11 +11,11 @@ export const fetchCITypeRelationships = createAsyncThunk(
   }
 )
 
-/** Load CIs for a given CI Type (class name). Keyed by ciType in state.cisByType. */
+/** Load CIs for a given CI Type (class name), optionally filtered by searchText. Keyed by ciType in state.cisByType. */
 export const fetchCIsByType = createAsyncThunk(
   'cmplan/ciTypeRelationships/fetchCIsByType',
-  async (ciType, { rejectWithValue }) => {
-    const res = await cmplanApi.configurationItems.getByType(ciType)
+  async ({ ciType, searchText }, { rejectWithValue }) => {
+    const res = await cmplanApi.configurationItems.getByType(ciType, searchText)
     if (!res.success) return rejectWithValue(res.error)
     return { ciType, items: res.data }
   }

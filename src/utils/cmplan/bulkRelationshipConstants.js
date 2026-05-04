@@ -1,10 +1,5 @@
-// ── Limits ───────────────────────────────────────────────────────────────────
-
-
 export const MAX_RULES = 10
 export const MAX_RELATIONSHIPS_PER_BATCH = 500
-
-// ── Display ──────────────────────────────────────────────────────────────────
 
 export const RELATIONSHIP_TYPE_COLORS = {
   depends_on: '#f5222d',

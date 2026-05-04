@@ -9,6 +9,7 @@ import {
   ciRuleConfigReducer,
   crmDirectionReducer,
   ciTypeRelationshipsReducer,
+  projectBasicInfoReducer,
 } from './reducers'
 
 const cmplanReducer = combineReducers({
@@ -21,6 +22,7 @@ const cmplanReducer = combineReducers({
   ciRuleConfig: ciRuleConfigReducer,
   crmDirection: crmDirectionReducer,
   ciTypeRelationships: ciTypeRelationshipsReducer,
+  projectBasicInfo: projectBasicInfoReducer,
 })
 
 export default cmplanReducer

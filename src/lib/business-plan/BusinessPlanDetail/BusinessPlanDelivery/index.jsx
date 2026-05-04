@@ -406,9 +406,13 @@ const BusinessPlanDelivery = forwardRef(
     useEffect(() => {
       dispatch(resetSummaryDeliveryPlan())
       if (activePanel !== 'Delivery') return
-      if (showAllOption) initDeliveryWithAll()
-      else initDeliveryWithFirstDu()
-    }, [activePanel, buId])
+      if (showAllOption) {
+        initDeliveryWithAll()
+      } else {
+        if (!dataDu || dataDu.length === 0) return
+        initDeliveryWithFirstDu()
+      }
+    }, [activePanel, buId, viewMode, dataDu])
 
     return (
       <div>

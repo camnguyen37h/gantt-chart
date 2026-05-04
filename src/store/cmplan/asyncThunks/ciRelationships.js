@@ -42,7 +42,11 @@ export const fetchExistingRelationshipPairs = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const res = await cmplanApi.relationships.getExistingPairs()
     if (!res.success) return rejectWithValue(res.message)
-    return res.data
+    // Normalize API objects → string keys used for duplicate detection
+    // Key format: "sourceId-relationshipType-targetId"
+    return res.data.map(
+      (item) => item.source.id + '-' + item.relationshipType + '-' + item.target.id
+    )
   }
 )
 

@@ -363,7 +363,7 @@ const BusinessPlanRevenue = forwardRef(
           duSelected: { ...dataDu[0], groupId: parseInt(dataDu[0].groupId) },
         })
       )
-    }, [activePanel, businessVersion, dataDu])
+    }, [activePanel, businessVersion, dataDu, viewMode])
 
     return (
       <div>

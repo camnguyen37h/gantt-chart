@@ -25,7 +25,7 @@ const ciTypeRelationshipsSlice = createSlice({
         state.error = (action.payload && action.payload.message) || 'Failed to load CI type relationships'
       })
       .addCase(fetchCIsByType.pending, (state, action) => {
-        const ciType = action.meta.arg
+        const ciType = action.meta.arg && action.meta.arg.ciType
         if (!ciType) return
         state.cisByType[ciType] = {
           items: (state.cisByType[ciType] && state.cisByType[ciType].items) || [],
@@ -37,7 +37,7 @@ const ciTypeRelationshipsSlice = createSlice({
         state.cisByType[ciType] = { items, loading: false }
       })
       .addCase(fetchCIsByType.rejected, (state, action) => {
-        const ciType = action.meta.arg
+        const ciType = action.meta.arg && action.meta.arg.ciType
         if (!ciType) return
         state.cisByType[ciType] = {
           items: (state.cisByType[ciType] && state.cisByType[ciType].items) || [],

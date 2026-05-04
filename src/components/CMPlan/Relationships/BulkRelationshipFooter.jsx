@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'antd'
+import { pluralSuffix } from '../../../utils/strings'
 
-const pluralSuffix = (count) => (count === 1 ? '' : 's')
+const DUPLICATE_HINT_STYLE = { color: '#faad14', marginLeft: 12 }
 
 const BulkRelationshipFooter = ({
   summaryParts,
@@ -27,7 +28,7 @@ const BulkRelationshipFooter = ({
           <strong>{total}</strong> relationship{pluralSuffix(total)}
         </span>
         {duplicateCount > 0 && (
-          <span style={{ color: '#faad14', marginLeft: 12 }}>
+          <span style={DUPLICATE_HINT_STYLE}>
             ({duplicateCount} existing will be skipped)
           </span>
         )}

@@ -205,12 +205,21 @@ const configurationItemsApi = {
   /**
    * Mirrors the "Ci By Ci Type" mock API — returns CIs whose ciTypeId matches the given ciType name.
    * ciType is a type name string (e.g. 'server', 'application').
+   * searchText is an optional keyword to filter by name or shortDescription.
    */
-  getByType: async (ciType) => {
+  getByType: async (ciType, searchText) => {
     await delay()
     if (!ciType) return successResponse([])
+    const query = searchText ? searchText.trim().toLowerCase() : ''
     const result = configurationItems
-      .filter((ci) => ci.ciTypeId === ciType && ci.status !== 'retired')
+      .filter((ci) => {
+        if (ci.ciTypeId !== ciType || ci.status === 'retired') return false
+        if (!query) return true
+        return (
+          ci.name.toLowerCase().includes(query) ||
+          (ci.shortDescription || '').toLowerCase().includes(query)
+        )
+      })
       .sort((a, b) => a.name.localeCompare(b.name))
     return successResponse(result)
   },
@@ -398,14 +407,31 @@ const relationshipsApi = {
   },
 
   /**
-   * Lightweight endpoint — returns existing relationship keys as string[]
-   * Format: "sourceId-relationshipType-targetId"
+   * Returns existing relationships as an array of objects.
+   * Format: { id, source: { id, name, type }, target: { id, name, type }, relationshipType }
    */
   getExistingPairs: async () => {
     await delay()
-    const pairs = ciRelationships.map(
-      (r) => r.sourceId + '-' + r.relationshipType + '-' + r.targetId
-    )
+    const pairs = ciRelationships.map((r) => {
+      const srcCI = configurationItems.find((c) => c.id === r.sourceId)
+      const tgtCI = configurationItems.find((c) => c.id === r.targetId)
+      const srcType = ciTypes.find((t) => t.id === (srcCI && srcCI.ciTypeId))
+      const tgtType = ciTypes.find((t) => t.id === (tgtCI && tgtCI.ciTypeId))
+      return {
+        id: r.id,
+        source: {
+          id: r.sourceId,
+          name: (srcCI && srcCI.name) || r.sourceId,
+          type: (srcType && srcType.id) || (srcCI && srcCI.ciTypeId) || null,
+        },
+        target: {
+          id: r.targetId,
+          name: (tgtCI && tgtCI.name) || r.targetId,
+          type: (tgtType && tgtType.id) || (tgtCI && tgtCI.ciTypeId) || null,
+        },
+        relationshipType: r.relationshipType,
+      }
+    })
     return successResponse(pairs)
   },
 
