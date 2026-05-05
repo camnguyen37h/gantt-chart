@@ -19,7 +19,7 @@ import { createEmptyRule } from '../../utils/cmplan/bulkRelationshipFactories'
 import useProjectBasicInfo from './useProjectBasicInfo'
 
 const EMPTY_LIST = Object.freeze([])
-const EMPTY_CI_TYPE_SLICE = Object.freeze({ items: EMPTY_LIST, loading: false })
+const EMPTY_CI_TYPE_SLICE = Object.freeze({ items: EMPTY_LIST, loading: false, hasMore: false, page: 1 })
 const INITIAL_FILTER = Object.freeze({ ciType: undefined, searchText: '' })
 const CI_FETCH_DEBOUNCE_MS = 300
 
@@ -164,6 +164,7 @@ const useBulkRelationshipForm = () => {
           fetchCIsByType({
             ciType: sourceFilter.ciType,
             searchText: sourceFilter.searchText,
+            page: 1,
           })
         ),
       CI_FETCH_DEBOUNCE_MS
@@ -179,6 +180,7 @@ const useBulkRelationshipForm = () => {
           fetchCIsByType({
             ciType: targetFilter.ciType,
             searchText: targetFilter.searchText,
+            page: 1,
           })
         ),
       CI_FETCH_DEBOUNCE_MS
@@ -296,6 +298,10 @@ const useBulkRelationshipForm = () => {
     targetCIs: targetSlice.items,
     sourceLoading: sourceSlice.loading,
     targetLoading: targetSlice.loading,
+    sourceHasMore: sourceSlice.hasMore,
+    targetHasMore: targetSlice.hasMore,
+    sourceCurrentPage: sourceSlice.page,
+    targetCurrentPage: targetSlice.page,
     // Selections
     sourceIds,
     targetIds,

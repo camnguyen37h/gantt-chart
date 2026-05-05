@@ -207,11 +207,11 @@ const configurationItemsApi = {
    * ciType is a type name string (e.g. 'server', 'application').
    * searchText is an optional keyword to filter by name or shortDescription.
    */
-  getByType: async (ciType, searchText) => {
+  getByType: async (ciType, searchText, page = 1, pageSize = 10) => {
     await delay()
-    if (!ciType) return successResponse([])
+    if (!ciType) return successResponse({ items: [], hasMore: false, total: 0 })
     const query = searchText ? searchText.trim().toLowerCase() : ''
-    const result = configurationItems
+    const filtered = configurationItems
       .filter((ci) => {
         if (ci.ciTypeId !== ciType || ci.status === 'retired') return false
         if (!query) return true
@@ -221,7 +221,10 @@ const configurationItemsApi = {
         )
       })
       .sort((a, b) => a.name.localeCompare(b.name))
-    return successResponse(result)
+    const total = filtered.length
+    const start = (page - 1) * pageSize
+    const items = filtered.slice(start, start + pageSize)
+    return successResponse({ items, hasMore: start + pageSize < total, total, page })
   },
 
   create: async (payload) => {

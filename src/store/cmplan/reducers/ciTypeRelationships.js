@@ -7,7 +7,7 @@ const ciTypeRelationshipsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-    cisByType: {}, // { [ciType]: { items: CI[], loading: bool } }
+    cisByType: {}, // { [ciType]: { items: CI[], loading: bool, hasMore: bool, page: number } }
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -26,22 +26,36 @@ const ciTypeRelationshipsSlice = createSlice({
       })
       .addCase(fetchCIsByType.pending, (state, action) => {
         const ciType = action.meta.arg && action.meta.arg.ciType
+        const page = (action.meta.arg && action.meta.arg.page) || 1
         if (!ciType) return
+        const prev = state.cisByType[ciType]
         state.cisByType[ciType] = {
-          items: (state.cisByType[ciType] && state.cisByType[ciType].items) || [],
+          items: (prev && page > 1) ? prev.items : [],
           loading: true,
+          hasMore: prev ? prev.hasMore : true,
+          page: prev ? prev.page : 1,
         }
       })
       .addCase(fetchCIsByType.fulfilled, (state, action) => {
-        const { ciType, items } = action.payload
-        state.cisByType[ciType] = { items, loading: false }
+        const { ciType, items, hasMore, page } = action.payload
+        const prev = state.cisByType[ciType]
+        const existing = (prev && page > 1) ? prev.items : []
+        state.cisByType[ciType] = {
+          items: [...existing, ...items],
+          loading: false,
+          hasMore,
+          page,
+        }
       })
       .addCase(fetchCIsByType.rejected, (state, action) => {
         const ciType = action.meta.arg && action.meta.arg.ciType
         if (!ciType) return
+        const prev = state.cisByType[ciType]
         state.cisByType[ciType] = {
-          items: (state.cisByType[ciType] && state.cisByType[ciType].items) || [],
+          items: (prev && prev.items) || [],
           loading: false,
+          hasMore: prev ? prev.hasMore : false,
+          page: (prev && prev.page) || 1,
         }
       })
   },

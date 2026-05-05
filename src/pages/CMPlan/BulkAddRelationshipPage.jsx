@@ -75,6 +75,8 @@ const BulkAddRelationshipPage = () => {
             onTypeChange={form.setSourceType}
             cis={form.sourceCIs}
             loading={form.sourceLoading}
+            hasMore={form.sourceHasMore}
+            currentPage={form.sourceCurrentPage}
             selectedIds={form.sourceIds}
             onSelectionChange={form.setSourceSelection}
             searchText={form.sourceSearch}
@@ -87,6 +89,8 @@ const BulkAddRelationshipPage = () => {
             onTypeChange={form.setTargetType}
             cis={form.targetCIs}
             loading={form.targetLoading}
+            hasMore={form.targetHasMore}
+            currentPage={form.targetCurrentPage}
             selectedIds={form.targetIds}
             onSelectionChange={form.setTargetSelection}
             searchText={form.targetSearch}
