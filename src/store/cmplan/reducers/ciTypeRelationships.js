@@ -24,39 +24,23 @@ const ciTypeRelationshipsSlice = createSlice({
         state.loading = false
         state.error = (action.payload && action.payload.message) || 'Failed to load CI type relationships'
       })
-      .addCase(fetchCIsByType.pending, (state, action) => {
-        const ciType = action.meta.arg && action.meta.arg.ciType
-        const page = (action.meta.arg && action.meta.arg.page) || 1
-        if (!ciType) return
-        const prev = state.cisByType[ciType]
-        state.cisByType[ciType] = {
-          items: (prev && page > 1) ? prev.items : [],
-          loading: true,
-          hasMore: prev ? prev.hasMore : true,
-          page: prev ? prev.page : 1,
-        }
+      .addCase(fetchCIsByType.pending, (state) => {
+        state.loading = true
       })
       .addCase(fetchCIsByType.fulfilled, (state, action) => {
         const { ciType, items, hasMore, page } = action.payload
-        const prev = state.cisByType[ciType]
+        const { cisByType } = state
+        const prev = cisByType[ciType]
         const existing = (prev && page > 1) ? prev.items : []
-        state.cisByType[ciType] = {
+        cisByType[ciType] = {
           items: [...existing, ...items],
-          loading: false,
           hasMore,
           page,
         }
+        state.loading = false
       })
-      .addCase(fetchCIsByType.rejected, (state, action) => {
-        const ciType = action.meta.arg && action.meta.arg.ciType
-        if (!ciType) return
-        const prev = state.cisByType[ciType]
-        state.cisByType[ciType] = {
-          items: (prev && prev.items) || [],
-          loading: false,
-          hasMore: prev ? prev.hasMore : false,
-          page: (prev && prev.page) || 1,
-        }
+      .addCase(fetchCIsByType.rejected, (state) => {
+        state.loading = false
       })
   },
 })
