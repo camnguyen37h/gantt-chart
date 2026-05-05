@@ -20,7 +20,7 @@ import { createEmptyRule } from '../../utils/cmplan/bulkRelationshipFactories'
 import useProjectBasicInfo from './useProjectBasicInfo'
 
 const EMPTY_LIST = Object.freeze([])
-const EMPTY_CI_TYPE_SLICE = Object.freeze({ items: EMPTY_LIST, hasMore: false, page: 1 })
+const EMPTY_CI_TYPE_SLICE = Object.freeze({ items: EMPTY_LIST, loading: false, hasMore: false, page: 1 })
 const INITIAL_FILTER = Object.freeze({ ciType: undefined, searchText: '' })
 const CI_FETCH_DEBOUNCE_MS = 300
 
@@ -30,7 +30,6 @@ const selectFormState = state => ({
   submitting: state.cmplan.ciRelationships.submitting,
   ciTypeRels: state.cmplan.ciTypeRelationships.items,
   typeRelsLoading: state.cmplan.ciTypeRelationships.loading,
-  cisLoading: state.cmplan.ciTypeRelationships.loading,
   cisByType: state.cmplan.ciTypeRelationships.cisByType,
 })
 
@@ -83,7 +82,6 @@ const useBulkRelationshipForm = () => {
     ciTypeRels,
     typeRelsLoading,
     cisByType,
-    cisLoading,
   } = useSelector(selectFormState, shallowEqual)
   const { pStartDate, pEndDate } = useProjectBasicInfo()
 
@@ -302,8 +300,8 @@ const useBulkRelationshipForm = () => {
     // CI lists
     sourceCIs: sourceSlice.items,
     targetCIs: targetSlice.items,
-    sourceLoading: cisLoading,
-    targetLoading: cisLoading,
+    sourceLoading: sourceSlice.loading,
+    targetLoading: targetSlice.loading,
     sourceHasMore: sourceSlice.hasMore,
     targetHasMore: targetSlice.hasMore,
     sourceCurrentPage: sourceSlice.page,
