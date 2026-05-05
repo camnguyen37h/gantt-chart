@@ -12,7 +12,7 @@ const DISABLED_LABEL_STYLE = { color: '#bfbfbf' }
 const INITIAL_TOUCHED = { type: false, applied: false, expired: false }
 
 const toMoment = (iso) => (iso ? moment(iso) : null)
-const toIso = (date) => (date ? date.toISOString() : null)
+const toIso = (date) => (date ? date.toISOString() : undefined)
 
 // Returns true if `date` falls outside the inclusive [min, max] day window.
 const isOutsideProjectRange = (date, min, max) => {

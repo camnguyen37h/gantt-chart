@@ -11,7 +11,7 @@ export const buildRelationshipKey = (sourceId, relType, targetId) =>
  */
 export const createEmptyRule = () => ({
   id: uuidv4(),
-  relationshipType: null,
-  appliedDate: null,
-  expiredDate: null,
+  relationshipType: undefined,
+  appliedDate: undefined,
+  expiredDate: undefined,
 })

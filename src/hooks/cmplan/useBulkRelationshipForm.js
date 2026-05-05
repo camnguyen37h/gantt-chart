@@ -56,8 +56,8 @@ const toBulkPayload = items =>
     sourceId: item.sourceId,
     targetId: item.targetId,
     relationshipType: item.relationshipType,
-    appliedDate: item.appliedDate,
-    expiredDate: item.expiredDate,
+    appliedDate: item.appliedDate ?? null,
+    expiredDate: item.expiredDate ?? null,
   }))
 
 const resolveSlice = (cisByType, ciType) =>
@@ -227,8 +227,6 @@ const useBulkRelationshipForm = () => {
       ),
     [sourceIds, targetIds, rules, existingPairs, previewCIs]
   )
-
-  console.log('previewItems = ', previewItems)
 
   const { newItems, duplicateCount } = useMemo(
     () => splitNewAndDuplicates(previewItems),
