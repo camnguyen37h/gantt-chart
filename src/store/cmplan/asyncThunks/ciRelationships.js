@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { NotificationManager } from 'react-notifications'
 import { cmplanApi } from '../../../utils/cmplan/mockCMPlanApi'
 
 export const fetchAllRelationships = createAsyncThunk(
@@ -42,11 +43,8 @@ export const fetchExistingRelationshipPairs = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     const res = await cmplanApi.relationships.getExistingPairs()
     if (!res.success) return rejectWithValue(res.message)
-    // Normalize API objects → string keys used for duplicate detection
-    // Key format: "sourceId-relationshipType-targetId"
-    return res.data.map(
-      (item) => item.source.id + '-' + item.relationshipType + '-' + item.target.id
-    )
+    // API returns string keys in the format `sourceId-relationshipType-targetId`
+    return res.data
   }
 )
 
@@ -54,7 +52,17 @@ export const bulkCreateRelationships = createAsyncThunk(
   'cmplan/ciRelationships/bulkCreate',
   async (relationships, { rejectWithValue }) => {
     const res = await cmplanApi.relationships.bulkCreate(relationships)
-    if (!res.success) return rejectWithValue((res.error && res.error.message) || 'Bulk create failed')
+    if (!res.success) {
+      const message = (res.error && res.error.message) || 'Bulk create failed'
+      NotificationManager.error(message, 'Bulk Create Failed')
+      return rejectWithValue(message)
+    }
+    NotificationManager.success(
+      res.data && res.data.created !== undefined
+        ? res.data.created + ' relationship(s) created successfully.'
+        : 'Relationships created successfully.',
+      'Relationships Created'
+    )
     return res.data
   }
 )

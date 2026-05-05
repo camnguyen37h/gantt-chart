@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Icon, Modal, notification } from 'antd'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
   bulkCreateRelationships,
@@ -15,11 +14,7 @@ import {
 } from '../../utils/cmplan/ciTypeRelationshipMappers'
 import { generatePreviewItems } from '../../utils/cmplan/bulkRelationshipPreview'
 import { validateBulkRelationships } from '../../utils/cmplan/bulkRelationshipValidation'
-import {
-  buildConfirmContent,
-  buildSuccessDescription,
-  buildSummaryParts,
-} from '../../utils/cmplan/bulkRelationshipFormatters'
+import { buildSummaryParts } from '../../utils/cmplan/bulkRelationshipFormatters'
 import { createEmptyRule } from '../../utils/cmplan/bulkRelationshipFactories'
 import useProjectBasicInfo from './useProjectBasicInfo'
 
@@ -27,9 +22,8 @@ const EMPTY_LIST = Object.freeze([])
 const EMPTY_CI_TYPE_SLICE = Object.freeze({ items: EMPTY_LIST, loading: false })
 const INITIAL_FILTER = Object.freeze({ ciType: undefined, searchText: '' })
 const CI_FETCH_DEBOUNCE_MS = 300
-const CONFIRM_ICON_STYLE = { color: '#722ed1' }
 
-const selectFormState = (state) => ({
+const selectFormState = state => ({
   existingPairs: state.cmplan.ciRelationships.existingPairs,
   relsLoading: state.cmplan.ciRelationships.loading,
   submitting: state.cmplan.ciRelationships.submitting,
@@ -42,23 +36,23 @@ const buildInitialRules = () => [createEmptyRule()]
 
 const mergeCIsById = (primary, secondary) => {
   const map = new Map()
-  primary.forEach((ci) => map.set(ci.id, ci))
-  secondary.forEach((ci) => map.set(ci.id, ci))
+  primary.forEach(ci => map.set(ci.id, ci))
+  secondary.forEach(ci => map.set(ci.id, ci))
   return Array.from(map.values())
 }
 
-const splitNewAndDuplicates = (previewItems) => {
+const splitNewAndDuplicates = previewItems => {
   const newItems = []
   let duplicateCount = 0
-  previewItems.forEach((item) => {
+  previewItems.forEach(item => {
     if (item.isDuplicate) duplicateCount += 1
     else newItems.push(item)
   })
   return { newItems, duplicateCount }
 }
 
-const toBulkPayload = (items) =>
-  items.map((item) => ({
+const toBulkPayload = items =>
+  items.map(item => ({
     sourceId: item.sourceId,
     targetId: item.targetId,
     relationshipType: item.relationshipType,
@@ -78,7 +72,7 @@ const resolveSlice = (cisByType, ciType) =>
  * @param {Function} options.onSubmitSuccess Invoked after a successful bulk
  *   create completes (typically used to navigate away from the page).
  */
-const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
+const useBulkRelationshipForm = () => {
   const dispatch = useDispatch()
   const {
     existingPairs,
@@ -91,8 +85,14 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   const { pStartDate, pEndDate } = useProjectBasicInfo()
 
   // ── CI Type catalogues ────────────────────────────────────────────────
-  const sourceTypes = useMemo(() => extractUniqueSourceTypes(ciTypeRels), [ciTypeRels])
-  const targetTypes = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
+  const sourceTypes = useMemo(
+    () => extractUniqueSourceTypes(ciTypeRels),
+    [ciTypeRels]
+  )
+  const targetTypes = useMemo(
+    () => extractUniqueTargetTypes(ciTypeRels),
+    [ciTypeRels]
+  )
   const relTypeOptions = useMemo(
     () => extractAllRelationshipTypeOptions(ciTypeRels),
     [ciTypeRels]
@@ -116,8 +116,8 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   // ── Rules state ───────────────────────────────────────────────────────
   const [rules, setRules] = useState(buildInitialRules)
   const updateRule = useCallback((ruleId, updates) => {
-    setRules((prev) =>
-      prev.map((rule) => (rule.id === ruleId ? { ...rule, ...updates } : rule))
+    setRules(prev =>
+      prev.map(rule => (rule.id === ruleId ? { ...rule, ...updates } : rule))
     )
   }, [])
   const resetRules = useCallback(() => setRules(buildInitialRules()), [])
@@ -159,10 +159,13 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   useEffect(() => {
     if (!sourceFilter.ciType) return undefined
     const timer = setTimeout(
-      () => dispatch(fetchCIsByType({
-        ciType: sourceFilter.ciType,
-        searchText: sourceFilter.searchText,
-      })),
+      () =>
+        dispatch(
+          fetchCIsByType({
+            ciType: sourceFilter.ciType,
+            searchText: sourceFilter.searchText,
+          })
+        ),
       CI_FETCH_DEBOUNCE_MS
     )
     return () => clearTimeout(timer)
@@ -171,32 +174,40 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   useEffect(() => {
     if (!targetFilter.ciType) return undefined
     const timer = setTimeout(
-      () => dispatch(fetchCIsByType({
-        ciType: targetFilter.ciType,
-        searchText: targetFilter.searchText,
-      })),
+      () =>
+        dispatch(
+          fetchCIsByType({
+            ciType: targetFilter.ciType,
+            searchText: targetFilter.searchText,
+          })
+        ),
       CI_FETCH_DEBOUNCE_MS
     )
     return () => clearTimeout(timer)
   }, [targetFilter.ciType, targetFilter.searchText, dispatch])
 
   // ── Filter handlers ───────────────────────────────────────────────────
-  const setSourceType = useCallback((ciType) => {
+  const setSourceType = useCallback(ciType => {
     setSourceFilter({ ciType, searchText: '' })
   }, [])
-  const setTargetType = useCallback((ciType) => {
+  const setTargetType = useCallback(ciType => {
     setTargetFilter({ ciType, searchText: '' })
   }, [])
-  const setSourceSearch = useCallback((searchText) => {
-    setSourceFilter((prev) => ({ ...prev, searchText }))
+  const setSourceSearch = useCallback(searchText => {
+    setSourceFilter(prev => ({ ...prev, searchText }))
   }, [])
-  const setTargetSearch = useCallback((searchText) => {
-    setTargetFilter((prev) => ({ ...prev, searchText }))
+  const setTargetSearch = useCallback(searchText => {
+    setTargetFilter(prev => ({ ...prev, searchText }))
   }, [])
 
   // ── Derived: valid relationship types + preview catalogues ────────────
   const validRelTypes = useMemo(
-    () => getValidRelationshipTypes(ciTypeRels, sourceFilter.ciType, targetFilter.ciType),
+    () =>
+      getValidRelationshipTypes(
+        ciTypeRels,
+        sourceFilter.ciType,
+        targetFilter.ciType
+      ),
     [ciTypeRels, sourceFilter.ciType, targetFilter.ciType]
   )
 
@@ -206,9 +217,18 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   )
 
   const previewItems = useMemo(
-    () => generatePreviewItems(sourceIds, targetIds, rules, existingPairs, previewCIs),
+    () =>
+      generatePreviewItems(
+        sourceIds,
+        targetIds,
+        rules,
+        existingPairs,
+        previewCIs
+      ),
     [sourceIds, targetIds, rules, existingPairs, previewCIs]
   )
+
+  console.log('previewItems = ', previewItems)
 
   const { newItems, duplicateCount } = useMemo(
     () => splitNewAndDuplicates(previewItems),
@@ -216,24 +236,35 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   )
 
   const validationErrors = useMemo(
-    () => validateBulkRelationships({
-      sourceType: sourceFilter.ciType,
-      targetType: targetFilter.ciType,
+    () =>
+      validateBulkRelationships({
+        sourceType: sourceFilter.ciType,
+        targetType: targetFilter.ciType,
+        sourceIds,
+        targetIds,
+        rules,
+        newItemCount: newItems.length,
+        validRelTypes,
+        pStartDate,
+        pEndDate,
+      }),
+    [
+      sourceFilter.ciType,
+      targetFilter.ciType,
       sourceIds,
       targetIds,
       rules,
-      newItemCount: newItems.length,
+      newItems.length,
       validRelTypes,
       pStartDate,
       pEndDate,
-    }),
-    [sourceFilter.ciType, targetFilter.ciType, sourceIds, targetIds, rules, newItems.length, validRelTypes, pStartDate, pEndDate]
+    ]
   )
 
   const hasInvalidRelType = useMemo(() => {
     if (!sourceFilter.ciType || !targetFilter.ciType) return false
     return rules.some(
-      (rule) => rule.relationshipType && !validRelTypes.has(rule.relationshipType)
+      rule => rule.relationshipType && !validRelTypes.has(rule.relationshipType)
     )
   }, [rules, sourceFilter.ciType, targetFilter.ciType, validRelTypes])
 
@@ -246,8 +277,8 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
   const resetForm = useCallback(() => {
     setSourceIds(EMPTY_LIST)
     setTargetIds(EMPTY_LIST)
-    setSourceFilter((prev) => ({ ...prev, searchText: '' }))
-    setTargetFilter((prev) => ({ ...prev, searchText: '' }))
+    setSourceFilter(prev => ({ ...prev, searchText: '' }))
+    setTargetFilter(prev => ({ ...prev, searchText: '' }))
     resetRules()
   }, [resetRules])
 
@@ -255,39 +286,6 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
     () => dispatch(bulkCreateRelationships(toBulkPayload(newItems))),
     [dispatch, newItems]
   )
-
-  const confirmAndSubmit = useCallback(() => {
-    if (validationErrors.length > 0) {
-      notification.error({
-        message: 'Validation Failed',
-        description: validationErrors[0],
-      })
-      return
-    }
-    Modal.confirm({
-      title: 'Confirm Bulk Create',
-      content: buildConfirmContent(newItems.length, duplicateCount),
-      okText: 'Apply Relationships',
-      okType: 'primary',
-      cancelText: 'Cancel',
-      icon: <Icon type="exclamation-circle" style={CONFIRM_ICON_STYLE} />,
-      onOk: () =>
-        submitBulkRelationships().then((action) => {
-          if (action.error) {
-            notification.error({
-              message: 'Bulk Create Failed',
-              description: (action.payload && action.payload) || 'An error occurred.',
-            })
-            return
-          }
-          notification.success({
-            message: 'Relationships Created',
-            description: buildSuccessDescription(action.payload),
-          })
-          if (onSubmitSuccess) onSubmitSuccess()
-        }),
-    })
-  }, [validationErrors, newItems.length, duplicateCount, submitBulkRelationships, onSubmitSuccess])
 
   return {
     // CI Type catalogues
@@ -329,7 +327,7 @@ const useBulkRelationshipForm = ({ onSubmitSuccess } = {}) => {
     setTargetSearch,
     updateRule,
     resetForm,
-    confirmAndSubmit,
+    submitBulkRelationships,
   }
 }
 

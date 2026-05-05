@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Spin } from 'antd'
+import { Icon, Modal, Spin } from 'antd'
+import { NotificationManager } from 'react-notifications'
 import useBulkRelationshipForm from '../../hooks/cmplan/useBulkRelationshipForm'
 import CISelectionPanel from '../../components/CMPlan/Relationships/CISelectionPanel'
 import RelationshipRulesSection from '../../components/CMPlan/Relationships/RelationshipRulesSection'
@@ -11,10 +12,14 @@ import {
   InvalidRelTypeWarning,
   ValidationErrorList,
 } from '../../components/CMPlan/Relationships/BulkRelationshipMessages'
+import {
+  buildConfirmContent,
+} from '../../utils/cmplan/bulkRelationshipFormatters'
 import './CMPlan.css'
 import './BulkAddRelationship.css'
 
 const RELATIONSHIP_MAP_PATH = '/cmplan/relationship-map'
+const CONFIRM_ICON_STYLE = { color: '#722ed1' }
 
 const BulkAddRelationshipPage = () => {
   const history = useHistory()
@@ -23,7 +28,32 @@ const BulkAddRelationshipPage = () => {
     [history]
   )
 
-  const form = useBulkRelationshipForm({ onSubmitSuccess: navigateBack })
+  const form = useBulkRelationshipForm()
+  const {
+    validationErrors,
+    newItems,
+    duplicateCount,
+    submitBulkRelationships,
+  } = form
+
+  const confirmAndSubmit = useCallback(() => {
+    if (validationErrors.length > 0) {
+      NotificationManager.error(validationErrors[0], 'Validation Failed')
+      return
+    }
+    Modal.confirm({
+      title: 'Confirm Bulk Create',
+      content: buildConfirmContent(newItems.length, duplicateCount),
+      okText: 'Apply Relationships',
+      okType: 'primary',
+      cancelText: 'Cancel',
+      icon: <Icon type="exclamation-circle" style={CONFIRM_ICON_STYLE} />,
+      onOk: () =>
+        submitBulkRelationships().then((action) => {
+          if (!action.error) navigateBack()
+        }),
+    })
+  }, [validationErrors, newItems.length, duplicateCount, submitBulkRelationships, navigateBack])
 
   return (
     <div className="cmplan-page">
@@ -83,7 +113,7 @@ const BulkAddRelationshipPage = () => {
           summaryParts={form.summaryParts}
           duplicateCount={form.duplicateCount}
           onReset={form.resetForm}
-          onApply={form.confirmAndSubmit}
+          onApply={confirmAndSubmit}
           applyDisabled={form.applyDisabled}
           submitting={form.submitting}
         />
