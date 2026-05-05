@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import debounce from 'lodash/debounce'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
@@ -159,48 +159,39 @@ const useBulkRelationshipForm = () => {
   }, [sourceFilter.ciType, targetFilter.ciType, resetRules])
 
   // ── Debounced CI list fetches on any filter change ────────────────────
-  const debouncedFetchSource = useMemo(
-    () =>
-      debounce(
-        params => dispatch(fetchCIsByType(params)),
-        CI_FETCH_DEBOUNCE_MS
-      ),
-    [dispatch]
+  const debouncedFetchSourceRef = useRef(
+    debounce(params => dispatch(fetchCIsByType(params)), CI_FETCH_DEBOUNCE_MS)
   )
-  const debouncedFetchTarget = useMemo(
-    () =>
-      debounce(
-        params => dispatch(fetchCIsByType(params)),
-        CI_FETCH_DEBOUNCE_MS
-      ),
-    [dispatch]
-  )
-
-  useEffect(
-    () => () => {
-      debouncedFetchSource.cancel()
-      debouncedFetchTarget.cancel()
-    },
-    [debouncedFetchSource, debouncedFetchTarget]
+  const debouncedFetchTargetRef = useRef(
+    debounce(params => dispatch(fetchCIsByType(params)), CI_FETCH_DEBOUNCE_MS)
   )
 
   useEffect(() => {
+    const fetchSource = debouncedFetchSourceRef.current
+    const fetchTarget = debouncedFetchTargetRef.current
+    return () => {
+      fetchSource.cancel()
+      fetchTarget.cancel()
+    }
+  }, [])
+
+  useEffect(() => {
     if (!sourceFilter.ciType) return
-    debouncedFetchSource({
+    debouncedFetchSourceRef.current({
       ciType: sourceFilter.ciType,
       searchText: sourceFilter.searchText,
       page: 1,
     })
-  }, [sourceFilter.ciType, sourceFilter.searchText, debouncedFetchSource])
+  }, [sourceFilter.ciType, sourceFilter.searchText])
 
   useEffect(() => {
     if (!targetFilter.ciType) return
-    debouncedFetchTarget({
+    debouncedFetchTargetRef.current({
       ciType: targetFilter.ciType,
       searchText: targetFilter.searchText,
       page: 1,
     })
-  }, [targetFilter.ciType, targetFilter.searchText, debouncedFetchTarget])
+  }, [targetFilter.ciType, targetFilter.searchText])
 
   // ── Filter handlers ───────────────────────────────────────────────────
   const setSourceType = useCallback(ciType => {
