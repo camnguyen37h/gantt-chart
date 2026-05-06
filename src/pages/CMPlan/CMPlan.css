@@ -5,6 +5,61 @@
   padding: 0;
 }
 
+/* ── Relationship list: CSS-sticky fixed columns ─────────────────────────── */
+/* .rel-list-wrap is the scroll container — replaces antd's overlay tables.
+   antd overlay tables have a known v3 bug where the inner <table> is sized to
+   the full scroll width, creating phantom columns on container resize.
+   CSS sticky is native, works at any container width, no JS. */
+
+.rel-list-wrap {
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Allow sticky to find .rel-list-wrap as scroll container */
+.rel-list-wrap .ant-table-content {
+  overflow: visible !important;
+}
+
+/* Header: no text wrapping */
+.rel-list-wrap .ant-table-thead > tr > th {
+  white-space: nowrap;
+}
+
+/* Sticky: checkbox column (first child, added by antd rowSelection) */
+.rel-list-wrap .ant-table-thead > tr > th:first-child,
+.rel-list-wrap .ant-table-tbody > tr > td:first-child {
+  position: sticky !important;
+  left: 0;
+  z-index: 4;
+}
+.rel-list-wrap .ant-table-thead > tr > th:first-child {
+  background: #fafafa !important;
+}
+.rel-list-wrap .ant-table-tbody > tr > td:first-child {
+  background: #fff;
+  z-index: 3;
+}
+
+/* Sticky: user-defined columns (via onHeaderCell/onCell className="sticky-col") */
+.rel-list-wrap .ant-table-thead > tr > th.sticky-col {
+  position: sticky !important;
+  z-index: 4;
+  background: #fafafa !important;
+}
+.rel-list-wrap .ant-table-tbody > tr > td.sticky-col {
+  position: sticky !important;
+  z-index: 3;
+  background: #fff;
+}
+
+/* Hover: repaint sticky cells so scrolled content doesn't bleed through */
+.rel-list-wrap .ant-table-tbody > tr:hover > td:first-child,
+.rel-list-wrap .ant-table-tbody > tr:hover > td.sticky-col {
+  background: #e6f7ff !important;
+}
+
+
 /* Page header bar */
 .cmplan-page-header {
   display: flex;

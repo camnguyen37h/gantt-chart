@@ -7,7 +7,7 @@ const ciTypeRelationshipsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-    cisByType: {}, // { [ciType]: { items: CI[], loading: bool, hasMore: bool, page: number } }
+    cisByType: {}, // { [key]: CI[] }
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -24,30 +24,15 @@ const ciTypeRelationshipsSlice = createSlice({
         state.loading = false
         state.error = (action.payload && action.payload.message) || 'Failed to load CI type relationships'
       })
-      .addCase(fetchCIsByType.pending, (state, action) => {
-        const ciType = action.meta.arg && action.meta.arg.ciType
-        if (!ciType) return
-        const { cisByType } = state
-        cisByType[ciType] = { ...(cisByType[ciType] || {}), loading: true }
+      .addCase(fetchCIsByType.pending, (state) => {
+        state.loading = true
       })
       .addCase(fetchCIsByType.fulfilled, (state, action) => {
-        const { ciType, items, hasMore, page } = action.payload
-        const { cisByType } = state
-        const prev = cisByType[ciType]
-        const existing = (prev && page > 1) ? prev.items : []
-        cisByType[ciType] = {
-          items: [...existing, ...items],
-          hasMore,
-          page,
-          loading: false,
-        }
+        const { key, data } = action.payload
+        state.cisByType[key] = data || []
         state.loading = false
       })
-      .addCase(fetchCIsByType.rejected, (state, action) => {
-        const ciType = action.meta.arg && action.meta.arg.ciType
-        if (!ciType) return
-        const { cisByType } = state
-        cisByType[ciType] = { ...(cisByType[ciType] || {}), loading: false }
+      .addCase(fetchCIsByType.rejected, (state) => {
         state.loading = false
       })
   },

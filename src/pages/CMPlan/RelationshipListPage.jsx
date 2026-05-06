@@ -1,271 +1,323 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Table, Button, Input, Select, Card,
-  Popconfirm, notification, Tag, Icon,
-  Spin, Tooltip,
+  Table, Button, Input, Select, Modal, Tag, Icon, Spin, Tooltip,
 } from 'antd'
 import { useHistory } from 'react-router-dom'
 import {
-  fetchAllRelationships,
+  fetchRelationships,
   deleteRelationship,
+  updateRelationship,
   fetchConfigurationItems,
+  fetchCITypes,
 } from '../../store/cmplan'
-import {
-  RELATIONSHIP_TYPES,
-} from '../../utils/cmplan/cmplanConstants'
+import { RELATIONSHIP_TYPES } from '../../utils/cmplan/cmplanConstants'
 import { RELATIONSHIP_TYPE_COLORS } from '../../utils/cmplan/bulkRelationshipConstants'
+import EditRelationshipModal from '../../components/CMPlan/Relationships/EditRelationshipModal'
 import './CMPlan.css'
 
 const { Option } = Select
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 20
 
-const FILTER_TYPE = {
-  SELECT: 'select',
-  INPUT: 'input',
-}
-
-const MATCH_MODE = {
-  EXACT: 'exact',
-  INCLUDES: 'includes',
-}
-
-const COLUMN_WIDTH = {
-  TYPE: 140,
-  CI_NAME: 180,
-  DESCRIPTION: 260,
-  EXPIRED: 120,
-  CREATED: 120,
-  ACTION: 80,
-}
-
-const STAT_COLORS = {
-  DEPENDS_ON: '#f5222d',
-  RUNS_ON: '#fa8c16',
-  HOSTS: '#52c41a',
-}
-
-// ── Filter config (declarative) ──────────────────────────────────────────────
-
-const FILTER_CONFIG = [
-  {
-    key: 'relationshipType',
-    dataIndex: 'relationshipType',
-    type: FILTER_TYPE.SELECT,
-    controlProps: { placeholder: 'Relationship Type', allowClear: true },
-    options: RELATIONSHIP_TYPES,
-    matchMode: MATCH_MODE.EXACT,
-  },
-  {
-    key: 'ciName',
-    dataIndex: '_ciName',
-    type: FILTER_TYPE.INPUT,
-    controlProps: {
-      placeholder: 'Search CI name...',
-      prefix: <Icon type="search" style={{ color: '#bfbfbf' }} />,
-      allowClear: true,
-    },
-    matchMode: MATCH_MODE.INCLUDES,
-  },
+const RL_STATUS_OPTIONS = [
+  { value: 'Active',   label: 'Active' },
+  { value: 'Draft',    label: 'Draft' },
+  { value: 'Updated',  label: 'Updated' },
+  { value: 'Renew',    label: 'Renew' },
+  { value: 'Expired',  label: 'Expired' },
 ]
 
-const INITIAL_FILTER_VALUES = FILTER_CONFIG.reduce((result, filter) => {
-  result[filter.key] = filter.type === FILTER_TYPE.SELECT ? undefined : ''
-  return result
-}, {})
+const APPROVAL_STATUS_OPTIONS = [
+  { value: 'Approved', label: 'Approved' },
+  { value: 'Pending',  label: 'Pending' },
+  { value: 'N/A',      label: 'N/A' },
+]
+
+// Deterministic mock values assigned per relationship index
+const MOCK_ACCESS   = ['Allow', 'Allow', 'Allow', 'Deny',    'Allow', 'Allow', 'Deny',    'Allow']
+const MOCK_STATUS   = ['Active', 'Draft', 'Updated', 'Active', 'Renew', 'Expired', 'Active', 'Draft']
+const MOCK_APPROVAL = ['Approved', 'Pending', 'N/A', 'Approved', 'Pending', 'N/A', 'Approved', 'Pending']
+const MOCK_USERS    = ['admin', 'nguyenvana', 'trantib', 'levanc', 'ldquan', 'admin', 'ldquan', 'trantib']
+
+const RL_STATUS_COLOR = {
+  Active:  'green',
+  Draft:   'default',
+  Updated: 'blue',
+  Renew:   'orange',
+  Expired: 'red',
+}
+
+const APPROVAL_COLOR = {
+  Approved: 'green',
+  Pending:  'orange',
+  'N/A':    'default',
+}
+
+const INITIAL_FILTERS = {
+  sourceName:       '',
+  targetName:       '',
+  relationshipType: undefined,
+  sourceCIType:     undefined,
+  targetCIType:     undefined,
+  rlStatus:         undefined,
+  approvalStatus:   undefined,
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+
+const formatDate = (iso) => {
+  if (!iso) return null
+  const d = new Date(iso)
+  return `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}/${d.getFullYear()}`
+}
+
+const getCIKeyInfo = (ci) => {
+  if (!ci || !ci.attributes) return '—'
+  const { attributes: a, ciTypeId } = ci
+  if (ciTypeId === 'server' || ciTypeId === 'virtual_machine') {
+    const parts = [a.ip_address, a.os_type].filter(Boolean)
+    return parts.join(', ') || ci.shortDescription || '—'
+  }
+  if (ciTypeId === 'database') {
+    return [a.db_type, a.port ? String(a.port) : null].filter(Boolean).join(':') || '—'
+  }
+  if (ciTypeId === 'application' || ciTypeId === 'middleware') {
+    const parts = [a.port ? String(a.port) : null, a.protocol, ci.environment].filter(Boolean)
+    return parts.join(', ') || ci.shortDescription || '—'
+  }
+  if (ciTypeId === 'network_device') {
+    return [a.ip_address, a.device_type].filter(Boolean).join(', ') || ci.shortDescription || '—'
+  }
+  if (ciTypeId === 'cloud_service') {
+    return [a.region, a.service_type].filter(Boolean).join(', ') || ci.shortDescription || '—'
+  }
+  return ci.shortDescription || '—'
+}
+
+const buildCIMap = (ciItems) => {
+  const map = {}
+  ciItems.forEach((ci) => { map[ci.id] = ci })
+  return map
+}
+
+const buildCITypeMap = (ciTypeItems) => {
+  const labelMap = {}
+  const colorMap = {}
+  ciTypeItems.forEach((t) => {
+    labelMap[t.name] = t.label
+    colorMap[t.name] = t.color
+  })
+  return { labelMap, colorMap }
+}
 
 const getRelTypeLabel = (value) => {
   const found = RELATIONSHIP_TYPES.find((t) => t.value === value)
   return found ? found.label : value
 }
 
-const buildCIMap = (ciItems) => {
-  const map = {}
-  ciItems.forEach((ci) => {
-    map[ci.id] = ci
-  })
-  return map
-}
-
-const enrichRelationships = (items, ciMap) => {
-  return items.map((rel) => {
+const enrichRelationships = (items, ciMap, ciTypeLabelMap) => {
+  return items.map((rel, index) => {
     const srcCI = ciMap[rel.sourceId]
     const tgtCI = ciMap[rel.targetId]
+    const num = index + 1
     return {
-      id: rel.id,
-      sourceId: rel.sourceId,
-      targetId: rel.targetId,
-      sourceName: (srcCI && srcCI.name) || rel.sourceId,
-      targetName: (tgtCI && tgtCI.name) || rel.targetId,
+      id:              rel.id,
+      relationshipKey: `RLK-${String(num).padStart(3, '0')}`,
+      sourceId:        rel.sourceId,
+      targetId:        rel.targetId,
+      sourceName:      srcCI ? srcCI.name : rel.sourceId,
+      sourceCIType:    srcCI ? (ciTypeLabelMap[srcCI.ciTypeId] || srcCI.ciTypeId) : '',
+      sourceCITypeKey: srcCI ? srcCI.ciTypeId : '',
+      sourceKeyInfo:   getCIKeyInfo(srcCI),
       relationshipType: rel.relationshipType,
-      description: rel.description || '',
-      expiredDate: rel.expiredDate || null,
-      createdBy: rel.createdBy || '',
-      createdAt: rel.createdAt || '',
-      _ciName: ((srcCI && srcCI.name) || '') + ' ' + ((tgtCI && tgtCI.name) || ''),
+      targetName:      tgtCI ? tgtCI.name : rel.targetId,
+      targetCIType:    tgtCI ? (ciTypeLabelMap[tgtCI.ciTypeId] || tgtCI.ciTypeId) : '',
+      targetCITypeKey: tgtCI ? tgtCI.ciTypeId : '',
+      targetKeyInfo:   getCIKeyInfo(tgtCI),
+      applyDate:       rel.createdAt,
+      expiredDate:     rel.expiredDate,
+      accessType:      MOCK_ACCESS[index % MOCK_ACCESS.length],
+      rlStatus:        MOCK_STATUS[index % MOCK_STATUS.length],
+      approvalStatus:  MOCK_APPROVAL[index % MOCK_APPROVAL.length],
+      modifyBy:        rel.createdBy || MOCK_USERS[index % MOCK_USERS.length],
     }
   })
 }
 
-const countActiveFilters = (filterValues) => {
-  return FILTER_CONFIG.filter((filter) => {
-    const currentValue = filterValues[filter.key]
-    return currentValue !== undefined && currentValue !== ''
-  }).length
-}
-
-const applyFilters = (items, filterValues) => {
-  return items.filter((item) => {
-    return FILTER_CONFIG.every((filter) => {
-      const filterValue = filterValues[filter.key]
-      if (filterValue === undefined || filterValue === null || filterValue === '') return true
-      if (filter.matchMode === MATCH_MODE.EXACT) return item[filter.dataIndex] === filterValue
-      const fieldText = String(item[filter.dataIndex] || '').toLowerCase()
-      return fieldText.includes(String(filterValue).toLowerCase())
-    })
+const applyFilters = (items, f) => {
+  // client-side fallback for rlStatus/approvalStatus which are mock-enriched fields
+  // (not on raw relationship records, so cannot be filtered server-side on mock data)
+  return items.filter((r) => {
+    if (f.rlStatus       && r.rlStatus !== f.rlStatus) return false
+    if (f.approvalStatus && r.approvalStatus !== f.approvalStatus) return false
+    return true
   })
 }
 
-const paginateData = (data, currentPage, pageSize) => {
-  return data.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-}
-
-const formatDate = (dateString) => {
-  if (!dateString) return null
-  const date = new Date(dateString)
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return year + '-' + month + '-' + day
-}
-
-const isExpired = (expiredDate) => {
-  if (!expiredDate) return false
-  return new Date(expiredDate) < new Date()
-}
+const countActiveFilters = (f) =>
+  Object.values(f).filter((v) => v !== undefined && v !== '').length
 
 // ── Column definitions ───────────────────────────────────────────────────────
 
-const buildColumns = (onDelete) => [
+const buildColumns = (ciTypeColorMap, onEdit) => [
   {
-    title: 'Type',
+    title: 'Source CI',
+    dataIndex: 'sourceName',
+    width: 260,
+    fixed: 'left',
+    render: (name, record) => (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+        <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
+        {record.sourceCIType && (
+          <Tag
+            color={ciTypeColorMap[record.sourceCITypeKey] || '#8c8c8c'}
+            style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px', margin: 0 }}
+          >
+            {record.sourceCIType}
+          </Tag>
+        )}
+      </span>
+    ),
+  },
+  {
+    title: 'Key Infor',
+    dataIndex: 'sourceKeyInfo',
+    width: 140,
+    fixed: 'left',
+    render: (val) => (
+      <Tooltip title={val} placement="topLeft">
+        <span style={{
+          color: '#595959', fontSize: 12,
+          display: 'block', maxWidth: 124,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}>
+          {val}
+        </span>
+      </Tooltip>
+    ),
+  },
+  {
+    title: 'Relationship',
     dataIndex: 'relationshipType',
-    width: COLUMN_WIDTH.TYPE,
-    sorter: (a, b) => a.relationshipType.localeCompare(b.relationshipType),
-    render: (value) => (
-      <Tag color={RELATIONSHIP_TYPE_COLORS[value] || '#1890ff'} style={{ fontSize: 11, margin: 0 }}>
-        {getRelTypeLabel(value)}
+    width: 120,
+    fixed: 'left',
+    render: (val) => (
+      <Tag color={RELATIONSHIP_TYPE_COLORS[val] || '#1890ff'} style={{ fontSize: 11, margin: 0 }}>
+        {getRelTypeLabel(val)}
       </Tag>
     ),
   },
   {
-    title: 'Source CI',
-    dataIndex: 'sourceName',
-    width: COLUMN_WIDTH.CI_NAME,
-    sorter: (a, b) => a.sourceName.localeCompare(b.sourceName),
-    render: (text) => <span style={{ fontWeight: 600 }}>{text}</span>,
-  },
-  {
-    title: '',
-    width: 40,
-    align: 'center',
-    render: () => <Icon type="arrow-right" style={{ color: '#bfbfbf' }} />,
-  },
-  {
-    title: 'Target CI',
+    title: 'Destination CI',
     dataIndex: 'targetName',
-    width: COLUMN_WIDTH.CI_NAME,
-    sorter: (a, b) => a.targetName.localeCompare(b.targetName),
-    render: (text) => <span style={{ fontWeight: 600 }}>{text}</span>,
+    width: 260,
+    fixed: 'left',
+    render: (name, record) => (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+        <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
+        {record.targetCIType && (
+          <Tag
+            color={ciTypeColorMap[record.targetCITypeKey] || '#8c8c8c'}
+            style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px', margin: 0 }}
+          >
+            {record.targetCIType}
+          </Tag>
+        )}
+      </span>
+    ),
   },
   {
-    title: 'Description',
-    dataIndex: 'description',
-    width: COLUMN_WIDTH.DESCRIPTION,
-    render: (text) => {
-      if (!text) return <span style={{ color: '#d9d9d9' }}>—</span>
-      return (
-        <Tooltip title={text} placement="topLeft">
-          <span style={{
-            color: '#8c8c8c',
-            fontSize: 12,
-            display: 'inline-block',
-            maxWidth: COLUMN_WIDTH.DESCRIPTION - 16,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            verticalAlign: 'middle',
-          }}>
-            {text}
-          </span>
-        </Tooltip>
-      )
-    },
+    title: 'Key Infor',
+    dataIndex: 'targetKeyInfo',
+    width: 300,
+    render: (val) => (
+      <Tooltip title={val} placement="topLeft">
+        <span style={{
+          color: '#595959', fontSize: 12,
+          display: 'block', maxWidth: 124,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}>
+          {val}
+        </span>
+      </Tooltip>
+    ),
   },
   {
-    title: 'Expired',
+    title: 'Apply Date',
+    dataIndex: 'applyDate',
+    width: 100,
+    render: (val) => val
+      ? <span style={{ fontSize: 12, color: '#595959' }}>{formatDate(val)}</span>
+      : <span style={{ color: '#d9d9d9' }}>—</span>,
+  },
+  {
+    title: 'Expire Date',
     dataIndex: 'expiredDate',
-    width: COLUMN_WIDTH.EXPIRED,
-    sorter: (a, b) => {
-      if (!a.expiredDate && !b.expiredDate) return 0
-      if (!a.expiredDate) return 1
-      if (!b.expiredDate) return -1
-      return a.expiredDate.localeCompare(b.expiredDate)
-    },
-    render: (value) => {
-      if (!value) return <span style={{ color: '#d9d9d9' }}>—</span>
-      const expired = isExpired(value)
+    width: 100,
+    render: (val) => {
+      if (!val) return <span style={{ color: '#d9d9d9' }}>—</span>
+      const expired = new Date(val) < new Date()
       return (
-        <span style={{ color: expired ? '#f5222d' : '#8c8c8c', fontSize: 12 }}>
-          {formatDate(value)}
-          {expired && (
-            <Tag color="red" style={{ marginLeft: 6, fontSize: 10 }}>Expired</Tag>
-          )}
+        <span style={{ fontSize: 12, color: expired ? '#f5222d' : '#595959' }}>
+          {formatDate(val)}
         </span>
       )
     },
   },
   {
-    title: 'Created',
-    dataIndex: 'createdAt',
-    width: COLUMN_WIDTH.CREATED,
-    sorter: (a, b) => {
-      if (!a.createdAt && !b.createdAt) return 0
-      if (!a.createdAt) return 1
-      if (!b.createdAt) return -1
-      return a.createdAt.localeCompare(b.createdAt)
-    },
-    render: (value) => {
-      if (!value) return <span style={{ color: '#d9d9d9' }}>—</span>
-      return <span style={{ color: '#8c8c8c', fontSize: 12 }}>{formatDate(value)}</span>
-    },
+    title: 'Access Type',
+    dataIndex: 'accessType',
+    width: 100,
+    render: (val) => (
+      <Tag color={val === 'Allow' ? 'green' : 'red'} style={{ fontSize: 11, margin: 0 }}>
+        {val}
+      </Tag>
+    ),
+  },
+  {
+    title: 'Status',
+    dataIndex: 'rlStatus',
+    width: 90,
+    render: (val) => (
+      <Tag color={RL_STATUS_COLOR[val] || 'default'} style={{ fontSize: 11, margin: 0 }}>
+        {val}
+      </Tag>
+    ),
+  },
+  {
+    title: 'Approval Status',
+    dataIndex: 'approvalStatus',
+    width: 130,
+    render: (val) => (
+      <Tag color={APPROVAL_COLOR[val] || 'default'} style={{ fontSize: 11, margin: 0 }}>
+        {val}
+      </Tag>
+    ),
+  },
+  {
+    title: 'Modify by',
+    dataIndex: 'modifyBy',
+    width: 100,
+    render: (val) => <span style={{ fontSize: 12, color: '#595959' }}>{val || '—'}</span>,
   },
   {
     title: 'Action',
-    width: COLUMN_WIDTH.ACTION,
+    width: 75,
     align: 'center',
+    fixed: 'right',
     render: (_, record) => (
-      <Popconfirm
-        title="Delete this relationship?"
-        okText="Delete"
-        okType="danger"
-        cancelText="Cancel"
-        onConfirm={() => onDelete(record.id)}
+      <Button
+        type="link"
+        size="small"
+        icon="edit"
+        style={{ padding: '0 4px', color: '#1890ff' }}
+        onClick={() => onEdit(record)}
       >
-        <Tooltip title="Delete">
-          <Button
-            type="link"
-            size="small"
-            icon="delete"
-            style={{ padding: '0 4px', color: '#ff4d4f' }}
-          />
-        </Tooltip>
-      </Popconfirm>
+        Edit
+      </Button>
     ),
   },
 ]
@@ -275,237 +327,303 @@ const buildColumns = (onDelete) => [
 const RelationshipListPage = () => {
   const dispatch = useDispatch()
   const history = useHistory()
-  const allRelationships = useSelector(state => state.cmplan.ciRelationships.items)
-  const ciItems = useSelector(state => state.cmplan.configurationItems.items)
-  const loading = useSelector(state => state.cmplan.ciRelationships.loading)
 
-  const [filterValues, setFilterValues] = useState(INITIAL_FILTER_VALUES)
-  const [pendingFilters, setPendingFilters] = useState(INITIAL_FILTER_VALUES)
-  const [currentPage, setCurrentPage] = useState(1)
+  const allRelationships = useSelector(state => state.cmplan.ciRelationships.items)
+  const ciItems          = useSelector(state => state.cmplan.configurationItems.items)
+  const ciTypeItems      = useSelector(state => state.cmplan.ciTypes.items)
+  const loading          = useSelector(state => state.cmplan.ciRelationships.loading)
+  const submitting       = useSelector(state => state.cmplan.ciRelationships.submitting)
+
+  const [filters, setFilters]               = useState(INITIAL_FILTERS)
+  const [currentPage, setCurrentPage]        = useState(1)
+  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [editRecord, setEditRecord]           = useState(null)
 
   useEffect(() => {
-    dispatch(fetchAllRelationships())
+    dispatch(fetchRelationships({}))
     dispatch(fetchConfigurationItems({ pageSize: 9999 }))
+    dispatch(fetchCITypes())
   }, [dispatch])
 
   // ── Derived data ─────────────────────────────────────────────────────────
 
   const ciMap = useMemo(() => buildCIMap(ciItems), [ciItems])
 
-  const enrichedItems = useMemo(
-    () => enrichRelationships(allRelationships, ciMap),
-    [allRelationships, ciMap]
+  const { labelMap: ciTypeLabelMap, colorMap: ciTypeColorMap } = useMemo(
+    () => buildCITypeMap(ciTypeItems),
+    [ciTypeItems]
   )
 
-  const activeFilterCount = countActiveFilters(filterValues)
+  const enrichedItems = useMemo(
+    () => enrichRelationships(allRelationships, ciMap, ciTypeLabelMap),
+    [allRelationships, ciMap, ciTypeLabelMap]
+  )
 
-  const stats = useMemo(() => {
-    const typeCounts = {}
-    for (let i = 0; i < enrichedItems.length; i++) {
-      const type = enrichedItems[i].relationshipType
-      typeCounts[type] = (typeCounts[type] || 0) + 1
-    }
-    const expiredCount = enrichedItems.filter((r) => isExpired(r.expiredDate)).length
-    return { total: enrichedItems.length, typeCounts, expiredCount }
-  }, [enrichedItems])
-
-  const topTypes = useMemo(() => {
-    const entries = Object.keys(stats.typeCounts).map((type) => ({
-      type,
-      count: stats.typeCounts[type],
-    }))
-    entries.sort((a, b) => b.count - a.count)
-    return entries.slice(0, 3)
-  }, [stats.typeCounts])
+  const ciTypeOptions = useMemo(
+    () => ciTypeItems.map(t => ({ value: t.name, label: t.label })),
+    [ciTypeItems]
+  )
 
   const filteredItems = useMemo(
-    () => applyFilters(enrichedItems, filterValues),
-    [enrichedItems, filterValues]
+    () => applyFilters(enrichedItems, filters),
+    [enrichedItems, filters]
   )
 
-  const paginatedItems = useMemo(
-    () => paginateData(filteredItems, currentPage, PAGE_SIZE),
-    [filteredItems, currentPage]
+  const activeFilterCount = useMemo(
+    () => countActiveFilters(filters),
+    [filters]
   )
 
-  // ── Filter handlers ──────────────────────────────────────────────────────
+  const handleEditOpen = useCallback((record) => {
+    setEditRecord(record)
+  }, [])
 
-  const handlePendingFilterChange = useCallback((filterKey, selectedValue) => {
-    setPendingFilters((prevFilters) => {
-      const nextFilters = {}
-      Object.keys(prevFilters).forEach((key) => { nextFilters[key] = prevFilters[key] })
-      nextFilters[filterKey] = selectedValue
-      return nextFilters
-    })
+  const handleEditClose = useCallback(() => {
+    setEditRecord(null)
+  }, [])
+
+  const handleEditSubmit = useCallback((payload) => {
+    const { id, ...rest } = payload
+    dispatch(updateRelationship({ id, payload: rest }))
+      .then((action) => {
+        if (!action.error) {
+          setEditRecord(null)
+        }
+      })
+  }, [dispatch])
+
+  const columns = useMemo(
+    () => buildColumns(ciTypeColorMap, handleEditOpen),
+    [ciTypeColorMap, handleEditOpen]
+  )
+
+  // ── Handlers ─────────────────────────────────────────────────────────────
+
+  const handlePending = useCallback((key, val) => {
+    setFilters(prev => ({ ...prev, [key]: val }))
   }, [])
 
   const handleSearch = useCallback(() => {
-    setFilterValues(pendingFilters)
+    dispatch(fetchRelationships({
+      sourceName:       filters.sourceName       || undefined,
+      targetName:       filters.targetName       || undefined,
+      relationshipType: filters.relationshipType || undefined,
+      sourceCIType:     filters.sourceCIType     || undefined,
+      targetCIType:     filters.targetCIType     || undefined,
+    }))
     setCurrentPage(1)
-  }, [pendingFilters])
+  }, [dispatch, filters])
 
   const handleReset = useCallback(() => {
-    setPendingFilters(INITIAL_FILTER_VALUES)
-    setFilterValues(INITIAL_FILTER_VALUES)
+    setFilters(INITIAL_FILTERS)
+    dispatch(fetchRelationships({}))
     setCurrentPage(1)
-  }, [])
-
-  // ── CRUD handlers ────────────────────────────────────────────────────────
-
-  const handleDelete = useCallback((recordId) => {
-    dispatch(deleteRelationship(recordId)).then((result) => {
-      if (result.error) {
-        notification.error({
-          message: 'Delete failed',
-          description: (result.payload && result.payload) || 'An error occurred.',
-        })
-      } else {
-        notification.success({ message: 'Relationship deleted' })
-      }
-    })
   }, [dispatch])
 
   const handleNavigateToBulkAdd = useCallback(() => {
     history.push('/cmplan/bulk-add-relationships')
   }, [history])
 
-  // ── Memoized columns ────────────────────────────────────────────────────
-
-  const columns = useMemo(
-    () => buildColumns(handleDelete),
-    [handleDelete]
-  )
+  const handleDeleteSelected = useCallback(() => {
+    Modal.confirm({
+      title: `Delete ${selectedRowKeys.length} relationship(s)?`,
+      content: 'This action cannot be undone.',
+      okText: 'Delete',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      icon: <Icon type="exclamation-circle" style={{ color: '#ff4d4f' }} />,
+      onOk: () => {
+        selectedRowKeys.forEach(id => dispatch(deleteRelationship(id)))
+        setSelectedRowKeys([])
+      },
+    })
+  }, [dispatch, selectedRowKeys])
 
   // ── Render ───────────────────────────────────────────────────────────────
 
   return (
     <div className="cmplan-page">
-      <div className="cmplan-page-header">
-        <div className="cmplan-page-header-left">
-          <Icon type="deployment-unit" className="cmplan-page-header-icon" />
-          <div>
-            <p className="cmplan-page-title">CI Relationships</p>
-            <p className="cmplan-page-subtitle">
-              View and manage all relationships between configuration items.
-            </p>
-          </div>
-        </div>
-        <div className="cmplan-page-header-stats">
-          <div className="cmplan-stat-pill">
-            <span className="cmplan-stat-pill-value">{stats.total}</span>
-            <span className="cmplan-stat-pill-label">Total</span>
-          </div>
-          {topTypes.map((entry) => (
-            <div key={entry.type} className="cmplan-stat-pill">
-              <span
-                className="cmplan-stat-pill-value"
-                style={{ color: RELATIONSHIP_TYPE_COLORS[entry.type] || '#1890ff' }}
-              >
-                {entry.count}
-              </span>
-              <span className="cmplan-stat-pill-label">{getRelTypeLabel(entry.type)}</span>
-            </div>
-          ))}
-          {stats.expiredCount > 0 && (
-            <div className="cmplan-stat-pill">
-              <span className="cmplan-stat-pill-value" style={{ color: '#f5222d' }}>
-                {stats.expiredCount}
-              </span>
-              <span className="cmplan-stat-pill-label">Expired</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <Card bodyStyle={{ padding: '16px 20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', flex: '1 1 auto', flexWrap: 'wrap' }}>
-            {FILTER_CONFIG.map((filter) => (
-              <div key={filter.key} style={{ width: 200, marginRight: 8, marginBottom: 4 }}>
-                {filter.type === FILTER_TYPE.SELECT ? (
-                  <Select
-                    {...filter.controlProps}
-                    style={{ width: '100%' }}
-                    value={pendingFilters[filter.key]}
-                    onChange={(selectedValue) => handlePendingFilterChange(filter.key, selectedValue)}
-                  >
-                    {(filter.options || []).map((option) => (
-                      <Option key={option.value} value={option.value}>{option.label}</Option>
-                    ))}
-                  </Select>
-                ) : (
-                  <Input
-                    {...filter.controlProps}
-                    value={pendingFilters[filter.key]}
-                    onChange={(event) => handlePendingFilterChange(filter.key, event.target.value)}
-                    onPressEnter={handleSearch}
-                  />
-                )}
-              </div>
+      {/* Filter bar */}
+      <div style={{
+        background: '#fff',
+        border: '1px solid #e8e8e8',
+        borderRadius: 6,
+        padding: '16px 24px',
+        marginBottom: 12,
+        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+      }}>
+        {/* Row 1 */}
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12, alignItems: 'center' }}>
+          <Input
+            placeholder="Source CI"
+            value={filters.sourceName}
+            onChange={e => handlePending('sourceName', e.target.value)}
+            onPressEnter={handleSearch}
+            style={{ width: 180 }}
+            prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
+          />
+          <Input
+            placeholder="Destination CI"
+            value={filters.targetName}
+            onChange={e => handlePending('targetName', e.target.value)}
+            onPressEnter={handleSearch}
+            style={{ width: 180 }}
+            prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
+          />
+          <Select
+            placeholder="Choose relationship"
+            allowClear
+            value={filters.relationshipType}
+            onChange={val => handlePending('relationshipType', val)}
+            style={{ width: 200 }}
+          >
+            {RELATIONSHIP_TYPES.map(t => (
+              <Option key={t.value} value={t.value}>{t.label}</Option>
             ))}
-            <div style={{ whiteSpace: 'nowrap', marginBottom: 4 }}>
+          </Select>
+          <Select
+            placeholder="Choose Source CI Type"
+            allowClear
+            value={filters.sourceCIType}
+            onChange={val => handlePending('sourceCIType', val)}
+            style={{ width: 210 }}
+          >
+            {ciTypeOptions.map(t => (
+              <Option key={t.value} value={t.value}>{t.label}</Option>
+            ))}
+          </Select>
+          <Select
+            placeholder="Choose Destination CI Type"
+            allowClear
+            value={filters.targetCIType}
+            onChange={val => handlePending('targetCIType', val)}
+            style={{ width: 230 }}
+          >
+            {ciTypeOptions.map(t => (
+              <Option key={t.value} value={t.value}>{t.label}</Option>
+            ))}
+          </Select>
+
+          {/* action buttons flush right */}
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
+            <Tooltip title="Search">
               <Button
-                type="primary"
+                shape="circle"
                 icon="search"
+                type="primary"
                 onClick={handleSearch}
-                style={{ marginRight: 8, display: 'inline-flex', alignItems: 'center' }}
-              >
-                Search
-              </Button>
+              />
+            </Tooltip>
+            <Tooltip title={activeFilterCount > 0 ? `Reset (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''})` : 'Reset filters'}>
               <Button
+                shape="circle"
                 icon="reload"
                 onClick={handleReset}
-                style={{ display: 'inline-flex', alignItems: 'center' }}
-              >
-                {activeFilterCount > 0 ? 'Reset (' + activeFilterCount + ')' : 'Reset'}
-              </Button>
-            </div>
-          </div>
-          <div style={{ whiteSpace: 'nowrap', marginBottom: 4 }}>
+              />
+            </Tooltip>
+            {selectedRowKeys.length > 0 && (
+              <Tooltip title={`Delete selected (${selectedRowKeys.length})`}>
+                <Button
+                  shape="circle"
+                  icon="delete"
+                  style={{ color: '#ff4d4f' }}
+                  onClick={handleDeleteSelected}
+                />
+              </Tooltip>
+            )}
             <Button
               type="primary"
               icon="plus"
               onClick={handleNavigateToBulkAdd}
               style={{ display: 'inline-flex', alignItems: 'center' }}
             >
-              Bulk Add
+              Add Bulk Relationship
             </Button>
           </div>
         </div>
 
-        <Spin spinning={loading}>
-          <Table
-            size="small"
-            bordered
-            rowKey="id"
-            dataSource={paginatedItems}
-            columns={columns}
-            pagination={{
-              current: currentPage,
-              pageSize: PAGE_SIZE,
-              total: filteredItems.length,
-              onChange: setCurrentPage,
-              showTotal: (total, range) =>
-                activeFilterCount > 0
-                  ? range[0] + '–' + range[1] + ' of ' + total + ' (filtered from ' + enrichedItems.length + ')'
-                  : total + ' records',
-              size: 'small',
-            }}
-            locale={{
-              emptyText: (
-                <div style={{ padding: '32px 0', color: '#bfbfbf' }}>
-                  <Icon type="inbox" style={{ fontSize: 32, marginBottom: 8, display: 'block' }} />
-                  {activeFilterCount > 0
-                    ? 'No relationships match the current filters'
-                    : 'No relationships yet'}
-                </div>
-              ),
-            }}
-          />
-        </Spin>
-      </Card>
+        {/* Row 2 */}
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Select
+            placeholder="Choose Status"
+            allowClear
+            value={filters.rlStatus}
+            onChange={val => handlePending('rlStatus', val)}
+            style={{ width: 180 }}
+          >
+            {RL_STATUS_OPTIONS.map(s => (
+              <Option key={s.value} value={s.value}>{s.label}</Option>
+            ))}
+          </Select>
+          <Select
+            placeholder="Approval Status"
+            allowClear
+            value={filters.approvalStatus}
+            onChange={val => handlePending('approvalStatus', val)}
+            style={{ width: 180 }}
+          >
+            {APPROVAL_STATUS_OPTIONS.map(s => (
+              <Option key={s.value} value={s.value}>{s.label}</Option>
+            ))}
+          </Select>
+          {activeFilterCount > 0 && (
+            <span style={{ fontSize: 12, color: '#8c8c8c' }}>
+              <Icon type="filter" style={{ marginRight: 4 }} />
+              {filteredItems.length} / {enrichedItems.length} records
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Table */}
+      <Spin spinning={loading}>
+        <Table
+          className="rel-list-table"
+          size="small"
+          bordered
+          rowKey="id"
+          dataSource={filteredItems}
+          columns={columns}
+          scroll={{ x: 'max-content' }}
+          rowSelection={{
+            selectedRowKeys,
+            onChange: setSelectedRowKeys,
+          }}
+          pagination={{
+            current: currentPage,
+            pageSize: PAGE_SIZE,
+            total: filteredItems.length,
+            onChange: setCurrentPage,
+            showSizeChanger: false,
+            showTotal: (total, range) =>
+              activeFilterCount > 0
+                ? `${range[0]}–${range[1]} of ${total} (filtered from ${enrichedItems.length})`
+                : `${total} records`,
+            size: 'small',
+          }}
+          locale={{
+            emptyText: (
+              <div style={{ padding: '32px 0', color: '#bfbfbf' }}>
+                <Icon type="inbox" style={{ fontSize: 32, marginBottom: 8, display: 'block' }} />
+                {activeFilterCount > 0
+                  ? 'No relationships match the current filters'
+                  : 'No relationships yet'}
+              </div>
+            ),
+          }}
+        />
+      </Spin>
+
+      <EditRelationshipModal
+        visible={!!editRecord}
+        record={editRecord}
+        submitting={submitting}
+        onSubmit={handleEditSubmit}
+        onClose={handleEditClose}
+      />
     </div>
   )
 }
 
 export default RelationshipListPage
+

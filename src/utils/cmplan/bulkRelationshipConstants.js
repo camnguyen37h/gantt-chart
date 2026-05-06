@@ -1,6 +1,10 @@
 export const MAX_RULES = 10
 export const MAX_RELATIONSHIPS_PER_BATCH = 500
 
+// CI list pagination + debounce
+export const CI_PAGE_SIZE = 10
+export const CI_FETCH_DEBOUNCE_MS = 300
+
 export const RELATIONSHIP_TYPE_COLORS = {
   depends_on: '#f5222d',
   runs_on: '#fa8c16',

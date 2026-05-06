@@ -1,0 +1,72 @@
+{
+    "pageNum": 0,
+    "pageSize": 10,
+    "totalPage": 1,
+    "totalElements": 4,
+    "data": [
+        {
+            "id": 1,
+            "name": "MEMBER",
+            "status": "ACTIVE",
+            "ableToDelete": true,
+            "duplicateCiId": null,
+            "createdAt": null,
+            "updatedAt": null,
+            "projectId": 1,
+            "primaryDetailId": 2,
+            "primaryDetailValue": null,
+            "uniqueValue": "User,User,abc@gmail.com",
+            "modifiedBy": "nvnam6",
+            "modifiedAt": "2026-05-06T09:49:02",
+            "detailList": null
+        },
+        {
+            "id": 18,
+            "name": "MEMBER",
+            "status": "ACTIVE",
+            "ableToDelete": true,
+            "duplicateCiId": null,
+            "createdAt": null,
+            "updatedAt": null,
+            "projectId": 1,
+            "primaryDetailId": 30,
+            "primaryDetailValue": null,
+            "uniqueValue": "abc,abc,abc@gmail.com",
+            "modifiedBy": "nvnam6",
+            "modifiedAt": "2026-05-06T10:37:47",
+            "detailList": null
+        },
+        {
+            "id": 35,
+            "name": "MEMBER",
+            "status": "ACTIVE",
+            "ableToDelete": true,
+            "duplicateCiId": null,
+            "createdAt": null,
+            "updatedAt": null,
+            "projectId": 1,
+            "primaryDetailId": 73,
+            "primaryDetailValue": null,
+            "uniqueValue": "quynhnga,quynhnga,quynhnga@gmail.com",
+            "modifiedBy": null,
+            "modifiedAt": "2026-05-06T12:38:52",
+            "detailList": null
+        },
+        {
+            "id": 37,
+            "name": "MEMBER",
+            "status": "ACTIVE",
+            "ableToDelete": true,
+            "duplicateCiId": null,
+            "createdAt": null,
+            "updatedAt": null,
+            "projectId": 1,
+            "primaryDetailId": 78,
+            "primaryDetailValue": null,
+            "uniqueValue": "trand,trand,trand@gmail.com",
+            "modifiedBy": null,
+            "modifiedAt": "2026-05-06T12:40:09",
+            "detailList": null
+        }
+    ]
+}

@@ -207,11 +207,11 @@ const configurationItemsApi = {
    * ciType is a type name string (e.g. 'server', 'application').
    * searchText is an optional keyword to filter by name or shortDescription.
    */
-  getByType: async (ciType, searchText, page = 1, pageSize = 10) => {
+  getByType: async (ciType, searchText) => {
     await delay()
-    if (!ciType) return successResponse({ items: [], hasMore: false, total: 0 })
+    if (!ciType) return successResponse({ data: [] })
     const query = searchText ? searchText.trim().toLowerCase() : ''
-    const filtered = configurationItems
+    const data = configurationItems
       .filter((ci) => {
         if (ci.ciTypeId !== ciType || ci.status === 'retired') return false
         if (!query) return true
@@ -221,10 +221,7 @@ const configurationItemsApi = {
         )
       })
       .sort((a, b) => a.name.localeCompare(b.name))
-    const total = filtered.length
-    const start = (page - 1) * pageSize
-    const items = filtered.slice(start, start + pageSize)
-    return successResponse({ items, hasMore: start + pageSize < total, total, page })
+    return successResponse({ data })
   },
 
   create: async (payload) => {
@@ -331,9 +328,52 @@ const configurationItemsApi = {
 
 // ── Relationships ─────────────────────────────────────────────────────────────
 const relationshipsApi = {
-  getAll: async () => {
+  getAll: async (params = {}) => {
     await delay()
-    return successResponse([...ciRelationships])
+    const { sourceName, targetName, relationshipType, sourceCIType, targetCIType, rlStatus, approvalStatus } = params
+    let result = [...ciRelationships]
+
+    if (sourceName) {
+      const q = sourceName.toLowerCase()
+      result = result.filter(r => {
+        const ci = configurationItems.find(c => c.id === r.sourceId)
+        return ci && ci.name.toLowerCase().includes(q)
+      })
+    }
+    if (targetName) {
+      const q = targetName.toLowerCase()
+      result = result.filter(r => {
+        const ci = configurationItems.find(c => c.id === r.targetId)
+        return ci && ci.name.toLowerCase().includes(q)
+      })
+    }
+    if (relationshipType) {
+      result = result.filter(r => r.relationshipType === relationshipType)
+    }
+    if (sourceCIType) {
+      result = result.filter(r => {
+        const ci = configurationItems.find(c => c.id === r.sourceId)
+        if (!ci) return false
+        const ciType = ciTypes.find(t => t.id === ci.ciTypeId)
+        return ciType && ciType.name === sourceCIType
+      })
+    }
+    if (targetCIType) {
+      result = result.filter(r => {
+        const ci = configurationItems.find(c => c.id === r.targetId)
+        if (!ci) return false
+        const ciType = ciTypes.find(t => t.id === ci.ciTypeId)
+        return ciType && ciType.name === targetCIType
+      })
+    }
+    if (rlStatus) {
+      result = result.filter(r => r.rlStatus === rlStatus)
+    }
+    if (approvalStatus) {
+      result = result.filter(r => r.approvalStatus === approvalStatus)
+    }
+
+    return successResponse(result)
   },
 
   getByCI: async (ciId) => {

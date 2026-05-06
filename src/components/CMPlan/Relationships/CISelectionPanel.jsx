@@ -8,7 +8,6 @@ import {
   mergeUniqueIds,
   removeIds,
 } from './CISelectionPanel.helpers'
-import useCIInfiniteScroll from '../../../hooks/cmplan/useCIInfiniteScroll'
 
 const { Option } = Select
 
@@ -27,13 +26,12 @@ const buildEmptyDescription = (ciType) =>
 
 const CISelectionPanel = ({
   title,
+  panel,
   ciType,
   availableTypes,
   onTypeChange,
   cis,
   loading,
-  hasMore,
-  currentPage,
   selectedIds,
   onSelectionChange,
   searchText,
@@ -50,14 +48,6 @@ const CISelectionPanel = ({
   )
 
   const ciTypeLabel = ciType ? resolveLabel(availableTypes, ciType) : ''
-
-  const sentinelRef = useCIInfiniteScroll({
-    ciType,
-    searchText,
-    currentPage,
-    hasMore,
-    loading,
-  })
 
   const handleSelectAll = useCallback(
     (event) => {
@@ -143,28 +133,15 @@ const CISelectionPanel = ({
               style={{ margin: '40px 0' }}
             />
           ) : (
-            <>
-              {cis.map((ci) => (
-                <CIListItem
-                  key={ci.id}
-                  ci={ci}
-                  ciTypeLabel={ciTypeLabel}
-                  isSelected={selectedIdSet.has(ci.id)}
-                  onToggle={handleToggleCI}
-                />
-              ))}
-              {hasMore && (
-                <div
-                  ref={sentinelRef}
-                  style={{ height: 1 }}
-                />
-              )}
-              {loading && cis.length > 0 && (
-                <div style={{ textAlign: 'center', padding: '8px 0' }}>
-                  <Spin size="small" />
-                </div>
-              )}
-            </>
+            cis.map((ci) => (
+              <CIListItem
+                key={ci.id}
+                ci={ci}
+                ciTypeLabel={ciTypeLabel}
+                isSelected={selectedIdSet.has(ci.id)}
+                onToggle={handleToggleCI}
+              />
+            ))
           )}
         </Spin>
       </div>
@@ -176,6 +153,7 @@ const CISelectionPanel = ({
 
 CISelectionPanel.propTypes = {
   title: PropTypes.string.isRequired,
+  panel: PropTypes.string.isRequired,
   ciType: PropTypes.string,
   availableTypes: PropTypes.arrayOf(
     PropTypes.shape({
@@ -193,8 +171,6 @@ CISelectionPanel.propTypes = {
     })
   ).isRequired,
   loading: PropTypes.bool,
-  hasMore: PropTypes.bool,
-  currentPage: PropTypes.number,
   selectedIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelectionChange: PropTypes.func.isRequired,
   searchText: PropTypes.string,
@@ -204,8 +180,6 @@ CISelectionPanel.propTypes = {
 CISelectionPanel.defaultProps = {
   ciType: undefined,
   loading: false,
-  hasMore: false,
-  currentPage: 1,
   searchText: '',
 }
 

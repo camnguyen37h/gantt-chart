@@ -8,10 +8,8 @@ import RelationshipRulesSection from '../../components/CMPlan/Relationships/Rela
 import RelationshipPreview from '../../components/CMPlan/Relationships/RelationshipPreview'
 import BulkRelationshipHeader from '../../components/CMPlan/Relationships/BulkRelationshipHeader'
 import BulkRelationshipFooter from '../../components/CMPlan/Relationships/BulkRelationshipFooter'
-import {
-  InvalidRelTypeWarning,
-  ValidationErrorList,
-} from '../../components/CMPlan/Relationships/BulkRelationshipMessages'
+import InvalidRelTypeWarning from '../../components/CMPlan/Relationships/InvalidRelTypeWarning'
+import ValidationErrorList from '../../components/CMPlan/Relationships/ValidationErrorList'
 import {
   buildConfirmContent,
 } from '../../utils/cmplan/bulkRelationshipFormatters'
@@ -70,13 +68,12 @@ const BulkAddRelationshipPage = () => {
         <div className="bulk-rel-panels">
           <CISelectionPanel
             title="SOURCE CIS"
+            panel="source"
             ciType={form.sourceType}
             availableTypes={form.sourceTypes}
             onTypeChange={form.setSourceType}
             cis={form.sourceCIs}
             loading={form.sourceLoading}
-            hasMore={form.sourceHasMore}
-            currentPage={form.sourceCurrentPage}
             selectedIds={form.sourceIds}
             onSelectionChange={form.setSourceSelection}
             searchText={form.sourceSearch}
@@ -84,13 +81,12 @@ const BulkAddRelationshipPage = () => {
           />
           <CISelectionPanel
             title="TARGET CIS"
+            panel="target"
             ciType={form.targetType}
             availableTypes={form.targetTypes}
             onTypeChange={form.setTargetType}
             cis={form.targetCIs}
             loading={form.targetLoading}
-            hasMore={form.targetHasMore}
-            currentPage={form.targetCurrentPage}
             selectedIds={form.targetIds}
             onSelectionChange={form.setTargetSelection}
             searchText={form.targetSearch}

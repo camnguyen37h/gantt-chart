@@ -11,12 +11,13 @@ export const fetchCITypeRelationships = createAsyncThunk(
   }
 )
 
-/** Load CIs for a given CI Type (class name), optionally filtered by searchText. Keyed by ciType in state.cisByType. */
+/** Load all CIs for a given CI Type, optionally filtered by searchText. Keyed by "panel|ciType|searchText" in state.cisByType. */
 export const fetchCIsByType = createAsyncThunk(
   'cmplan/ciTypeRelationships/fetchCIsByType',
-  async ({ ciType, searchText, page = 1, pageSize = 10 }, { rejectWithValue }) => {
-    const res = await cmplanApi.configurationItems.getByType(ciType, searchText, page, pageSize)
+  async ({ panel = 'default', ciType, searchText = '' }, { rejectWithValue }) => {
+    const res = await cmplanApi.configurationItems.getByType(ciType, searchText)
     if (!res.success) return rejectWithValue(res.error)
-    return { ciType, page, ...res.data }
+    const key = `${panel}|${ciType}|${searchText}`
+    return { key, data: res.data.data }
   }
 )

@@ -11,6 +11,15 @@ export const fetchAllRelationships = createAsyncThunk(
   }
 )
 
+export const fetchRelationships = createAsyncThunk(
+  'cmplan/ciRelationships/fetch',
+  async (params = {}, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.getAll(params)
+    if (!res.success) return rejectWithValue(res.message)
+    return res.data
+  }
+)
+
 export const createRelationship = createAsyncThunk(
   'cmplan/ciRelationships/create',
   async (payload, { rejectWithValue }) => {
