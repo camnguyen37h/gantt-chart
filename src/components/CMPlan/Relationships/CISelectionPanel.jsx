@@ -26,7 +26,6 @@ const buildEmptyDescription = (ciType) =>
 
 const CISelectionPanel = ({
   title,
-  panel,
   ciType,
   availableTypes,
   onTypeChange,
@@ -153,7 +152,6 @@ const CISelectionPanel = ({
 
 CISelectionPanel.propTypes = {
   title: PropTypes.string.isRequired,
-  panel: PropTypes.string.isRequired,
   ciType: PropTypes.string,
   availableTypes: PropTypes.arrayOf(
     PropTypes.shape({

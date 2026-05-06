@@ -75,9 +75,8 @@ const useBulkRelationshipForm = () => {
   const targetTypes    = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
   const relTypeOptions = useMemo(() => extractAllRelationshipTypeOptions(ciTypeRels), [ciTypeRels])
 
-  const cisLoading = useSelector((state) => state.cmplan.ciTypeRelationships.loading)
-  const sourcePanel = useCIPanel('source', sourceTypes, cisByType, cisLoading)
-  const targetPanel = useCIPanel('target', targetTypes, cisByType, cisLoading)
+  const sourcePanel = useCIPanel(sourceTypes, cisByType)
+  const targetPanel = useCIPanel(targetTypes, cisByType)
 
   const [rules, setRules] = useState(buildInitialRules)
 

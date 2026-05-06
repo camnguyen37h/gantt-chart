@@ -221,7 +221,7 @@ const configurationItemsApi = {
         )
       })
       .sort((a, b) => a.name.localeCompare(b.name))
-    return successResponse({ data })
+    return successResponse(data)
   },
 
   create: async (payload) => {

@@ -68,7 +68,6 @@ const BulkAddRelationshipPage = () => {
         <div className="bulk-rel-panels">
           <CISelectionPanel
             title="SOURCE CIS"
-            panel="source"
             ciType={form.sourceType}
             availableTypes={form.sourceTypes}
             onTypeChange={form.setSourceType}
@@ -81,7 +80,6 @@ const BulkAddRelationshipPage = () => {
           />
           <CISelectionPanel
             title="TARGET CIS"
-            panel="target"
             ciType={form.targetType}
             availableTypes={form.targetTypes}
             onTypeChange={form.setTargetType}

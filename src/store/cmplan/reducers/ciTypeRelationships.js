@@ -7,7 +7,7 @@ const ciTypeRelationshipsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-    cisByType: {}, // { [key]: CI[] }
+    cisByType: {}, // { ["ciType|searchText"]: CI[] }
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -24,17 +24,12 @@ const ciTypeRelationshipsSlice = createSlice({
         state.loading = false
         state.error = (action.payload && action.payload.message) || 'Failed to load CI type relationships'
       })
-      .addCase(fetchCIsByType.pending, (state) => {
-        state.loading = true
-      })
+      .addCase(fetchCIsByType.pending, () => {})
       .addCase(fetchCIsByType.fulfilled, (state, action) => {
-        const { key, data } = action.payload
-        state.cisByType[key] = data || []
-        state.loading = false
+        const { ciType, searchText = '' } = action.meta.arg
+        state.cisByType[`${ciType}|${searchText}`] = action.payload || []
       })
-      .addCase(fetchCIsByType.rejected, (state) => {
-        state.loading = false
-      })
+      .addCase(fetchCIsByType.rejected, () => {})
   },
 })
 

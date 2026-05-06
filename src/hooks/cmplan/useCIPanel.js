@@ -7,23 +7,24 @@ import { CI_FETCH_DEBOUNCE_MS } from '../../utils/cmplan/bulkRelationshipConstan
 const EMPTY_LIST = Object.freeze([])
 const INITIAL_FILTER = Object.freeze({ ciType: undefined, searchText: '' })
 
-const buildSliceKey = (panel, ciType, searchText) =>
-  `${panel}|${ciType}|${searchText}`
+const buildSliceKey = (ciType, searchText) =>
+  `${ciType}|${searchText}`
 
 /**
  * Encapsulates all per-panel state for one side of the bulk-add screen
  * (Source or Target): CI-type filter, search text, selected CI ids, and the
  * debounced API fetch that keeps the list in sync with the current filter.
  */
-const useCIPanel = (panel, availableTypes, cisByType, cisLoading) => {
+const useCIPanel = (availableTypes, cisByType) => {
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(INITIAL_FILTER)
+  const [loading, setLoading] = useState(false)
   const [selectedIds, setSelectedIds] = useState(EMPTY_LIST)
 
   const cis = useMemo(() => {
     if (!filter.ciType) return EMPTY_LIST
-    return cisByType[buildSliceKey(panel, filter.ciType, filter.searchText)] || EMPTY_LIST
-  }, [cisByType, panel, filter.ciType, filter.searchText])
+    return cisByType[buildSliceKey(filter.ciType, filter.searchText)] || EMPTY_LIST
+  }, [cisByType, filter.ciType, filter.searchText])
 
   // Auto-pick the first CI type once the catalogue is populated.
   useEffect(() => {
@@ -40,7 +41,7 @@ const useCIPanel = (panel, availableTypes, cisByType, cisLoading) => {
   const debouncedFetch = useMemo(
     () =>
       debounce(
-        (params) => dispatch(fetchCIsByType(params)),
+        (params) => dispatch(fetchCIsByType(params)).finally(() => setLoading(false)),
         CI_FETCH_DEBOUNCE_MS
       ),
     [dispatch]
@@ -49,8 +50,9 @@ const useCIPanel = (panel, availableTypes, cisByType, cisLoading) => {
 
   useEffect(() => {
     if (!filter.ciType) return
-    debouncedFetch({ panel, ciType: filter.ciType, searchText: filter.searchText })
-  }, [panel, filter.ciType, filter.searchText, debouncedFetch])
+    setLoading(true)
+    debouncedFetch({ ciType: filter.ciType, searchText: filter.searchText })
+  }, [filter.ciType, filter.searchText, debouncedFetch])
 
   const setType = useCallback((ciType) => {
     setFilter({ ciType, searchText: '' })
@@ -71,7 +73,7 @@ const useCIPanel = (panel, availableTypes, cisByType, cisLoading) => {
     selectedIds,
     setSelectedIds,
     cis,
-    loading: cisLoading,
+    loading,
     setType,
     setSearch,
     reset,
