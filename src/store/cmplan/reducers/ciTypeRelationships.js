@@ -7,7 +7,7 @@ const ciTypeRelationshipsSlice = createSlice({
     items: [],
     loading: false,
     error: null,
-    cisByType: {}, // { ["ciType|searchText"]: CI[] }
+    cisByType: {}, // { [panelId]: CI[] }
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -26,8 +26,8 @@ const ciTypeRelationshipsSlice = createSlice({
       })
       .addCase(fetchCIsByType.pending, () => {})
       .addCase(fetchCIsByType.fulfilled, (state, action) => {
-        const { ciType, searchText = '' } = action.meta.arg
-        state.cisByType[`${ciType}|${searchText}`] = action.payload || []
+        const { panelId = 'default' } = action.meta.arg
+        state.cisByType[panelId] = action.payload || []
       })
       .addCase(fetchCIsByType.rejected, () => {})
   },

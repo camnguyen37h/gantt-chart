@@ -7,24 +7,21 @@ import { CI_FETCH_DEBOUNCE_MS } from '../../utils/cmplan/bulkRelationshipConstan
 const EMPTY_LIST = Object.freeze([])
 const INITIAL_FILTER = Object.freeze({ ciType: undefined, searchText: '' })
 
-const buildSliceKey = (ciType, searchText) =>
-  `${ciType}|${searchText}`
-
 /**
  * Encapsulates all per-panel state for one side of the bulk-add screen
  * (Source or Target): CI-type filter, search text, selected CI ids, and the
  * debounced API fetch that keeps the list in sync with the current filter.
  */
-const useCIPanel = (availableTypes, cisByType) => {
+const useCIPanel = (panelId, availableTypes, cisByType) => {
   const dispatch = useDispatch()
   const [filter, setFilter] = useState(INITIAL_FILTER)
   const [loading, setLoading] = useState(false)
   const [selectedIds, setSelectedIds] = useState(EMPTY_LIST)
 
-  const cis = useMemo(() => {
-    if (!filter.ciType) return EMPTY_LIST
-    return cisByType[buildSliceKey(filter.ciType, filter.searchText)] || EMPTY_LIST
-  }, [cisByType, filter.ciType, filter.searchText])
+  const cis = useMemo(
+    () => cisByType[panelId] || EMPTY_LIST,
+    [cisByType, panelId]
+  )
 
   // Auto-pick the first CI type once the catalogue is populated.
   useEffect(() => {
@@ -51,7 +48,7 @@ const useCIPanel = (availableTypes, cisByType) => {
   useEffect(() => {
     if (!filter.ciType) return
     setLoading(true)
-    debouncedFetch({ ciType: filter.ciType, searchText: filter.searchText })
+    debouncedFetch({ panelId, ciType: filter.ciType, searchText: filter.searchText })
   }, [filter.ciType, filter.searchText, debouncedFetch])
 
   const setType = useCallback((ciType) => {
