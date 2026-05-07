@@ -52,7 +52,7 @@ const useCIPanel = (panelId, availableTypes, cisByType) => {
   }, [filter.ciType, filter.searchText, debouncedFetch])
 
   const setType = useCallback((ciType) => {
-    setFilter({ ciType, searchText: '' })
+    setFilter((prev) => ({ ...prev, ciType }))
   }, [])
 
   const setSearch = useCallback((searchText) => {

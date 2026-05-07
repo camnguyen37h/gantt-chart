@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { MAX_RELATIONSHIPS_PER_BATCH } from './bulkRelationshipConstants'
 
 const ruleLabel = (index) => 'Rule #' + (index + 1)
@@ -28,22 +29,22 @@ const validateSingleRule = (rule, index, validRelTypes, hasTypePair, projectRang
   if (
     rule.appliedDate &&
     rule.expiredDate &&
-    new Date(rule.expiredDate) < new Date(rule.appliedDate)
+    moment(rule.expiredDate).isBefore(moment(rule.appliedDate))
   ) {
     errors.push(prefix + 'Expired Date must be on or after Applied Date.')
   }
   if (projectRange) {
     const { pStart, pEnd } = projectRange
-    if (rule.appliedDate && pStart && new Date(rule.appliedDate) < pStart) {
+    if (rule.appliedDate && pStart && moment(rule.appliedDate).isBefore(pStart)) {
       errors.push(prefix + 'Applied Date must be on or after the project start date.')
     }
-    if (rule.appliedDate && pEnd && new Date(rule.appliedDate) > pEnd) {
+    if (rule.appliedDate && pEnd && moment(rule.appliedDate).isAfter(pEnd)) {
       errors.push(prefix + 'Applied Date must be on or before the project end date.')
     }
-    if (rule.expiredDate && pStart && new Date(rule.expiredDate) < pStart) {
+    if (rule.expiredDate && pStart && moment(rule.expiredDate).isBefore(pStart)) {
       errors.push(prefix + 'Expired Date must be on or after the project start date.')
     }
-    if (rule.expiredDate && pEnd && new Date(rule.expiredDate) > pEnd) {
+    if (rule.expiredDate && pEnd && moment(rule.expiredDate).isAfter(pEnd)) {
       errors.push(prefix + 'Expired Date must be on or before the project end date.')
     }
   }
@@ -104,8 +105,8 @@ export const validateBulkRelationships = ({
   const hasTypePair = Boolean(sourceType && targetType && validRelTypes)
   const projectRange = (pStartDate || pEndDate)
     ? {
-        pStart: pStartDate ? new Date(pStartDate) : null,
-        pEnd: pEndDate ? new Date(pEndDate) : null,
+        pStart: pStartDate ? moment(pStartDate) : null,
+        pEnd: pEndDate ? moment(pEndDate) : null,
       }
     : null
   const ruleResult = validateRules(rules, validRelTypes, hasTypePair, projectRange)

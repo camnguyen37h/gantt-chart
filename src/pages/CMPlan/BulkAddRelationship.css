@@ -105,6 +105,15 @@
   background: #e6f7ff;
 }
 
+.bulk-rel-panel-item--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.bulk-rel-panel-item--disabled:hover {
+  background: transparent;
+}
+
 .bulk-rel-panel-item-info {
   display: flex;
   flex-direction: column;

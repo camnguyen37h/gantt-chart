@@ -8,6 +8,7 @@ import {
   mergeUniqueIds,
   removeIds,
 } from './CISelectionPanel.helpers'
+import { MAX_CI_SELECTION } from '../../../utils/cmplan/bulkRelationshipConstants'
 
 const { Option } = Select
 
@@ -48,11 +49,14 @@ const CISelectionPanel = ({
 
   const ciTypeLabel = ciType ? resolveLabel(availableTypes, ciType) : ''
 
+  const atLimit = selectedIds.length >= MAX_CI_SELECTION
+
   const handleSelectAll = useCallback(
     (event) => {
       const cisIds = cis.map((ci) => ci.id)
       if (event.target.checked) {
-        onSelectionChange(mergeUniqueIds(selectedIds, cisIds))
+        const merged = mergeUniqueIds(selectedIds, cisIds)
+        onSelectionChange(merged.slice(0, MAX_CI_SELECTION))
         return
       }
       onSelectionChange(removeIds(selectedIds, cisIds))
@@ -66,6 +70,7 @@ const CISelectionPanel = ({
         onSelectionChange(selectedIds.filter((id) => id !== ciId))
         return
       }
+      if (selectedIds.length >= MAX_CI_SELECTION) return
       onSelectionChange(selectedIds.concat(ciId))
     },
     [selectedIds, selectedIdSet, onSelectionChange]
@@ -85,7 +90,9 @@ const CISelectionPanel = ({
     <div className="bulk-rel-panel">
       <div className="bulk-rel-panel-header">
         <span className="bulk-rel-panel-title">{title}</span>
-        <span className="bulk-rel-panel-count">{selectedIds.length} selected</span>
+        <span className="bulk-rel-panel-count" style={atLimit ? { color: '#ff4d4f', fontWeight: 600 } : undefined}>
+          {selectedIds.length} / {MAX_CI_SELECTION} selected
+        </span>
       </div>
 
       <div className="bulk-rel-panel-toolbar">
@@ -108,7 +115,7 @@ const CISelectionPanel = ({
           checked={selectionState.allSelected}
           indeterminate={selectionState.indeterminate}
           onChange={handleSelectAll}
-          disabled={cis.length === 0}
+          disabled={cis.length === 0 || (atLimit && !selectionState.allSelected && !selectionState.indeterminate)}
         >
           Select all
         </Checkbox>
@@ -138,6 +145,7 @@ const CISelectionPanel = ({
                 ci={ci}
                 ciTypeLabel={ciTypeLabel}
                 isSelected={selectedIdSet.has(ci.id)}
+                disabled={atLimit && !selectedIdSet.has(ci.id)}
                 onToggle={handleToggleCI}
               />
             ))

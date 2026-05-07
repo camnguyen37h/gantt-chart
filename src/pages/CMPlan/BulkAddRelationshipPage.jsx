@@ -45,7 +45,8 @@ const BulkAddRelationshipPage = () => {
       okText: 'Apply Relationships',
       okType: 'primary',
       cancelText: 'Cancel',
-      icon: <Icon type="exclamation-circle" style={CONFIRM_ICON_STYLE} />,
+      icon: null,
+      centered: true,
       onOk: () =>
         submitBulkRelationships().then((action) => {
           if (!action.error) navigateBack()

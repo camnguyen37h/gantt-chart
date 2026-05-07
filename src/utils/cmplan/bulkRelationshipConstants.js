@@ -1,5 +1,6 @@
 export const MAX_RULES = 10
 export const MAX_RELATIONSHIPS_PER_BATCH = 500
+export const MAX_CI_SELECTION = 10
 
 // CI list pagination + debounce
 export const CI_PAGE_SIZE = 10
