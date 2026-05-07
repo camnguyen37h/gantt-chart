@@ -9,8 +9,8 @@ const formatDuplicateClause = (count) =>
 /** Plain-text confirmation body for the bulk-create modal. */
 export const buildConfirmContent = (newCount, duplicateCount) => {
   const duplicateLine = duplicateCount > 0
-    ? formatRelationshipCount(duplicateCount) + ' already exist. Thereby, ' +
-      formatRelationshipCount(newCount) + ' will be created.'
+    ? duplicateCount + ' existing relationship' + pluralSuffix(duplicateCount) +
+      ' found. Thereby, ' + formatRelationshipCount(newCount) + ' will be created.'
     : formatRelationshipCount(newCount) + ' will be created.'
   return duplicateLine + '\nAre you sure you want to create? This action can take some minutes.'
 }
