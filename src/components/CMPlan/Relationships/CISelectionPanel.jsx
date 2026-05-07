@@ -55,13 +55,19 @@ const CISelectionPanel = ({
     (event) => {
       const cisIds = cis.map((ci) => ci.id)
       if (event.target.checked) {
+        // If at limit or all visible CIs are already selected, nothing more can be added → deselect
+        const hasNewToAdd = !atLimit && cisIds.some((id) => !selectedIdSet.has(id))
+        if (!hasNewToAdd) {
+          onSelectionChange(removeIds(selectedIds, cisIds))
+          return
+        }
         const merged = mergeUniqueIds(selectedIds, cisIds)
         onSelectionChange(merged.slice(0, MAX_CI_SELECTION))
         return
       }
       onSelectionChange(removeIds(selectedIds, cisIds))
     },
-    [cis, selectedIds, onSelectionChange]
+    [cis, selectedIds, selectedIdSet, atLimit, onSelectionChange]
   )
 
   const handleToggleCI = useCallback(

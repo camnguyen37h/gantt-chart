@@ -16,28 +16,22 @@ export const isOutsideProjectRange = (date, min, max) => {
 /**
  * Builds the `disabledDate` predicate for the Applied Date picker:
  *   - rejects dates outside the project window
- *   - rejects dates after an already-chosen Expired Date
  */
-export const buildAppliedDateGuard = ({ pStartMoment, pEndMoment, expiredMoment }) =>
+export const buildAppliedDateGuard = ({ pStartMoment, pEndMoment }) =>
   (current) => {
     if (!current) return false
     if (isOutsideProjectRange(current, pStartMoment, pEndMoment)) return true
-    if (expiredMoment && current.isAfter(expiredMoment.clone().endOf('day'))) return true
     return false
   }
 
 /**
  * Builds the `disabledDate` predicate for the Expired Date picker:
  *   - rejects dates outside the project window
- *   - rejects dates strictly before today (today itself remains selectable)
- *   - rejects dates strictly before an already-chosen Applied Date
  */
-export const buildExpiredDateGuard = ({ pStartMoment, pEndMoment, appliedMoment }) =>
+export const buildExpiredDateGuard = ({ pStartMoment, pEndMoment }) =>
   (current) => {
     if (!current) return false
     if (isOutsideProjectRange(current, pStartMoment, pEndMoment)) return true
-    if (current.isBefore(moment().startOf('day'))) return true
-    if (appliedMoment && current.isBefore(appliedMoment.clone().startOf('day'))) return true
     return false
   }
 
