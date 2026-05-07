@@ -125,9 +125,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #1a1a2e;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 2px !important;
 }
 
 .bulk-rel-panel-item-class {

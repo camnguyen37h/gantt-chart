@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Checkbox, Icon, Tag } from 'antd'
+import { Checkbox, Icon, Tag, Tooltip, Typography } from 'antd'
 import EnvironmentTag from './EnvironmentTag'
 
 const ICON_TYPE = 'profile'
@@ -15,15 +15,24 @@ const CIListItem = ({ ci, isSelected, disabled, onToggle }) => {
     (isSelected ? ' bulk-rel-panel-item--selected' : '') +
     (disabled ? ' bulk-rel-panel-item--disabled' : '')
 
+  const displayName = ci.primaryDetailValue || ci.name
+
   return (
     <div className={className} onClick={handleClick}>
       <Checkbox checked={isSelected} disabled={disabled} style={CHECKBOX_STYLE} />
       <Icon type={ICON_TYPE} style={ICON_STYLE} />
       <div className="bulk-rel-panel-item-info">
-        <span className="bulk-rel-panel-item-name">{ci.primaryDetailValue || ci.name}</span>
+        <Typography.Paragraph
+          ellipsis={{ rows: 2, tooltip: displayName }}
+          className="bulk-rel-panel-item-name"
+        >
+          {displayName}
+        </Typography.Paragraph>
         <span className="bulk-rel-panel-item-class">
           {(ci.infoDetailValues || []).map((val, idx) => (
-            <Tag key={idx} style={TAG_STYLE}>{val}</Tag>
+            <Tooltip key={idx} title={val} placement="topLeft" mouseEnterDelay={0.5}>
+              <Tag style={TAG_STYLE}>{val}</Tag>
+            </Tooltip>
           ))}
         </span>
       </div>
