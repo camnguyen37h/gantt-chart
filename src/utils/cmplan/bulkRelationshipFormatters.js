@@ -8,12 +8,11 @@ const formatDuplicateClause = (count) =>
 
 /** Plain-text confirmation body for the bulk-create modal. */
 export const buildConfirmContent = (newCount, duplicateCount) => {
-  const head =
-    'Are you sure you want to create ' +
-    formatRelationshipCount(newCount) +
-    '? This can take a couple of minutes.'
-  if (duplicateCount <= 0) return head
-  return head + '\n' + formatDuplicateClause(duplicateCount)
+  const duplicateLine = duplicateCount > 0
+    ? formatRelationshipCount(duplicateCount) + ' already exist. Thereby, ' +
+      formatRelationshipCount(newCount) + ' will be created.'
+    : formatRelationshipCount(newCount) + ' will be created.'
+  return duplicateLine + '\nAre you sure you want to create? This action can take some minutes.'
 }
 
 /** Success notification body returned after a bulk-create completes. */

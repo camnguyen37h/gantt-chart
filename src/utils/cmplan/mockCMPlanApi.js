@@ -221,6 +221,22 @@ const configurationItemsApi = {
         )
       })
       .sort((a, b) => a.name.localeCompare(b.name))
+      .map((ci) => {
+        if (ci.primaryDetailValue && ci.infoDetailValues) {
+          return ci
+        }
+        const attrs = ci.attributes || {}
+        const infoValues = [
+          ci.name,
+          attrs.ip_address || attrs.endpoint_url || attrs.hostname || null,
+          attrs.os_version || attrs.db_version || attrs.version || attrs.platform || ci.shortDescription || null,
+        ].filter(Boolean)
+        return {
+          ...ci,
+          primaryDetailValue: ci.name,
+          infoDetailValues: infoValues,
+        }
+      })
     return successResponse(data)
   },
 

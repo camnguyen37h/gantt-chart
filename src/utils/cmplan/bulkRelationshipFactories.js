@@ -8,10 +8,11 @@ export const buildRelationshipKey = (sourceId, relType, targetId) =>
 
 /**
  * Create an empty rule shape used by the Bulk Add Relationships form.
+ * Optionally pre-fill appliedDate / expiredDate with project-range defaults.
  */
-export const createEmptyRule = () => ({
+export const createEmptyRule = ({ appliedDate, expiredDate } = {}) => ({
   id: uuidv4(),
   relationshipType: undefined,
-  appliedDate: undefined,
-  expiredDate: undefined,
+  appliedDate: appliedDate || undefined,
+  expiredDate: expiredDate || undefined,
 })

@@ -90,7 +90,7 @@
 
 .bulk-rel-panel-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 10px 16px;
   cursor: pointer;
   transition: background 0.15s;
@@ -131,9 +131,21 @@
 }
 
 .bulk-rel-panel-item-class {
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+  min-width: 0;
+}
+
+.bulk-rel-panel-item-class .ant-tag {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc((100% - 24px) / 3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 0;
   font-size: 11px;
-  color: #8c8c8c;
-  margin-top: 1px;
 }
 
 .bulk-rel-panel-tags {

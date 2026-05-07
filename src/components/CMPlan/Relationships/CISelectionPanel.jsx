@@ -143,7 +143,6 @@ const CISelectionPanel = ({
               <CIListItem
                 key={ci.id}
                 ci={ci}
-                ciTypeLabel={ciTypeLabel}
                 isSelected={selectedIdSet.has(ci.id)}
                 disabled={atLimit && !selectedIdSet.has(ci.id)}
                 onToggle={handleToggleCI}

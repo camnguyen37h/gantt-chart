@@ -18,7 +18,9 @@ import { createEmptyRule } from '../../utils/cmplan/bulkRelationshipFactories'
 import useCIPanel from './useCIPanel'
 import useProjectBasicInfo from './useProjectBasicInfo'
 
-const buildInitialRules = () => [createEmptyRule()]
+const buildInitialRules = (pStartDate, pEndDate) => [
+  createEmptyRule({ appliedDate: pStartDate, expiredDate: pEndDate }),
+]
 
 const selectFormState = (state) => ({
   existingPairs:    state.cmplan.ciRelationships.existingPairs,
@@ -80,12 +82,27 @@ const useBulkRelationshipForm = () => {
 
   const [rules, setRules] = useState(buildInitialRules)
 
+  // When project dates load, patch rules that still have no date set (undefined).
+  useEffect(() => {
+    if (!pStartDate && !pEndDate) return
+    setRules((prev) =>
+      prev.map((rule) => ({
+        ...rule,
+        appliedDate: rule.appliedDate === undefined ? (pStartDate || undefined) : rule.appliedDate,
+        expiredDate: rule.expiredDate === undefined ? (pEndDate || undefined) : rule.expiredDate,
+      }))
+    )
+  }, [pStartDate, pEndDate])
+
   const updateRule = useCallback((ruleId, updates) => {
     setRules((prev) =>
       prev.map((rule) => (rule.id === ruleId ? { ...rule, ...updates } : rule))
     )
   }, [])
-  const resetRules = useCallback(() => setRules(buildInitialRules()), [])
+  const resetRules = useCallback(
+    () => setRules(buildInitialRules(pStartDate, pEndDate)),
+    [pStartDate, pEndDate]
+  )
 
   // Bootstrap reference data once on mount.
   useEffect(() => {
