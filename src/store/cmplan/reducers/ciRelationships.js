@@ -15,6 +15,7 @@ const ciRelationshipsSlice = createSlice({
     items: [],
     existingPairs: [],
     loading: false,
+    existingPairsLoading: false,
     submitting: false,
     error: null,
   },
@@ -73,15 +74,15 @@ const ciRelationshipsSlice = createSlice({
         state.error = action.payload
       })
       .addCase(fetchExistingRelationshipPairs.pending, (state) => {
-        state.loading = true
+        state.existingPairsLoading = true
         state.error = null
       })
       .addCase(fetchExistingRelationshipPairs.fulfilled, (state, action) => {
-        state.loading = false
+        state.existingPairsLoading = false
         state.existingPairs = action.payload
       })
       .addCase(fetchExistingRelationshipPairs.rejected, (state, action) => {
-        state.loading = false
+        state.existingPairsLoading = false
         state.error = action.payload
       })
       .addCase(bulkCreateRelationships.pending, (state) => {

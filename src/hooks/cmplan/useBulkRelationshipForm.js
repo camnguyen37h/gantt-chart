@@ -10,6 +10,7 @@ import {
   extractUniqueSourceTypes,
   extractUniqueTargetTypes,
   getValidRelationshipTypes,
+  buildIssueTypeLookup,
 } from '../../utils/cmplan/ciTypeRelationshipMappers'
 import { generatePreviewItems } from '../../utils/cmplan/bulkRelationshipPreview'
 import { validateBulkRelationships } from '../../utils/cmplan/bulkRelationshipValidation'
@@ -23,12 +24,13 @@ const buildInitialRules = (pStartDate, pEndDate) => [
 ]
 
 const selectFormState = (state) => ({
-  existingPairs:    state.cmplan.ciRelationships.existingPairs,
-  relsLoading:      state.cmplan.ciRelationships.loading,
-  submitting:       state.cmplan.ciRelationships.submitting,
-  ciTypeRels:       state.cmplan.ciTypeRelationships.items,
-  typeRelsLoading:  state.cmplan.ciTypeRelationships.loading,
-  cisByType:        state.cmplan.ciTypeRelationships.cisByType,
+  existingPairs:        state.cmplan.ciRelationships.existingPairs,
+  existingPairsLoading: state.cmplan.ciRelationships.existingPairsLoading,
+  relsLoading:          state.cmplan.ciRelationships.loading,
+  submitting:           state.cmplan.ciRelationships.submitting,
+  ciTypeRels:           state.cmplan.ciTypeRelationships.items,
+  typeRelsLoading:      state.cmplan.ciTypeRelationships.loading,
+  cisByType:            state.cmplan.ciTypeRelationships.cisByType,
 })
 
 const mergeCIsById = (primary, secondary) => {
@@ -55,6 +57,8 @@ const toBulkPayload = (items) =>
     relationshipType: item.relationshipType,
     appliedDate:      item.appliedDate || null,
     expiredDate:      item.expiredDate || null,
+    issueType:        item.issueType        || null,
+    issueTypeValue:   item.issueTypeValue   || null,
   }))
 
 /**
@@ -65,6 +69,7 @@ const useBulkRelationshipForm = () => {
   const dispatch = useDispatch()
   const {
     existingPairs,
+    existingPairsLoading,
     relsLoading,
     submitting,
     ciTypeRels,
@@ -73,12 +78,17 @@ const useBulkRelationshipForm = () => {
   } = useSelector(selectFormState, shallowEqual)
   const { pStartDate, pEndDate } = useProjectBasicInfo()
 
-  const sourceTypes    = useMemo(() => extractUniqueSourceTypes(ciTypeRels), [ciTypeRels])
-  const targetTypes    = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
-  const relTypeOptions = useMemo(() => extractAllRelationshipTypeOptions(ciTypeRels), [ciTypeRels])
+  const sourceTypes      = useMemo(() => extractUniqueSourceTypes(ciTypeRels), [ciTypeRels])
+  const targetTypes      = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
+  const relTypeOptions   = useMemo(() => extractAllRelationshipTypeOptions(ciTypeRels), [ciTypeRels])
 
   const sourcePanel = useCIPanel('source', sourceTypes, cisByType)
   const targetPanel = useCIPanel('target', targetTypes, cisByType)
+
+  const issueTypeLookup = useMemo(
+    () => buildIssueTypeLookup(ciTypeRels, sourcePanel.ciType, targetPanel.ciType),
+    [ciTypeRels, sourcePanel.ciType, targetPanel.ciType]
+  )
 
   const [rules, setRules] = useState(buildInitialRules)
 
@@ -104,11 +114,19 @@ const useBulkRelationshipForm = () => {
     [pStartDate, pEndDate]
   )
 
-  // Bootstrap reference data once on mount.
+  // Bootstrap CI type relationship matrix once on mount.
   useEffect(() => {
-    dispatch(fetchExistingRelationshipPairs())
     dispatch(fetchCITypeRelationships())
   }, [dispatch])
+
+  // Fetch existing relationship pairs whenever both CI types are selected.
+  useEffect(() => {
+    if (!sourcePanel.ciType || !targetPanel.ciType) return
+    dispatch(fetchExistingRelationshipPairs({
+      sourceType: sourcePanel.ciType,
+      targetType: targetPanel.ciType,
+    }))
+  }, [dispatch, sourcePanel.ciType, targetPanel.ciType])
 
   // Reset rules whenever the (source, target) type pair changes.
   useEffect(() => {
@@ -131,9 +149,10 @@ const useBulkRelationshipForm = () => {
       targetPanel.selectedIds,
       rules,
       existingPairs,
-      previewCIs
+      previewCIs,
+      issueTypeLookup
     ),
-    [sourcePanel.selectedIds, targetPanel.selectedIds, rules, existingPairs, previewCIs]
+    [sourcePanel.selectedIds, targetPanel.selectedIds, rules, existingPairs, previewCIs, issueTypeLookup]
   )
 
   const { newItems, duplicateCount } = useMemo(
@@ -217,8 +236,9 @@ const useBulkRelationshipForm = () => {
     hasInvalidRelType,
     summaryParts,
     submitting,
-    isBootstrapping:   relsLoading || typeRelsLoading,
-    applyDisabled:     validationErrors.length > 0 || hasInvalidRelType,
+    isBootstrapping:      relsLoading || typeRelsLoading,
+    existingPairsLoading,
+    applyDisabled:        validationErrors.length > 0 || hasInvalidRelType,
     // Handlers
     setSourceType:      sourcePanel.setType,
     setTargetType:      targetPanel.setType,

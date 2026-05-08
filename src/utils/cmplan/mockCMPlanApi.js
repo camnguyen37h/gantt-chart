@@ -470,9 +470,19 @@ const relationshipsApi = {
    * format `sourceId-relationshipType-targetId`. The frontend uses this set
    * directly for duplicate detection.
    */
-  getExistingPairs: async () => {
+  getExistingPairs: async ({ sourceType, targetType } = {}) => {
     await delay()
-    const keys = ciRelationships.map(
+    let rels = ciRelationships
+    if (sourceType && targetType) {
+      const sourceIds = new Set(
+        configurationItems.filter((ci) => ci.ciTypeId === sourceType).map((ci) => ci.id)
+      )
+      const targetIds = new Set(
+        configurationItems.filter((ci) => ci.ciTypeId === targetType).map((ci) => ci.id)
+      )
+      rels = rels.filter((r) => sourceIds.has(r.sourceId) && targetIds.has(r.targetId))
+    }
+    const keys = rels.map(
       (r) => r.sourceId + '-' + r.relationshipType + '-' + r.targetId
     )
     return successResponse(keys)

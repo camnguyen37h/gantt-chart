@@ -49,8 +49,8 @@ export const updateRelationship = createAsyncThunk(
 
 export const fetchExistingRelationshipPairs = createAsyncThunk(
   'cmplan/ciRelationships/fetchExistingPairs',
-  async (_, { rejectWithValue }) => {
-    const res = await cmplanApi.relationships.getExistingPairs()
+  async ({ sourceType, targetType } = {}, { rejectWithValue }) => {
+    const res = await cmplanApi.relationships.getExistingPairs({ sourceType, targetType })
     if (!res.success) return rejectWithValue(res.message)
     // API returns string keys in the format `sourceId-relationshipType-targetId`
     return res.data

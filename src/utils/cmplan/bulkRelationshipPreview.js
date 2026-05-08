@@ -6,10 +6,11 @@ const indexCIsById = (cis) => {
   return map
 }
 
-const buildPreviewItem = ({ rule, sourceId, targetId, ciIndex, existingKeys }) => {
+const buildPreviewItem = ({ rule, sourceId, targetId, ciIndex, existingKeys, issueTypeLookup }) => {
   const srcCI = ciIndex.get(sourceId)
   const tgtCI = ciIndex.get(targetId)
   const key = buildRelationshipKey(sourceId, rule.relationshipType, targetId)
+  const issueTypeInfo = issueTypeLookup ? (issueTypeLookup.get(rule.relationshipType) || {}) : {}
   return {
     sourceId,
     targetId,
@@ -20,6 +21,8 @@ const buildPreviewItem = ({ rule, sourceId, targetId, ciIndex, existingKeys }) =
     targetName: (tgtCI && tgtCI.name) || targetId,
     isDuplicate: existingKeys.has(key),
     ruleId: rule.id,
+    issueType:      issueTypeInfo.issueType      || null,
+    issueTypeValue: issueTypeInfo.issueTypeValue || null,
   }
 }
 
@@ -27,7 +30,7 @@ const buildPreviewItem = ({ rule, sourceId, targetId, ciIndex, existingKeys }) =
  * Generate the cartesian product of (rule × source × target), deduplicated and
  * annotated with an `isDuplicate` flag against existing relationship keys.
  */
-export const generatePreviewItems = (sourceIds, targetIds, rules, existingPairs, allCIs) => {
+export const generatePreviewItems = (sourceIds, targetIds, rules, existingPairs, allCIs, issueTypeLookup) => {
   const ciIndex = indexCIsById(allCIs)
   const existingKeys = new Set(existingPairs)
   const seenKeys = new Set()
@@ -41,7 +44,7 @@ export const generatePreviewItems = (sourceIds, targetIds, rules, existingPairs,
         const key = buildRelationshipKey(sourceId, rule.relationshipType, targetId)
         if (seenKeys.has(key)) return
         seenKeys.add(key)
-        items.push(buildPreviewItem({ rule, sourceId, targetId, ciIndex, existingKeys }))
+        items.push(buildPreviewItem({ rule, sourceId, targetId, ciIndex, existingKeys, issueTypeLookup }))
       })
     })
   })

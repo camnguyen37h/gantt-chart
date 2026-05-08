@@ -19,6 +19,9 @@ const APPROVAL_STATUS_OPTIONS = [
   { value: 'N/A',      label: 'N/A' },
 ]
 
+const filterOption = (input, option) =>
+  option.props.children.toLowerCase().includes(input.toLowerCase())
+
 const RelationshipFilterBar = ({
   filters,
   relTypeOptions,
@@ -43,7 +46,7 @@ const RelationshipFilterBar = ({
     boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
   }}>
     <Row gutter={[16, 10]}>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Input
           placeholder="Source CI"
           value={filters.sourceName}
@@ -53,7 +56,7 @@ const RelationshipFilterBar = ({
           prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
         />
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Input
           placeholder="Destination CI"
           value={filters.targetName}
@@ -63,10 +66,12 @@ const RelationshipFilterBar = ({
           prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
         />
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Select
           placeholder="Choose relationship"
           allowClear
+          showSearch
+          filterOption={filterOption}
           value={filters.relationshipType}
           onChange={val => onFilterChange('relationshipType', val)}
           style={{ width: '100%' }}
@@ -76,10 +81,12 @@ const RelationshipFilterBar = ({
           ))}
         </Select>
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Select
           placeholder="Choose Source CI Type"
           allowClear
+          showSearch
+          filterOption={filterOption}
           value={filters.sourceCIType}
           onChange={val => onFilterChange('sourceCIType', val)}
           style={{ width: '100%' }}
@@ -89,10 +96,12 @@ const RelationshipFilterBar = ({
           ))}
         </Select>
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Select
           placeholder="Choose Destination CI Type"
           allowClear
+          showSearch
+          filterOption={filterOption}
           value={filters.targetCIType}
           onChange={val => onFilterChange('targetCIType', val)}
           style={{ width: '100%' }}
@@ -102,10 +111,12 @@ const RelationshipFilterBar = ({
           ))}
         </Select>
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Select
           placeholder="Choose Status"
           allowClear
+          showSearch
+          filterOption={filterOption}
           value={filters.rlStatus}
           onChange={val => onFilterChange('rlStatus', val)}
           style={{ width: '100%' }}
@@ -115,10 +126,12 @@ const RelationshipFilterBar = ({
           ))}
         </Select>
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <Select
           placeholder="Approval Status"
           allowClear
+          showSearch
+          filterOption={filterOption}
           value={filters.approvalStatus}
           onChange={val => onFilterChange('approvalStatus', val)}
           style={{ width: '100%' }}
@@ -128,7 +141,7 @@ const RelationshipFilterBar = ({
           ))}
         </Select>
       </Col>
-      <Col span={8}>
+      <Col span={8} xl={4}>
         <DatePicker.RangePicker
           placeholder={['Expire Date from', 'Expire Date to']}
           value={filters.expiredDateRange}
@@ -137,7 +150,7 @@ const RelationshipFilterBar = ({
           style={{ width: '100%' }}
         />
       </Col>
-      <Col span={8}>
+      <Col span={24} xl={{ span: 4, offset: 12 }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
           {activeFilterCount > 0 && (
             <span style={{ fontSize: 12, color: '#8c8c8c' }}>

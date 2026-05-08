@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { Empty } from 'antd'
+import { Empty, Spin } from 'antd'
 import { getRelTypeLabel } from '../../../utils/cmplan/ciTypeRelationshipMappers'
 import { pluralSuffix } from '../../../utils/strings'
 import RelationshipPreviewRow from './RelationshipPreviewRow'
@@ -9,7 +9,7 @@ import { buildRowKey, countDuplicates } from './RelationshipPreview.helpers'
 const EMPTY_DESCRIPTION = 'Select source CIs, target CIs, and at least one rule to preview'
 const DUPLICATE_HINT_STYLE = { color: '#faad14', marginLeft: 8 }
 
-const RelationshipPreview = ({ previewItems, totalCount, relTypeOptions }) => {
+const RelationshipPreview = ({ previewItems, totalCount, relTypeOptions, loading }) => {
   const duplicateCount = useMemo(() => countDuplicates(previewItems), [previewItems])
   const hasItems = previewItems.length > 0
 
@@ -28,24 +28,26 @@ const RelationshipPreview = ({ previewItems, totalCount, relTypeOptions }) => {
       </div>
 
       <div className="bulk-rel-preview-list">
-        {!hasItems ? (
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={EMPTY_DESCRIPTION}
-            style={{ margin: '30px 0' }}
-          />
-        ) : (
-          <div className="bulk-rel-preview-grid">
-            {previewItems.map((item, index) => (
-              <RelationshipPreviewRow
-                key={buildRowKey(item)}
-                item={item}
-                index={index}
-                relTypeLabel={getRelTypeLabel(item.relationshipType, relTypeOptions)}
-              />
-            ))}
-          </div>
-        )}
+        <Spin spinning={loading}>
+          {!hasItems ? (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={EMPTY_DESCRIPTION}
+              style={{ margin: '30px 0' }}
+            />
+          ) : (
+            <div className="bulk-rel-preview-grid">
+              {previewItems.map((item, index) => (
+                <RelationshipPreviewRow
+                  key={buildRowKey(item)}
+                  item={item}
+                  index={index}
+                  relTypeLabel={getRelTypeLabel(item.relationshipType, relTypeOptions)}
+                />
+              ))}
+            </div>
+          )}
+        </Spin>
       </div>
     </div>
   )
@@ -64,6 +66,7 @@ RelationshipPreview.propTypes = {
     })
   ).isRequired,
   totalCount: PropTypes.number.isRequired,
+  loading: PropTypes.bool,
   relTypeOptions: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.string.isRequired,
@@ -72,6 +75,6 @@ RelationshipPreview.propTypes = {
   ),
 }
 
-RelationshipPreview.defaultProps = { relTypeOptions: [] }
+RelationshipPreview.defaultProps = { relTypeOptions: [], loading: false }
 
 export default RelationshipPreview

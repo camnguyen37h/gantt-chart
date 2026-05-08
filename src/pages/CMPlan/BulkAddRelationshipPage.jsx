@@ -30,6 +30,7 @@ const BulkAddRelationshipPage = () => {
     newItems,
     duplicateCount,
     submitBulkRelationships,
+    existingPairsLoading,
   } = form
 
   const confirmAndSubmit = useCallback(() => {
@@ -104,6 +105,7 @@ const BulkAddRelationshipPage = () => {
           previewItems={form.previewItems}
           totalCount={form.newItems.length}
           relTypeOptions={form.relTypeOptions}
+          loading={existingPairsLoading}
         />
 
         <BulkRelationshipFooter

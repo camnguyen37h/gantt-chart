@@ -44,3 +44,22 @@ export const getRelTypeLabel = (value, relTypeOptions) => {
   const found = relTypeOptions.find((option) => option.value === value)
   return found ? found.label : value
 }
+
+/**
+ * Build a map from relationshipType → { issueType, issueTypeValue } for a
+ * specific (sourceType, targetType) pair. Used to include issue type info in
+ * the submit payload.
+ */
+export const buildIssueTypeLookup = (ciTypeRelationships, sourceType, targetType) => {
+  const map = new Map()
+  if (!sourceType || !targetType) return map
+  ciTypeRelationships.forEach((r) => {
+    if (r.ciTypeSource === sourceType && r.ciTypeTarget === targetType) {
+      map.set(r.typeConnection, {
+        issueType:      r.issueType      || null,
+        issueTypeValue: r.issueTypeValue || null,
+      })
+    }
+  })
+  return map
+}
