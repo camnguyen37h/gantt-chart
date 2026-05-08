@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Icon, Modal, Spin } from 'antd'
+import { Modal, Spin } from 'antd'
 import { NotificationManager } from 'react-notifications'
 import useBulkRelationshipForm from '../../hooks/cmplan/useBulkRelationshipForm'
 import CISelectionPanel from '../../components/CMPlan/Relationships/CISelectionPanel'
@@ -9,7 +9,6 @@ import RelationshipPreview from '../../components/CMPlan/Relationships/Relations
 import BulkRelationshipHeader from '../../components/CMPlan/Relationships/BulkRelationshipHeader'
 import BulkRelationshipFooter from '../../components/CMPlan/Relationships/BulkRelationshipFooter'
 import InvalidRelTypeWarning from '../../components/CMPlan/Relationships/InvalidRelTypeWarning'
-import ValidationErrorList from '../../components/CMPlan/Relationships/ValidationErrorList'
 import {
   buildConfirmContent,
 } from '../../utils/cmplan/bulkRelationshipFormatters'
@@ -17,7 +16,6 @@ import './CMPlan.css'
 import './BulkAddRelationship.css'
 
 const RELATIONSHIP_MAP_PATH = '/cmplan/relationship-map'
-const CONFIRM_ICON_STYLE = { color: '#722ed1' }
 
 const BulkAddRelationshipPage = () => {
   const history = useHistory()
@@ -116,8 +114,6 @@ const BulkAddRelationshipPage = () => {
           applyDisabled={form.applyDisabled}
           submitting={form.submitting}
         />
-
-        <ValidationErrorList errors={form.validationErrors} />
       </Spin>
     </div>
   )

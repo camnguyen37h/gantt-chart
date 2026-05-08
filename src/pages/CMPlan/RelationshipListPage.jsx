@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Table, Button, Input, Select, Modal, Tag, Icon, Spin, Tooltip,
+  Table, Button, Input, Select, Modal, Tag, Icon, Spin, Tooltip, DatePicker,
 } from 'antd'
 import { useHistory } from 'react-router-dom'
 import {
@@ -64,6 +64,8 @@ const INITIAL_FILTERS = {
   targetCIType:     undefined,
   rlStatus:         undefined,
   approvalStatus:   undefined,
+  applyDateRange:   null,
+  expiredDateRange: null,
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -148,17 +150,32 @@ const enrichRelationships = (items, ciMap, ciTypeLabelMap) => {
 }
 
 const applyFilters = (items, f) => {
-  // client-side fallback for rlStatus/approvalStatus which are mock-enriched fields
-  // (not on raw relationship records, so cannot be filtered server-side on mock data)
+  // client-side fallback for rlStatus/approvalStatus/date ranges which are mock-enriched fields
   return items.filter((r) => {
     if (f.rlStatus       && r.rlStatus !== f.rlStatus) return false
     if (f.approvalStatus && r.approvalStatus !== f.approvalStatus) return false
+    if (f.applyDateRange && f.applyDateRange[0] && f.applyDateRange[1]) {
+      const from = f.applyDateRange[0].startOf('day').valueOf()
+      const to   = f.applyDateRange[1].endOf('day').valueOf()
+      const d    = r.applyDate ? new Date(r.applyDate).getTime() : null
+      if (!d || d < from || d > to) return false
+    }
+    if (f.expiredDateRange && f.expiredDateRange[0] && f.expiredDateRange[1]) {
+      const from = f.expiredDateRange[0].startOf('day').valueOf()
+      const to   = f.expiredDateRange[1].endOf('day').valueOf()
+      const d    = r.expiredDate ? new Date(r.expiredDate).getTime() : null
+      if (!d || d < from || d > to) return false
+    }
     return true
   })
 }
 
 const countActiveFilters = (f) =>
-  Object.values(f).filter((v) => v !== undefined && v !== '').length
+  Object.values(f).filter((v) => {
+    if (v === undefined || v === null || v === '') return false
+    if (Array.isArray(v)) return v.some(Boolean)
+    return true
+  }).length
 
 // ── Column definitions ───────────────────────────────────────────────────────
 
@@ -566,6 +583,20 @@ const RelationshipListPage = () => {
               <Option key={s.value} value={s.value}>{s.label}</Option>
             ))}
           </Select>
+          <DatePicker.RangePicker
+            placeholder={['Apply Date from', 'Apply Date to']}
+            value={filters.applyDateRange}
+            onChange={val => handlePending('applyDateRange', val || null)}
+            format="MM/DD/YYYY"
+            style={{ width: 280 }}
+          />
+          <DatePicker.RangePicker
+            placeholder={['Expire Date from', 'Expire Date to']}
+            value={filters.expiredDateRange}
+            onChange={val => handlePending('expiredDateRange', val || null)}
+            format="MM/DD/YYYY"
+            style={{ width: 280 }}
+          />
           {activeFilterCount > 0 && (
             <span style={{ fontSize: 12, color: '#8c8c8c' }}>
               <Icon type="filter" style={{ marginRight: 4 }} />
