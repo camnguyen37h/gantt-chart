@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Table, Button, Input, Select, Modal, Tag, Icon, Spin, Tooltip, DatePicker,
+  Table, Button, Input, Select, Modal, Tag, Icon, Spin, Tooltip, DatePicker, Row, Col,
 } from 'antd'
 import { useHistory } from 'react-router-dom'
 import {
@@ -10,9 +10,14 @@ import {
   updateRelationship,
   fetchConfigurationItems,
   fetchCITypes,
+  fetchCITypeRelationships,
 } from '../../store/cmplan'
-import { RELATIONSHIP_TYPES } from '../../utils/cmplan/cmplanConstants'
 import { RELATIONSHIP_TYPE_COLORS } from '../../utils/cmplan/bulkRelationshipConstants'
+import {
+  extractAllRelationshipTypeOptions,
+  extractUniqueSourceTypes,
+  extractUniqueTargetTypes,
+} from '../../utils/cmplan/ciTypeRelationshipMappers'
 import EditRelationshipModal from '../../components/CMPlan/Relationships/EditRelationshipModal'
 import './CMPlan.css'
 
@@ -115,11 +120,6 @@ const buildCITypeMap = (ciTypeItems) => {
   return { labelMap, colorMap }
 }
 
-const getRelTypeLabel = (value) => {
-  const found = RELATIONSHIP_TYPES.find((t) => t.value === value)
-  return found ? found.label : value
-}
-
 const enrichRelationships = (items, ciMap, ciTypeLabelMap) => {
   return items.map((rel, index) => {
     const srcCI = ciMap[rel.sourceId]
@@ -179,7 +179,7 @@ const countActiveFilters = (f) =>
 
 // ── Column definitions ───────────────────────────────────────────────────────
 
-const buildColumns = (ciTypeColorMap, onEdit) => [
+const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
   {
     title: 'Source CI',
     dataIndex: 'sourceName',
@@ -221,11 +221,15 @@ const buildColumns = (ciTypeColorMap, onEdit) => [
     dataIndex: 'relationshipType',
     width: 120,
     fixed: 'left',
-    render: (val) => (
-      <Tag color={RELATIONSHIP_TYPE_COLORS[val] || '#1890ff'} style={{ fontSize: 11, margin: 0 }}>
-        {getRelTypeLabel(val)}
-      </Tag>
-    ),
+    render: (val) => {
+      const found = relTypeOptions.find((t) => t.value === val)
+      const label = found ? found.label : val
+      return (
+        <Tag color={RELATIONSHIP_TYPE_COLORS[val] || '#1890ff'} style={{ fontSize: 11, margin: 0 }}>
+          {label}
+        </Tag>
+      )
+    },
   },
   {
     title: 'Destination CI',
@@ -348,6 +352,7 @@ const RelationshipListPage = () => {
   const allRelationships = useSelector(state => state.cmplan.ciRelationships.items)
   const ciItems          = useSelector(state => state.cmplan.configurationItems.items)
   const ciTypeItems      = useSelector(state => state.cmplan.ciTypes.items)
+  const ciTypeRels       = useSelector(state => state.cmplan.ciTypeRelationships.items)
   const loading          = useSelector(state => state.cmplan.ciRelationships.loading)
   const submitting       = useSelector(state => state.cmplan.ciRelationships.submitting)
 
@@ -360,6 +365,7 @@ const RelationshipListPage = () => {
     dispatch(fetchRelationships({}))
     dispatch(fetchConfigurationItems({ pageSize: 9999 }))
     dispatch(fetchCITypes())
+    dispatch(fetchCITypeRelationships())
   }, [dispatch])
 
   // ── Derived data ─────────────────────────────────────────────────────────
@@ -376,10 +382,9 @@ const RelationshipListPage = () => {
     [allRelationships, ciMap, ciTypeLabelMap]
   )
 
-  const ciTypeOptions = useMemo(
-    () => ciTypeItems.map(t => ({ value: t.name, label: t.label })),
-    [ciTypeItems]
-  )
+  const relTypeOptions    = useMemo(() => extractAllRelationshipTypeOptions(ciTypeRels), [ciTypeRels])
+  const sourceTypeOptions = useMemo(() => extractUniqueSourceTypes(ciTypeRels), [ciTypeRels])
+  const targetTypeOptions = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
 
   const filteredItems = useMemo(
     () => applyFilters(enrichedItems, filters),
@@ -410,8 +415,8 @@ const RelationshipListPage = () => {
   }, [dispatch])
 
   const columns = useMemo(
-    () => buildColumns(ciTypeColorMap, handleEditOpen),
-    [ciTypeColorMap, handleEditOpen]
+    () => buildColumns(ciTypeColorMap, relTypeOptions, handleEditOpen),
+    [ciTypeColorMap, relTypeOptions, handleEditOpen]
   )
 
   // ── Handlers ─────────────────────────────────────────────────────────────
@@ -469,141 +474,145 @@ const RelationshipListPage = () => {
         marginBottom: 12,
         boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
       }}>
-        {/* Row 1 */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 12, alignItems: 'center' }}>
-          <Input
-            placeholder="Source CI"
-            value={filters.sourceName}
-            onChange={e => handlePending('sourceName', e.target.value)}
-            onPressEnter={handleSearch}
-            style={{ width: 180 }}
-            prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
-          />
-          <Input
-            placeholder="Destination CI"
-            value={filters.targetName}
-            onChange={e => handlePending('targetName', e.target.value)}
-            onPressEnter={handleSearch}
-            style={{ width: 180 }}
-            prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
-          />
-          <Select
-            placeholder="Choose relationship"
-            allowClear
-            value={filters.relationshipType}
-            onChange={val => handlePending('relationshipType', val)}
-            style={{ width: 200 }}
-          >
-            {RELATIONSHIP_TYPES.map(t => (
-              <Option key={t.value} value={t.value}>{t.label}</Option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Choose Source CI Type"
-            allowClear
-            value={filters.sourceCIType}
-            onChange={val => handlePending('sourceCIType', val)}
-            style={{ width: 210 }}
-          >
-            {ciTypeOptions.map(t => (
-              <Option key={t.value} value={t.value}>{t.label}</Option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Choose Destination CI Type"
-            allowClear
-            value={filters.targetCIType}
-            onChange={val => handlePending('targetCIType', val)}
-            style={{ width: 230 }}
-          >
-            {ciTypeOptions.map(t => (
-              <Option key={t.value} value={t.value}>{t.label}</Option>
-            ))}
-          </Select>
-
-          {/* action buttons flush right */}
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
-            <Tooltip title="Search">
-              <Button
-                shape="circle"
-                icon="search"
-                type="primary"
-                onClick={handleSearch}
-              />
-            </Tooltip>
-            <Tooltip title={activeFilterCount > 0 ? `Reset (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''})` : 'Reset filters'}>
-              <Button
-                shape="circle"
-                icon="reload"
-                onClick={handleReset}
-              />
-            </Tooltip>
-            {selectedRowKeys.length > 0 && (
-              <Tooltip title={`Delete selected (${selectedRowKeys.length})`}>
+        <Row gutter={[16, 10]}>
+          <Col span={8}>
+            <Input
+              placeholder="Source CI"
+              value={filters.sourceName}
+              onChange={e => handlePending('sourceName', e.target.value)}
+              onPressEnter={handleSearch}
+              style={{ width: '100%' }}
+              prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
+            />
+          </Col>
+          <Col span={8}>
+            <Input
+              placeholder="Destination CI"
+              value={filters.targetName}
+              onChange={e => handlePending('targetName', e.target.value)}
+              onPressEnter={handleSearch}
+              style={{ width: '100%' }}
+              prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
+            />
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder="Choose relationship"
+              allowClear
+              value={filters.relationshipType}
+              onChange={val => handlePending('relationshipType', val)}
+              style={{ width: '100%' }}
+            >
+              {relTypeOptions.map(t => (
+                <Option key={t.value} value={t.value}>{t.label}</Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder="Choose Source CI Type"
+              allowClear
+              value={filters.sourceCIType}
+              onChange={val => handlePending('sourceCIType', val)}
+              style={{ width: '100%' }}
+            >
+              {sourceTypeOptions.map(t => (
+                <Option key={t.value} value={t.value}>{t.label}</Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder="Choose Destination CI Type"
+              allowClear
+              value={filters.targetCIType}
+              onChange={val => handlePending('targetCIType', val)}
+              style={{ width: '100%' }}
+            >
+              {targetTypeOptions.map(t => (
+                <Option key={t.value} value={t.value}>{t.label}</Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder="Choose Status"
+              allowClear
+              value={filters.rlStatus}
+              onChange={val => handlePending('rlStatus', val)}
+              style={{ width: '100%' }}
+            >
+              {RL_STATUS_OPTIONS.map(s => (
+                <Option key={s.value} value={s.value}>{s.label}</Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={8}>
+            <Select
+              placeholder="Approval Status"
+              allowClear
+              value={filters.approvalStatus}
+              onChange={val => handlePending('approvalStatus', val)}
+              style={{ width: '100%' }}
+            >
+              {APPROVAL_STATUS_OPTIONS.map(s => (
+                <Option key={s.value} value={s.value}>{s.label}</Option>
+              ))}
+            </Select>
+          </Col>
+          <Col span={8}>
+            <DatePicker.RangePicker
+              placeholder={['Expire Date from', 'Expire Date to']}
+              value={filters.expiredDateRange}
+              onChange={val => handlePending('expiredDateRange', val || null)}
+              format="MM/DD/YYYY"
+              style={{ width: '100%' }}
+            />
+          </Col>
+          <Col span={8}>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
+              {activeFilterCount > 0 && (
+                <span style={{ fontSize: 12, color: '#8c8c8c' }}>
+                  <Icon type="filter" style={{ marginRight: 4 }} />
+                  {filteredItems.length} / {enrichedItems.length}
+                </span>
+              )}
+              <Tooltip title="Search">
                 <Button
                   shape="circle"
-                  icon="delete"
-                  style={{ color: '#ff4d4f' }}
-                  onClick={handleDeleteSelected}
+                  icon="search"
+                  type="primary"
+                  onClick={handleSearch}
                 />
               </Tooltip>
-            )}
-            <Button
-              type="primary"
-              icon="plus"
-              onClick={handleNavigateToBulkAdd}
-              style={{ display: 'inline-flex', alignItems: 'center' }}
-            >
-              Add Bulk Relationship
-            </Button>
-          </div>
-        </div>
-
-        {/* Row 2 */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-          <Select
-            placeholder="Choose Status"
-            allowClear
-            value={filters.rlStatus}
-            onChange={val => handlePending('rlStatus', val)}
-            style={{ width: 180 }}
-          >
-            {RL_STATUS_OPTIONS.map(s => (
-              <Option key={s.value} value={s.value}>{s.label}</Option>
-            ))}
-          </Select>
-          <Select
-            placeholder="Approval Status"
-            allowClear
-            value={filters.approvalStatus}
-            onChange={val => handlePending('approvalStatus', val)}
-            style={{ width: 180 }}
-          >
-            {APPROVAL_STATUS_OPTIONS.map(s => (
-              <Option key={s.value} value={s.value}>{s.label}</Option>
-            ))}
-          </Select>
-          <DatePicker.RangePicker
-            placeholder={['Apply Date from', 'Apply Date to']}
-            value={filters.applyDateRange}
-            onChange={val => handlePending('applyDateRange', val || null)}
-            format="MM/DD/YYYY"
-            style={{ width: 280 }}
-          />
-          <DatePicker.RangePicker
-            placeholder={['Expire Date from', 'Expire Date to']}
-            value={filters.expiredDateRange}
-            onChange={val => handlePending('expiredDateRange', val || null)}
-            format="MM/DD/YYYY"
-            style={{ width: 280 }}
-          />
-          {activeFilterCount > 0 && (
-            <span style={{ fontSize: 12, color: '#8c8c8c' }}>
-              <Icon type="filter" style={{ marginRight: 4 }} />
-              {filteredItems.length} / {enrichedItems.length} records
-            </span>
-          )}
-        </div>
+              <Tooltip title={activeFilterCount > 0 ? `Reset (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''})` : 'Reset filters'}>
+                <Button
+                  shape="circle"
+                  icon="reload"
+                  onClick={handleReset}
+                />
+              </Tooltip>
+              {selectedRowKeys.length > 0 && (
+                <Tooltip title={`Delete selected (${selectedRowKeys.length})`}>
+                  <Button
+                    shape="circle"
+                    icon="delete"
+                    style={{ color: '#ff4d4f' }}
+                    onClick={handleDeleteSelected}
+                  />
+                </Tooltip>
+              )}
+              <Button
+                type="primary"
+                icon="plus"
+                onClick={handleNavigateToBulkAdd}
+                style={{ display: 'inline-flex', alignItems: 'center' }}
+              >
+                Add Bulk Relationship
+              </Button>
+            </div>
+          </Col>
+        </Row>
       </div>
 
       {/* Table */}
