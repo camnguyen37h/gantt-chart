@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  Table, Button, Input, Select, Modal, Tag, Icon, Spin, Tooltip, DatePicker, Row, Col,
+  Button, Modal, Tag, Icon, Tooltip,
 } from 'antd'
 import { useHistory } from 'react-router-dom'
 import {
@@ -19,27 +19,11 @@ import {
   extractUniqueTargetTypes,
 } from '../../utils/cmplan/ciTypeRelationshipMappers'
 import EditRelationshipModal from '../../components/CMPlan/Relationships/EditRelationshipModal'
+import RelationshipFilterBar from '../../components/CMPlan/Relationships/RelationshipFilterBar'
+import RelationshipTable from '../../components/CMPlan/Relationships/RelationshipTable'
 import './CMPlan.css'
 
-const { Option } = Select
-
 // ── Constants ────────────────────────────────────────────────────────────────
-
-const PAGE_SIZE = 20
-
-const RL_STATUS_OPTIONS = [
-  { value: 'Active',   label: 'Active' },
-  { value: 'Draft',    label: 'Draft' },
-  { value: 'Updated',  label: 'Updated' },
-  { value: 'Renew',    label: 'Renew' },
-  { value: 'Expired',  label: 'Expired' },
-]
-
-const APPROVAL_STATUS_OPTIONS = [
-  { value: 'Approved', label: 'Approved' },
-  { value: 'Pending',  label: 'Pending' },
-  { value: 'N/A',      label: 'N/A' },
-]
 
 // Deterministic mock values assigned per relationship index
 const MOCK_ACCESS   = ['Allow', 'Allow', 'Allow', 'Deny',    'Allow', 'Allow', 'Deny',    'Allow']
@@ -465,194 +449,33 @@ const RelationshipListPage = () => {
 
   return (
     <div className="cmplan-page">
-      {/* Filter bar */}
-      <div style={{
-        background: '#fff',
-        border: '1px solid #e8e8e8',
-        borderRadius: 6,
-        padding: '16px 24px',
-        marginBottom: 12,
-        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-      }}>
-        <Row gutter={[16, 10]}>
-          <Col span={8}>
-            <Input
-              placeholder="Source CI"
-              value={filters.sourceName}
-              onChange={e => handlePending('sourceName', e.target.value)}
-              onPressEnter={handleSearch}
-              style={{ width: '100%' }}
-              prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
-            />
-          </Col>
-          <Col span={8}>
-            <Input
-              placeholder="Destination CI"
-              value={filters.targetName}
-              onChange={e => handlePending('targetName', e.target.value)}
-              onPressEnter={handleSearch}
-              style={{ width: '100%' }}
-              prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
-            />
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder="Choose relationship"
-              allowClear
-              value={filters.relationshipType}
-              onChange={val => handlePending('relationshipType', val)}
-              style={{ width: '100%' }}
-            >
-              {relTypeOptions.map(t => (
-                <Option key={t.value} value={t.value}>{t.label}</Option>
-              ))}
-            </Select>
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder="Choose Source CI Type"
-              allowClear
-              value={filters.sourceCIType}
-              onChange={val => handlePending('sourceCIType', val)}
-              style={{ width: '100%' }}
-            >
-              {sourceTypeOptions.map(t => (
-                <Option key={t.value} value={t.value}>{t.label}</Option>
-              ))}
-            </Select>
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder="Choose Destination CI Type"
-              allowClear
-              value={filters.targetCIType}
-              onChange={val => handlePending('targetCIType', val)}
-              style={{ width: '100%' }}
-            >
-              {targetTypeOptions.map(t => (
-                <Option key={t.value} value={t.value}>{t.label}</Option>
-              ))}
-            </Select>
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder="Choose Status"
-              allowClear
-              value={filters.rlStatus}
-              onChange={val => handlePending('rlStatus', val)}
-              style={{ width: '100%' }}
-            >
-              {RL_STATUS_OPTIONS.map(s => (
-                <Option key={s.value} value={s.value}>{s.label}</Option>
-              ))}
-            </Select>
-          </Col>
-          <Col span={8}>
-            <Select
-              placeholder="Approval Status"
-              allowClear
-              value={filters.approvalStatus}
-              onChange={val => handlePending('approvalStatus', val)}
-              style={{ width: '100%' }}
-            >
-              {APPROVAL_STATUS_OPTIONS.map(s => (
-                <Option key={s.value} value={s.value}>{s.label}</Option>
-              ))}
-            </Select>
-          </Col>
-          <Col span={8}>
-            <DatePicker.RangePicker
-              placeholder={['Expire Date from', 'Expire Date to']}
-              value={filters.expiredDateRange}
-              onChange={val => handlePending('expiredDateRange', val || null)}
-              format="MM/DD/YYYY"
-              style={{ width: '100%' }}
-            />
-          </Col>
-          <Col span={8}>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
-              {activeFilterCount > 0 && (
-                <span style={{ fontSize: 12, color: '#8c8c8c' }}>
-                  <Icon type="filter" style={{ marginRight: 4 }} />
-                  {filteredItems.length} / {enrichedItems.length}
-                </span>
-              )}
-              <Tooltip title="Search">
-                <Button
-                  shape="circle"
-                  icon="search"
-                  type="primary"
-                  onClick={handleSearch}
-                />
-              </Tooltip>
-              <Tooltip title={activeFilterCount > 0 ? `Reset (${activeFilterCount} filter${activeFilterCount > 1 ? 's' : ''})` : 'Reset filters'}>
-                <Button
-                  shape="circle"
-                  icon="reload"
-                  onClick={handleReset}
-                />
-              </Tooltip>
-              {selectedRowKeys.length > 0 && (
-                <Tooltip title={`Delete selected (${selectedRowKeys.length})`}>
-                  <Button
-                    shape="circle"
-                    icon="delete"
-                    style={{ color: '#ff4d4f' }}
-                    onClick={handleDeleteSelected}
-                  />
-                </Tooltip>
-              )}
-              <Button
-                type="primary"
-                icon="plus"
-                onClick={handleNavigateToBulkAdd}
-                style={{ display: 'inline-flex', alignItems: 'center' }}
-              >
-                Add Bulk Relationship
-              </Button>
-            </div>
-          </Col>
-        </Row>
-      </div>
+      <RelationshipFilterBar
+        filters={filters}
+        relTypeOptions={relTypeOptions}
+        sourceTypeOptions={sourceTypeOptions}
+        targetTypeOptions={targetTypeOptions}
+        filteredCount={filteredItems.length}
+        totalCount={enrichedItems.length}
+        activeFilterCount={activeFilterCount}
+        selectedRowKeys={selectedRowKeys}
+        onFilterChange={handlePending}
+        onSearch={handleSearch}
+        onReset={handleReset}
+        onDeleteSelected={handleDeleteSelected}
+        onNavigateToBulkAdd={handleNavigateToBulkAdd}
+      />
 
-      {/* Table */}
-      <Spin spinning={loading}>
-        <Table
-          className="rel-list-table"
-          size="small"
-          bordered
-          rowKey="id"
-          dataSource={filteredItems}
-          columns={columns}
-          scroll={{ x: 'max-content' }}
-          rowSelection={{
-            selectedRowKeys,
-            onChange: setSelectedRowKeys,
-          }}
-          pagination={{
-            current: currentPage,
-            pageSize: PAGE_SIZE,
-            total: filteredItems.length,
-            onChange: setCurrentPage,
-            showSizeChanger: false,
-            showTotal: (total, range) =>
-              activeFilterCount > 0
-                ? `${range[0]}–${range[1]} of ${total} (filtered from ${enrichedItems.length})`
-                : `${total} records`,
-            size: 'small',
-          }}
-          locale={{
-            emptyText: (
-              <div style={{ padding: '32px 0', color: '#bfbfbf' }}>
-                <Icon type="inbox" style={{ fontSize: 32, marginBottom: 8, display: 'block' }} />
-                {activeFilterCount > 0
-                  ? 'No relationships match the current filters'
-                  : 'No relationships yet'}
-              </div>
-            ),
-          }}
-        />
-      </Spin>
+      <RelationshipTable
+        loading={loading}
+        filteredItems={filteredItems}
+        totalCount={enrichedItems.length}
+        columns={columns}
+        activeFilterCount={activeFilterCount}
+        selectedRowKeys={selectedRowKeys}
+        onSelectionChange={setSelectedRowKeys}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
 
       <EditRelationshipModal
         visible={!!editRecord}
