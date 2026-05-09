@@ -400,12 +400,9 @@ const RelationshipListPage = () => {
   }, [])
 
   const handleSearch = useCallback(() => {
-    const [expiredDateFrom, expiredDateTo] = filters.expiredDateRange
-      ? [
-          filters.expiredDateRange[0] ? filters.expiredDateRange[0].startOf('day').toISOString() : undefined,
-          filters.expiredDateRange[1] ? filters.expiredDateRange[1].endOf('day').toISOString()   : undefined,
-        ]
-      : [undefined, undefined]
+    const [startDate, endDate] = filters.expiredDateRange || []
+    const expiredDateFrom = startDate ? startDate.format('YYYY-MM-DD') : undefined
+    const expiredDateTo   = endDate   ? endDate.format('YYYY-MM-DD')   : undefined
 
     dispatch(fetchRelationships({
       sourceName:       filters.sourceName       || undefined,
