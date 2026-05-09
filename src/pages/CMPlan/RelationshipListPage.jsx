@@ -127,6 +127,8 @@ const enrichRelationships = (items, ciMap, ciTypeLabelMap) => {
       rlStatus:        MOCK_STATUS[index % MOCK_STATUS.length],
       approvalStatus:  MOCK_APPROVAL[index % MOCK_APPROVAL.length],
       modifyBy:        rel.createdBy || MOCK_USERS[index % MOCK_USERS.length],
+      isDelete:        rel.isDelete !== false,
+      isAction:        rel.isAction !== false,
     }
   })
 }

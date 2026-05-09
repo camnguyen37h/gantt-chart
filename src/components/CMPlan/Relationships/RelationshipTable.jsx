@@ -26,6 +26,9 @@ const RelationshipTable = ({
       rowSelection={{
         selectedRowKeys,
         onChange: onSelectionChange,
+        getCheckboxProps: (record) => ({
+          style: record.isDelete ? undefined : { display: 'none' },
+        }),
       }}
       pagination={{
         current: currentPage,
