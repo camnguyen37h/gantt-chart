@@ -133,27 +133,6 @@ const enrichRelationships = (items, ciMap, ciTypeLabelMap) => {
   })
 }
 
-const applyFilters = (items, f) => {
-  // client-side fallback for rlStatus/approvalStatus/date ranges which are mock-enriched fields
-  return items.filter((r) => {
-    if (f.rlStatus       && r.rlStatus !== f.rlStatus) return false
-    if (f.approvalStatus && r.approvalStatus !== f.approvalStatus) return false
-    if (f.applyDateRange && f.applyDateRange[0] && f.applyDateRange[1]) {
-      const from = f.applyDateRange[0].startOf('day').valueOf()
-      const to   = f.applyDateRange[1].endOf('day').valueOf()
-      const d    = r.applyDate ? new Date(r.applyDate).getTime() : null
-      if (!d || d < from || d > to) return false
-    }
-    if (f.expiredDateRange && f.expiredDateRange[0] && f.expiredDateRange[1]) {
-      const from = f.expiredDateRange[0].startOf('day').valueOf()
-      const to   = f.expiredDateRange[1].endOf('day').valueOf()
-      const d    = r.expiredDate ? new Date(r.expiredDate).getTime() : null
-      if (!d || d < from || d > to) return false
-    }
-    return true
-  })
-}
-
 const countActiveFilters = (f) =>
   Object.values(f).filter((v) => {
     if (v === undefined || v === null || v === '') return false
@@ -370,11 +349,6 @@ const RelationshipListPage = () => {
   const sourceTypeOptions = useMemo(() => extractUniqueSourceTypes(ciTypeRels), [ciTypeRels])
   const targetTypeOptions = useMemo(() => extractUniqueTargetTypes(ciTypeRels), [ciTypeRels])
 
-  const filteredItems = useMemo(
-    () => applyFilters(enrichedItems, filters),
-    [enrichedItems, filters]
-  )
-
   const activeFilterCount = useMemo(
     () => countActiveFilters(filters),
     [filters]
@@ -454,7 +428,7 @@ const RelationshipListPage = () => {
         relTypeOptions={relTypeOptions}
         sourceTypeOptions={sourceTypeOptions}
         targetTypeOptions={targetTypeOptions}
-        filteredCount={filteredItems.length}
+        filteredCount={enrichedItems.length}
         totalCount={enrichedItems.length}
         activeFilterCount={activeFilterCount}
         selectedRowKeys={selectedRowKeys}
@@ -467,7 +441,7 @@ const RelationshipListPage = () => {
 
       <RelationshipTable
         loading={loading}
-        filteredItems={filteredItems}
+        filteredItems={enrichedItems}
         totalCount={enrichedItems.length}
         columns={columns}
         activeFilterCount={activeFilterCount}

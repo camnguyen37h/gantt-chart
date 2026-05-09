@@ -150,7 +150,7 @@ const RelationshipFilterBar = ({
           style={{ width: '100%' }}
         />
       </Col>
-      <Col span={24} xl={{ span: 4, offset: 12 }}>
+      <Col span={24} xl={{ span: 8, offset: 8 }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'flex-end', height: '100%' }}>
           {activeFilterCount > 0 && (
             <span style={{ fontSize: 12, color: '#8c8c8c' }}>
