@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   Button, Modal, Tag, Icon, Tooltip,
 } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import {
   fetchRelationships,
   deleteRelationship,
@@ -150,7 +150,12 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     fixed: 'left',
     render: (name, record) => (
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-        <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
+        <Link
+          to={`/cmplan/configuration-items?id=${record.sourceId}`}
+          style={{ fontWeight: 600, fontSize: 13 }}
+        >
+          {name}
+        </Link>
         {record.sourceCIType && (
           <Tag
             color={ciTypeColorMap[record.sourceCITypeKey] || '#8c8c8c'}
@@ -201,7 +206,12 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     fixed: 'left',
     render: (name, record) => (
       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-        <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
+        <Link
+          to={`/cmplan/configuration-items?id=${record.targetId}`}
+          style={{ fontWeight: 600, fontSize: 13 }}
+        >
+          {name}
+        </Link>
         {record.targetCIType && (
           <Tag
             color={ciTypeColorMap[record.targetCITypeKey] || '#8c8c8c'}
