@@ -52,6 +52,7 @@ const RelationshipFilterBar = ({
           value={filters.sourceName}
           onChange={e => onFilterChange('sourceName', e.target.value)}
           onPressEnter={onSearch}
+          maxLength={250}
           style={{ width: '100%' }}
           prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
         />
@@ -62,6 +63,7 @@ const RelationshipFilterBar = ({
           value={filters.targetName}
           onChange={e => onFilterChange('targetName', e.target.value)}
           onPressEnter={onSearch}
+          maxLength={250}
           style={{ width: '100%' }}
           prefix={<Icon type="search" style={{ color: '#bfbfbf' }} />}
         />
