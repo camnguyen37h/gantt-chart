@@ -147,25 +147,24 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     width: 260,
     fixed: 'left',
     render: (name, record) => (
-      <span className="ci-name-cell">
-        <Tooltip title={name} placement="topLeft">
+      <Tooltip title={name} placement="topLeft">
+        <span className="ci-name-cell">
           <Link
             to={`/cmplan/configuration-items?id=${record.sourceId}`}
             className="ci-name-link"
-            style={{ fontWeight: 600, fontSize: 13 }}
           >
             {name}
           </Link>
-        </Tooltip>
-        {record.sourceCIType && (
-          <Tag
-            color={ciTypeColorMap[record.sourceCITypeKey] || '#8c8c8c'}
-            style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px', margin: 0 }}
-          >
-            {record.sourceCIType}
-          </Tag>
-        )}
-      </span>
+          {record.sourceCIType && (
+            <Tag
+              color={ciTypeColorMap[record.sourceCITypeKey] || '#8c8c8c'}
+              style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px', margin: 0 }}
+            >
+              {record.sourceCIType}
+            </Tag>
+          )}
+        </span>
+      </Tooltip>
     ),
   },
   {
@@ -207,25 +206,24 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     width: 260,
     fixed: 'left',
     render: (name, record) => (
-      <span className="ci-name-cell">
-        <Tooltip title={name} placement="topLeft">
+      <Tooltip title={name} placement="topLeft">
+        <span className="ci-name-cell">
           <Link
             to={`/cmplan/configuration-items?id=${record.targetId}`}
             className="ci-name-link"
-            style={{ fontWeight: 600, fontSize: 13 }}
           >
             {name}
           </Link>
-        </Tooltip>
-        {record.targetCIType && (
-          <Tag
-            color={ciTypeColorMap[record.targetCITypeKey] || '#8c8c8c'}
-            style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px', margin: 0 }}
-          >
-            {record.targetCIType}
-          </Tag>
-        )}
-      </span>
+          {record.targetCIType && (
+            <Tag
+              color={ciTypeColorMap[record.targetCITypeKey] || '#8c8c8c'}
+              style={{ fontSize: 10, lineHeight: '16px', padding: '0 4px', margin: 0 }}
+            >
+              {record.targetCIType}
+            </Tag>
+          )}
+        </span>
+      </Tooltip>
     ),
   },
   {

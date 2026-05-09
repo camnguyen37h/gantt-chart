@@ -5,21 +5,25 @@
   padding: 0;
 }
 
-/* CI name cell: name link + CI type tag inline */
+/* CI name cell: name + tag flow inline, clamped to 2 lines */
 .ci-name-cell {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-/* Clamp CI name to 2 lines */
-.ci-name-link {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-word;
+}
+
+.ci-name-link {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.ci-name-cell .ant-tag {
+  display: inline;
+  vertical-align: middle;
+  margin-left: 4px;
+  white-space: nowrap;
 }
 
 /* Key Info cell: stacked list of strings */
