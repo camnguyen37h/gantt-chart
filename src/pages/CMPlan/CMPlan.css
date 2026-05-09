@@ -5,6 +5,14 @@
   padding: 0;
 }
 
+/* CI name cell: name link + CI type tag inline */
+.ci-name-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
 /* ── Relationship list: CSS-sticky fixed columns ─────────────────────────── */
 /* .rel-list-wrap is the scroll container — replaces antd's overlay tables.
    antd overlay tables have a known v3 bug where the inner <table> is sized to

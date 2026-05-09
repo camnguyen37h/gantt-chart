@@ -149,7 +149,7 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     width: 260,
     fixed: 'left',
     render: (name, record) => (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      <span className="ci-name-cell">
         <Link
           to={`/cmplan/configuration-items?id=${record.sourceId}`}
           style={{ fontWeight: 600, fontSize: 13 }}
@@ -205,7 +205,7 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     width: 260,
     fixed: 'left',
     render: (name, record) => (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      <span className="ci-name-cell">
         <Link
           to={`/cmplan/configuration-items?id=${record.targetId}`}
           style={{ fontWeight: 600, fontSize: 13 }}
