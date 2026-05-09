@@ -48,7 +48,7 @@ const BulkAddRelationshipPage = () => {
       centered: true,
       onOk: () =>
         submitBulkRelationships().then((action) => {
-          if (!action.error) navigateBack()
+          if (!action.error) form.resetForm()
         }),
     })
   }, [validationErrors, newItems.length, duplicateCount, submitBulkRelationships, navigateBack])

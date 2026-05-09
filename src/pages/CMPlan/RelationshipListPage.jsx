@@ -404,12 +404,11 @@ const RelationshipListPage = () => {
     const expiredDateFrom = startDate ? startDate.format('YYYY-MM-DD') : undefined
     const expiredDateTo   = endDate   ? endDate.format('YYYY-MM-DD')   : undefined
 
+    // eslint-disable-next-line no-unused-vars
+    const { expiredDateRange, applyDateRange, ...restFilters } = filters
+
     dispatch(fetchRelationships({
-      sourceName:       filters.sourceName       || undefined,
-      targetName:       filters.targetName       || undefined,
-      relationshipType: filters.relationshipType || undefined,
-      sourceCIType:     filters.sourceCIType     || undefined,
-      targetCIType:     filters.targetCIType     || undefined,
+      ...restFilters,
       expiredDateFrom,
       expiredDateTo,
     }))
