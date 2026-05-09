@@ -176,7 +176,7 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
       <Tooltip title={val} placement="topLeft">
         <span style={{
           color: '#595959', fontSize: 12,
-          display: 'block', maxWidth: 124,
+          display: 'block', width: '100%',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
           {val}
@@ -226,12 +226,12 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
   {
     title: 'Key Infor',
     dataIndex: 'targetKeyInfo',
-    width: 300,
+    width: 140,
     render: (val) => (
       <Tooltip title={val} placement="topLeft">
         <span style={{
           color: '#595959', fontSize: 12,
-          display: 'block', maxWidth: 124,
+          display: 'block', width: '100%',
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
           {val}
