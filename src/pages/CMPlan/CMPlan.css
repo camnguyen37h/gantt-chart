@@ -13,6 +13,40 @@
   flex-wrap: wrap;
 }
 
+/* Clamp CI name to 2 lines */
+.ci-name-link {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+/* Key Info cell: stacked list of strings */
+.ci-key-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.ci-key-info-item {
+  color: #595959;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Relationship list table: left-align all cells */
+.rel-list-table .ant-table-thead > tr > th,
+.rel-list-table .ant-table-tbody > tr > td {
+  text-align: left !important;
+  vertical-align: middle;
+}
+
 /* ── Relationship list: CSS-sticky fixed columns ─────────────────────────── */
 /* .rel-list-wrap is the scroll container — replaces antd's overlay tables.
    antd overlay tables have a known v3 bug where the inner <table> is sized to

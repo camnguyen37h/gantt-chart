@@ -66,26 +66,24 @@ const formatDate = (iso) => {
 }
 
 const getCIKeyInfo = (ci) => {
-  if (!ci || !ci.attributes) return '—'
+  if (!ci || !ci.attributes) return []
   const { attributes: a, ciTypeId } = ci
   if (ciTypeId === 'server' || ciTypeId === 'virtual_machine') {
-    const parts = [a.ip_address, a.os_type].filter(Boolean)
-    return parts.join(', ') || ci.shortDescription || '—'
+    return [a.ip_address, a.os_type].filter(Boolean)
   }
   if (ciTypeId === 'database') {
-    return [a.db_type, a.port ? String(a.port) : null].filter(Boolean).join(':') || '—'
+    return [a.db_type, a.port ? `Port: ${a.port}` : null].filter(Boolean)
   }
   if (ciTypeId === 'application' || ciTypeId === 'middleware') {
-    const parts = [a.port ? String(a.port) : null, a.protocol, ci.environment].filter(Boolean)
-    return parts.join(', ') || ci.shortDescription || '—'
+    return [a.port ? `Port: ${a.port}` : null, a.protocol, ci.environment].filter(Boolean)
   }
   if (ciTypeId === 'network_device') {
-    return [a.ip_address, a.device_type].filter(Boolean).join(', ') || ci.shortDescription || '—'
+    return [a.ip_address, a.device_type].filter(Boolean)
   }
   if (ciTypeId === 'cloud_service') {
-    return [a.region, a.service_type].filter(Boolean).join(', ') || ci.shortDescription || '—'
+    return [a.region, a.service_type].filter(Boolean)
   }
-  return ci.shortDescription || '—'
+  return ci.shortDescription ? [ci.shortDescription] : []
 }
 
 const buildCIMap = (ciItems) => {
@@ -150,12 +148,15 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     fixed: 'left',
     render: (name, record) => (
       <span className="ci-name-cell">
-        <Link
-          to={`/cmplan/configuration-items?id=${record.sourceId}`}
-          style={{ fontWeight: 600, fontSize: 13 }}
-        >
-          {name}
-        </Link>
+        <Tooltip title={name} placement="topLeft">
+          <Link
+            to={`/cmplan/configuration-items?id=${record.sourceId}`}
+            className="ci-name-link"
+            style={{ fontWeight: 600, fontSize: 13 }}
+          >
+            {name}
+          </Link>
+        </Tooltip>
         {record.sourceCIType && (
           <Tag
             color={ciTypeColorMap[record.sourceCITypeKey] || '#8c8c8c'}
@@ -172,17 +173,18 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     dataIndex: 'sourceKeyInfo',
     width: 140,
     fixed: 'left',
-    render: (val) => (
-      <Tooltip title={val} placement="topLeft">
-        <span style={{
-          color: '#595959', fontSize: 12,
-          display: 'block', width: '100%',
-          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-        }}>
-          {val}
-        </span>
-      </Tooltip>
-    ),
+    render: (vals) => {
+      if (!vals || vals.length === 0) return <span style={{ color: '#d9d9d9' }}>—</span>
+      return (
+        <Tooltip title={vals.join(' · ')} placement="topLeft">
+          <span className="ci-key-info-list">
+            {vals.map((v, i) => (
+              <span key={i} className="ci-key-info-item">{v}</span>
+            ))}
+          </span>
+        </Tooltip>
+      )
+    },
   },
   {
     title: 'Relationship',
@@ -206,12 +208,15 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     fixed: 'left',
     render: (name, record) => (
       <span className="ci-name-cell">
-        <Link
-          to={`/cmplan/configuration-items?id=${record.targetId}`}
-          style={{ fontWeight: 600, fontSize: 13 }}
-        >
-          {name}
-        </Link>
+        <Tooltip title={name} placement="topLeft">
+          <Link
+            to={`/cmplan/configuration-items?id=${record.targetId}`}
+            className="ci-name-link"
+            style={{ fontWeight: 600, fontSize: 13 }}
+          >
+            {name}
+          </Link>
+        </Tooltip>
         {record.targetCIType && (
           <Tag
             color={ciTypeColorMap[record.targetCITypeKey] || '#8c8c8c'}
@@ -227,17 +232,18 @@ const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
     title: 'Key Infor',
     dataIndex: 'targetKeyInfo',
     width: 140,
-    render: (val) => (
-      <Tooltip title={val} placement="topLeft">
-        <span style={{
-          color: '#595959', fontSize: 12,
-          display: 'block', width: '100%',
-          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-        }}>
-          {val}
-        </span>
-      </Tooltip>
-    ),
+    render: (vals) => {
+      if (!vals || vals.length === 0) return <span style={{ color: '#d9d9d9' }}>—</span>
+      return (
+        <Tooltip title={vals.join(' · ')} placement="topLeft">
+          <span className="ci-key-info-list">
+            {vals.map((v, i) => (
+              <span key={i} className="ci-key-info-item">{v}</span>
+            ))}
+          </span>
+        </Tooltip>
+      )
+    },
   },
   {
     title: 'Apply Date',
