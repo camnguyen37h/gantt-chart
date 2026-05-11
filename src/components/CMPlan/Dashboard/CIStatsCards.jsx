@@ -1,16 +1,21 @@
 import React from 'react'
 import { Row, Col, Card, Icon, Spin } from 'antd'
+import { Link } from 'react-router-dom'
 
-const StatCard = ({ title, value, icon, color, subtitle, loading }) => (
-  <Card
-    bodyStyle={{ padding: '20px 24px' }}
-    style={{
-      borderRadius: 8,
-      border: `1px solid ${color}30`,
-      background: `linear-gradient(135deg, #ffffff 0%, ${color}08 100%)`,
-      height: '100%',
-    }}
-  >
+const StatCard = ({ title, value, icon, color, subtitle, loading, link }) => {
+  const inner = (
+    <Card
+      bodyStyle={{ padding: '20px 24px' }}
+      style={{
+        borderRadius: 8,
+        border: `1px solid ${color}30`,
+        background: `linear-gradient(135deg, #ffffff 0%, ${color}08 100%)`,
+        height: '100%',
+        cursor: link ? 'pointer' : 'default',
+        transition: link ? 'box-shadow 0.2s' : undefined,
+      }}
+      hoverable={!!link}
+    >
     {loading ? (
       <div style={{ textAlign: 'center', padding: '12px 0' }}>
         <Spin size="small" />
@@ -50,7 +55,16 @@ const StatCard = ({ title, value, icon, color, subtitle, loading }) => (
       </div>
     )}
   </Card>
-)
+  )
+  if (link) {
+    return (
+      <Link to={link} style={{ display: 'block', height: '100%', color: 'inherit', textDecoration: 'none' }}>
+        {inner}
+      </Link>
+    )
+  }
+  return inner
+}
 
 /**
  * Row of KPI stat cards for the CMPlan dashboard.
@@ -69,6 +83,7 @@ const CIStatsCards = ({ stats, loading }) => {
       icon: 'database',
       color: '#1890ff',
       subtitle: 'All configuration items',
+      link: '/cmplan/configuration-items',
     },
     {
       title: 'Active CIs',
@@ -76,6 +91,7 @@ const CIStatsCards = ({ stats, loading }) => {
       icon: 'check-circle',
       color: '#52c41a',
       subtitle: `${total > 0 ? Math.round(((byStatus.active || 0) / total) * 100) : 0}% of total`,
+      link: '/cmplan/configuration-items?status=active',
     },
     {
       title: 'In Maintenance',
@@ -83,6 +99,7 @@ const CIStatsCards = ({ stats, loading }) => {
       icon: 'tool',
       color: '#faad14',
       subtitle: 'Currently being serviced',
+      link: '/cmplan/configuration-items?status=maintenance',
     },
     {
       title: 'Critical CIs',
@@ -90,6 +107,7 @@ const CIStatsCards = ({ stats, loading }) => {
       icon: 'warning',
       color: '#f5222d',
       subtitle: 'Highest priority items',
+      link: '/cmplan/configuration-items?criticality=critical',
     },
   ]
 

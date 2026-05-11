@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { Button, Card, notification, Icon } from 'antd'
 import {
   fetchCITypes,
@@ -24,6 +25,17 @@ import './CMPlan.css'
 
 const ConfigurationItemsPage = () => {
   const dispatch = useDispatch()
+  const location = useLocation()
+
+  // Apply URL query params (status / criticality) as initial filters on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const updates = {}
+    if (params.get('status'))      updates.status      = params.get('status')
+    if (params.get('criticality')) updates.criticality = params.get('criticality')
+    if (Object.keys(updates).length > 0) dispatch(setFilters(updates))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // State
   const ciTypes = useSelector(state => state.cmplan.ciTypes.items)

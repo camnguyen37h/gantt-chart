@@ -38,6 +38,8 @@ const ciRelationshipsSlice = createSlice({
       .addCase(fetchRelationships.pending, (state) => {
         state.loading = true
         state.error = null
+        state.items = []
+        state.total = 0
       })
       .addCase(fetchRelationships.fulfilled, (state, action) => {
         state.loading = false
