@@ -204,8 +204,17 @@ const useBulkRelationshipForm = () => {
   }, [sourcePanel, targetPanel, resetRules])
 
   const submitBulkRelationships = useCallback(
-    () => dispatch(bulkCreateRelationships(toBulkPayload(newItems))),
-    [dispatch, newItems]
+    async () => {
+      const action = await dispatch(bulkCreateRelationships(toBulkPayload(newItems)))
+      if (!action.error && sourcePanel.ciType && targetPanel.ciType) {
+        dispatch(fetchExistingRelationshipPairs({
+          sourceType: sourcePanel.ciType,
+          targetType: targetPanel.ciType,
+        }))
+      }
+      return action
+    },
+    [dispatch, newItems, sourcePanel.ciType, targetPanel.ciType]
   )
 
   return {
