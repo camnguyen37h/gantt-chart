@@ -346,7 +346,11 @@ const configurationItemsApi = {
 const relationshipsApi = {
   getAll: async (params = {}) => {
     await delay()
-    const { sourceName, targetName, relationshipType, sourceCIType, targetCIType, rlStatus, approvalStatus } = params
+    const {
+      sourceName, targetName, relationshipType, sourceCIType, targetCIType,
+      rlStatus, approvalStatus,
+      page = 1, pageSize = 20,
+    } = params
     let result = [...ciRelationships]
 
     if (sourceName) {
@@ -389,7 +393,9 @@ const relationshipsApi = {
       result = result.filter(r => r.approvalStatus === approvalStatus)
     }
 
-    return successResponse(result)
+    const total = result.length
+    const paginated = result.slice((page - 1) * pageSize, page * pageSize)
+    return successResponse(paginated, { total, page, pageSize })
   },
 
   getByCI: async (ciId) => {

@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Form, Input, Icon, Tag, Tooltip, DatePicker } from 'antd'
+import { Modal, Form, Icon, Tag, Tooltip, DatePicker } from 'antd'
 import moment from 'moment'
 import { RELATIONSHIP_TYPES } from '../../../utils/cmplan/cmplanConstants'
 import { RELATIONSHIP_TYPE_COLORS } from '../../../utils/cmplan/bulkRelationshipConstants'
+import './EditRelationshipModal.css'
 
 const DATE_FMT = 'MM/DD/YYYY'
 
@@ -15,25 +16,14 @@ const getRelLabel = (value) => {
 const LockedField = ({ label, value, tag, tagColor }) => (
   <Form.Item label={label}>
     <Tooltip title="Editing is disabled to preserve data integrity" placement="topRight">
-      <div
-        style={{
-          padding: '6px 11px',
-          background: '#f5f5f5',
-          borderRadius: 4,
-          border: '1px solid #d9d9d9',
-          color: '#595959',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-        }}
-      >
-        <span style={{ fontWeight: 500, flex: 1 }}>{value || '—'}</span>
+      <div className="edit-rel-locked-field">
+        <span className="edit-rel-locked-field__value">{value || '—'}</span>
         {tag && (
-          <Tag color={tagColor || 'blue'} style={{ marginBottom: 0 }}>
+          <Tag color={tagColor || 'blue'} className="edit-rel-locked-field__tag" title={tag}>
             {tag}
           </Tag>
         )}
-        <Icon type="lock" style={{ color: '#bfbfbf' }} />
+        <Icon type="lock" className="edit-rel-locked-field__lock-icon" />
       </div>
     </Tooltip>
   </Form.Item>
@@ -101,7 +91,7 @@ const EditRelationshipModalInner = ({
       visible={visible}
       title={
         <span>
-          <Icon type="edit" style={{ marginRight: 8, color: '#1890ff' }} />
+          <Icon type="edit" className="edit-rel-modal-title-icon" />
           Edit Relationship
         </span>
       }
@@ -152,7 +142,7 @@ const EditRelationshipModalInner = ({
             ],
           })(
             <DatePicker
-              style={{ width: '100%' }}
+              className="edit-rel-datepicker"
               format={DATE_FMT}
               placeholder="Select apply date"
               onChange={() => {
@@ -184,7 +174,7 @@ const EditRelationshipModalInner = ({
             ],
           })(
             <DatePicker
-              style={{ width: '100%' }}
+              className="edit-rel-datepicker"
               format={DATE_FMT}
               placeholder="No expiry"
               disabledDate={disableExpireBeforeApply}

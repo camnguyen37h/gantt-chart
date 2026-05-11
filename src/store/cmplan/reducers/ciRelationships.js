@@ -13,6 +13,7 @@ const ciRelationshipsSlice = createSlice({
   name: 'ciRelationships',
   initialState: {
     items: [],
+    total: 0,
     existingPairs: [],
     loading: false,
     existingPairsLoading: false,
@@ -40,7 +41,8 @@ const ciRelationshipsSlice = createSlice({
       })
       .addCase(fetchRelationships.fulfilled, (state, action) => {
         state.loading = false
-        state.items = action.payload
+        state.items = action.payload.items
+        state.total = action.payload.total
       })
       .addCase(fetchRelationships.rejected, (state, action) => {
         state.loading = false

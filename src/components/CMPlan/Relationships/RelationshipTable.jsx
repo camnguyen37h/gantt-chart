@@ -26,14 +26,14 @@ const RelationshipTable = ({
       rowSelection={{
         selectedRowKeys,
         onChange: onSelectionChange,
-        getCheckboxProps: (record) => ({
+        getCheckboxProps: record => ({
           style: record.isDelete ? undefined : { display: 'none' },
         }),
       }}
       pagination={{
         current: currentPage,
         pageSize: PAGE_SIZE,
-        total: filteredItems.length,
+        total: totalCount,
         onChange: onPageChange,
         showSizeChanger: false,
         showTotal: (total, range) =>
@@ -45,7 +45,10 @@ const RelationshipTable = ({
       locale={{
         emptyText: (
           <div style={{ padding: '32px 0', color: '#bfbfbf' }}>
-            <Icon type="inbox" style={{ fontSize: 32, marginBottom: 8, display: 'block' }} />
+            <Icon
+              type="inbox"
+              style={{ fontSize: 32, marginBottom: 8, display: 'block' }}
+            />
             {activeFilterCount > 0
               ? 'No relationships match the current filters'
               : 'No relationships yet'}

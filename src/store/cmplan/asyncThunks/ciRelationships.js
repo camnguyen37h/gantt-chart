@@ -16,7 +16,7 @@ export const fetchRelationships = createAsyncThunk(
   async (params = {}, { rejectWithValue }) => {
     const res = await cmplanApi.relationships.getAll(params)
     if (!res.success) return rejectWithValue(res.message)
-    return res.data
+    return { items: res.data, total: res.total ?? res.data.length }
   }
 )
 

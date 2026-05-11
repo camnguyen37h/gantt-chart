@@ -51,6 +51,12 @@
   vertical-align: middle;
 }
 
+/* When no data, ensure the scroll container is tall enough so the horizontal
+   scrollbar appears below the empty-state content, not right under the header */
+.rel-list-table .ant-table-body {
+  min-height: 140px;
+}
+
 /* ── Relationship list: CSS-sticky fixed columns ─────────────────────────── */
 /* .rel-list-wrap is the scroll container — replaces antd's overlay tables.
    antd overlay tables have a known v3 bug where the inner <table> is sized to

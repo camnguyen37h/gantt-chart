@@ -140,6 +140,17 @@ const countActiveFilters = (f) =>
     return true
   }).length
 
+// Pure helper — takes a filter object (not closure state) so callers are never
+// affected by stale React state.
+const buildParamsFromFilters = (filtersObj, page = 1) => {
+  const [startDate, endDate] = filtersObj.expiredDateRange || []
+  const expiredDateFrom = startDate ? startDate.format('YYYY-MM-DD') : undefined
+  const expiredDateTo   = endDate   ? endDate.format('YYYY-MM-DD')   : undefined
+  // eslint-disable-next-line no-unused-vars
+  const { expiredDateRange, applyDateRange, ...restFilters } = filtersObj
+  return { ...restFilters, expiredDateFrom, expiredDateTo, page }
+}
+
 // ── Column definitions ───────────────────────────────────────────────────────
 
 const buildColumns = (ciTypeColorMap, relTypeOptions, onEdit) => [
@@ -329,6 +340,7 @@ const RelationshipListPage = () => {
   const history = useHistory()
 
   const allRelationships = useSelector(state => state.cmplan.ciRelationships.items)
+  const total            = useSelector(state => state.cmplan.ciRelationships.total)
   const ciItems          = useSelector(state => state.cmplan.configurationItems.items)
   const ciTypeItems      = useSelector(state => state.cmplan.ciTypes.items)
   const ciTypeRels       = useSelector(state => state.cmplan.ciTypeRelationships.items)
@@ -399,25 +411,26 @@ const RelationshipListPage = () => {
     setFilters(prev => ({ ...prev, [key]: val }))
   }, [])
 
+  const buildFetchParams = useCallback(
+    (page = 1) => buildParamsFromFilters(filters, page),
+    [filters]
+  )
+
   const handleSearch = useCallback(() => {
-    const [startDate, endDate] = filters.expiredDateRange || []
-    const expiredDateFrom = startDate ? startDate.format('YYYY-MM-DD') : undefined
-    const expiredDateTo   = endDate   ? endDate.format('YYYY-MM-DD')   : undefined
-
-    // eslint-disable-next-line no-unused-vars
-    const { expiredDateRange, applyDateRange, ...restFilters } = filters
-
-    dispatch(fetchRelationships({
-      ...restFilters,
-      expiredDateFrom,
-      expiredDateTo,
-    }))
+    dispatch(fetchRelationships(buildFetchParams(1)))
     setCurrentPage(1)
-  }, [dispatch, filters])
+  }, [dispatch, buildFetchParams])
+
+  const handlePageChange = useCallback((page) => {
+    setCurrentPage(page)
+    dispatch(fetchRelationships(buildFetchParams(page)))
+  }, [dispatch, buildFetchParams])
 
   const handleReset = useCallback(() => {
     setFilters(INITIAL_FILTERS)
-    dispatch(fetchRelationships({}))
+    // Build params from INITIAL_FILTERS directly — never from closure state,
+    // which may not have updated yet when this callback runs.
+    dispatch(fetchRelationships(buildParamsFromFilters(INITIAL_FILTERS, 1)))
     setCurrentPage(1)
   }, [dispatch])
 
@@ -463,13 +476,13 @@ const RelationshipListPage = () => {
       <RelationshipTable
         loading={loading}
         filteredItems={enrichedItems}
-        totalCount={enrichedItems.length}
+        totalCount={total}
         columns={columns}
         activeFilterCount={activeFilterCount}
         selectedRowKeys={selectedRowKeys}
         onSelectionChange={setSelectedRowKeys}
         currentPage={currentPage}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
       />
 
       <EditRelationshipModal
