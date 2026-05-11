@@ -155,7 +155,16 @@ const EditRelationshipModalInner = ({
 
         <Form.Item label="Apply Date">
           {getFieldDecorator('applyDate', {
-            normalize: (val) => snapToRange(val, pStartMoment, pEndMoment),
+            normalize: (val) => {
+              if (!val) return val
+              const snapped = snapToRange(val, pStartMoment, pStartMoment)
+              // if after expiredDate → snap back to pStart (mirrors RuleCard)
+              const expire = getFieldValue('expiredDate')
+              if (expire && snapped && snapped.isAfter(expire.clone().endOf('day'))) {
+                return pStartMoment ? pStartMoment.clone() : snapped
+              }
+              return snapped
+            },
             rules: [
               { required: true, message: 'Apply Date is required' },
               {
@@ -187,7 +196,16 @@ const EditRelationshipModalInner = ({
 
         <Form.Item label="Expire Date">
           {getFieldDecorator('expiredDate', {
-            normalize: (val) => snapToRange(val, pStartMoment, pEndMoment),
+            normalize: (val) => {
+              if (!val) return val
+              const snapped = snapToRange(val, pEndMoment, pEndMoment)
+              // if before applyDate → snap forward to pEnd (mirrors RuleCard)
+              const apply = getFieldValue('applyDate')
+              if (apply && snapped && snapped.isBefore(apply.clone().startOf('day'))) {
+                return pEndMoment ? pEndMoment.clone() : snapped
+              }
+              return snapped
+            },
             rules: [
               { required: true, message: 'Expire Date is required' },
               {
