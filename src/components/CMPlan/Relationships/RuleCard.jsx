@@ -77,9 +77,9 @@ const RuleCard = ({
   const handleExpiredDateChange = useCallback(
     (date) => {
       markExpired()
-      // null → user cleared or typed a project-range-disabled date → snap to pEnd
+      // null → user cleared → allow it so showExpiredError triggers (required)
       if (!date) {
-        onUpdate(rule.id, { expiredDate: toIso(pEndMoment) })
+        onUpdate(rule.id, { expiredDate: null })
         return
       }
       let resolved = snapDateIntoRange(date, pEndMoment, pStartMoment, pEndMoment)

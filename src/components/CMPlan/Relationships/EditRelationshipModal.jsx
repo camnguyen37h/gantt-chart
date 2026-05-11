@@ -1,9 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Modal, Form, Icon, Tag, Tooltip, DatePicker } from 'antd'
 import moment from 'moment'
 import { RELATIONSHIP_TYPES } from '../../../utils/cmplan/cmplanConstants'
 import { RELATIONSHIP_TYPE_COLORS } from '../../../utils/cmplan/bulkRelationshipConstants'
+import useProjectBasicInfo from '../../../hooks/cmplan/useProjectBasicInfo'
+import {
+  toMoment,
+  isOutsideProjectRange,
+  buildAppliedDateGuard,
+} from '../../../utils/cmplan/ruleDateHelpers'
 import './EditRelationshipModal.css'
 
 const DATE_FMT = 'MM/DD/YYYY'
@@ -47,6 +53,35 @@ const EditRelationshipModalInner = ({
 }) => {
   const { getFieldDecorator, validateFields, resetFields, getFieldValue, setFieldsValue } = form
 
+  const { pStartDate, pEndDate } = useProjectBasicInfo()
+  const pStartMoment = useMemo(() => toMoment(pStartDate), [pStartDate])
+  const pEndMoment   = useMemo(() => toMoment(pEndDate),   [pEndDate])
+
+  // Snap a typed-in date back to the nearest project boundary.
+  // Applied: snap below → pStart, snap above → pEnd.
+  // Expired: same boundaries (past/before-apply still caught by validators).
+  const snapToRange = useCallback((val, fallbackBelow, fallbackAbove) => {
+    if (!val) return val
+    if (pStartMoment && val.isBefore(pStartMoment.clone().startOf('day'))) return fallbackBelow ? fallbackBelow.clone() : val
+    if (pEndMoment   && val.isAfter(pEndMoment.clone().endOf('day')))     return fallbackAbove ? fallbackAbove.clone() : val
+    return val
+  }, [pStartMoment, pEndMoment])
+
+  const disabledApplyDate = useMemo(
+    () => buildAppliedDateGuard({ pStartMoment, pEndMoment }),
+    [pStartMoment, pEndMoment]
+  )
+
+  // Expire date: blocks project-range violations + past dates + on/before applyDate.
+  const disabledExpireDate = useCallback((current) => {
+    if (!current) return false
+    if (isOutsideProjectRange(current, pStartMoment, pEndMoment)) return true
+    if (current.isBefore(moment().startOf('day'))) return true
+    const applyDate = getFieldValue('applyDate')
+    if (applyDate && current.isSameOrBefore(applyDate.clone().endOf('day'))) return true
+    return false
+  }, [pStartMoment, pEndMoment, getFieldValue])
+
   // Initialize form values whenever the record changes
   useEffect(() => {
     if (visible && record) {
@@ -74,16 +109,8 @@ const EditRelationshipModalInner = ({
     onClose()
   }
 
-  // Disable expire dates that are in the past OR on/before applyDate.
+  // Disable expire dates that are in the past OR on/before applyDate OR outside project range.
   // Today is allowed (so user can set Expire = today).
-  const disableExpireBeforeApply = (current) => {
-    if (!current) return false
-    if (current.isBefore(moment().startOf('day'))) return true
-    const applyDate = getFieldValue('applyDate')
-    if (applyDate && current.isSameOrBefore(applyDate.clone().endOf('day'))) return true
-    return false
-  }
-
   if (!record) return null
 
   return (
@@ -128,6 +155,7 @@ const EditRelationshipModalInner = ({
 
         <Form.Item label="Apply Date">
           {getFieldDecorator('applyDate', {
+            normalize: (val) => snapToRange(val, pStartMoment, pEndMoment),
             rules: [
               { required: true, message: 'Apply Date is required' },
               {
@@ -146,19 +174,22 @@ const EditRelationshipModalInner = ({
               className="edit-rel-datepicker"
               format={DATE_FMT}
               placeholder="Select apply date"
+              disabledDate={disabledApplyDate}
               onChange={() => {
                 // Re-validate expire field when apply changes
                 if (getFieldValue('expiredDate')) {
-                  setTimeout(() => form.validateFields(['expiredDate'], { force: true }), 0)
+                  form.validateFields(['expiredDate'], { force: true })
                 }
               }}
             />
           )}
         </Form.Item>
 
-        <Form.Item label="Expire Date" extra="Leave blank if the relationship has no expiry">
+        <Form.Item label="Expire Date">
           {getFieldDecorator('expiredDate', {
+            normalize: (val) => snapToRange(val, pStartMoment, pEndMoment),
             rules: [
+              { required: true, message: 'Expire Date is required' },
               {
                 validator: (_, value, cb) => {
                   if (!value) return cb()
@@ -177,9 +208,8 @@ const EditRelationshipModalInner = ({
             <DatePicker
               className="edit-rel-datepicker"
               format={DATE_FMT}
-              placeholder="No expiry"
-              disabledDate={disableExpireBeforeApply}
-              allowClear
+              placeholder="Select expire date"
+              disabledDate={disabledExpireDate}
             />
           )}
         </Form.Item>
