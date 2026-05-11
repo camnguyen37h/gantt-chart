@@ -16,7 +16,7 @@ const getRelLabel = (value) => {
 const LockedField = ({ label, value, tag, tagColor }) => (
   <Form.Item label={label}>
     <Tooltip title="Editing is disabled to preserve data integrity" placement="topRight">
-      <div className="edit-rel-locked-field">
+      <div className="ant-input ant-input-disabled edit-rel-locked-field">
         <span className="edit-rel-locked-field__value">{value || '—'}</span>
         {tag && (
           <Tag color={tagColor || 'blue'} className="edit-rel-locked-field__tag" title={tag}>
@@ -89,6 +89,7 @@ const EditRelationshipModalInner = ({
   return (
     <Modal
       visible={visible}
+      className="edit-rel-modal"
       title={
         <span>
           <Icon type="edit" className="edit-rel-modal-title-icon" />
@@ -104,7 +105,7 @@ const EditRelationshipModalInner = ({
       width={520}
       maskClosable={false}
     >
-      <Form layout="vertical">
+      <Form layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }} colon={false}>
         <LockedField
           label="Source CI"
           value={record.sourceName}
