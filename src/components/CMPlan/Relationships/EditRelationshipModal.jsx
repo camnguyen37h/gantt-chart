@@ -78,7 +78,7 @@ const EditRelationshipModalInner = ({
     if (isOutsideProjectRange(current, pStartMoment, pEndMoment)) return true
     if (current.isBefore(moment().startOf('day'))) return true
     const applyDate = getFieldValue('applyDate')
-    if (applyDate && current.isSameOrBefore(applyDate.clone().endOf('day'))) return true
+    if (applyDate && current.isBefore(applyDate.clone().startOf('day'))) return true
     return false
   }, [pStartMoment, pEndMoment, getFieldValue])
 
@@ -171,7 +171,7 @@ const EditRelationshipModalInner = ({
                 validator: (_, value, cb) => {
                   if (!value) return cb()
                   const expire = getFieldValue('expiredDate')
-                  if (expire && value.isSameOrAfter(expire.clone().startOf('day'))) {
+                  if (expire && value.isAfter(expire.clone().endOf('day'))) {
                     return cb('Apply Date must be before Expire Date')
                   }
                   return cb()
@@ -215,7 +215,7 @@ const EditRelationshipModalInner = ({
                     return cb('Expire Date cannot be in the past')
                   }
                   const apply = getFieldValue('applyDate')
-                  if (apply && value.isSameOrBefore(apply.clone().endOf('day'))) {
+                  if (apply && value.isBefore(apply.clone().startOf('day'))) {
                     return cb('Expire Date must be after Apply Date')
                   }
                   return cb()
