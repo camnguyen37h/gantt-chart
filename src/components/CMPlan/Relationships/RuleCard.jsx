@@ -59,15 +59,15 @@ const RuleCard = ({
   const handleAppliedDateChange = useCallback(
     (date) => {
       markApplied()
-      // null → user cleared or typed a project-range-disabled date → snap to pStart
+      // null → user cleared → snap to pStart
       if (!date) {
         onUpdate(rule.id, { appliedDate: toIso(pStartMoment) })
         return
       }
       let resolved = snapDateIntoRange(date, pStartMoment, pStartMoment, pEndMoment)
-      // date is after expiredDate → snap to pStart
+      // date is after expiredDate → snap to expiredDate (not pStart)
       if (resolved && expiredMoment && resolved.isAfter(expiredMoment.clone().endOf('day'))) {
-        resolved = pStartMoment
+        resolved = expiredMoment
       }
       onUpdate(rule.id, { appliedDate: toIso(resolved) })
     },
@@ -83,9 +83,9 @@ const RuleCard = ({
         return
       }
       let resolved = snapDateIntoRange(date, pEndMoment, pStartMoment, pEndMoment)
-      // date is before appliedDate → snap to pEnd
+      // date is before appliedDate → snap to appliedDate (not pEnd)
       if (resolved && appliedMoment && resolved.isBefore(appliedMoment.clone().startOf('day'))) {
-        resolved = pEndMoment
+        resolved = appliedMoment
       }
       onUpdate(rule.id, { expiredDate: toIso(resolved) })
     },
@@ -102,12 +102,12 @@ const RuleCard = ({
   )
 
   const disabledAppliedDate = useMemo(
-    () => buildAppliedDateGuard({ pStartMoment, pEndMoment }),
-    [pStartMoment, pEndMoment]
+    () => buildAppliedDateGuard({ pStartMoment, pEndMoment, expiredMoment }),
+    [pStartMoment, pEndMoment, expiredMoment]
   )
   const disabledExpiredDate = useMemo(
-    () => buildExpiredDateGuard({ pStartMoment, pEndMoment }),
-    [pStartMoment, pEndMoment]
+    () => buildExpiredDateGuard({ pStartMoment, pEndMoment, appliedMoment }),
+    [pStartMoment, pEndMoment, appliedMoment]
   )
 
   const isCurrentInvalid = Boolean(
