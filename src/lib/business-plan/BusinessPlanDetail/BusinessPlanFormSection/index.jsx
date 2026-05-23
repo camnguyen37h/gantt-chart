@@ -416,6 +416,8 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
     status,
     validation,
     setValidation,
+    listAM,
+    listPreparator,
     loadingBusinessPlan,
   } = useBusinessPlanDetails()
 
@@ -424,13 +426,6 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
   const { generalInfos } = useSelector(
     state => state.businessGeneralInformation
   )
-
-  const viewModeGeneralInfo = useMemo(
-    () => generalInfos.find(info => info.mvvLocationType === viewMode) || {},
-    [generalInfos, viewMode]
-  )
-  const listAM = viewModeGeneralInfo.listAM || []
-  const listPreparator = viewModeGeneralInfo.listPreparator || []
 
   const columnTypeMap = useMemo(
     () =>
@@ -485,8 +480,8 @@ function BusinessPlanFormSection({ handleChangeTab, viewMode = 'Total' }) {
 
   const canEdit =
     isEditableViewMode &&
-    perms.canEditScope &&
-    ((isDraft && isOtherRole) || (isFin && !isApproved))
+    ((isDraft && (isOtherRole || perms.canEditScope)) ||
+      ((isFin || perms.canEditScope) && !isApproved))
 
   const [selectedCompareId, setSelectedCompareId] = useState()
   const [activePanel, setActivePanel] = useState(

@@ -1,7 +1,7 @@
 import { DateFormat } from '../../../../lib/constants/DateFormat'
 import { Tag, DatePicker } from 'antd'
 import { FOOTER_CONFIG } from './constants'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useState } from 'react'
 import styled from 'styled-components'
 
 const StyledDatePicker = styled(DatePicker)`
@@ -48,6 +48,7 @@ const DatePickerWithFooter = ({
           <Fragment>
             {footerConfig.map(config => (
               <Tag
+                key={config.value}
                 style={{ marginRight: 5 }}
                 color={typeValue === config.value ? '#2db7f5' : 'blue'}
                 onClick={() => handleChangeType(config.value)}>

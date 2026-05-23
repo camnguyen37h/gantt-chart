@@ -38,9 +38,6 @@ import BusinessPlanTabWrapper from './BusinessPlanTabWrapper'
 import { NotificationManager } from 'react-notifications'
 
 const { Panel } = Collapse
-const { TabPane } = Tabs
-
-const customPanelStyle = { border: 0, overflow: 'hidden' }
 
 const StyledCollapse = styled(Collapse)`
   .ant-collapse-item {
@@ -89,7 +86,6 @@ const StyledAffix = styled.div`
 function BusinessPlanDetail({ match, history }) {
   const affixRef = useRef(null)
   const businessPlanDeliveryRef = useRef(null)
-  const pendingViewModeRef = useRef(null)
   const [activeTab, setActiveTab] = useState('1')
   const [activeCollapse, setActiveCollapse] = useState('')
   const [viewMode, setViewMode] = useState('Total')
@@ -159,17 +155,14 @@ function BusinessPlanDetail({ match, history }) {
 
   useEffect(() => {
     if (generalInfos && generalInfos.length > 0 && match.params.buId) {
-      if (pendingViewModeRef.current !== null) {
-        setViewMode(pendingViewModeRef.current)
-        pendingViewModeRef.current = null
-        return
-      }
       const matchedMVV = generalInfos.find(
         info => info.id === Number(match.params.buId)
       )
       const currentMVV = matchedMVV || generalInfos[0]
+
       if (currentMVV && currentMVV.mvvLocationType) {
-        setViewMode(currentMVV.mvvLocationType)
+        const locationType = currentMVV.mvvLocationType
+        setViewMode(locationType)
       }
     }
   }, [generalInfos, match.params.buId])
@@ -195,40 +188,12 @@ function BusinessPlanDetail({ match, history }) {
     return modes
   }, [mvvLocationTypeIdMap])
 
-  const buildSectionDTO = () => {
-    if (
-      !isSaveShowed.businessPlan ||
-      !businessPlanVersionId ||
-      (viewMode !== 'Onsite' && viewMode !== 'Offshore')
-    )
-      return null
-    const sectionList = cloneDeep(originalBusinessPlanItems)
-    sectionList.forEach(section => {
-      section.rowLabels = section.rowLabels.filter(
-        row =>
-          row.label ||
-          row.cellList.some(item => item.editable && item.value !== null)
-      )
-      section.rowLabels.forEach(row => {
-        row.cellList = row.cellList.map(cell => {
-          if (!cell.compareKey) return cell
-          const c = Object.assign({}, cell)
-          delete c.compareKey
-          return c
-        })
-      })
-    })
-    const cleanColumnLabels = columnLabels.map(col => {
-      if (!col.compareKey) return col
-      const c = Object.assign({}, col)
-      delete c.compareKey
-      return c
-    })
-    return { columnLabels: cleanColumnLabels, sectionList, businessPlanVersionId, projectCode }
+  const customPanelStyle = {
+    border: 0,
+    overflow: 'hidden',
   }
 
   const onSubmit = async () => {
-    const savedViewMode = viewMode
     updateIsSaveShowed({ generalInformation: false, businessPlan: false })
     setLoadingSubmit(true)
 
@@ -242,8 +207,42 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    const dto = buildSectionDTO()
-    if (dto) params.businessPlanSectionDTO = dto
+    if (
+      isSaveShowed.businessPlan &&
+      businessPlanVersionId &&
+      (viewMode === 'Onsite' || viewMode === 'Offshore')
+    ) {
+      const sectionList = cloneDeep(originalBusinessPlanItems)
+      sectionList.forEach(section => {
+        section.rowLabels = section.rowLabels.filter(row => {
+          if (row.label) return true
+          if (row.cellList.some(item => item.editable && item.value !== null)) {
+            return true
+          }
+          return false
+        })
+        section.rowLabels.forEach(function (row) {
+          row.cellList = row.cellList.map(function (cell) {
+            if (!cell.compareKey) return cell
+            const c = Object.assign({}, cell)
+            delete c.compareKey
+            return c
+          })
+        })
+      })
+      const cleanColumnLabels = columnLabels.map(function (col) {
+        if (!col.compareKey) return col
+        const c = Object.assign({}, col)
+        delete c.compareKey
+        return c
+      })
+      params.businessPlanSectionDTO = {
+        columnLabels: cleanColumnLabels,
+        sectionList,
+        businessPlanVersionId: businessPlanVersionId,
+        projectCode: projectCode,
+      }
+    }
 
     const onsiteInfo = generalInfos.find(
       item => item.mvvLocationType === 'Onsite'
@@ -274,9 +273,7 @@ function BusinessPlanDetail({ match, history }) {
     const isSubmit = await submit(params)
 
     if (isSubmit) {
-      pendingViewModeRef.current = savedViewMode
       await getBusinessPlanDetail(match.params.buId)
-      dispatch(setActiveViewMode({ viewMode: savedViewMode }))
       await getBusinessPlanWorkflow({
         referenceId: match.params.buId,
       })
@@ -322,7 +319,7 @@ function BusinessPlanDetail({ match, history }) {
       if (!isValid) return { payload: { status: '' } }
       else {
         const saveParams = {
-          businessPlanId: businessPlanVersionId,
+          businessPlanId: Number(match.params.buId),
           groupId: [Number(deliveryUnitDataDelivery.groupId)],
           isSubmit: false,
           viewType: resourceInfoTableParams.viewType,
@@ -341,7 +338,7 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
     const saveDeliveryPlanParams = {
-      businessPlanId: businessPlanVersionId,
+      businessPlanId: Number(match.params.buId),
       isSubmit: true,
       viewType: resourceInfoTableParams.viewType,
       loadDataFromType: '',
@@ -379,7 +376,6 @@ function BusinessPlanDetail({ match, history }) {
     setLoadingSave(true)
     const savedProjectCode = projectCode
     const savedViewMode = viewMode
-    const savedBusinessPlanVersionId = businessPlanVersionId
 
     const params = {}
 
@@ -391,12 +387,45 @@ function BusinessPlanDetail({ match, history }) {
       }
     }
 
-    const dto = buildSectionDTO()
-    if (dto) params.businessPlanSectionDTO = dto
+    if (
+      isSaveShowed.businessPlan &&
+      businessPlanVersionId &&
+      (viewMode === 'Onsite' || viewMode === 'Offshore')
+    ) {
+      const sectionList = cloneDeep(originalBusinessPlanItems)
+      sectionList.forEach(section => {
+        section.rowLabels = section.rowLabels.filter(row => {
+          if (row.label) return true
+          if (row.cellList.some(item => item.editable && item.value !== null)) {
+            return true
+          }
+          return false
+        })
+        section.rowLabels.forEach(function (row) {
+          row.cellList = row.cellList.map(function (cell) {
+            if (!cell.compareKey) return cell
+            const c = Object.assign({}, cell)
+            delete c.compareKey
+            return c
+          })
+        })
+      })
+      const cleanColumnLabels = columnLabels.map(function (col) {
+        if (!col.compareKey) return col
+        const c = Object.assign({}, col)
+        delete c.compareKey
+        return c
+      })
+      params.businessPlanSectionDTO = {
+        columnLabels: cleanColumnLabels,
+        sectionList,
+        businessPlanVersionId: businessPlanVersionId,
+        projectCode: projectCode,
+      }
+    }
 
     const saved = await saveDraft(params)
     if (saved) {
-      pendingViewModeRef.current = savedViewMode
       const res = await getBusinessPlanDetail(match.params.buId)
 
       if (res && res.payload && res.payload.data) {
@@ -419,8 +448,9 @@ function BusinessPlanDetail({ match, history }) {
         }
       }
 
-      dispatch(setActiveViewMode({ viewMode: savedViewMode }))
-      if (savedBusinessPlanVersionId && savedViewMode !== 'Total') {
+      setViewMode(savedViewMode)
+
+      if (businessPlanVersionId && savedViewMode !== 'Total') {
         await getBusinessPlanDetailByViewMode(match.params.buId, {
           view: savedViewMode,
         })
@@ -513,6 +543,19 @@ function BusinessPlanDetail({ match, history }) {
     }
   }, [businessPlanVersionId, availableModes])
 
+  useEffect(() => {
+    if (activeTab === '2' && (!listDuRevenue || listDuRevenue.length === 0)) {
+      setActiveTab('1')
+      dispatch(setActiveBusinessPlanPanel({ activeKey: '1' }))
+    } else if (
+      activeTab === '3' &&
+      (!listDUDelivery || listDUDelivery.length === 0)
+    ) {
+      setActiveTab('1')
+      dispatch(setActiveBusinessPlanPanel({ activeKey: '1' }))
+    }
+  }, [listDuRevenue, listDUDelivery, activeTab, dispatch])
+
   return (
     <div className="main-content-pr">
       <div className="pb-5">
@@ -561,7 +604,9 @@ function BusinessPlanDetail({ match, history }) {
                     onChange={e => setViewMode(e.target.value)}
                     activeTab={activeTab}
                     availableModes={availableModes}
-                    hideTotalAndOB={generalInfos.length === 1}
+                    hideTotalAndOB={
+                      Object.keys(mvvLocationTypeIdMap).length === 1
+                    }
                     tab={
                       isSaveShowedDeliveryPlan || isEditingRevenuePlan ? (
                         <Tooltip
@@ -590,7 +635,6 @@ function BusinessPlanDetail({ match, history }) {
                       onChange={e => setViewMode(e.target.value)}
                       activeTab={activeTab}
                       availableModes={availableModes}
-                      hideTotalAndOB={generalInfos.length === 1}
                       tab={
                         isSaveShowedDeliveryPlan ||
                         isSaveShowed.generalInformation ||
@@ -607,6 +651,9 @@ function BusinessPlanDetail({ match, history }) {
                         ) : (
                           <span>Revenue Plan</span>
                         )
+                      }
+                      hideTotalAndOB={
+                        Object.keys(mvvLocationTypeIdMap).length === 1
                       }
                       key="2"
                       disabled={
@@ -647,6 +694,9 @@ function BusinessPlanDetail({ match, history }) {
                         ) : (
                           <span>Delivery Plan</span>
                         )
+                      }
+                      hideTotalAndOB={
+                        Object.keys(mvvLocationTypeIdMap).length === 1
                       }
                       key="3"
                       disabled={

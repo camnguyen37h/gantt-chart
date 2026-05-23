@@ -60,6 +60,13 @@ const BUSINESS_PLAN_API = {
     }
   },
 
+  getUserRoleBusinessPlan: id => {
+    return {
+      url: `${API_SALE}/api/business-plan/get-user-role-business-plan/${id}`,
+      method: 'get',
+    }
+  },
+
   getBusinessPlanSettingMaxKPI: {
     url: `${API_SALE}/api/business-plan/get-setting-max-kpi`,
     method: 'get',

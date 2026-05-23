@@ -2,19 +2,19 @@ import { Spin, Table, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
-  getBusinessPlanDetail,
+  getBusinessPlanDetailVersion,
+  getBusinessPlanDetailByViewMode,
   setActiveViewMode,
 } from '../redux'
 import { NotificationManager } from 'react-notifications'
 import styled from 'styled-components'
-import { ResponseStatusCode } from '@/service/constant'
+import { ResponseStatusCode } from '../../../service/constant'
 import {
   useBusinessPlanDetails,
   useBusinessPlanForm,
   useFormula,
 } from '../hooks'
 import { resolveValue } from './BusinessPlanFormSection/helpers'
-import { getDisplayKey } from '../utils'
 
 const BorderTable = styled.div`
   td {
@@ -59,7 +59,8 @@ function generateDataSource(data = []) {
 }
 
 function formatPercent(number = '') {
-  if (!number) return '-'
+  const num = Number(number)
+  if (!num) return '-'
   const isNegative = number < 0
   const roundedNumber = Math.round(number * 100) / 100
   const fraction = roundedNumber % 1 == 0 ? 0 : 2
@@ -75,7 +76,8 @@ function formatPercent(number = '') {
 }
 
 function formatMoney(number = '') {
-  if (!number) return '-'
+  const num = Number(number)
+  if (!num) return '-'
   const isNegative = number < 0
   const newValue = Number(number) / 1000
   const roundedNumber = Math.round(newValue * 100) / 100
@@ -91,7 +93,7 @@ function formatMoney(number = '') {
 function ExportBusinessPlanDetail({ match }) {
   const dispatch = useDispatch()
   const { businessPlanItems, columns } = useBusinessPlanForm()
-  const { fetchAllViewModesData } = useBusinessPlanDetails()
+  const { getBusinessPlanDetail, fetchAllViewModesData } = useBusinessPlanDetails()
 
   const [headerProjectCodes, setHeaderProjectCodes] = useState([])
   const [loading, setLoading] = useState(true)
@@ -247,43 +249,53 @@ function ExportBusinessPlanDetail({ match }) {
   }, [columns, businessPlanItems])
 
   useEffect(() => {
-    if (!idBusiness) return
-    setLoading(true)
-    dispatch(getBusinessPlanDetail(idBusiness)).then(function (detailResult) {
-      const payload = detailResult.payload || {}
-      if (payload.data) {
-        const { generalInfos } = payload.data
-        if (generalInfos && Array.isArray(generalInfos)) {
-          const sortedInfos = [...generalInfos].sort(function (a, b) {
-            if (a.id.toString() === idBusiness) return -1
-            if (b.id.toString() === idBusiness) return 1
-            return a.id - b.id
-          })
-          const projectCodes = sortedInfos.map(function (info) {
-            return {
-              code: info.projectCode,
-              isMain: info.id.toString() === idBusiness,
+    if (idBusiness) {
+      setLoading(true)
+      Promise.allSettled([
+        getBusinessPlanDetailVersion(idBusiness),
+        fetchAllViewModesData(idBusiness),
+      ])
+        .then(([versionResult]) => {
+          if (
+            versionResult.status === 'fulfilled' &&
+            versionResult.value.data
+          ) {
+            const { generalInfos } = versionResult.value.data
+            if (generalInfos && Array.isArray(generalInfos)) {
+              const sortedInfos = [...generalInfos].sort((a, b) => {
+                if (a.id.toString() === idBusiness) return -1
+                if (b.id.toString() === idBusiness) return 1
+                return a.id - b.id
+              })
+
+              const viewMode =
+                sortedInfos.length > 1
+                  ? 'Total'
+                  : sortedInfos[0].mvvLocationType || 'Total'
+              dispatch(setActiveViewMode({ viewMode }))
+              dispatch(getBusinessPlanDetail(idBusiness))
+
+              const projectCodes = sortedInfos.map(info => ({
+                code: info.projectCode,
+                isMain: info.id.toString() === idBusiness,
+              }))
+              setHeaderProjectCodes(projectCodes)
             }
-          })
-          setHeaderProjectCodes(projectCodes)
-          var viewModeToSet =
-            sortedInfos.length === 1 && sortedInfos[0].mvvLocationType
-              ? sortedInfos[0].mvvLocationType
-              : 'Total'
-          dispatch(setActiveViewMode({ viewMode: viewModeToSet }))
-        }
-      } else if (detailResult.error) {
-        if (payload.status === ResponseStatusCode.forbidden) {
-          window.location.href = '/error/access-deny'
-        }
-        NotificationManager.error(
-          payload.message || 'Failed to fetch business plan.'
-        )
-      }
-      return fetchAllViewModesData(idBusiness)
-    }).finally(function () {
-      setLoading(false)
-    })
+          } else if (versionResult.status === 'rejected') {
+            const result = versionResult.reason
+            if (result.status === ResponseStatusCode.forbidden) {
+              window.location.href = '/error/access-deny'
+            }
+            NotificationManager.error(
+              result.message || 'Failed to fetch business plan version.'
+            )
+          }
+
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
   }, [idBusiness, dispatch, fetchAllViewModesData])
 
   return (
@@ -310,7 +322,7 @@ function ExportBusinessPlanDetail({ match }) {
             <div style={{ textAlign: 'right' }}>BUSINESS PLAN</div>
             <div>
               {headerProjectCodes.map((item, index) => (
-                <span key={index}>
+                <span key={item.code}>
                   {item.code}
                   {index < headerProjectCodes.length - 1 ? ', ' : ''}
                 </span>
@@ -363,7 +375,7 @@ function ExportBusinessPlanDetail({ match }) {
                   return {
                     title: <b>{item.label}</b>,
                     dataIndex: item.label,
-                    key: item.label,
+                    key: item.compareKey ? item.compareKey : item.columnKey,
                     className: `text-right ${textSize}`,
                     render: (data, rowData) => {
                       const cellItem =
@@ -374,7 +386,7 @@ function ExportBusinessPlanDetail({ match }) {
 
                       const formulaValue = getFormula({
                         item: cellItem,
-                        columnKey: getDisplayKey(cellItem) || item.columnKey,
+                        columnKey: item.columnKey,
                         sectionKey: cellItem.sectionKey,
                         rowKey: cellItem.rowKey,
                       })

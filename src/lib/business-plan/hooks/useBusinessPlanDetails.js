@@ -8,7 +8,6 @@ import { getRowConfig } from '../constants'
 import { getDisplayKey } from '../utils'
 import moment from 'moment'
 import { DateFormat } from '../../constants/DateFormat'
-import { getUserRoleBusinessPlan } from '../redux'
 import useBusinessPlanPermission from './useBusinessPlanPermission'
 import { SCOPE } from '../permissions/policyMatrix'
 
@@ -209,8 +208,6 @@ const useBusinessPlanDetails = () => {
       parseFloat(kpiPm || 0) +
       parseFloat(kpiQa || 0) +
       parseFloat(kpiMember || 0)
-    // Use a small epsilon to handle floating-point rounding
-    // (e.g. 33.33 + 33.33 + 33.34 = 100.00000000000001 in JS)
     return Math.abs(parseFloat(total) - sum) < 0.001
   }
 
@@ -237,10 +234,6 @@ const useBusinessPlanDetails = () => {
       return { ...res, ...sectionRes }
     }, {})
 
-    // ── UI HIGHLIGHTING (selected MVV only) ──────────────────────────────────
-    // generalInformationResult is dispatched to highlight red fields on the
-    // form currently visible to the user. It only concerns the selected MVV.
-    // Actual submit-blocking for ALL MVVs is done in allMvvInfos.forEach below.
     const selectedMvvInfo = allMvvInfosFromGI.find(
       info => info.projectCode === selectedMvvCode
     )
@@ -251,14 +244,16 @@ const useBusinessPlanDetails = () => {
 
     const isEmptyCheck = v => v === null || v === undefined || v === ''
 
-    // Financial fields: explicitly set false when user can't edit (to clear any
-    // stale true that was left by setValidation's merge from a prior validation run).
     const generalInformationResult = {
       industryCurrency: canEditSelectedGeneral ? !industryCurrency : false,
       exchangeRate: canEditSelectedGeneral ? isEmptyCheck(exchangeRate) : false,
-      totalContractPrice: canEditSelectedGeneral ? isEmptyCheck(totalContractPrice) : false,
+      totalContractPrice: canEditSelectedGeneral
+        ? isEmptyCheck(totalContractPrice)
+        : false,
       otherFees: canEditSelectedGeneral ? isEmptyCheck(otherFees) : false,
-      softwareDevelopmentFee: canEditSelectedGeneral ? isEmptyCheck(softwareDevelopmentFee) : false,
+      softwareDevelopmentFee: canEditSelectedGeneral
+        ? isEmptyCheck(softwareDevelopmentFee)
+        : false,
       industryDomain: canEditSelectedGeneral ? !industryDomain : false,
       listAM: listAM.length < 1 || !handleCheckAtLeastOneFilled(listAM),
       listTeamLead:
@@ -287,17 +282,11 @@ const useBusinessPlanDetails = () => {
 
     const isEmptyVal = v => v === null || v === undefined || v === ''
 
-    // canEditGeneralForType: whether the current user can edit financial fields
-    // for a given MVV location type, based on the permission matrix.
     const canEditGeneralForType = mvvLocationType =>
       mvvLocationType === 'Offshore'
         ? offshoreGeneralPerms.canEditScope
         : onsiteGeneralPerms.canEditScope
 
-    // ── SUBMIT-BLOCKING (ALL MVVs) ────────────────────────────────────────────
-    // Build a snapshot of every MVV's data: the selected MVV gets live Redux
-    // state values; non-selected MVVs are overlaid with ratesByLocationType
-    // (which holds any edits made while that MVV was active).
     const allMvvInfos = allMvvInfosFromGI.map(info => {
       if (info.projectCode === selectedMvvCode) {
         return {
@@ -314,14 +303,13 @@ const useBusinessPlanDetails = () => {
           businessPlanKpiDTO,
         }
       }
-      // For non-selected MVVs, overlay with ratesByLocationType values which
-      // reflect any edits the user made while that MVV was selected (more
-      // up-to-date than the raw generalInfos loaded from the initial API call).
       const rates = (ratesByLocationType || {})[info.mvvLocationType] || {}
       return {
         ...info,
         ...(rates.exchangeRate != null && { exchangeRate: rates.exchangeRate }),
-        ...(rates.softwareDevelopmentFee != null && { softwareDevelopmentFee: rates.softwareDevelopmentFee }),
+        ...(rates.softwareDevelopmentFee != null && {
+          softwareDevelopmentFee: rates.softwareDevelopmentFee,
+        }),
         ...(rates.otherFees != null && { otherFees: rates.otherFees }),
       }
     })
@@ -338,8 +326,6 @@ const useBusinessPlanDetails = () => {
 
       const canEditThisMvvGeneral = canEditGeneralForType(info.mvvLocationType)
 
-      // Financial fields are only validated when the user has edit permission
-      // for this MVV's location type. When masked, the BE holds valid data.
       const isFinancialFieldsInvalid =
         canEditThisMvvGeneral &&
         (!info.currency ||
@@ -358,7 +344,8 @@ const useBusinessPlanDetails = () => {
         listPMInfo.length < 1 ||
         !handleCheckAtLeastOneFilled(listPMInfo)
 
-      const isGeneralInfoInvalid = isFinancialFieldsInvalid || isCollaboratorsInvalid
+      const isGeneralInfoInvalid =
+        isFinancialFieldsInvalid || isCollaboratorsInvalid
 
       if (isGeneralInfoInvalid) {
         invalidGeneralMvvCodes.push(info.projectCode)

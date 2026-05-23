@@ -178,7 +178,8 @@ const RevenueInformation = ({
   })
   const [hasMore, setHasMore] = useState(true)
   const [loadingTable, setLoadingTable] = useState(false)
-  const { startDate, endDate } = useBusinessPlanDetails()
+  const { startDate } = useBusinessPlanDetails()
+  const { viewMode } = useSelector(state => state.businessPlanDetails)
 
   const tableRef = useRef(null)
 
@@ -240,6 +241,15 @@ const RevenueInformation = ({
   )
 
   const fetchProductionRevenuePlan = async (start, pageSize, param) => {
+    if (start === PAGE_INDEX_START) {
+      setHasMore(true)
+      setDataSourceTable({
+        avgPrice: 0,
+        startDate: null,
+        endDate: null,
+        revenueInfos: [],
+      })
+    }
     setLoadingTable(true)
     try {
       const result = await BusinessPlanAPI.getProductionRevenue({
@@ -593,6 +603,7 @@ const RevenueInformation = ({
     filters,
     businessVersion,
     deliveryUnitDataRevenue.groupId,
+    viewMode,
   ])
 
   useEffect(() => {
@@ -608,16 +619,6 @@ const RevenueInformation = ({
       }
     }
   }, [handleScroll])
-
-  useEffect(() => {
-    setHasMore(true)
-    setDataSourceTable({
-      avgPrice: 0,
-      startDate: null,
-      endDate: null,
-      revenueInfos: [],
-    })
-  }, [isExpandPanel, switchValue, filters, deliveryUnitDataRevenue.groupId])
 
   const handleSearch = useCallback(
     value => {
@@ -698,12 +699,6 @@ const RevenueInformation = ({
         }
         loading={loadingTable}
         scroll={{ x: 'max-content', y: 400 }}
-        showHeader={
-          canView &&
-          dataSourceTable &&
-          dataSourceTable.revenueInfos &&
-          dataSourceTable.revenueInfos.length > 0
-        }
       />
     </div>
   )

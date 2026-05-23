@@ -71,16 +71,24 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
   }, [mvvLocationTypeIdMap])
 
   const handleAssign = async params => {
-    const { ldap, departmentName, stepName, taskKey, referenceId } =
-      params || {}
+    const {
+      ldap,
+      departmentName,
+      stepName,
+      taskKey,
+      referenceId,
+      mergeApprove,
+    } = params || {}
 
     const currentStep = listStep.find(s => s.stepName === stepName)
-    const mergeApprove = !!(
-      currentStep &&
-      Object.values(APPROVAL_STATUS_STEP).includes(
-        Number(currentStep.stepOrder)
+    const hasApproved =
+      mergeApprove ||
+      !!(
+        currentStep &&
+        Object.values(APPROVAL_STATUS_STEP).includes(
+          Number(currentStep.stepOrder)
+        )
       )
-    )
 
     await approveRejectWO({
       ldap,
@@ -89,7 +97,7 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
       referenceId,
       action: 'REASSIGN',
       taskKey,
-      mergeApprove,
+      mergeApprove: hasApproved,
     })
     await getBusinessPlanWorkflow({
       referenceId: businessPlanId,
@@ -130,7 +138,7 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
     try {
       setRejectLoading(true)
       const res = await commentRef.current.form.validateFields()
-      const { departmentName, stepName, taskKey, referenceId } =
+      const { departmentName, stepName, taskKey, referenceId, mergeApprove } =
         rejectPerson || {}
 
       await dispatch(
@@ -148,11 +156,12 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
       )
 
       const currentStep = listStep.find(s => s.stepName === stepName)
-      const mergeApprove = !!(
-        currentStep &&
-        Object.values(APPROVAL_STATUS_STEP).includes(
-          Number(currentStep.stepOrder)
-        )
+      const hasApproved = !!(
+        mergeApprove ||
+        (currentStep &&
+          Object.values(APPROVAL_STATUS_STEP).includes(
+            Number(currentStep.stepOrder)
+          ))
       )
 
       await approveRejectWO({
@@ -162,7 +171,7 @@ function BusinessPlanStep({ match, projectCode, startDate, endDate }) {
         referenceId,
         action: 'REJECTED',
         taskKey,
-        mergeApprove,
+        mergeApprove: hasApproved,
       })
       setRejectModalVisible(false)
     } catch (e) {

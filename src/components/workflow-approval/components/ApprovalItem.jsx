@@ -1,5 +1,5 @@
 import UserSolidSVG from '../../common/icons/UserSolid'
-import { Icon, Tooltip } from 'antd'
+import { Icon } from 'antd'
 import {
   SPECIFIC_PERMISSIONS,
   STATUS_COLOR_ICON,
@@ -19,7 +19,10 @@ const ApprovalItem = ({
 }) => {
   const { specificPermissions } = useWorkflowApproval()
   // Mock user for demo
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || { userName: 'Demo User', userId: 1 }
+  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
+    userName: 'Demo User',
+    userId: 1,
+  }
   const { userName } = userPOA
 
   const canApprove =

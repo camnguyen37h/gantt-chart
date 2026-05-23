@@ -1023,6 +1023,30 @@ export const getHistoryDeliveryPlan = async (businessPlanVersionId, deliveryUnit
   };
 };
 
+/**
+ * Get User Role Business Plan
+ * @param {number} businessPlanVersionId
+ * @returns {Promise<Object>}
+ */
+export const getUserRoleBusinessPlan = async (businessPlanVersionId) => {
+  await delay(300);
+  return {
+    httpStatus: 200,
+    data: true,
+    messageId: "Success",
+    errorMessage: "",
+  };
+};
+
+export const getOvertimeData = async () => {
+  return {
+    httpStatus: 200,
+    data: [],
+    messageId: 'Success',
+    errorMessage: ''
+  };
+};
+
 // Export all mock API functions as default
 const mockBusinessPlanApi = {
   getBusinessPlanDetail,
@@ -1053,6 +1077,7 @@ const mockBusinessPlanApi = {
   getBusinessPlanWorkflow,
   uploadDocument,
   getUserActionHistory,
+  getUserRoleBusinessPlan,
   // Delivery Plan APIs
   getSummaryDeliveryPlan,
   getLocationExchangeRate,
@@ -1064,6 +1089,7 @@ const mockBusinessPlanApi = {
   getEmployeePosition,
   getEmployeeRole,
   getOtherExpensesTable,
+  getOvertimeData,
   saveDeliveryPlan,
   getResourcesInformationReference,
   getHistoryDeliveryPlan,

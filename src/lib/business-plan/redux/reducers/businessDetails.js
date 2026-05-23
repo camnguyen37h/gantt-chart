@@ -306,38 +306,31 @@ const businessDetailsSlice = createSlice({
       const onsiteRaw = payload['Onsite']
       const offshoreRaw = payload['Offshore']
 
-      // Build entries for the two fetched views
       const viewModeDataMap = {}
-      if (onsiteRaw) viewModeDataMap['Onsite'] = buildViewModeEntry(onsiteRaw, 'Onsite')
-      if (offshoreRaw) viewModeDataMap['Offshore'] = buildViewModeEntry(offshoreRaw, 'Offshore')
+      if (onsiteRaw)
+        viewModeDataMap['Onsite'] = buildViewModeEntry(onsiteRaw, 'Onsite')
+      if (offshoreRaw)
+        viewModeDataMap['Offshore'] = buildViewModeEntry(
+          offshoreRaw,
+          'Offshore'
+        )
 
-      // Determine which sides have actual MVV data (populated from getBusinessPlanDetail).
-      // The API always responds to both ?view=Onsite and ?view=Offshore even when only one
-      // side exists — it may echo the existing side's data for the missing side. Guard
-      // against that by only combining when BOTH sides are genuinely present.
-      const hasRealOnsite = !!state.ratesByLocationType['Onsite']
-      const hasRealOffshore = !!state.ratesByLocationType['Offshore']
-
-      // Derive Total and OB from Onsite + Offshore (no extra API calls needed)
-      if (hasRealOnsite && hasRealOffshore && onsiteRaw && offshoreRaw) {
+      if (onsiteRaw && offshoreRaw) {
         const totalRaw = buildDerivedRawData(onsiteRaw, offshoreRaw, 'Total')
         const obRaw = buildDerivedRawData(onsiteRaw, offshoreRaw, 'OB')
         viewModeDataMap['Total'] = buildViewModeEntry(totalRaw, 'Total')
         viewModeDataMap['OB'] = buildViewModeEntry(obRaw, 'OB')
-      } else if (hasRealOffshore && offshoreRaw) {
-        viewModeDataMap['Total'] = buildViewModeEntry(offshoreRaw, 'Total')
-        viewModeDataMap['OB'] = buildViewModeEntry(offshoreRaw, 'OB')
-      } else if (hasRealOnsite && onsiteRaw) {
-        viewModeDataMap['Total'] = buildViewModeEntry(onsiteRaw, 'Total')
-        viewModeDataMap['OB'] = buildViewModeEntry(onsiteRaw, 'OB')
       }
 
       state.viewModeDataMap = viewModeDataMap
 
       const activeViewMode = state.viewMode
       if (activeViewMode && viewModeDataMap[activeViewMode]) {
-        applyViewModeEntry(state, viewModeDataMap[activeViewMode], activeViewMode)
-        // Carry version/warningMessage from Onsite (the primary source view)
+        applyViewModeEntry(
+          state,
+          viewModeDataMap[activeViewMode],
+          activeViewMode
+        )
         const sourceRaw = onsiteRaw || offshoreRaw
         if (sourceRaw) {
           state.version = sourceRaw.version

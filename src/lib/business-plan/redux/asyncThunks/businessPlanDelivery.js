@@ -102,13 +102,25 @@ export const getOtherExpensesTable = createAsyncThunk(
   }
 )
 
+export const getOvertimeData = createAsyncThunk(
+  'get/getOvertimeData',
+  async params => {
+    const result = await BusinessPlanAPI.getOvertimeData(params)
+    if (result.status === ResponseStatusCode.success) {
+      return result.data
+    } else {
+      return NotificationManager.error(result.message)
+    }
+  }
+)
+
 export const saveDeliveryPlan = createAsyncThunk(
   'post/saveDeliveryPlan',
   async params => {
     const result = await BusinessPlanAPI.saveDeliveryPlan(params)
     if (result.status === ResponseStatusCode.success) {
       NotificationManager.success(result.data)
-    } else if (result.status !== ResponseStatusCode.forceExpired) {
+    } else {
       NotificationManager.error(result.message)
     }
     return result

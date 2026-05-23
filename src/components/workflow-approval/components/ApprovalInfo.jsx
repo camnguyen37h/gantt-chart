@@ -1,6 +1,4 @@
-import { DateFormat } from '../../../lib/constants/DateFormat'
 import { Icon, Popover } from 'antd'
-import moment from 'moment'
 
 function ApprovalInfo({
   approver,

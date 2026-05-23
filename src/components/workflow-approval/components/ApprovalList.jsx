@@ -162,7 +162,7 @@ const ApprovalList = ({
                   {allWOLength > step.map.None.length &&
                     new Array(allWOLength - step.map.None.length)
                       .fill('')
-                      .map(() => <div style={{ height: 29 }}></div>)}
+                      .map((_, index) => <div key={`empty-${index}`} style={{ height: 29 }}></div>)}
                 </div>
               )}
             </div>
@@ -185,9 +185,9 @@ const ApprovalList = ({
                           .filter(
                             approver => approver.departmentName === wo.duName
                           )
-                          .map(approver => (
+                          .map((approver, approverIndex) => (
                             <ApprovalItem
-                              key={approver.ldap || approver.userId || `approver-${approver.stepName}`}
+                              key={approver.ldap || approver.userId || `approver-${gKeyIndex}-${woIndex}-${approverIndex}`}
                               approver={approver}
                               enableActions={enableActions}
                               onClickAssign={approver =>
@@ -221,9 +221,9 @@ const ApprovalList = ({
                 step.map[gKey] &&
                 step.map[gKey].length > 0 && (
                   <div key={`grid-group-${gKeyIndex}`} className="grid-group">
-                    {step.map[gKey].map(approver => (
+                    {step.map[gKey].map((approver, approverIndex) => (
                       <ApprovalItem
-                        key={approver.ldap || approver.userId || `approver-${approver.stepName}`}
+                        key={approver.ldap || approver.userId || `approver-${gKeyIndex}-${approverIndex}`}
                         approver={approver}
                         enableActions={enableActions}
                         onClickAssign={approver =>
@@ -249,7 +249,7 @@ const ApprovalList = ({
                     {gWO.length > step.map[gKey].length &&
                       new Array(gWO.length - step.map[gKey].length)
                         .fill('')
-                        .map(() => <div style={{ height: 29 }}></div>)}
+                        .map((_, index) => <div key={`empty-${index}`} style={{ height: 29 }}></div>)}
                   </div>
                 )
               )

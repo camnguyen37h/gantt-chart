@@ -56,7 +56,7 @@ export const getBusinessPlanSettingMaxKPI = createAsyncThunk(
 export const getUserRoleBusinessPlan = createAsyncThunk(
   'get/getUserRoleBusinessPlan',
   async id => {
-    const result = await Request(BUSINESS_PLAN_API.getUserRoleBusinessPlan(id))
+    const result = await BusinessPlanAPI.getUserRoleBusinessPlan(id)
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {

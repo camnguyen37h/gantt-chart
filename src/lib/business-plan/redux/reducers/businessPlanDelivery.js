@@ -1,19 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
-  getListResource,
-  getListResourceType,
-  getLocation,
   getEmployeePosition,
   getEmployeeRole,
   getEmployeeType,
-  getResourcesInformationDeliveryPlan,
-  getOtherExpensesTable,
-  saveDeliveryPlan,
   getListDUByVersionDelivery,
+  getListResource,
+  getListResourceType,
+  getLocation,
   getLocationExchangeRate,
+  getOtherExpensesTable,
+  getOvertimeData,
+  getResourcesInformationDeliveryPlan,
   getSummaryDeliveryPlan,
+  saveDeliveryPlan,
 } from '../asyncThunks/businessPlanDelivery.js'
-import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
+import {
+  OVERTIME_ENUM,
+  OVERTIME_EXPENSES_KEYS,
+} from '../../BusinessPlanDetail/BusinessPlanDelivery/constants.js'
 
 const initialState = {
   // Resources Information & Filter
@@ -52,6 +56,19 @@ const initialState = {
   labelMonthOtherExpenses: [],
   getOtherExpensesTableLoading: false,
 
+  // Overtime
+  dataListOvertime: [],
+  labelMonthOvertime: [],
+  getOvertimeDataLoading: false,
+  averageEachResource: null,
+
+  payloadOvertime: {
+    expenseCategoriesEnum: OVERTIME_ENUM,
+    otherExpenseId: null,
+    totalExpenseValue: 0,
+    categoriesDataList: [],
+  },
+
   // Reference Table
   listDUDelivery: [],
   loadingSummaryDeliveryPlan: false,
@@ -77,7 +94,7 @@ const initialState = {
   loadingGetReferenceTable: false,
   // Load Data From Value
   loadDataFromValue: undefined,
-  //
+  // Delivery Plan Params
   dataCreateRequest: {
     listResourceInformation: [],
     listOtherExpensesTableData: [],
@@ -178,6 +195,30 @@ const handleMergeOtherExpense = (existingParents = [], payload) => {
   return copy
 }
 
+const removeItemInOtherExpense = (
+  existingArray,
+  key,
+  expenseCategoriesEnum
+) => {
+  return existingArray
+    .map(item => {
+      if (item.expenseCategoriesEnum === expenseCategoriesEnum) {
+        const newCategoriesDataList = item.categoriesDataList.filter(
+          child => child.key !== key
+        )
+        if (newCategoriesDataList.length === 0) {
+          return null
+        }
+        return {
+          ...item,
+          categoriesDataList: newCategoriesDataList,
+        }
+      }
+      return item
+    })
+    .filter(item => item !== null)
+}
+
 const businessPlanDeliverySlice = createSlice({
   name: 'businessPlanDelivery',
   initialState,
@@ -244,28 +285,13 @@ const businessPlanDeliverySlice = createSlice({
       }
     },
     removeUpdateOtherExpense: (state, { payload }) => {
-      const listOtherExpensesTableDataUpdated =
-        state.dataUpdateRequest.listOtherExpensesTableData
-          .map(item => {
-            if (item.expenseCategoriesEnum === payload.parentKey) {
-              const newCategoriesDataList = item.categoriesDataList.filter(
-                child => child.key !== payload.key
-              )
-              if (newCategoriesDataList.length === 0) {
-                return null
-              }
-              return {
-                ...item,
-                categoriesDataList: newCategoriesDataList,
-              }
-            }
-            return item
-          })
-          .filter(item => item !== null)
-
       state.dataUpdateRequest = {
         ...state.dataUpdateRequest,
-        listOtherExpensesTableData: listOtherExpensesTableDataUpdated,
+        listOtherExpensesTableData: removeItemInOtherExpense(
+          state.dataUpdateRequest.listOtherExpensesTableData,
+          payload.key,
+          payload.parentKey
+        ),
       }
 
       if (
@@ -279,28 +305,82 @@ const businessPlanDeliverySlice = createSlice({
       }
     },
     removeCreateOtherExpense: (state, { payload }) => {
-      const listOtherExpensesTableDataUpdated =
-        state.dataCreateRequest.listOtherExpensesTableData
-          .map(item => {
-            if (item.expenseCategoriesEnum === payload.parentKey) {
-              const newCategoriesDataList = item.categoriesDataList.filter(
-                child => child.key !== payload.key
-              )
-              if (newCategoriesDataList.length === 0) {
-                return null
-              }
-              return {
-                ...item,
-                categoriesDataList: newCategoriesDataList,
-              }
-            }
-            return item
-          })
-          .filter(item => item !== null)
+      state.dataCreateRequest = {
+        ...state.dataCreateRequest,
+        listOtherExpensesTableData: removeItemInOtherExpense(
+          state.dataCreateRequest.listOtherExpensesTableData,
+          payload.key,
+          payload.parentKey
+        ),
+      }
+    },
+    updateExistedOvertimeItem: (state, { payload }) => {
+      state.dataUpdateRequest = {
+        ...state.dataUpdateRequest,
+        listOtherExpensesTableData: handleMergeOtherExpense(
+          state.dataUpdateRequest.listOtherExpensesTableData,
+          {
+            ...initialState.payloadOvertime,
+            categoriesDataList: [payload],
+          }
+        ),
+      }
+    },
+    addNewOvertimeItem: (state, { payload }) => {
+      const updatedRow = payload
+
+      // remove empty month values in payload
+      Object.entries(updatedRow.overtimeExpenseMonthlyDTO || {}).forEach(
+        ([monthKey, monthData]) => {
+          const value = monthData && monthData.valueMM
+          if (value === null || value === undefined || value === '')
+            delete updatedRow.overtimeExpenseMonthlyDTO[monthKey]
+        }
+      )
 
       state.dataCreateRequest = {
         ...state.dataCreateRequest,
-        listOtherExpensesTableData: listOtherExpensesTableDataUpdated,
+        listOtherExpensesTableData: handleMergeOtherExpense(
+          state.dataCreateRequest.listOtherExpensesTableData,
+          {
+            ...initialState.payloadOvertime,
+            categoriesDataList: [updatedRow],
+          }
+        ),
+      }
+    },
+    removeOvertimeItem: (state, { payload }) => {
+      const { key } = payload
+
+      const isRemoveCreate = String(key).includes(
+        OVERTIME_EXPENSES_KEYS.NEW_OVERTIME_COSTNAME
+      )
+
+      if (
+        !isRemoveCreate &&
+        !state.dataDeleteRequest.listOtherExpensesTableData.includes(key)
+      ) {
+        state.dataDeleteRequest.listOtherExpensesTableData.push(key)
+
+        state.dataUpdateRequest = {
+          ...state.dataUpdateRequest,
+          listOtherExpensesTableData: removeItemInOtherExpense(
+            state.dataUpdateRequest.listOtherExpensesTableData,
+            key,
+            OVERTIME_ENUM
+          ),
+        }
+      }
+
+      if (isRemoveCreate) {
+        state.dataCreateRequest = {
+          ...state.dataCreateRequest,
+          listOtherExpensesTableData: removeItemInOtherExpense(
+            state.dataCreateRequest.listOtherExpensesTableData,
+            key,
+            OVERTIME_ENUM
+          ),
+        }
       }
     },
     setResourceInfoTableParams: (state, action) => {
@@ -485,6 +565,29 @@ const businessPlanDeliverySlice = createSlice({
         state.getOtherExpensesTableLoading = false
       })
     builder
+      .addCase(getOvertimeData.pending, state => {
+        state.getOvertimeDataLoading = true
+      })
+      .addCase(getOvertimeData.fulfilled, (state, { payload }) => {
+        state.getOvertimeDataLoading = false
+
+        const { body } = payload || {}
+
+        const overtimeData =
+          body.dataList && body.dataList.length > 0
+            ? body.dataList.find(
+                item => item.expenseCategoriesEnum === OVERTIME_ENUM
+              )
+            : []
+
+        state.dataListOvertime = overtimeData.categoriesDataList || []
+        state.labelMonthOvertime = body.labelMonth || []
+        state.averageEachResource = body.averageEachResource
+      })
+      .addCase(getOvertimeData.rejected, state => {
+        state.getOvertimeDataLoading = false
+      })
+    builder
       .addCase(saveDeliveryPlan.pending, state => {
         state.saveDeliveryPlanLoading = true
       })
@@ -501,7 +604,7 @@ const businessPlanDeliverySlice = createSlice({
     builder.addCase(getListDUByVersionDelivery.fulfilled, (state, action) => {
       state.loadingSummaryDeliveryPlan = false
 
-      const filteredItems = action.payload
+      state.listDUDelivery = action.payload
         ? action.payload
             .filter(item => item.groupId !== null)
             .map(item => ({
@@ -509,14 +612,6 @@ const businessPlanDeliverySlice = createSlice({
               groupId: item.groupId.toString(),
             }))
         : []
-
-      state.listDUDelivery = filteredItems
-      // Reset selection to the first DU whenever the list reloads
-      // (e.g. after switching Onsite/Offshore view mode).
-      state.deliveryUnitDataDelivery =
-        filteredItems.length > 0 ? filteredItems[0] : {}
-      state.duValueDelivery =
-        filteredItems.length > 0 ? filteredItems[0].groupId : undefined
     })
 
     builder.addCase(getListDUByVersionDelivery.rejected, (state, action) => {
@@ -599,6 +694,9 @@ export const {
   addCreateOtherExpense,
   removeUpdateOtherExpense,
   removeCreateOtherExpense,
+  updateExistedOvertimeItem,
+  addNewOvertimeItem,
+  removeOvertimeItem,
   setErrorDataSubmitDeliveryPlan,
   resetPayloadSaveDelivery,
   duValueDelivery,

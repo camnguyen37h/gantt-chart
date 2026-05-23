@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react'
 import { NotificationManager } from 'react-notifications'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import styled from 'styled-components'
 import {
   API_TYPE,
@@ -82,13 +82,14 @@ const BusinessPlanRevenue = forwardRef(
     const [loadingSave, setLoadingSave] = useState(false)
     const [keyReset, setKeyReset] = useState(0)
     const affixRef = useRef(null)
+    const store = useStore()
     const prevVersionRef = useRef(businessVersion)
     const revenueScope =
       viewMode === 'Offshore' ? SCOPE.REVENUE_OFFSHORE : SCOPE.REVENUE_ONSITE
     const revenuePerms = useBusinessPlanPermission(revenueScope)
     const canViewRevenue = revenuePerms.canViewScope
-    const canViewRevenueDetails = revenuePerms.canViewDetails
     const canEditRevenue = revenuePerms.canEditScope
+    const canViewRevenueDetails = revenuePerms.canViewDetails
     const {
       isSaveConfirmShowed: isSaveShowed,
       updateOtherRevenuesData: updateOtherRevenues,
@@ -233,12 +234,27 @@ const BusinessPlanRevenue = forwardRef(
       setLoadingSave(true)
       let hasSucceeded = false
       try {
-        const filterUpdateOtherRevenues = updateOtherRevenues.filter(
-          item => !deleteOtherRevenues.includes(item.revenueTypeSpecificId)
+        await new Promise(resolve => setTimeout(resolve, 550))
+
+        // Access fresh state from store instead of stale useSelector value
+        const latestState = store.getState().businessPlanRevenue
+        const {
+          updateOtherRevenuesData: latestUpdateOther,
+          deleteOtherRevenuesData: latestDeleteOther,
+          createOtherRevenuesData: latestCreateOther,
+          updateSellingExpensesData: latestUpdateSelling,
+          deleteSellingExpensesData: latestDeleteSelling,
+          createSellingExpensesData: latestCreateSelling,
+          dataSourceTableRevenue: latestMainOther,
+          dataSourceTableSellingExpenses: latestMainSelling,
+        } = latestState
+
+        const filterUpdateOtherRevenues = latestUpdateOther.filter(
+          item => !latestDeleteOther.includes(item.revenueTypeSpecificId)
         )
 
-        const filterUpdateSellingExpenses = updateSellingExpenses.filter(
-          item => !deleteSellingExpenses.includes(item.revenueTypeSpecificId)
+        const filterUpdateSellingExpenses = latestUpdateSelling.filter(
+          item => !latestDeleteSelling.includes(item.revenueTypeSpecificId)
         )
 
         const params = {
@@ -246,9 +262,9 @@ const BusinessPlanRevenue = forwardRef(
           duId: deliveryUnitDataRevenue && deliveryUnitDataRevenue.groupId,
           businessVersion: businessVersion,
           isSale: deliveryUnitDataRevenue && deliveryUnitDataRevenue.groupSale,
-          deletedItems: deleteOtherRevenues,
+          deletedItems: latestDeleteOther,
           updatedItems: filterUpdateOtherRevenues,
-          createdItems: createOtherRevenues,
+          createdItems: latestCreateOther,
         }
 
         const paramsSelling = {
@@ -256,15 +272,12 @@ const BusinessPlanRevenue = forwardRef(
           duId: deliveryUnitDataRevenue && deliveryUnitDataRevenue.groupId,
           businessVersion: businessVersion,
           isSale: deliveryUnitDataRevenue && deliveryUnitDataRevenue.groupSale,
-          deletedItems: deleteSellingExpenses,
+          deletedItems: latestDeleteSelling,
           updatedItems: filterUpdateSellingExpenses,
-          createdItems: createSellingExpenses,
+          createdItems: latestCreateSelling,
         }
 
-        const allCreatedItems = [
-          ...createOtherRevenues,
-          ...createSellingExpenses,
-        ]
+        const allCreatedItems = [...latestCreateOther, ...latestCreateSelling]
         const allUpdatedItems = [
           ...filterUpdateOtherRevenues,
           ...filterUpdateSellingExpenses,
@@ -273,20 +286,20 @@ const BusinessPlanRevenue = forwardRef(
         if (
           allCreatedItems.length > 0 ||
           allUpdatedItems.length > 0 ||
-          deleteOtherRevenues.length > 0 ||
-          deleteSellingExpenses.length > 0
+          latestDeleteOther.length > 0 ||
+          latestDeleteSelling.length > 0
         ) {
           const isValid = validateRevenueNames(
-            mainDataOtherRevenues,
-            mainDataSellingExpenses,
+            latestMainOther,
+            latestMainSelling,
             allCreatedItems,
             allUpdatedItems
           )
           if (isValid) {
             const apiPostRevenue = [
-              createOtherRevenues.length > 0 ||
+              latestCreateOther.length > 0 ||
               filterUpdateOtherRevenues.length > 0 ||
-              deleteOtherRevenues.length > 0
+              latestDeleteOther.length > 0
                 ? dispatch(
                     postBusinessPlanOtherRevenue({
                       params: params,
@@ -294,9 +307,9 @@ const BusinessPlanRevenue = forwardRef(
                     })
                   )
                 : null,
-              createSellingExpenses.length > 0 ||
+              latestCreateSelling.length > 0 ||
               filterUpdateSellingExpenses.length > 0 ||
-              deleteSellingExpenses.length > 0
+              latestDeleteSelling.length > 0
                 ? dispatch(
                     postBusinessPlanOtherRevenue({
                       params: paramsSelling,
@@ -363,7 +376,7 @@ const BusinessPlanRevenue = forwardRef(
           duSelected: { ...dataDu[0], groupId: parseInt(dataDu[0].groupId) },
         })
       )
-    }, [activePanel, businessVersion, dataDu, viewMode])
+    }, [activePanel, businessVersion, dataDu])
 
     return (
       <div>

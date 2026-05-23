@@ -1,4 +1,4 @@
-import React, {
+import {
   useState,
   useEffect,
   useCallback,
@@ -7,20 +7,8 @@ import React, {
   memo,
   useMemo,
 } from 'react'
-import {
-  Table,
-  Button,
-  InputNumber,
-  Icon,
-  Select,
-  Popover,
-  Tooltip,
-  Spin,
-  Dropdown,
-  Input,
-  Menu,
-} from 'antd'
-import { cloneDeep, debounce, set, uniqueId, isEqual } from 'lodash'
+import { Table, Button, Icon, Select, Tooltip, Spin, Input } from 'antd'
+import { cloneDeep, debounce, uniqueId, isEqual } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getListResource,
@@ -34,12 +22,11 @@ import {
 } from '../../../redux'
 import BUSINESS_PLAN_API from '../../../../service/api/businessPlan'
 import { ResponseStatusCode } from '../../../../service/constant'
-import Request from '../../../..//service/request'
+import Request from '../../../../service/request'
 import { NotificationManager } from 'react-notifications'
 import Decimal from 'decimal.js'
 import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber'
 import { formatInputNumber, parseInputNumber } from '../../../utils'
-import styled from 'styled-components'
 import { formatterMMValues, parserMMValues } from '../utils'
 import { v4 as uuid } from 'uuid'
 import {
@@ -55,29 +42,14 @@ import {
 } from '../constants'
 import moment from 'moment'
 import { useBusinessPlanDetails } from '../../../hooks'
+import { ALL_OPTION_VALUE } from '../../../constants'
+import {
+  StyledDisabledIcon,
+  StyledInputNumber,
+  StyledWarningDiv,
+} from '../styled'
 
 const { Option } = Select
-
-const StyledInputNumber = styled(InputNumber)`
-  .ant-input-number-handler-wrap {
-    display: none;
-  }
-`
-const StyledWarningDiv = styled.div`
-  background-color: #e5d166;
-  width: 100%;
-  height: 100%;
-  line-height: 50px;
-  position: relative;
-  z-index: 1;
-  cursor: default;
-`
-const StyledDisabledIcon = styled(Icon)`
-  svg {
-    color: #d9d9d9;
-    cursor: not-allowed;
-  }
-`
 const PAGE_SIZE = 20
 const PAGE_NUMBER = 1
 
@@ -424,7 +396,10 @@ const HeadCountTable = forwardRef((props, ref) => {
       {
         ...resourceInfoTableParams,
         businessPlanVersionId: Number(buId),
-        deliveryUnit: deliveryUnit.groupName || '',
+        deliveryUnit:
+          deliveryUnit.groupName === ALL_OPTION_VALUE
+            ? null
+            : deliveryUnit.groupName,
         pageNum: pageNum,
         pageSize: PAGE_SIZE,
       }
@@ -1420,7 +1395,6 @@ const HeadCountTable = forwardRef((props, ref) => {
           x: 'max-content',
           y: 400,
         }}
-        showHeader={data && data.length > 0}
       />
     </div>
   )

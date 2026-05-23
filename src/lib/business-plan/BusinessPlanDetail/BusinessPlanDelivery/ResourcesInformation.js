@@ -1,9 +1,8 @@
+import PropTypes from 'prop-types'
 import {
   Button,
   Checkbox,
   Col,
-  Dropdown,
-  Icon,
   Menu,
   Popover,
   Radio,
@@ -46,8 +45,9 @@ import {
   setDataResourcesInformation,
 } from '../../redux'
 import { debounce, isEqual } from 'lodash'
-import RESOURCE_INFORMATION_TYPE, {
+import {
   ACTION_NOT_AVAILABLE_MESSAGE,
+  RESOURCE_INFORMATION_TYPE,
   REVIEWING_WARNING_MESSAGE,
 } from './constants'
 import { ALL_OPTION_VALUE } from '../../constants'
@@ -132,18 +132,18 @@ const ResourcesInformation = forwardRef((props, ref) => {
       dispatch(getEmployeePosition({ mvv }))
       dispatch(getEmployeeRole())
     }
-  }, [canEdit, mvv])
+  }, [canEdit, mvv, dispatch])
 
-  const handleSearchResource = useCallback(
-    debounce(
+  const handleSearchResource = useMemo(
+    () => debounce(
       value => dispatch(getListResource({ name: value.toString().trim() })),
       1000
     ),
     [dispatch]
   )
 
-  const handleSearchPosition = useCallback(
-    debounce(
+  const handleSearchPosition = useMemo(
+    () => debounce(
       value =>
         dispatch(getEmployeePosition({ name: value.toString().trim(), mvv })),
       600
@@ -151,8 +151,8 @@ const ResourcesInformation = forwardRef((props, ref) => {
     [dispatch, mvv]
   )
 
-  const handlePositionDropdownClose = useCallback(
-    debounce(open => {
+  const handlePositionDropdownClose = useMemo(
+    () => debounce(open => {
       if (!open) dispatch(getEmployeePosition({ mvv }))
     }, 300),
     [dispatch, mvv]
@@ -320,7 +320,7 @@ const ResourcesInformation = forwardRef((props, ref) => {
       loadDataFromType: loadDataFromValue || '',
       deliveryUnit:
         deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE
-          ? undefined
+          ? null
           : deliveryUnitDataDelivery.groupName,
       viewType: valueRadio,
       resource: filters['resource'] ? [filters['resource']] : [],
@@ -339,6 +339,8 @@ const ResourcesInformation = forwardRef((props, ref) => {
     valueRadio,
     deliveryUnitDataDelivery,
     buId,
+    canView,
+    dispatch,
   ])
 
   useImperativeHandle(
@@ -455,3 +457,13 @@ const ResourcesInformation = forwardRef((props, ref) => {
 })
 
 export default ResourcesInformation
+
+ResourcesInformation.propTypes = {
+  isExpandPanel: PropTypes.bool.isRequired,
+  buId: PropTypes.number,
+  deliveryUnitDataDelivery: PropTypes.object,
+  isSaveShowed: PropTypes.bool,
+  mvv: PropTypes.bool,
+  canEdit: PropTypes.bool,
+  canView: PropTypes.bool,
+}

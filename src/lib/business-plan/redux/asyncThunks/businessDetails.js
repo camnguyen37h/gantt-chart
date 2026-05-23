@@ -28,7 +28,7 @@ export const getCompareBusinessPlanDetail = createAsyncThunk(
     if (result.status === ResponseStatusCode.success) {
       return result.data
     } else {
-      return NotificationManager.error(result.message)
+      return NotificationManager.error(result.message || result.errorMessage)
     }
   }
 )
@@ -54,7 +54,6 @@ export const getBusinessPlanDetailByViewMode = createAsyncThunk(
 export const fetchAllViewModesData = createAsyncThunk(
   'get/fetchAllViewModesData',
   async ({ id }) => {
-    // Only fetch the two source views — Total and OB are derived on the frontend.
     const viewModes = ['Onsite', 'Offshore']
     const results = await Promise.all(
       viewModes.map(view =>
@@ -72,4 +71,4 @@ export const fetchAllViewModesData = createAsyncThunk(
 )
 
 export const getBusinessPlanDetailVersion = id =>
-  Request(BUSINESS_PLAN_API.getBusinessPlanDetail(id))
+  BusinessPlanAPI.getBusinessPlanDetail(id)

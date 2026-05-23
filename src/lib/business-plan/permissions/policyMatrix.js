@@ -15,6 +15,7 @@ export const SCOPE = {
   DELIVERY_OFFSHORE: 'delivery_offshore',
   DELIVERY: 'deliveryPlan',
   SUBMIT: 'submit',
+  KPI_BONUS: 'kpi_bonus',
 }
 
 export const COL_CAT = {
@@ -68,6 +69,7 @@ export const PERMISSION_MATRIX = {
     [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.KPI_BONUS]: { edit: true },
     [SCOPE.SUBMIT]: {},
   },
 
@@ -82,7 +84,21 @@ export const PERMISSION_MATRIX = {
     [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.KPI_BONUS]: { edit: true },
     [SCOPE.SUBMIT]: {},
+  },
+
+  [BP_ROLES.DB_HR]: {
+    [SCOPE.TOTAL]: { columns: COL_CAT.ALL },
+    [SCOPE.OB]: { columns: COL_CAT.ALL },
+    [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL },
+    [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL },
   },
 
   [BP_ROLES.SALE_ONSITE]: {
@@ -101,22 +117,13 @@ export const PERMISSION_MATRIX = {
       sections: ['REVENUES', 'DELIVERY_EXPENSES'],
     },
     [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
-    [SCOPE.REVENUE_OFFSHORE]: {
-      columns: COL_CAT.ALL,
-      summaryOnly: true,
-      edit: true,
-    },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, summaryOnly: true },
     [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.SUBMIT]: {},
   },
 
   [BP_ROLES.SALE_OFFSHORE]: {
-    [SCOPE.OB]: {
-      sectionColumns: [COL_CAT.DU_ONSITE],
-      dataColumns: [COL_CAT.DU_ONSITE],
-      sections: ['REVENUES'],
-    },
     [SCOPE.OFFSHORE]: {
       columns: COL_CAT.ALL,
       edit: true,
@@ -181,14 +188,8 @@ export const PERMISSION_MATRIX = {
       dataColumns: [],
     },
     [SCOPE.OB]: { columns: COL_CAT.ALL },
-    [SCOPE.ONSITE]: {
-      columns: COL_CAT.ALL,
-    },
-    [SCOPE.OFFSHORE]: {
-      sectionColumns: [COL_CAT.TOTAL],
-      dataColumns: [],
-      sections: ['REVENUES', 'DELIVERY_EXPENSES'],
-    },
+    [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
     [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
     [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, summaryOnly: true },
     [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
@@ -202,23 +203,18 @@ export const PERMISSION_MATRIX = {
     },
     [SCOPE.OB]: { columns: COL_CAT.ALL },
     [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
-    [SCOPE.OFFSHORE]: {
-      sectionColumns: [COL_CAT.TOTAL],
-      dataColumns: [],
-      sections: ['REVENUES', 'DELIVERY_EXPENSES'],
-    },
-    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, summaryOnly: true },
-    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.DELIVERY_ONSITE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_ONSITE]: { columns: COL_CAT.ALL },
   },
 
   [BP_ROLES.G_LEAD_OFFSHORE]: {
-    [SCOPE.OFFSHORE]: {
-      columns: COL_CAT.ALL,
-    },
-    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL },
-    [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL },
+    [SCOPE.ONSITE]: { columns: COL_CAT.ALL },
+    [SCOPE.OFFSHORE]: { columns: COL_CAT.ALL },
+    [SCOPE.REVENUE_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
+    [SCOPE.DELIVERY_OFFSHORE]: { columns: COL_CAT.ALL, edit: true },
     [SCOPE.GENERAL_OFFSHORE]: { columns: COL_CAT.ALL },
   },
 

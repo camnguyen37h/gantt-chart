@@ -50,8 +50,8 @@ const BusinessPlanTabWrapper = ({
   onChange,
   activeTab = '1',
   availableModes,
-  hideTotalAndOB = false,
   tab,
+  hideTotalAndOB = false,
   ...rest
 }) => {
   const visibleOptions = VIEW_OPTIONS.filter(option => {

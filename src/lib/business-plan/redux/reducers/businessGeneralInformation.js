@@ -160,9 +160,9 @@ export const businessGeneralInformationSlice = createSlice({
       (state, { payload }) => {
         state.businessPlanSettingMaxKpiSetting = payload
           ? payload.reduce((acc, { settingConfigKey, value }) => {
-              acc[settingConfigKey] = value
-              return acc
-            }, {})
+            acc[settingConfigKey] = value
+            return acc
+          }, {})
           : null
       }
     )

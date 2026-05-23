@@ -106,6 +106,14 @@ export const parseInputNumber = value => {
   return res ? `${res[1]}${res[2] || ''}` : ''
 }
 
+export const parseInputNumberMM = value => {
+  if (value === null || value === '') return ''
+
+  const cleaned = value.replace(/[-,]/g, '')
+  const res = cleaned.match(/^(\d{1,15})(\.(\d{0,6})?)?/)
+  return res ? `${res[1]}${res[2] || ''}` : ''
+}
+
 const getProjectCodeByViewMode = (viewMode, arrayMap) => {
   if (arrayMap && arrayMap[viewMode]) {
     return arrayMap[viewMode]
@@ -132,7 +140,8 @@ const mergeApprovers = (existing, incoming, gKey, currentBuId) => {
         result[idx] = { ...result[idx], mergeApprove: true }
       }
     } else {
-      ldapIndexMap[`${approver.ldap}|${approver.departmentName}`] = result.length
+      ldapIndexMap[`${approver.ldap}|${approver.departmentName}`] =
+        result.length
       result.push({ ...approver })
     }
   })
@@ -167,17 +176,27 @@ export const mergeStepsByPosition = (steps, currentBuId) => {
 export const getDisplayKey = item => item && item.compareKey
 
 export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
+  const normalizedView = viewMode ? viewMode.toLowerCase() : null
+
+  let filteredColumnLabels = columnLabels
+  if (normalizedView === 'ob') {
+    filteredColumnLabels = columnLabels.filter(
+      col =>
+        !col.columnKey.startsWith('SALE') &&
+        !col.columnKey.startsWith('INTERNAL') &&
+        !col.columnKey.startsWith('DELIVERY_UNIT')
+    )
+  }
+
   const keyCounts = {}
-  for (const col of columnLabels) {
+  for (const col of filteredColumnLabels) {
     keyCounts[col.columnKey] = (keyCounts[col.columnKey] || 0) + 1
   }
 
   let saleCount = 0
   const duOccurrence = {}
 
-  const normalizedView = viewMode ? viewMode.toLowerCase() : null
-
-  const resultColumns = columnLabels.map(col => {
+  const resultColumns = filteredColumnLabels.map(col => {
     const isDuplicate = keyCounts[col.columnKey] > 1
 
     let colCategory
@@ -195,9 +214,9 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
           colCategory = 'du_offshore'
         } else if (normalizedView === 'onsite') {
           colCategory = 'du_onsite'
-        } else if (col.mvvType && col.mvvType.toLowerCase() === 'offshore') {
+        } else if (col.mvvType === 'Offshore') {
           colCategory = 'du_offshore'
-        } else if (col.mvvType && col.mvvType.toLowerCase() === 'onsite') {
+        } else if (col.mvvType === 'Onsite') {
           colCategory = 'du_onsite'
         } else if (isDuplicate) {
           const occ = (duOccurrence[col.columnKey] =
@@ -232,8 +251,8 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
   })
 
   const compareKeysByOriginal = new Map()
-  for (let i = 0; i < columnLabels.length; i++) {
-    const orig = columnLabels[i].columnKey
+  for (let i = 0; i < filteredColumnLabels.length; i++) {
+    const orig = filteredColumnLabels[i].columnKey
     const ck = resultColumns[i].compareKey
     const arr = compareKeysByOriginal.get(orig)
     if (arr) arr.push(ck)
@@ -246,13 +265,24 @@ export const normalizeColumnKeys = (columnLabels, sectionList, viewMode) => {
       const cellOcc = {}
       return {
         ...row,
-        cellList: row.cellList.map(cell => {
-          const cks = compareKeysByOriginal.get(cell.columnKey)
-          if (!cks) return cell
-          const occ = (cellOcc[cell.columnKey] =
-            (cellOcc[cell.columnKey] || 0) + 1)
-          return { ...cell, compareKey: cks[occ - 1] }
-        }),
+        cellList: row.cellList
+          .filter(cell => {
+            if (normalizedView === 'ob') {
+              return (
+                !cell.columnKey.startsWith('SALE') &&
+                !cell.columnKey.startsWith('INTERNAL') &&
+                !cell.columnKey.startsWith('DELIVERY_UNIT')
+              )
+            }
+            return true
+          })
+          .map(cell => {
+            const cks = compareKeysByOriginal.get(cell.columnKey)
+            if (!cks) return cell
+            const occ = (cellOcc[cell.columnKey] =
+              (cellOcc[cell.columnKey] || 0) + 1)
+            return { ...cell, compareKey: cks[occ - 1] }
+          }),
       }
     }),
   }))

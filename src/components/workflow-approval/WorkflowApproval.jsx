@@ -109,7 +109,7 @@ const WorkflowApproval = ({
 
   useEffect(() => {
     getSpecificPermission()
-  }, [])
+  }, [getSpecificPermission])
 
   const isEmptyListDu = !listDU || Object.keys(listDU).length === 0
 

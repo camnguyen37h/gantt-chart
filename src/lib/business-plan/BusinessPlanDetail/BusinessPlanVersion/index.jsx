@@ -1,10 +1,9 @@
 import { Button, Dropdown, Icon, Menu, Modal, Select, Tooltip } from 'antd'
 import React, { useCallback, useState } from 'react'
-import cloneDeep from 'lodash/cloneDeep'
+import { cloneDeep } from 'lodash'
 import styled from 'styled-components'
 import { statusBusinessPlanDetail } from '../constant'
-import { canSubmit } from '../../permissions/viewPermissions'
-import { useBusinessPlanDetails } from '../../hooks'
+import { useBusinessPlanDetails, useBusinessPlanPermission } from '../../hooks'
 import { withRouter } from 'react-router'
 import { checkRolePermission } from '../../../../components/common/checkRolePermission'
 import {
@@ -20,6 +19,9 @@ import {
 } from '../../redux'
 import { NotificationManager } from 'react-notifications'
 import { getMissingFieldsArray } from '../BusinessPlanDelivery/utils'
+import { canSubmit } from '../../permissions/viewPermissions'
+import BUSINESS_PLAN_API from '../../../service/api/businessPlan'
+import Request from '../../../service/request'
 
 const StyledSelect = styled(Select)`
   .ant-select-selection {
@@ -47,9 +49,9 @@ function BusinessPlanVersion({
   const [nextId, setNextId] = useState()
   const {
     saveDraft,
-    isSaveShowed,
     versionId,
     listVersions,
+    isSaveShowed,
     generalInformationParams,
     originalBusinessPlanItems,
     columns: columnLabels,
@@ -57,9 +59,8 @@ function BusinessPlanVersion({
     errorMessage,
   } = useBusinessPlanDetails()
 
-  const { generalInfos, listGeneralInformation, mvvLocationTypeIdMap, userRoles } = useSelector(
-    state => state.businessGeneralInformation
-  )
+  const { generalInfos, listGeneralInformation, mvvLocationTypeIdMap } =
+    useSelector(state => state.businessGeneralInformation)
 
   const currentViewMode = useSelector(
     state => state.businessPlanDetails.viewMode
@@ -67,12 +68,7 @@ function BusinessPlanVersion({
   const businessPlanVersionId =
     +mvvLocationTypeIdMap[currentViewMode] || parseInt(match.params.buId)
 
-  // Mock user for demo
-  const userPOA = JSON.parse(localStorage.getItem('userPOA')) || {
-    userName: 'Demo User',
-    userId: 1,
-  }
-  const { userName } = userPOA
+  const { userName } = JSON.parse(localStorage.getItem('userPOA'))
 
   const buId = Number(match.params.buId)
   const currentMVVInfo = generalInfos.find(function (info) {
@@ -99,14 +95,6 @@ function BusinessPlanVersion({
     ? listVersions[listVersions.length - 1].versionId === versionId
     : null
 
-  const generalInfoIdSet = new Set(Object.values(mvvLocationTypeIdMap))
-  const hasLinkedMvvMissing = generalInfos.some(
-    info => info.mvvLinkedId != null && !generalInfoIdSet.has(info.mvvLinkedId)
-  )
-
-  const { listDuRevenue } = useSelector(state => state.businessPlanRevenue)
-  const { listDUDelivery } = useSelector(state => state.businessPlanDelivery)
-
   const isSaveShowedRevenue = useSelector(
     state => state.businessPlanRevenue.isSaveConfirmShowed
   )
@@ -120,18 +108,21 @@ function BusinessPlanVersion({
     ActivityKeyConstants.EXPORT_BUSINESS_PLAN
   )
 
-  const isCreateNewVersion = checkRolePermission(
-    SourceConstants.BUSINESS_PLAN_DETAIL,
-    ActivityKeyConstants.CREATE_NEW_VERSION
-  )
-
   const isSubmit = checkRolePermission(
     SourceConstants.BUSINESS_PLAN_DETAIL,
     ActivityKeyConstants.SUBMIT_BUSINESS_PLAN
   )
 
+  const { userRoles } = useBusinessPlanPermission()
+  const generalInfoIdSet = new Set(Object.values(mvvLocationTypeIdMap))
+  const hasLinkedMvvMissing = generalInfos.some(
+    info => info.mvvLinkedId != null && !generalInfoIdSet.has(info.mvvLinkedId)
+  )
   const canSubmitBP =
-    isSubmit || (generalInfos.length === 1 ? isAMSubmit : canSubmit(userRoles))
+    isSubmit ||
+    (Object.keys(mvvLocationTypeIdMap).length === 1
+      ? isAMSubmit
+      : canSubmit(userRoles))
 
   const updateIsSaveShowedRevenue = useCallback(
     value => {
@@ -152,7 +143,14 @@ function BusinessPlanVersion({
       setChangeVersionModalVisible(true)
       setNextId(id)
     } else {
-      history.push(`/delivery/business-plan-list/${id}/business-plan-detail`)
+      const checkUserRoleNextVersion = await Request(
+        BUSINESS_PLAN_API.getUserRoleBusinessPlan(id)
+      )
+      if (checkUserRoleNextVersion.status === ResponseStatusCode.success) {
+        window.location.href = `/delivery/business-plan-list/${id}/business-plan-detail`
+      } else {
+        NotificationManager.error(checkUserRoleNextVersion.message)
+      }
     }
   }
 
@@ -181,7 +179,9 @@ function BusinessPlanVersion({
       businessPlanVersionId &&
       (currentViewMode === 'Onsite' || currentViewMode === 'Offshore')
     ) {
-      const projectCode = (generalInfos.find(item => +item.id === businessPlanVersionId) || {}).projectCode
+      const projectCode = (
+        generalInfos.find(item => +item.id === businessPlanVersionId) || {}
+      ).projectCode
       const sectionList = cloneDeep(originalBusinessPlanItems)
       sectionList.forEach(section => {
         section.rowLabels = section.rowLabels.filter(
@@ -215,17 +215,29 @@ function BusinessPlanVersion({
     const res = await saveDraft(params)
     setChangeVersionModalVisible(false)
     if (res) {
-      history.push(
-        `/delivery/business-plan-list/${nextId}/business-plan-detail`
+      const checkUserRoleNextVersion = await Request(
+        BUSINESS_PLAN_API.getUserRoleBusinessPlan(nextId)
       )
+      if (checkUserRoleNextVersion.status === ResponseStatusCode.success) {
+        window.location.href = `/delivery/business-plan-list/${nextId}/business-plan-detail`
+      } else {
+        NotificationManager.error(checkUserRoleNextVersion.message)
+      }
     }
   }
 
-  const onCancel = () => {
+  const onCancel = async () => {
     setChangeVersionModalVisible(false)
     isSaveShowedRevenue === true && updateIsSaveShowedRevenue(false)
     isSaveShowedDelivery === true && updateIsSaveShowedDelivery(false)
-    history.push(`/delivery/business-plan-list/${nextId}/business-plan-detail`)
+    const checkUserRoleNextVersion = await Request(
+      BUSINESS_PLAN_API.getUserRoleBusinessPlan(nextId)
+    )
+    if (checkUserRoleNextVersion.status === ResponseStatusCode.success) {
+      window.location.href = `/delivery/business-plan-list/${nextId}/business-plan-detail`
+    } else {
+      NotificationManager.error(checkUserRoleNextVersion.message)
+    }
   }
 
   const handleSubmit = async () => {
@@ -304,7 +316,12 @@ function BusinessPlanVersion({
             </Dropdown>
           )}
           {isDraft && canSubmitBP && (
-            <Tooltip title={renderTooltipButton(errorMessage)}>
+            <Tooltip
+              title={renderTooltipButton(
+                hasLinkedMvvMissing
+                  ? 'Unable to submit. One of your MVV has not been activated. Please activate to proceed.'
+                  : errorMessage
+              )}>
               <Button
                 type="primary"
                 onClick={() => setSubmitModalVisible(true)}
@@ -314,13 +331,21 @@ function BusinessPlanVersion({
               </Button>
             </Tooltip>
           )}
-          {isApproved && isLatest && isCreateNewVersion && (
-            <Button
-              type="primary"
-              onClick={onCreateNewVersion}
-              loading={loadingSubmit}>
-              Create new version
-            </Button>
+          {isApproved && isLatest && canSubmitBP && (
+            <Tooltip
+              title={renderTooltipButton(
+                hasLinkedMvvMissing
+                  ? 'Unable to create new version. One of your MVV has not been activated. Please activate to proceed.'
+                  : ''
+              )}>
+              <Button
+                type="primary"
+                onClick={onCreateNewVersion}
+                loading={loadingSubmit}
+                disabled={hasLinkedMvvMissing}>
+                Create new version
+              </Button>
+            </Tooltip>
           )}
         </div>
         <Modal

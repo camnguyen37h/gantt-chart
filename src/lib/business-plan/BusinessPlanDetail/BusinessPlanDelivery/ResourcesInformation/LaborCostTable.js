@@ -7,6 +7,7 @@ import { NotificationManager } from 'react-notifications'
 import { formatFloatNumber } from '../../../../utils/format-utils/ConvertNumber'
 import Decimal from 'decimal.js'
 import { RESOURCE_TABLE_WIDTH, RESOURCE_TYPE_TOOLTIP } from '../constants'
+import { ALL_OPTION_VALUE } from '../../../constants'
 
 const PAGE_SIZE = 20
 const PAGE_NUMBER = 1
@@ -70,11 +71,18 @@ const LaborCostTable = ({ mainColumns }) => {
     if (loadingTable || !hasMore) return
     setLoadingTable(true)
 
-    const result = await BusinessPlanAPI.getResourcesInformationDeliveryPlan({
-      ...resourceInfoTableParams,
-      pageNum: pageNum,
-      pageSize: PAGE_SIZE,
-    })
+    const result = await Request(
+      BUSINESS_PLAN_API.getResourcesInformationDeliveryPlan,
+      {
+        ...resourceInfoTableParams,
+        deliveryUnit:
+          resourceInfoTableParams.deliveryUnit === ALL_OPTION_VALUE
+            ? null
+            : resourceInfoTableParams.deliveryUnit,
+        pageNum: pageNum,
+        pageSize: PAGE_SIZE,
+      }
+    )
 
     if (result.status === ResponseStatusCode.success) {
       setData(prevData => [
@@ -290,7 +298,6 @@ const LaborCostTable = ({ mainColumns }) => {
         }}
         loading={loadingDataResourcesInformation || loadingTable}
         rowKey={record => record.deliveryMemberId}
-        showHeader={data && data.length > 0}
       />
     </div>
   )

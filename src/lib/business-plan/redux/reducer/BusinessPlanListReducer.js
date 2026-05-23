@@ -29,6 +29,7 @@ export const BusinessPlanListSlice = createSlice({
     listBusinessPlan: {},
     loadingFilter: false,
     loadingTable: false,
+    loadingExport: false,
     paramsSearch: {},
   },
   reducers: {
@@ -56,7 +57,7 @@ export const BusinessPlanListSlice = createSlice({
     })
     builder.addCase(getBusinessPlanListStatus.fulfilled, (state, action) => {
       state.loadingFilter = false
-      state.listStatusSearched = action.payload
+      state.listStatusSearched = action.payload || []
       state.listStatus = action.payload
     })
     builder.addCase(getBusinessPlanListStatus.rejected, (state, action) => {

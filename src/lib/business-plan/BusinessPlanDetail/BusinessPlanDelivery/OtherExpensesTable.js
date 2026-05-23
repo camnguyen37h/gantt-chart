@@ -1,6 +1,5 @@
-import moment from 'moment'
-import { cloneDeep, debounce, set, uniqueId } from 'lodash'
-import React, {
+import { uniqueId } from 'lodash'
+import {
   forwardRef,
   memo,
   useCallback,
@@ -11,8 +10,8 @@ import React, {
   useState,
 } from 'react'
 import { NotificationManager } from 'react-notifications'
-import { Icon, Input, InputNumber, Table, Tooltip } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+import { Icon, Input, Table, Tooltip } from 'antd'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import {
   setIsSaveShowedDeliveryPlan,
   getOtherExpensesTable,
@@ -23,7 +22,6 @@ import {
 } from '../../redux'
 import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import { formatInputNumber, parseInputNumber } from '../../utils'
-import styled from 'styled-components'
 import {
   ACTION_NOT_AVAILABLE_MESSAGE,
   DUPLICATED_COSTNAMES_MESSAGE,
@@ -34,27 +32,15 @@ import {
 } from './constants'
 import { ALL_OPTION_VALUE } from '../../constants'
 import { useBusinessPlanDetails } from '../../hooks'
-const StyledInputNumber = styled(InputNumber)`
-  .ant-input-number-handler-wrap {
-    display: none;
-  }
-  .ant-input-number-input {
-    text-align: center;
-  }
-`
-const StyledDisabledIcon = styled(Icon)`
-  svg {
-    color: #d9d9d9;
-    cursor: not-allowed;
-  }
-`
-
+import { StyledDisabledIcon, StyledInputNumber } from './styled'
+import { useElementSize } from '../../../../hooks'
 const OtherExpensesTable = forwardRef(
   (
     { isExpandPanel, canEdit, canView, buId, deliveryUnitDataDelivery },
     ref
   ) => {
     const dispatch = useDispatch()
+    const store = useStore()
     const {
       dataListOtherExpenses,
       labelMonthOtherExpenses,
@@ -77,6 +63,13 @@ const OtherExpensesTable = forwardRef(
     const [listDuplicated, setListDuplicated] = useState({})
     const [data, setData] = useState([])
     const prevBuIdRef = useRef(buId)
+    const dataRef = useRef([])
+
+    const { containerRef, size } = useElementSize()
+
+    useEffect(() => {
+      dataRef.current = data
+    }, [data])
 
     const updateIsSaveConfirmShowed = useCallback(
       value => {
@@ -108,7 +101,7 @@ const OtherExpensesTable = forwardRef(
           pageSize: 10,
         })
       )
-    }, [deliveryUnitDataDelivery, buId, isExpandPanel])
+    }, [deliveryUnitDataDelivery, buId, isExpandPanel, dispatch])
 
     useEffect(() => {
       if (dataListOtherExpenses.length === 0) {
@@ -122,6 +115,7 @@ const OtherExpensesTable = forwardRef(
           otherExpenseId: item.otherExpenseId,
           expenseCategoriesEnum: item.expenseCategoriesEnum,
           totalExpenseValue: item.totalExpenseValue || '',
+
           children:
             (item.categoriesDataList &&
               item.categoriesDataList.map(child => ({
@@ -209,78 +203,93 @@ const OtherExpensesTable = forwardRef(
       [dispatch]
     )
 
-    const handleChangeCostName = debounce((record, field, value) => {
-      updateIsSaveConfirmShowed(true)
-      const parentRow = data.find(row => row.key === record.parentKey)
-      const isUpdate = record.key.includes(
-        OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME
-      )
+    const handleChangeCostName = useCallback(
+      (record, field, value) => {
+        updateIsSaveConfirmShowed(true)
+        const parentRow = dataRef.current.find(
+          row => row.key === record.parentKey
+        )
+        if (!parentRow) return
 
-      if (value !== null && value !== undefined && value.trim() !== '') {
-        setListInvalid(prevErrors => ({
-          ...prevErrors,
-          [record.key]: {
-            ...prevErrors[record.key],
-            costName: !value,
-          },
-        }))
-        setListDuplicated(prevErrors => {
-          const newRowErrors = { ...prevErrors }
-          delete newRowErrors[record.parentKey]
-          return newRowErrors
-        })
-      }
+        const isUpdate = record.key.includes(
+          OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME
+        )
 
-      handleSave(
-        {
-          expenseCategoriesEnum: parentRow.expenseCategoriesEnum,
-          totalExpenseValue: parentRow.totalExpenseValue,
-          otherExpenseId: parentRow.otherExpenseId,
-          categoriesDataList: [
-            {
-              key: record.key,
-              otherExpenseId: record.otherExpenseId,
-              parentKey: record.parentKey,
-              costName: value.trim(),
+        if (value !== null && value !== undefined && value.trim() !== '') {
+          setListInvalid(prevErrors => ({
+            ...prevErrors,
+            [record.key]: {
+              ...prevErrors[record.key],
+              costName: !value,
             },
-          ],
-        },
-        isUpdate
-      )
-    }, 300)
+          }))
+          setListDuplicated(prevErrors => {
+            const newRowErrors = { ...prevErrors }
+            delete newRowErrors[record.parentKey]
+            return newRowErrors
+          })
+        }
 
-    const handleChangeRow = debounce((record, month, value) => {
-      if (isNaN(value) || value === null || value === undefined) return
-      updateIsSaveConfirmShowed(true)
-      const parentRow = data.find(row => row.key === record.parentKey)
-      const { expenseCategoriesEnum, totalExpenseValue, otherExpenseId } =
-        parentRow
+        handleSave(
+          {
+            expenseCategoriesEnum: parentRow.expenseCategoriesEnum,
+            totalExpenseValue: parentRow.totalExpenseValue,
+            otherExpenseId: parentRow.otherExpenseId,
+            categoriesDataList: [
+              {
+                key: record.key,
+                otherExpenseId: record.otherExpenseId,
+                parentKey: record.parentKey,
+                costName: value.trim(),
+              },
+            ],
+          },
+          isUpdate
+        )
+      },
+      [handleSave, updateIsSaveConfirmShowed]
+    )
 
-      const isUpdate = record.key.includes(
-        OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME
-      )
-      handleSave(
-        {
-          expenseCategoriesEnum,
-          totalExpenseValue,
-          otherExpenseId,
-          categoriesDataList: [
-            {
-              key: record.key,
-              parentKey: record.parentKey,
-              otherExpenseId: record.otherExpenseId,
-              otherExpensesMonthlyDTO: {
-                [month]: {
-                  ...record.otherExpensesMonthlyDTO[month],
-                  value,
+    const handleChangeRow = useCallback(
+      (record, month, value) => {
+        if (Number.isNaN(value) || value === null || value === undefined) return
+        updateIsSaveConfirmShowed(true)
+
+        const parentRow = dataRef.current.find(
+          row => row.key === record.parentKey
+        )
+        if (!parentRow) return
+
+        const { expenseCategoriesEnum, totalExpenseValue, otherExpenseId } =
+          parentRow
+
+        const isUpdate = record.key.includes(
+          OTHER_EXPENSES_KEYS.UPDATE_EXPENSE_COSTNAME
+        )
+        handleSave(
+          {
+            expenseCategoriesEnum,
+            totalExpenseValue,
+            otherExpenseId,
+            categoriesDataList: [
+              {
+                key: record.key,
+                parentKey: record.parentKey,
+                otherExpenseId: record.otherExpenseId,
+                otherExpensesMonthlyDTO: {
+                  [month]: {
+                    ...record.otherExpensesMonthlyDTO[month],
+                    value,
+                  },
                 },
               },
-            },
-          ],
-        },
-        isUpdate
-      )
-    }, 300)
+            ],
+          },
+          isUpdate
+        )
+      },
+      [handleSave, updateIsSaveConfirmShowed]
+    )
 
     const handleDeleteSubData = subRow => {
       if (!subRow) return
@@ -313,18 +322,25 @@ const OtherExpensesTable = forwardRef(
       () => ({
         validate,
       }),
-      [listCreateOtherExpenses, listUpdateOtherExpenses, data]
+      [listCreateOtherExpenses, listUpdateOtherExpenses, data, validate]
     )
 
     const validate = () => {
       let allValid = true
       if (!isExpandPanel) return allValid
+
+      // Access fresh state from store, not cached useSelector value
+      const latestState = store.getState().businessPlanDelivery
+      const latestCreate =
+        latestState.dataCreateRequest.listOtherExpensesTableData
+      const latestUpdate =
+        latestState.dataUpdateRequest.listOtherExpensesTableData
+
       const existedDatas = data.flatMap(row => row.children)
 
-      const editingRows = [
-        ...listCreateOtherExpenses,
-        ...listUpdateOtherExpenses,
-      ].flatMap(row => row.categoriesDataList)
+      const editingRows = [...latestCreate, ...latestUpdate].flatMap(
+        row => row.categoriesDataList
+      )
       const invalidList = editingRows.reduce((acc, row) => {
         if (row.hasOwnProperty('costName') && !row.costName) {
           if (!acc[row.key]) acc[row.key] = {}
@@ -355,7 +371,7 @@ const OtherExpensesTable = forwardRef(
 
       editingRows.forEach(row => {
         if (row.costName) {
-          const { key, parentKey, costName } = row
+          const { parentKey, costName } = row
           if (!costNameMap[parentKey]) {
             costNameMap[parentKey] = {}
           }
@@ -427,6 +443,21 @@ const OtherExpensesTable = forwardRef(
         {}
       )
     }, [dataListOtherExpenses])
+
+    const calculatedMonthWidth = useMemo(() => {
+      const monthWidth =
+        labelMonthOtherExpenses.length > 0
+          ? Math.max(
+              (size.width -
+                2 * OTHER_EXPENSE_TABLE_WIDTH.ACTION -
+                OTHER_EXPENSE_TABLE_WIDTH.EXPENSE_CATEGORIES -
+                OTHER_EXPENSE_TABLE_WIDTH.TOTAL_EXPENSE) /
+                labelMonthOtherExpenses.length,
+              OTHER_EXPENSE_TABLE_WIDTH.MONTH
+            )
+          : 0
+      return monthWidth
+    }, [size, labelMonthOtherExpenses])
 
     const columnsConfig = useCallback(
       (expandedKeys, toggleExpandedKeys) => {
@@ -527,7 +558,7 @@ const OtherExpensesTable = forwardRef(
                       <Input
                         className={isError ? 'input-error' : ''}
                         defaultValue={record.costName}
-                        onChange={e =>
+                        onBlur={e =>
                           handleChangeCostName(
                             record,
                             'costName',
@@ -568,14 +599,6 @@ const OtherExpensesTable = forwardRef(
           },
           ...(labelMonthOtherExpenses.length > 0
             ? labelMonthOtherExpenses.map(date => {
-                const monthWidth = Math.max(
-                  (OTHER_EXPENSE_TABLE_WIDTH.TABLE -
-                    2 * OTHER_EXPENSE_TABLE_WIDTH.ACTION -
-                    OTHER_EXPENSE_TABLE_WIDTH.EXPENSE_CATEGORIES -
-                    OTHER_EXPENSE_TABLE_WIDTH.TOTAL_EXPENSE) /
-                    labelMonthOtherExpenses.length,
-                  OTHER_EXPENSE_TABLE_WIDTH.MONTH
-                )
                 return {
                   title: (
                     <span
@@ -583,7 +606,8 @@ const OtherExpensesTable = forwardRef(
                         totalMonthValues[date] &&
                         formatFloatNumber(totalMonthValues[date])
                       }>
-                      {isNaN(totalMonthValues[date]) || !totalMonthValues[date]
+                      {Number.isNaN(totalMonthValues[date]) ||
+                      !totalMonthValues[date]
                         ? ''
                         : formatFloatNumber(totalMonthValues[date])}
                     </span>
@@ -597,7 +621,7 @@ const OtherExpensesTable = forwardRef(
                       key: date,
                       align: 'center',
                       ellipsis: true,
-                      width: monthWidth,
+                      width: calculatedMonthWidth,
                       render: (_, record) => {
                         const defaultValue =
                           (record.parentKey &&
@@ -620,9 +644,10 @@ const OtherExpensesTable = forwardRef(
                                 defaultValue={defaultValue}
                                 formatter={formatInputNumber}
                                 parser={parseInputNumber}
-                                onChange={value =>
-                                  handleChangeRow(record, date, value)
-                                }
+                                onBlur={e => {
+                                  const val = parseInputNumber(e.target.value)
+                                  handleChangeRow(record, date, val)
+                                }}
                               />
                             ) : (
                               <span title={formatFloatNumber(defaultValue)}>
@@ -651,15 +676,19 @@ const OtherExpensesTable = forwardRef(
         labelMonthOtherExpenses,
         totalMonthValues,
         totalMonthRow,
-        // listCreateOtherExpenses,
-        // listUpdateOtherExpenses,
         handleChangeCostName,
         handleChangeRow,
+        duValueDelivery,
+        handleAddSubTableRow,
+        handleDeleteSubData,
+        status,
+        toggleExpandAll,
+        calculatedMonthWidth,
       ]
     )
 
     return (
-      <div>
+      <div ref={containerRef}>
         <Table
           className="other-expenses-table"
           rowClassName={record =>
@@ -682,7 +711,6 @@ const OtherExpensesTable = forwardRef(
             y: 400,
           }}
           loading={getOtherExpensesTableLoading}
-          showHeader={data && data.length > 0}
         />
       </div>
     )

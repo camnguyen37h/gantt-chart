@@ -6,7 +6,6 @@ import { formatFloatNumber } from '../../../utils/format-utils/ConvertNumber'
 import {
   forwardRef,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useState,
 } from 'react'

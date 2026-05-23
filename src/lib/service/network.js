@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { NotificationManager } from 'react-notifications'
 import { HttpStatus } from '../../../constants/HttpStatus'
-import LoginActions from '@/actions/LoginActions'
+// import LoginActions from '@/actions/LoginActions'
 import { parseParams } from './request'
 import { processResponse } from './encrypt'
 
@@ -47,7 +47,7 @@ const attachResponseInterceptor = (instance) => {
       
       if (response && response.status === HttpStatus.UNAUTHORIZED) {
         console.warn('⚠️ Mock Auth: Unauthorized detected, logging out...')
-        LoginActions.signOut()
+        // LoginActions.signOut()
         return
       }
 

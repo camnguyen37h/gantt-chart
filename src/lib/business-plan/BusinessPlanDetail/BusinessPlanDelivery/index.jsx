@@ -1,3 +1,4 @@
+import './style.css'
 import { checkRolePermission } from '../../../../components/common/checkRolePermission'
 import Loading from '../../../../components/common/Loading/Loading'
 import { ALL_OPTION, ALL_OPTION_VALUE } from '../../constants'
@@ -27,16 +28,15 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
 } from 'react'
 import { NotificationManager } from 'react-notifications'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import {
   getLocationExchangeRate,
   getOtherExpensesTable,
+  getOvertimeData,
   getResourcesInformationDeliveryPlan,
   getSummaryDeliveryPlan,
   resetSaveDeliveryPlanParams,
@@ -55,68 +55,37 @@ import { statusBusinessPlanDetail } from '../constant'
 import DeliveryPlanReference from './DeliveryPlanReference'
 import OtherExpensesTable from './OtherExpensesTable'
 import ResourcesInformation from './ResourcesInformation'
-import './style.css'
+import { DELIVERY_PLAN_SECTION } from './constants'
+import { StyledAffix, StyledPanelHeader } from './styled'
+import Overtime from './Overtime'
 
 const { Panel } = Collapse
-const DEFAULT_PANELS = ['1']
+const DEFAULT_PANELS = [DELIVERY_PLAN_SECTION.SUMMARY]
 const customPanelStyle = {
   border: 0,
   overflow: 'hidden',
 }
 
-const StyledAffix = styled.div`
-  position: fixed;
-  bottom: 0;
-  background: #ffffff;
-  width: calc(100% - 280px);
-  transition: transform 1s;
-  transform: translateY(100%);
-  z-index: 99;
-  left: 240px;
-  &.active {
-    transform: translateY(0);
-  }
-
-  .sidebar-collapsed & {
-    width: calc(100% - 180px);
-    left: 140px;
-  }
-
-  .affix-content {
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    & > span {
-      color: var(--primary-blue);
-    }
-  }
-`
 const CustomDescription = ({ title, value }) => {
   return (
-    <Row>
+    <Row className="d-flex align-items-center">
       <Col span={5} style={{ marginBottom: 4 }}>
         {title}
       </Col>
-      <Col span={7}>
-        <Row type="flex" align="middle">
-          <Col span={4} type="flex" align="middle">
-            <Tooltip title={DeliverySummaryTooltip[title]}>
-              <Icon
-                type="question-circle"
-                style={{ cursor: 'pointer', padding: '4px' }}
-              />
-            </Tooltip>
-          </Col>
-          <Col span={7}>
-            <div style={{ textAlign: 'left' }}>
-              {value < 0
-                ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
-                : formatFloatNumber(value, 0, 3)}
-            </div>
-          </Col>
-        </Row>
+      <Col span={1} type="flex" align="middle">
+        <Tooltip title={DeliverySummaryTooltip[title]}>
+          <Icon
+            type="question-circle"
+            style={{ cursor: 'pointer', padding: '4px' }}
+          />
+        </Tooltip>
+      </Col>
+      <Col span={6}>
+        <div style={{ textAlign: 'left' }}>
+          {value < 0
+            ? `(${formatFloatNumber(Math.abs(value), 0, 3)})`
+            : formatFloatNumber(value, 0, 3)}
+        </div>
       </Col>
     </Row>
   )
@@ -185,11 +154,13 @@ const DeliverySummary = ({ canViewDelivery }) => {
 const BusinessPlanDelivery = forwardRef(
   ({ buId, status, dataDu, mvv, viewMode }, ref) => {
     const dispatch = useDispatch()
+    const store = useStore()
 
     const affixRef = useRef(null)
     const deliveryPlanReferenceRef = useRef(null)
     const deliveryPlanOtherExpensesRef = useRef(null)
     const resourcesInformationRef = useRef(null)
+    const overtimeExpenseRef = useRef(null)
 
     const deliveryScope =
       viewMode === 'Offshore' ? SCOPE.DELIVERY_OFFSHORE : SCOPE.DELIVERY_ONSITE
@@ -205,9 +176,6 @@ const BusinessPlanDelivery = forwardRef(
     const { fetchUserActionHistory } = useBusinessPlanHistoryService()
     const {
       resourceInfoTableParams,
-      dataCreateRequest,
-      dataUpdateRequest,
-      dataDeleteRequest,
       saveDeliveryPlanLoading,
       deliveryUnitDataDelivery,
       duValueDelivery,
@@ -221,34 +189,30 @@ const BusinessPlanDelivery = forwardRef(
       },
       [dispatch]
     )
+
     const canEditDeliveryPlanAllStatus = checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_DELIVERY_PLAN_ALL_STATUS
     )
 
-    const showAllOption = useMemo(() => {
-      try {
-        const roles = JSON.parse(localStorage.getItem('LoginRole')) || []
-        const roleNames = roles.flatMap(r => r.activities || []).map(a => a.name)
-        return roleNames.some(
-          r => r === 'DB-ADMIN' || r === 'DB-FC' || r === 'DB-FCL' || r === 'DB-BOM'
-        )
-      } catch {
-        return false
-      }
-    }, [])
+    const canViewDeliveryPlanAllFilter = checkRolePermission(
+      SourceConstants.BUSINESS_PLAN_DETAIL,
+      ActivityKeyConstants.VIEW_DELIVERY_PLAN_ALL
+    )
 
     useImperativeHandle(ref, () => ({
       handleSaveDraft,
     }))
 
     useEffect(() => {
-      dispatch(
-        getLocationExchangeRate({
-          businessPlanVersionId: Number(buId),
-          deliveryUnit: '',
-        })
-      )
+      if (buId) {
+        dispatch(
+          getLocationExchangeRate({
+            businessPlanVersionId: Number(buId),
+            deliveryUnit: '',
+          })
+        )
+      }
     }, [buId])
 
     const handleCancel = () => {
@@ -275,7 +239,7 @@ const BusinessPlanDelivery = forwardRef(
         ? ''
         : parseInt(deliveryUnitDataDelivery.groupId)
       if (
-        activePanelList.includes('2') &&
+        activePanelList.includes(DELIVERY_PLAN_SECTION.RESOURCES_INFORMATION) &&
         !resourceInfoTableParams.loadDataFromType
       ) {
         dispatch(
@@ -287,7 +251,7 @@ const BusinessPlanDelivery = forwardRef(
           })
         )
       }
-      if (activePanelList.includes('3')) {
+      if (activePanelList.includes(DELIVERY_PLAN_SECTION.OTHER_EXPENSES)) {
         dispatch(
           getOtherExpensesTable({
             deliveryUnit,
@@ -297,11 +261,21 @@ const BusinessPlanDelivery = forwardRef(
           })
         )
       }
-      if (activePanelList.includes('4')) {
+      if (activePanelList.includes(DELIVERY_PLAN_SECTION.REFERENCE)) {
         dispatch(
           getLocationExchangeRate({
             businessPlanVersionId,
             deliveryUnit: '',
+          })
+        )
+      }
+      if (activePanelList.includes(DELIVERY_PLAN_SECTION.OVERTIME)) {
+        dispatch(
+          getOvertimeData({
+            deliveryUnit,
+            businessPlanVersionId,
+            pageNum: 1,
+            pageSize: 10,
           })
         )
       }
@@ -313,7 +287,7 @@ const BusinessPlanDelivery = forwardRef(
           groupId,
         })
       )
-      if (activePanelList.includes('5')) {
+      if (activePanelList.includes(DELIVERY_PLAN_SECTION.HISTORY)) {
         fetchUserActionHistory(
           buId,
           deliveryUnit,
@@ -328,8 +302,19 @@ const BusinessPlanDelivery = forwardRef(
       const isValid = handleValidate()
 
       if (!isValid) return
-      if (!deliveryUnitDataDelivery) return
-      if (deliveryUnitDataDelivery.groupName === ALL_OPTION_VALUE) {
+      await new Promise(resolve => setTimeout(resolve, 100))
+
+      const latestState = store.getState().businessPlanDelivery
+      const {
+        dataCreateRequest: latestCreate,
+        dataUpdateRequest: latestUpdate,
+        dataDeleteRequest: latestDelete,
+        deliveryUnitDataDelivery: latestUnit,
+        resourceInfoTableParams: latestParams,
+      } = latestState
+
+      if (!latestUnit) return
+      if (latestUnit.groupName === ALL_OPTION_VALUE) {
         return NotificationManager.error(
           'You cannot operate task because changes at filter all, changes cannot be saved'
         )
@@ -337,13 +322,13 @@ const BusinessPlanDelivery = forwardRef(
 
       const saveDeliveryPlanParams = {
         businessPlanId: Number(buId),
-        groupId: [Number(deliveryUnitDataDelivery.groupId)],
+        groupId: [Number(latestUnit.groupId)],
         isSubmit: false,
-        viewType: resourceInfoTableParams.viewType,
+        viewType: latestParams.viewType,
         loadDataFromType: '',
-        dataCreateRequest,
-        dataUpdateRequest,
-        dataDeleteRequest,
+        dataCreateRequest: latestCreate,
+        dataUpdateRequest: latestUpdate,
+        dataDeleteRequest: latestDelete,
       }
 
       try {
@@ -362,18 +347,26 @@ const BusinessPlanDelivery = forwardRef(
       }
     }
 
+
     const handleValidate = useCallback(() => {
       const result = {
         isValidReference:
-          !activePanelList.includes('4') ||
+          !activePanelList.includes(DELIVERY_PLAN_SECTION.REFERENCE) ||
           (deliveryPlanReferenceRef.current &&
             deliveryPlanReferenceRef.current.validate()),
         isValidOtherExpenses:
-          !activePanelList.includes('3') ||
+          !activePanelList.includes(DELIVERY_PLAN_SECTION.OTHER_EXPENSES) ||
           (deliveryPlanOtherExpensesRef.current &&
             deliveryPlanOtherExpensesRef.current.validate()),
+
+        isValidOvertimeExpense:
+          !activePanelList.includes(DELIVERY_PLAN_SECTION.OVERTIME) ||
+          (overtimeExpenseRef.current && overtimeExpenseRef.current.validate()),
+
         isValidHeadCountTable:
-          !activePanelList.includes('2') ||
+          !activePanelList.includes(
+            DELIVERY_PLAN_SECTION.RESOURCES_INFORMATION
+          ) ||
           (resourcesInformationRef.current &&
             resourcesInformationRef.current.validate()),
       }
@@ -391,28 +384,44 @@ const BusinessPlanDelivery = forwardRef(
     const initDeliveryWithAll = useCallback(() => {
       dispatch(setDeliveryUnitDataDelivery(ALL_OPTION))
       dispatch(setDuValueDelivery(ALL_OPTION_VALUE))
-      dispatch(getSummaryDeliveryPlan({ businessPlanVersionId: Number(buId), groupId: '' }))
+      dispatch(
+        getSummaryDeliveryPlan({
+          businessPlanVersionId: Number(buId),
+          groupId: '',
+        })
+      )
     }, [dispatch, buId])
 
     const initDeliveryWithFirstDu = useCallback(() => {
+      if (!dataDu || dataDu.length === 0) return
+
       const firstDu = dataDu && dataDu[0]
       if (!firstDu) return
       dispatch(setDeliveryUnitDataDelivery(firstDu))
       dispatch(setDuValueDelivery(firstDu.groupId))
-      dispatch(getLocationExchangeRate({ businessPlanVersionId: Number(buId), deliveryUnit: firstDu.groupName }))
-      dispatch(getSummaryDeliveryPlan({ businessPlanVersionId: Number(buId), groupId: parseInt(firstDu.groupId) }))
+      dispatch(
+        getLocationExchangeRate({
+          businessPlanVersionId: Number(buId),
+          deliveryUnit: firstDu.groupName,
+        })
+      )
+      dispatch(
+        getSummaryDeliveryPlan({
+          businessPlanVersionId: Number(buId),
+          groupId: Number.parseInt(firstDu.groupId),
+        })
+      )
     }, [dispatch, buId, dataDu])
 
     useEffect(() => {
       dispatch(resetSummaryDeliveryPlan())
       if (activePanel !== 'Delivery') return
-      if (showAllOption) {
+      if (canViewDeliveryPlanAllFilter) {
         initDeliveryWithAll()
       } else {
-        if (!dataDu || dataDu.length === 0) return
         initDeliveryWithFirstDu()
       }
-    }, [activePanel, buId, viewMode, dataDu])
+    }, [activePanel, buId, dataDu])
 
     return (
       <div>
@@ -424,23 +433,38 @@ const BusinessPlanDelivery = forwardRef(
           expandIcon={({ isActive }) => (
             <Icon type="caret-right" rotate={isActive ? 90 : 0} />
           )}>
-          <BusinessPlanDropdownDu
-            buId={buId}
-            dataDU={dataDu}
-            duValue={duValueDelivery}
-            updateIsSaveConfirmShowed={updateIsSaveConfirmShowed}
-            showAllOption={showAllOption}
-          />
-          <Panel style={customPanelStyle} header="Summary" key="1">
+          <Panel
+            style={customPanelStyle}
+            key={DELIVERY_PLAN_SECTION.SUMMARY}
+            header={
+              <StyledPanelHeader>
+                <span>Summary</span>
+                <div
+                  onClick={e => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                  }}>
+                  <BusinessPlanDropdownDu
+                    buId={buId}
+                    dataDU={dataDu}
+                    duValue={duValueDelivery}
+                    updateIsSaveConfirmShowed={updateIsSaveConfirmShowed}
+                    showAllOption={canViewDeliveryPlanAllFilter}
+                  />
+                </div>
+              </StyledPanelHeader>
+            }>
             <DeliverySummary buId={buId} canViewDelivery={canViewDelivery} />
           </Panel>
           <Panel
             style={customPanelStyle}
             header="Resources Information"
-            key="2">
+            key={DELIVERY_PLAN_SECTION.RESOURCES_INFORMATION}>
             <ResourcesInformation
               ref={resourcesInformationRef}
-              isExpandPanel={activePanelList.includes('2')}
+              isExpandPanel={activePanelList.includes(
+                DELIVERY_PLAN_SECTION.RESOURCES_INFORMATION
+              )}
               buId={buId}
               deliveryUnitDataDelivery={deliveryUnitDataDelivery}
               isSaveShowed={isSaveShowed}
@@ -455,10 +479,15 @@ const BusinessPlanDelivery = forwardRef(
               canView={canViewDelivery}
             />
           </Panel>
-          <Panel style={customPanelStyle} header="Other expenses" key="3">
+          <Panel
+            style={customPanelStyle}
+            header="Other expenses"
+            key={DELIVERY_PLAN_SECTION.OTHER_EXPENSES}>
             <OtherExpensesTable
               ref={deliveryPlanOtherExpensesRef}
-              isExpandPanel={activePanelList.includes('3')}
+              isExpandPanel={activePanelList.includes(
+                DELIVERY_PLAN_SECTION.OTHER_EXPENSES
+              )}
               buId={buId}
               deliveryUnitDataDelivery={deliveryUnitDataDelivery}
               canEdit={
@@ -471,10 +500,18 @@ const BusinessPlanDelivery = forwardRef(
               canView={canViewDelivery}
             />
           </Panel>
-          <Panel style={customPanelStyle} header="Reference" key="4">
-            <DeliveryPlanReference
-              ref={deliveryPlanReferenceRef}
-              isExpandPanel={activePanelList.includes('4')}
+          <Panel
+            style={customPanelStyle}
+            header="Overtime"
+            key={DELIVERY_PLAN_SECTION.OVERTIME}>
+            <Overtime
+              ref={overtimeExpenseRef}
+              buId={buId}
+              isExpandPanel={activePanelList.includes(
+                DELIVERY_PLAN_SECTION.OVERTIME
+              )}
+              isSaveShowed={isSaveShowed}
+              deliveryUnitDataDelivery={deliveryUnitDataDelivery}
               canEdit={
                 status !== statusBusinessPlanDetail.approved &&
                 (status === statusBusinessPlanDetail.draft ||
@@ -485,7 +522,29 @@ const BusinessPlanDelivery = forwardRef(
               canView={canViewDelivery}
             />
           </Panel>
-          <Panel style={customPanelStyle} header="History" key="5">
+          <Panel
+            style={customPanelStyle}
+            header="Reference"
+            key={DELIVERY_PLAN_SECTION.REFERENCE}>
+            <DeliveryPlanReference
+              ref={deliveryPlanReferenceRef}
+              isExpandPanel={activePanelList.includes(
+                DELIVERY_PLAN_SECTION.REFERENCE
+              )}
+              canEdit={
+                status !== statusBusinessPlanDetail.approved &&
+                (status === statusBusinessPlanDetail.draft ||
+                  canEditDeliveryPlanAllStatus) &&
+                deliveryUnitDataDelivery.groupName !== ALL_OPTION_VALUE &&
+                canEditDelivery
+              }
+              canView={canViewDelivery}
+            />
+          </Panel>
+          <Panel
+            style={customPanelStyle}
+            header="History"
+            key={DELIVERY_PLAN_SECTION.HISTORY}>
             <BusinessPlanHistoryTable
               getBusinessPlanHistoryAPI="HistoryDeliveryPlan"
               BusinessPlanVersionId={buId}

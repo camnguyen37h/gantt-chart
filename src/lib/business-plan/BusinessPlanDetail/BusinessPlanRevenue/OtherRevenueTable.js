@@ -52,6 +52,7 @@ const OtherRevenueTable = ({
   const [expandAll, setExpandAll] = useState(false)
   const [rowsData, setRowsData] = useState([])
   const prevVersionRef = useRef(businessVersion)
+  const { viewMode } = useSelector(state => state.businessPlanDetails)
 
   const dispatch = useDispatch()
   const {
@@ -197,7 +198,8 @@ const OtherRevenueTable = ({
       ActivityKeyConstants.EDIT_REVENUE_PLAN_ALL_STATUS
     ) && status !== 'Approved'
 
-  const canEditRevenue = (status === 'Draft' || canEditRevenueAllStatus) && canEdit !== false
+  const canEditRevenue =
+    (status === 'Draft' || canEditRevenueAllStatus) && canEdit !== false
 
   const mapRevenueDetails = (mainDataRevenue, formatRowData) => {
     const start = moment(mainDataRevenue.startDate)
@@ -237,52 +239,45 @@ const OtherRevenueTable = ({
             const val =
               (row.revenueDetails[month] && row.revenueDetails[month].value) ||
               null
-            revenueDetailsInputs[month] =
-              status === 'Draft' || canEditRevenueAllStatus ? (
-                <StyledInputNumber
-                  key={`${row.key}-${val}-${keyReset}`}
-                  style={{ fontSize: 'small', maxWidth: MIN_WIDTH }}
-                  size="small"
-                  defaultValue={val}
-                  formatter={formatInputNumber}
-                  parser={parseInputNumber}
-                  title={formatFloatNumber(val, 0, 8)}
-                  onChange={value =>
-                    handleRowChange(row.key, 'revenueDetails', month, value)
-                  }
-                />
-              ) : (
-                <span title={formatFloatNumber(val, 0, 8)}>
-                  {formatFloatNumber(val, 0, 3)}
-                </span>
-              )
+            revenueDetailsInputs[month] = canEditRevenue ? (
+              <StyledInputNumber
+                key={`${row.key}-${val}-${keyReset}`}
+                style={{ fontSize: 'small', maxWidth: MIN_WIDTH }}
+                size="small"
+                defaultValue={val}
+                formatter={formatInputNumber}
+                parser={parseInputNumber}
+                title={formatFloatNumber(val, 0, 8)}
+                onChange={value =>
+                  handleRowChange(row.key, 'revenueDetails', month, value)
+                }
+              />
+            ) : (
+              <span title={formatFloatNumber(val, 0, 8)}>
+                {formatFloatNumber(val, 0, 3)}
+              </span>
+            )
           })
 
           return {
             key: row.key,
             revenueTypeSpecificId: row.revenueTypeSpecificId,
             total: row.total,
-            revenueName:
-              status === 'Draft' || canEditRevenueAllStatus ? (
-                <Input
-                  key={`${row.key}-${row.revenueName}-${keyReset}`}
-                  className=""
-                  size="small"
-                  style={{ fontSize: 'small' }}
-                  defaultValue={row.revenueName}
-                  title={row.revenueName}
-                  onChange={e =>
-                    handleRowChange(
-                      row.key,
-                      'revenueName',
-                      null,
-                      e.target.value
-                    )
-                  }
-                />
-              ) : (
-                <span>{row.revenueName}</span>
-              ),
+            revenueName: canEditRevenue ? (
+              <Input
+                key={`${row.key}-${row.revenueName}-${keyReset}`}
+                className=""
+                size="small"
+                style={{ fontSize: 'small' }}
+                defaultValue={row.revenueName}
+                title={row.revenueName}
+                onChange={e =>
+                  handleRowChange(row.key, 'revenueName', null, e.target.value)
+                }
+              />
+            ) : (
+              <span>{row.revenueName}</span>
+            ),
             ...revenueDetailsInputs,
           }
         })
@@ -460,18 +455,12 @@ const OtherRevenueTable = ({
 
                     <Tooltip
                       placement="leftTop"
-                      title={
-                        canEditRevenue
-                          ? ''
-                          : CAN_NOT_EDIT_REVENUE
-                      }>
+                      title={canEditRevenue ? '' : CAN_NOT_EDIT_REVENUE}>
                       <span style={{ display: 'inline-block' }}>
                         <Icon
                           type="plus-circle"
                           className={
-                            canEditRevenue
-                              ? ''
-                              : 'icon-disabled-action'
+                            canEditRevenue ? '' : 'icon-disabled-action'
                           }
                           style={{ fontSize: '12px' }}
                           onClick={() => handleAddChildRow(record)}
@@ -489,18 +478,12 @@ const OtherRevenueTable = ({
                     <div style={{ width: '12px' }}></div>
                     <Tooltip
                       placement="leftTop"
-                      title={
-                        canEditRevenue
-                          ? ''
-                          : CAN_NOT_EDIT_REVENUE
-                      }>
+                      title={canEditRevenue ? '' : CAN_NOT_EDIT_REVENUE}>
                       <span style={{ display: 'inline-block' }}>
                         <Icon
                           type="minus-circle"
                           className={
-                            canEditRevenue
-                              ? ''
-                              : 'icon-disabled-action'
+                            canEditRevenue ? '' : 'icon-disabled-action'
                           }
                           style={{ fontSize: '12px' }}
                           onClick={() => handleRemoveChildRow(record)}
@@ -641,7 +624,12 @@ const OtherRevenueTable = ({
         status,
       })
     )
-  }, [isExpandPanel, deliveryUnitDataRevenue.groupId, businessVersion])
+  }, [
+    isExpandPanel,
+    deliveryUnitDataRevenue.groupId,
+    businessVersion,
+    viewMode,
+  ])
 
   useEffect(() => {
     if (isUpdated) {
@@ -680,7 +668,6 @@ const OtherRevenueTable = ({
       expandIconColumnIndex={-1}
       expandIconAsCell={false}
       scroll={{ x: 'max-content', y: 400 }}
-      showHeader={canView && dataSourceTable && dataSourceTable.length > 0}
     />
   )
 }

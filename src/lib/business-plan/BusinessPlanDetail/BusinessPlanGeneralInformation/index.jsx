@@ -3,16 +3,21 @@ import {
   ActivityKeyConstants,
   SourceConstants,
 } from '../../../constants/ActivityKeyConstants'
-import { DatePicker, Form, Icon, Select, Table, Tooltip } from 'antd'
+import { DateFormat } from '../../../constants/DateFormat'
+import { DatePicker, Form, Icon, Select, Tooltip } from 'antd'
+import { isEmpty } from 'lodash'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useBusinessPlanDetails } from '../../hooks'
+import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
+import { SCOPE } from '../../permissions/policyMatrix'
 import {
   getBusinessPlanSettingMaxKPI,
   getIndustryCurrency,
   getIndustryDomain,
-  setValidation,
   resetValidation,
+  setValidation,
 } from '../../redux'
 import {
   handleChangeDateGeneralInfo,
@@ -20,18 +25,13 @@ import {
   setKpiBonusData,
   setSelectedMvvCode,
 } from '../../redux/reducers/businessGeneralInformation'
-import { CollaboratorSVG, industrySVG } from '../SVGIcon'
+import { CollaboratorSVG } from '../SVGIcon'
+import { statusBusinessPlanDetail } from '../constant'
 import CollaboratorBodyItem from './CollaboratorBodyItem'
 import GeneralInformationHeader from './GeneralInformationHeader'
 import IndustryItemInput from './IndustryItemInput'
 import KpiBonusBodyItem from './KpiBonusBodyItem'
 import { MEMBER_TYPE } from './data'
-import { statusBusinessPlanDetail } from '../constant'
-import moment from 'moment'
-import { DateFormat } from '../../../constants/DateFormat'
-import { isEmpty } from 'lodash'
-import { SCOPE } from '../../permissions/policyMatrix'
-import useBusinessPlanPermission from '../../hooks/useBusinessPlanPermission'
 
 const { Option } = Select
 
@@ -80,6 +80,10 @@ const BusinessPlanGeneralInformation = () => {
     !isEmpty(listGeneralInformation) &&
     listGeneralInformation.status === statusBusinessPlanDetail.draft
 
+  const isApproved =
+    !isEmpty(listGeneralInformation) &&
+    listGeneralInformation.status === statusBusinessPlanDetail.approved
+
   const selectedInfo = generalInfos.find(function (info) {
     return info.projectCode === selectedMvvCode
   })
@@ -94,16 +98,21 @@ const BusinessPlanGeneralInformation = () => {
   const canViewGeneral = generalPerms.canViewScope
   const canEditGeneral = generalPerms.canEditScope
 
+  const kpiBonusPerms = useBusinessPlanPermission(SCOPE.KPI_BONUS)
+  const canEditKpiBonusByMatrix = kpiBonusPerms.canEditScope
+
   const isEditInputDraft =
     (checkRolePermission(
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_BUSINESS_PLAN
     ) ||
       (listAM && listAM.some(p => p.ldap === userName)) ||
-      (listPreparator && listPreparator.some(p => p.ldap === userName))) &&
+      (listPreparator && listPreparator.some(p => p.ldap === userName)) ||
+      canEditGeneral) &&
     isDraft
 
-  const isEditGeneralField = isEditInputDraft && canEditGeneral
+  const canEditBonus =
+    isEditInputDraft || (canEditKpiBonusByMatrix && !isApproved)
 
   const { validation } = useSelector(state => state.businessPlanDetails)
 
@@ -431,7 +440,7 @@ const BusinessPlanGeneralInformation = () => {
                     }`}>
                     {isStartDate || isEndDate ? (
                       <DatePicker
-                        disabled={!isEditGeneralField}
+                        disabled={!isEditInputDraft}
                         className="custom-planning-date-picker"
                         value={item.value}
                         format={DateFormat.DATE_FORWARD_SLASH}
@@ -496,7 +505,7 @@ const BusinessPlanGeneralInformation = () => {
                       }`}
                       size="small"
                       placeholder={canViewGeneral ? 'Select industry' : '*****'}
-                      disabled={!isEditGeneralField}>
+                      disabled={!isEditInputDraft}>
                       {listDomain.map(item => (
                         <Option value={item.id} key={item.id}>
                           <Tooltip title={item.industry} key={item.id}>
@@ -535,7 +544,7 @@ const BusinessPlanGeneralInformation = () => {
                       }`}
                       size="small"
                       placeholder={canViewGeneral ? 'Select currency' : '*****'}
-                      disabled={!isEditGeneralField}>
+                      disabled={!isEditInputDraft}>
                       {listCurrency.map(item => (
                         <Option value={item.id} key={item.id}>
                           {item.currency}
@@ -558,7 +567,7 @@ const BusinessPlanGeneralInformation = () => {
                   handleChangeInputValue={item.onChange}
                   key={item.key}
                   name={item.key}
-                  isEditInput={isEditGeneralField}
+                  isEditInput={isEditInputDraft}
                   validation={validation}
                   handleRenderTooltip={handleRenderTooltip}
                   isSubItem={item.isSubItem}
@@ -621,7 +630,7 @@ const BusinessPlanGeneralInformation = () => {
           <div className="d-flex gap-6 flex-wrap">
             <KpiBonusBodyItem
               businessPlanKpiDTO={businessPlanKpiDTO}
-              canEdit={isEditGeneralField}
+              canEdit={canEditBonus}
               masked={!canViewGeneral}
               onChangeKpiBonusInput={onChangeKpiBonusInput}
             />

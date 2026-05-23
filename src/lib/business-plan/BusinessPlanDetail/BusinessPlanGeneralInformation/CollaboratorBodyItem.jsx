@@ -73,9 +73,9 @@ function CollaboratorBodyItem({
       ActivityKeyConstants.EDIT_BUSINESS_PLAN
     ) ||
       (listAM && listAM.some(p => p.ldap === userName)) ||
-      (listPreparator && listPreparator.some(p => p.ldap === userName))) &&
-    isDraft &&
-    canEditScope
+      (listPreparator && listPreparator.some(p => p.ldap === userName)) ||
+      canEditScope) &&
+    isDraft
 
   const handleReturnIndexItem = (pagination, index) => {
     return (pagination.current - 1) * pagination.pageSize + index + 1

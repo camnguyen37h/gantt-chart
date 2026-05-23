@@ -3,41 +3,41 @@ import { getDisplayKey } from '../../utils'
 
 const findCell = (dataArray, columnKey) => {
   if (!dataArray) return null
-  for (var i = 0; i < dataArray.length; i++) {
+  for (let i = 0; i < dataArray.length; i++) {
     if (getDisplayKey(dataArray[i]) === columnKey) return dataArray[i]
   }
   return null
 }
 
 const getCellValue = (dataArray, columnKey) => {
-  var cell = findCell(dataArray, columnKey)
+  let cell = findCell(dataArray, columnKey)
   return cell ? cell.value : null
 }
 
 const getCellFloor = (dataArray, columnKey) => {
-  var cell = findCell(dataArray, columnKey)
+  let cell = findCell(dataArray, columnKey)
   return cell ? cell.normUnitPriceFloor : null
 }
 
 const getCellCeiling = (dataArray, columnKey) => {
-  var cell = findCell(dataArray, columnKey)
+  let cell = findCell(dataArray, columnKey)
   return cell ? cell.normUnitPriceCeiling : null
 }
 
 const getCellNormConfig = (dataArray, columnKey) => {
-  var cell = findCell(dataArray, columnKey)
+  let cell = findCell(dataArray, columnKey)
   return cell ? cell.normUnitPriceConfig : null
 }
 
 const getCellPercentage = (dataArray, columnKey) => {
-  var cell = findCell(dataArray, columnKey)
+  let cell = findCell(dataArray, columnKey)
   return cell ? cell.normBusinessPlanConfig : null
 }
 
 const findCellIn = (businessPlanItems, sectionKey, rowKey, columnKey) => {
-  var section = businessPlanItems[sectionKey]
+  const section = businessPlanItems[sectionKey]
   if (!section) return null
-  var row = section.data[rowKey]
+  const row = section.data[rowKey]
   if (!row) return null
   return findCell(row.data, columnKey)
 }
@@ -98,13 +98,13 @@ const getMergedColumns = (
     })
   }
 
-  var result = []
-  var insertedCompareKeys = {}
+  let result = []
+  let insertedCompareKeys = {}
 
   ;(currentCols || []).forEach(function (col) {
-    var matchedCmp = null
-    for (var i = 0; i < compareCols.length; i++) {
-      var c = compareCols[i]
+    let matchedCmp = null
+    for (let i = 0; i < compareCols.length; i++) {
+      let c = compareCols[i]
       if (col.id === null || col.id === undefined) {
         if (c.columnKey === col.columnKey) {
           matchedCmp = c
@@ -130,7 +130,7 @@ const getMergedColumns = (
     })
 
     if (matchedCmp) {
-      var matchedKey =
+      let matchedKey =
         matchedCmp.columnKey +
         '_' +
         (matchedCmp.id !== null && matchedCmp.id !== undefined
@@ -139,11 +139,11 @@ const getMergedColumns = (
       insertedCompareKeys[matchedKey] = true
     }
 
-    for (var j = 0; j < compareCols.length; j++) {
-      var cmpA = compareCols[j]
+    for (let j = 0; j < compareCols.length; j++) {
+      let cmpA = compareCols[j]
       if (cmpA.id === null || cmpA.id === undefined) continue
       if (cmpA.columnKey !== col.columnKey) continue
-      var keyA = cmpA.columnKey + '_' + cmpA.id
+      let keyA = cmpA.columnKey + '_' + cmpA.id
       if (insertedCompareKeys[keyA]) continue
       result.push({
         id: cmpA.id,
@@ -159,9 +159,9 @@ const getMergedColumns = (
     }
   })
 
-  for (var k = 0; k < compareCols.length; k++) {
-    var cmpB = compareCols[k]
-    var keyB =
+  for (let k = 0; k < compareCols.length; k++) {
+    let cmpB = compareCols[k]
+    let keyB =
       cmpB.columnKey +
       '_' +
       (cmpB.id !== null && cmpB.id !== undefined ? cmpB.id : 'null')

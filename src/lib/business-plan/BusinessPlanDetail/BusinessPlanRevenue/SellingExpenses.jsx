@@ -196,8 +196,8 @@ const SellingExpenses = ({
       SourceConstants.BUSINESS_PLAN_DETAIL,
       ActivityKeyConstants.EDIT_REVENUE_PLAN_ALL_STATUS
     ) && status !== 'Approved'
-
-  const canEditRevenue = (status === 'Draft' || canEditRevenueAllStatus) && canEdit !== false
+  const canEditRevenue =
+    (status === 'Draft' || canEditRevenueAllStatus) && canEdit !== false
 
   const mapRevenueDetails = (mainDataRevenue, formatRowData) => {
     const start = moment(mainDataRevenue.startDate)
@@ -237,51 +237,44 @@ const SellingExpenses = ({
             const val =
               (row.revenueDetails[month] && row.revenueDetails[month].value) ||
               null
-            revenueDetailsInputs[month] =
-              status === 'Draft' || canEditRevenueAllStatus ? (
-                <StyledInputNumber
-                  key={`${row.key}-${val}-${keyReset}`}
-                  style={{ fontSize: 'small', maxWidth: MIN_WIDTH }}
-                  size="small"
-                  defaultValue={val}
-                  formatter={formatInputNumber}
-                  parser={parseInputNumber}
-                  title={formatFloatNumber(val, 0, 8)}
-                  onChange={value =>
-                    handleRowChange(row.key, 'revenueDetails', month, value)
-                  }
-                />
-              ) : (
-                <span title={formatFloatNumber(val, 0, 8)}>
-                  {formatFloatNumber(val, 0, 3)}
-                </span>
-              )
+            revenueDetailsInputs[month] = canEditRevenue ? (
+              <StyledInputNumber
+                key={`${row.key}-${val}-${keyReset}`}
+                style={{ fontSize: 'small', maxWidth: MIN_WIDTH }}
+                size="small"
+                defaultValue={val}
+                formatter={formatInputNumber}
+                parser={parseInputNumber}
+                title={formatFloatNumber(val, 0, 8)}
+                onChange={value =>
+                  handleRowChange(row.key, 'revenueDetails', month, value)
+                }
+              />
+            ) : (
+              <span title={formatFloatNumber(val, 0, 8)}>
+                {formatFloatNumber(val, 0, 3)}
+              </span>
+            )
           })
 
           return {
             key: row.key,
             total: row.total,
             revenueTypeSpecificId: row.revenueTypeSpecificId,
-            revenueName:
-              status === 'Draft' || canEditRevenueAllStatus ? (
-                <Input
-                  key={`${row.key}-${row.revenueName}-${keyReset}`}
-                  size="small"
-                  style={{ fontSize: 'small' }}
-                  defaultValue={row.revenueName}
-                  title={row.revenueName}
-                  onChange={e =>
-                    handleRowChange(
-                      row.key,
-                      'revenueName',
-                      null,
-                      e.target.value
-                    )
-                  }
-                />
-              ) : (
-                <span>{row.revenueName}</span>
-              ),
+            revenueName: canEditRevenue ? (
+              <Input
+                key={`${row.key}-${row.revenueName}-${keyReset}`}
+                size="small"
+                style={{ fontSize: 'small' }}
+                defaultValue={row.revenueName}
+                title={row.revenueName}
+                onChange={e =>
+                  handleRowChange(row.key, 'revenueName', null, e.target.value)
+                }
+              />
+            ) : (
+              <span>{row.revenueName}</span>
+            ),
             ...revenueDetailsInputs,
           }
         })
@@ -458,18 +451,12 @@ const SellingExpenses = ({
                     />
                     <Tooltip
                       placement="leftTop"
-                      title={
-                        canEditRevenue
-                          ? ''
-                          : CAN_NOT_EDIT_REVENUE
-                      }>
+                      title={canEditRevenue ? '' : CAN_NOT_EDIT_REVENUE}>
                       <span style={{ display: 'inline-block' }}>
                         <Icon
                           type="plus-circle"
                           className={
-                            canEditRevenue
-                              ? ''
-                              : 'icon-disabled-action'
+                            canEditRevenue ? '' : 'icon-disabled-action'
                           }
                           style={{ fontSize: '12px' }}
                           onClick={() => handleAddChildRow(record)}
@@ -487,18 +474,12 @@ const SellingExpenses = ({
                     <div style={{ width: '12px' }}></div>
                     <Tooltip
                       placement="leftTop"
-                      title={
-                        canEditRevenue
-                          ? ''
-                          : CAN_NOT_EDIT_REVENUE
-                      }>
+                      title={canEditRevenue ? '' : CAN_NOT_EDIT_REVENUE}>
                       <span style={{ display: 'inline-block' }}>
                         <Icon
                           type="minus-circle"
                           className={
-                            canEditRevenue
-                              ? ''
-                              : 'icon-disabled-action'
+                            canEditRevenue ? '' : 'icon-disabled-action'
                           }
                           style={{ fontSize: '12px' }}
                           onClick={() => handleRemoveChildRow(record)}
@@ -668,7 +649,6 @@ const SellingExpenses = ({
       expandIconColumnIndex={-1}
       expandIconAsCell={false}
       scroll={{ x: 'max-content', y: 400 }}
-      showHeader={canView && dataSourceTable && dataSourceTable.length > 0}
     />
   )
 }

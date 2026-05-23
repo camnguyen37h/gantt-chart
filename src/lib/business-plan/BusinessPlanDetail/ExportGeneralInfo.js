@@ -25,8 +25,6 @@ const BorderTable = styled.div`
     background-color: #b1b1b1 !important;
   }
 `
-// import { Descriptions } from 'antd'
-// format money
 function formatMoney(number = '') {
   if (!number) return '-'
   const isNegative = number < 0
@@ -39,7 +37,7 @@ function formatPercent(number = '') {
   if (!num) return '-'
   const isNegative = number < 0
   const roundedNumber = Math.round(number * 100) / 100
-  const fraction = roundedNumber % 1 == 0 ? 0 : 2
+  const fraction = roundedNumber % 1 === 0 ? 0 : 2
 
   const formatedNumber = Intl.NumberFormat('en-US', {
     minimumFractionDigits: fraction,
@@ -57,7 +55,7 @@ function formatMoneyUnit(number = '') {
   const isNegative = number < 0
   const newValue = Number(number) / 1000
   const roundedNumber = Math.round(newValue * 100) / 100
-  const fraction = roundedNumber % 1 == 0 ? 0 : 2
+  const fraction = roundedNumber % 1 === 0 ? 0 : 2
 
   const formatedNumber = Intl.NumberFormat('en-US', {
     minimumFractionDigits: fraction,
