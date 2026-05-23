@@ -2,13 +2,11 @@ import { useSelector } from 'react-redux'
 import useBusinessPlanForm from './useBusinessPlanForm'
 import { sectionConfig } from '../constants'
 import Decimal from 'decimal.js'
-
 const LOC_TYPES = ['Onsite', 'Offshore']
 const decimalDivide = (numerator, denominator) =>
   numerator && denominator
     ? new Decimal(numerator).dividedBy(new Decimal(denominator)).toNumber()
     : null
-
 const decimalDividePercent = (numerator, denominator) =>
   numerator && denominator
     ? new Decimal(numerator)
@@ -16,10 +14,8 @@ const decimalDividePercent = (numerator, denominator) =>
         .times(100)
         .toNumber()
     : null
-
 const decimalNegate = value =>
   new Decimal(0).minus(new Decimal(value)).toNumber()
-
 const useFormula = () => {
   useBusinessPlanForm()
   const {
@@ -30,14 +26,11 @@ const useFormula = () => {
     viewModeDataMap,
     viewMode,
   } = useSelector(state => state.businessPlanDetails)
-
   const getDisplayColumnKey = item => item && item.compareKey
-
   const getColumnMetaByDisplayKey = displayKey => {
     const safeColumns = columns || []
     return safeColumns.find(col => col.compareKey === displayKey)
   }
-
   const getOBLocationTypeByDisplayKey = displayKey => {
     const meta = getColumnMetaByDisplayKey(displayKey)
     if (!meta || !meta.colCategory) return null
@@ -50,17 +43,14 @@ const useFormula = () => {
       return 'Offshore'
     return null
   }
-
   const getSaleLocType = compareKey => {
     const col = getColumnMetaByDisplayKey(compareKey)
     return col ? col.saleLocType : null
   }
-
   const isOBOrTotal = () => viewMode === 'OB' || viewMode === 'Total'
-  const isOB = () => viewMode === 'OB'
+
   const isDU = colKey => colKey.toLowerCase().includes('delivery_unit')
   const isSaleCol = colKey => colKey.toLowerCase().includes('sale')
-
   const getSum = (...rest) => {
     if (rest.every(v => v === null || v === undefined)) return null
     return rest
@@ -73,7 +63,6 @@ const useFormula = () => {
       }, new Decimal(0))
       .toNumber()
   }
-
   const getMultiplicationRes = (...rest) => {
     const valid = rest.filter(
       v => v !== null && v !== undefined && v !== '' && !isNaN(v)
@@ -83,7 +72,6 @@ const useFormula = () => {
       .reduce((prod, cur) => prod.times(new Decimal(cur)), new Decimal(1))
       .toNumber()
   }
-
   const getItem = ({ sectionKey, rowKey, columnKey, compareKey: ck }) => {
     const row =
       businessPlanItems[sectionKey] &&
@@ -92,34 +80,38 @@ const useFormula = () => {
     if (ck) return row.data.find(item => item.compareKey === ck) || {}
     return row.data.find(item => item.columnKey === columnKey) || {}
   }
-
   const getItems = ({ sectionKey, rowKey, filterCallback }) => {
     const row =
       businessPlanItems[sectionKey] &&
       businessPlanItems[sectionKey].data[rowKey]
     return row ? row.data.filter(filterCallback) : []
   }
-
   const getItemValues = ({ sectionKey, rowKey, filterCallback }) =>
-    getItems({ sectionKey, rowKey, filterCallback }).map(item => item.value)
-
+    getItems({
+      sectionKey,
+      rowKey,
+      filterCallback,
+    }).map(item => item.value)
   const getSumItemValues = ({ sectionKey, rowKey, filterCallback }) =>
-    getSum(...getItemValues({ sectionKey, rowKey, filterCallback }))
-
+    getSum(
+      ...getItemValues({
+        sectionKey,
+        rowKey,
+        filterCallback,
+      })
+    )
   const getSumDUValues = ({ sectionKey, rowKey }) =>
     getSumItemValues({
       sectionKey,
       rowKey,
       filterCallback: item => isDU(item.columnKey),
     })
-
   const getSumAllValues = ({ sectionKey, rowKey }) =>
     getSumItemValues({
       sectionKey,
       rowKey,
       filterCallback: item => item.columnKey.toLowerCase() !== 'total',
     })
-
   const getCrossViewCell = (locType, secKey, rowKey, colKey) => {
     const locData = viewModeDataMap[locType]
     if (!locData) return null
@@ -130,7 +122,6 @@ const useFormula = () => {
     const cell = row.data.find(c => c.columnKey === colKey)
     return cell && cell.value != null ? cell.value : null
   }
-
   const sumCrossViewDU = (secKey, rowKey) => {
     const perLoc = LOC_TYPES.map(locType => {
       const locData = viewModeDataMap[locType]
@@ -145,7 +136,6 @@ const useFormula = () => {
     })
     return perLoc.some(v => v !== null) ? getSum(...perLoc) : null
   }
-
   const sumCrossViewTotals = (secKey, rowKey) => {
     const perLoc = LOC_TYPES.map(locType =>
       getCrossViewCell(locType, secKey, rowKey, 'TOTAL')
@@ -153,29 +143,22 @@ const useFormula = () => {
     if (!perLoc.some(v => v !== null)) return undefined
     return getSum(...perLoc)
   }
-
   const getOBNegativeCrossViewDUSum = (secKey, rowKey) => {
-    if (!isOB()) return undefined
+    return undefined
     const duSum = sumCrossViewDU(secKey, rowKey)
     return duSum !== null ? duSum : undefined
   }
-
   const getOBCrossViewCell = (secKey, rowKey, targetItem) => {
     if (!isOBOrTotal()) return undefined
     const colKey = targetItem.columnKey
     if (colKey === 'TOTAL') return undefined
-
     if (colKey === 'INTERNAL') {
-      if (isOB()) {
-        return sumCrossViewDU(secKey, rowKey)
-      }
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(locType, secKey, rowKey, 'INTERNAL')
       )
       if (!perLoc.some(v => v !== null)) return undefined
       return getSum(...perLoc)
     }
-
     if (isSaleCol(colKey)) {
       const locType = getOBLocationTypeByDisplayKey(
         getDisplayColumnKey(targetItem)
@@ -194,7 +177,6 @@ const useFormula = () => {
       if (!section) return null
       const row = section.data[rowKey]
       if (!row) return null
-
       const cell = row.data.find(c => c.columnKey === colKey)
       return cell ? (cell.value == null ? null : cell.value) : null
     }
@@ -210,7 +192,6 @@ const useFormula = () => {
     }
     return null
   }
-
   const getTotalColumnAndSet = ({ targetItem, serviceRowKey }) => {
     const { sectionKey, columnKey, rowKey, compareKey: ck } = targetItem
     const rowKeys = Object.keys(businessPlanItems[sectionKey].data).filter(
@@ -235,9 +216,8 @@ const useFormula = () => {
     })
     return getSum(...values)
   }
-
   const getOBSumDUInternal = ({ sectionKey, rowKey }) => {
-    if (!isOB()) return undefined
+    return undefined
     const sum = getSum(
       ...getItems({
         sectionKey,
@@ -247,9 +227,8 @@ const useFormula = () => {
     )
     return decimalNegate(sum === null ? 0 : sum)
   }
-
   const getOBDeliveryExpenseInternal = ({ sectionKey, rowKey }) => {
-    if (!isOB()) return undefined
+    return undefined
     const onsiteData = viewModeDataMap['Onsite']
     if (!onsiteData) return decimalNegate(0)
     const row =
@@ -262,14 +241,12 @@ const useFormula = () => {
     const sum = getSum(...duValues)
     return decimalNegate(sum === null ? 0 : sum)
   }
-
   const getUnitPriceTotal = () =>
     getItem({
       sectionKey: 'MAN_MONTH',
       rowKey: 'UNIT_PRICE',
       columnKey: 'SALE',
     }).value
-
   const getMMBillDU = ({ targetItem }) => {
     const serviceKeys = Object.keys(businessPlanItems.MAN_MONTH.data).filter(
       key => key.match(/MM_BILL_\d+/)
@@ -287,56 +264,46 @@ const useFormula = () => {
       })
     )
   }
-
   const getMMBillSale = () => {
+    if (isOBOrTotal()) return sumCrossViewTotals('MAN_MONTH', 'MM_BILL')
     const duItems = getItems({
       sectionKey: 'MAN_MONTH',
       rowKey: 'MM_BILL',
       filterCallback: item => isDU(item.columnKey),
     })
-    return getSum(...duItems.map(item => getMMBillDU({ targetItem: item })))
+    return getSum(
+      ...duItems.map(item =>
+        getMMBillDU({
+          targetItem: item,
+        })
+      )
+    )
   }
-
-  const getMMManufactureTotal = () =>
-    getSumDUValues({ sectionKey: 'MAN_MONTH', rowKey: 'MM_PRODUCTION' })
-
+  const getMMManufactureTotal = () => {
+    if (isOBOrTotal()) return sumCrossViewTotals('MAN_MONTH', 'MM_PRODUCTION')
+    return getSumDUValues({
+      sectionKey: 'MAN_MONTH',
+      rowKey: 'MM_PRODUCTION',
+    })
+  }
   const getMMManufactureSale = () => getMMBillSale()
-
-  const getTotalMMBilService = ({ targetItem }) =>
-    getSumDUValues({
+  const getTotalMMBilService = ({ targetItem }) => {
+    if (isOBOrTotal()) return sumCrossViewTotals(targetItem.sectionKey, targetItem.rowKey)
+    return getSumDUValues({
       sectionKey: targetItem.sectionKey,
       rowKey: targetItem.rowKey,
     })
-
+  }
   const getSoftwareProductionSale = () => {
     if (isOBOrTotal()) return undefined
     return getMultiplicationRes(exchangeRate, softwareDevelopmentFee)
   }
-
   const getSoftwareProductionDU = ({ targetItem }) => {
-    if (isOB()) {
-      const locType = getOBLocationTypeByDisplayKey(
-        getDisplayColumnKey(targetItem)
-      )
-      if (locType === 'Onsite') return 0
-    }
     return targetItem != null && targetItem.value != null
       ? targetItem.value
       : null
   }
-
   const getSoftwareProductionInternal = () => {
-    if (isOB()) {
-      const duItems = getItems({
-        sectionKey: 'REVENUES',
-        rowKey: 'SOFTWARE_PRODUCTION_REVENUES',
-        filterCallback: item => isDU(item.columnKey),
-      })
-      const sum = getSum(
-        ...duItems.map(item => getSoftwareProductionDU({ targetItem: item }))
-      )
-      return sum !== null ? decimalNegate(sum) : null
-    }
     if (viewMode === 'Total') {
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(
@@ -355,24 +322,24 @@ const useFormula = () => {
       filterCallback: item => isDU(item.columnKey),
     })
     const sum = getSum(
-      ...duItems.map(item => getSoftwareProductionDU({ targetItem: item }))
+      ...duItems.map(item =>
+        getSoftwareProductionDU({
+          targetItem: item,
+        })
+      )
     )
     return sum === null ? null : decimalNegate(sum)
   }
-
   const getSoftwareProductionTotal = () => {
-    if (isOB())
-      return sumCrossViewTotals('REVENUES', 'SOFTWARE_PRODUCTION_REVENUES')
+    if (viewMode === 'OB') return sumCrossViewTotals('REVENUES', 'SOFTWARE_PRODUCTION_REVENUES')
     if (viewMode === 'Total') return undefined
     return getSoftwareProductionSale()
   }
-
   const getDeductionTotal = () => {
-    if (isOB()) return sumCrossViewTotals('REVENUES', 'DEDUCTION')
+    if (viewMode === 'OB') return sumCrossViewTotals('REVENUES', 'DEDUCTION')
     if (viewMode === 'Total') return undefined
     return getDeductionSale()
   }
-
   const getDeductionSale = () => {
     if (isOBOrTotal()) return undefined
     const deductionFromBackend =
@@ -396,44 +363,14 @@ const useFormula = () => {
       .toNumber()
   }
 
-  const getOBRevenuesFeeTotal = ({ rowKey }) => {
-    if (!isOB()) return undefined
-    const onsiteData = viewModeDataMap['Onsite']
-    if (!onsiteData) return undefined
-    const onsiteRow =
-      onsiteData.businessPlanItems['REVENUES'] &&
-      onsiteData.businessPlanItems['REVENUES'].data[rowKey]
-    if (!onsiteRow) return undefined
-
-    return getSum(
-      ...onsiteRow.data
-        .filter(item => isSaleCol(item.columnKey))
-        .map(item => item.value)
-    )
-  }
-
   const getOBFeeTotal = ({ sectionKey, rowKey }) => {
-    if (isOB()) return getOBRevenuesFeeTotal({ rowKey })
-    return getSumAllValues({ sectionKey, rowKey })
+    if (viewMode === 'OB') return sumCrossViewTotals(sectionKey, rowKey)
+    return getSumAllValues({
+      sectionKey,
+      rowKey,
+    })
   }
-
   const getRevenuesTotalInternal = ({ targetItem, serviceRowKey }) => {
-    if (isOB()) {
-      const duItems = getItems({
-        sectionKey: 'REVENUES',
-        rowKey: 'REVENUES_TOTAL',
-        filterCallback: item => isDU(item.columnKey),
-      })
-      const sum = getSum(
-        ...duItems.map(item =>
-          getTotalColumnAndSet({
-            targetItem: item,
-            serviceRowKey: sectionConfig.REVENUES.newRowKey,
-          })
-        )
-      )
-      return sum !== null ? decimalNegate(sum) : undefined
-    }
     if (isOBOrTotal()) {
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(locType, 'REVENUES', 'REVENUES_TOTAL', 'INTERNAL')
@@ -441,16 +378,17 @@ const useFormula = () => {
       if (!perLoc.some(v => v !== null)) return undefined
       return getSum(...perLoc)
     }
-    return getTotalColumnAndSet({ targetItem, serviceRowKey })
+    return getTotalColumnAndSet({
+      targetItem,
+      serviceRowKey,
+    })
   }
-
   const getDUCostSale = () => {
     const internal = getSoftwareProductionInternal()
     return internal ? -internal : null
   }
-
   const getDUCostSaleOB = ({ targetItem }) => {
-    if (!isOB()) return undefined
+    return undefined
     if (isSaleCol(targetItem.columnKey)) {
       const offshoreData = viewModeDataMap['Offshore']
       if (offshoreData) {
@@ -488,77 +426,37 @@ const useFormula = () => {
     const cell = row.data.find(c => c.columnKey === targetItem.columnKey)
     return cell && cell.value != null ? cell.value : undefined
   }
-
   const getDUCostInternal = () => {
-    if (isOB()) {
-      const offshoreData = viewModeDataMap['Offshore']
-      if (!offshoreData) return 0
-      const row =
-        offshoreData.businessPlanItems['COST_PRICE'] &&
-        offshoreData.businessPlanItems['COST_PRICE'].data['COST_OF_DU_SOLD']
-      if (!row) return 0
-      const saleValues = row.data
-        .filter(item => isSaleCol(item.columnKey))
-        .map(item => item.value)
-      const sum = getSum(...saleValues)
-      return sum !== null ? decimalNegate(sum) : 0
-    }
     return getSoftwareProductionInternal()
   }
-
   const getDUCostTotal = () => {
-    if (isOB()) return 0
+    if (viewMode === 'OB') {
+      const offshoreData = viewModeDataMap['Offshore']
+      if (!offshoreData) return 0
+      const revRow =
+        offshoreData.businessPlanItems['REVENUES'] &&
+        offshoreData.businessPlanItems['REVENUES'].data['REVENUES_TOTAL']
+      if (!revRow) return 0
+      const duValues = revRow.data
+        .filter(item => isDU(item.columnKey))
+        .map(item => item.value)
+      const sum = getSum(...duValues)
+      return sum !== null ? sum : 0
+    }
     return getSum(getDUCostInternal(), getDUCostSale())
   }
-
   const getSellingExpensesTotalSaleOB = ({ targetItem, serviceRowKey }) => {
-    if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const onsiteData = viewModeDataMap['Onsite']
-      if (onsiteData) {
-        const row =
-          onsiteData.businessPlanItems['SELLING_EXPENSES'] &&
-          onsiteData.businessPlanItems['SELLING_EXPENSES'].data[
-            'SELLING_EXPENSES_TOTAL'
-          ]
-        if (row) {
-          const cell = row.data.find(c => c.columnKey === 'SALE')
-          if (cell) return cell.value != null ? cell.value : null
-        }
-      }
-      return undefined
-    }
-    return getTotalColumnAndSet({ targetItem, serviceRowKey })
+    return getTotalColumnAndSet({
+      targetItem,
+      serviceRowKey,
+    })
   }
-
   const getIncentiveTotal = () => {
-    if (isOB()) {
-      const onsiteData = viewModeDataMap['Onsite']
-      if (!onsiteData) return undefined
-      const row =
-        onsiteData.businessPlanItems['SELLING_EXPENSES'] &&
-        onsiteData.businessPlanItems['SELLING_EXPENSES'].data['INCENTIVES']
-      if (!row) return undefined
-      return getSum(
-        ...row.data
-          .filter(item => item.columnKey !== 'TOTAL')
-          .map(item => item.value)
-      )
-    }
+    if (viewMode === 'OB') return sumCrossViewTotals('SELLING_EXPENSES', 'INCENTIVES')
     if (viewMode === 'Total') return undefined
     return getIncentiveSale()
   }
-
   const getIncentiveSale = () => {
-    if (isOB()) {
-      const onsiteData = viewModeDataMap['Onsite']
-      if (!onsiteData) return undefined
-      const row =
-        onsiteData.businessPlanItems['SELLING_EXPENSES'] &&
-        onsiteData.businessPlanItems['SELLING_EXPENSES'].data['INCENTIVES']
-      if (!row) return undefined
-      const cell = row.data.find(item => isSaleCol(item.columnKey))
-      return cell && cell.value != null ? cell.value : undefined
-    }
     if (viewMode === 'Total') return undefined
     const revenues = getSoftwareProductionSale()
     const rate = getItem({
@@ -572,21 +470,8 @@ const useFormula = () => {
       .dividedBy(100)
       .toNumber()
   }
-
   const getAgencyTotal = () => {
-    if (isOB()) {
-      const onsiteData = viewModeDataMap['Onsite']
-      if (!onsiteData) return undefined
-      const row =
-        onsiteData.businessPlanItems['SELLING_EXPENSES'] &&
-        onsiteData.businessPlanItems['SELLING_EXPENSES'].data['AGENCY_EXPENSE']
-      if (!row) return undefined
-      return getSum(
-        ...row.data
-          .filter(item => item.columnKey !== 'TOTAL')
-          .map(item => item.value)
-      )
-    }
+    if (viewMode === 'OB') return sumCrossViewTotals('SELLING_EXPENSES', 'AGENCY_EXPENSE')
     if (viewMode === 'Total') return undefined
     const value = getItem({
       sectionKey: 'SELLING_EXPENSES',
@@ -595,38 +480,16 @@ const useFormula = () => {
     }).value
     return value != null ? value : null
   }
-
   const getDirectLaborCostTotal = ({ targetItem, sectionKey, rowKey }) => {
-    if (isOB()) {
-      const onsiteData = viewModeDataMap['Onsite']
-      const offshoreData = viewModeDataMap['Offshore']
-      if (!onsiteData || !offshoreData) return undefined
-      const onsiteDirectLaborRow =
-        onsiteData.businessPlanItems['DELIVERY_EXPENSES'] &&
-        onsiteData.businessPlanItems['DELIVERY_EXPENSES'].data[
-          'DIRECT_LABOR_COST'
-        ]
-      if (!onsiteDirectLaborRow) return undefined
-      const offshoreRevenuesRow =
-        offshoreData.businessPlanItems['REVENUES'] &&
-        offshoreData.businessPlanItems['REVENUES'].data[
-          'SOFTWARE_PRODUCTION_REVENUES'
-        ]
-      if (!offshoreRevenuesRow) return undefined
-      return getSum(
-        ...onsiteDirectLaborRow.data
-          .filter(item => isDU(item.columnKey))
-          .map(item => item.value),
-        ...offshoreRevenuesRow.data
-          .filter(item => isDU(item.columnKey))
-          .map(item => item.value)
-      )
-    }
-    return getSumAllValues({ targetItem, sectionKey, rowKey })
+    if (viewMode === 'OB') return sumCrossViewTotals(sectionKey, rowKey)
+    return getSumAllValues({
+      targetItem,
+      sectionKey,
+      rowKey,
+    })
   }
-
   const getOBDeliveryExpenseDU = ({ targetItem, rowKey }) => {
-    if (!isOB()) return undefined
+    return undefined
     const locType = getOBLocationTypeByDisplayKey(
       getDisplayColumnKey(targetItem)
     )
@@ -641,29 +504,23 @@ const useFormula = () => {
     return cell && cell.value != null ? cell.value : null
   }
 
-  const getOBDeliveryExpenseTotalFromOnsite = ({ rowKey }) => {
-    if (!isOB()) return undefined
-    const onsiteData = viewModeDataMap['Onsite']
-    if (!onsiteData) return undefined
-    const row =
-      onsiteData.businessPlanItems['DELIVERY_EXPENSES'] &&
-      onsiteData.businessPlanItems['DELIVERY_EXPENSES'].data[rowKey]
-    if (!row) return undefined
-    return getSum(
-      ...row.data
-        .filter(item => item.columnKey !== 'TOTAL')
-        .map(item => item.value)
-    )
-  }
-
   const makeOBDeliveryTotal = ({ targetItem, sectionKey, rowKey }) => {
-    if (isOB()) return getOBDeliveryExpenseTotalFromOnsite({ rowKey })
-    return getSumAllValues({ targetItem, sectionKey, rowKey })
+    if (viewMode === 'OB') {
+      const cell = getCrossViewCell('Onsite', sectionKey, rowKey, 'TOTAL')
+      return cell == null ? null : cell
+    }
+    return getSumAllValues({
+      targetItem,
+      sectionKey,
+      rowKey,
+    })
   }
-
   const getSenorityBonusTotal = ({ targetItem, sectionKey, rowKey }) =>
-    getSumAllValues({ targetItem, sectionKey, rowKey })
-
+    getSumAllValues({
+      targetItem,
+      sectionKey,
+      rowKey,
+    })
   const getProjectBonusDU = ({ targetItem }) => {
     const bonus = getItem({
       sectionKey: 'REFERENCE',
@@ -683,30 +540,33 @@ const useFormula = () => {
       ? new Decimal(bonus).times(new Decimal(mmBillDU)).toNumber()
       : null
   }
-
   const getProjectBonusDUByViewMode = ({ targetItem, rowKey }) => {
-    if (isOB()) return getOBDeliveryExpenseDU({ targetItem, rowKey })
-    return getProjectBonusDU({ targetItem })
+    return getProjectBonusDU({
+      targetItem,
+    })
   }
-
   const getProjectBonusTotal = () => {
-    if (isOB())
-      return getOBDeliveryExpenseTotalFromOnsite({ rowKey: 'PROJECT_BONUS' })
+    if (viewMode === 'OB') {
+      const cell = getCrossViewCell('Onsite', 'DELIVERY_EXPENSES', 'PROJECT_BONUS', 'TOTAL')
+      return cell == null ? null : cell
+    }
     const duItems = getItems({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'PROJECT_BONUS',
       filterCallback: item => isDU(item.columnKey),
     })
     return getSum(
-      ...duItems.map(item => getProjectBonusDU({ targetItem: item }))
+      ...duItems.map(item =>
+        getProjectBonusDU({
+          targetItem: item,
+        })
+      )
     )
   }
-
   const getTotalTax = ({ targetItem }) => {
     const colKey = targetItem.columnKey
     if (colKey === 'INTERNAL') return null
     if (colKey !== 'TOTAL' && viewMode === 'Total') return undefined
-
     if (colKey === 'TOTAL' && isOBOrTotal()) {
       const perLoc = LOC_TYPES.map(locType => {
         const revTotal = getCrossViewCell(
@@ -725,32 +585,6 @@ const useFormula = () => {
       if (perLoc.some(v => v !== null)) return getSum(...perLoc)
       return undefined
     }
-
-    if (isOB() && isSaleCol(colKey)) {
-      return getSum(
-        ...LOC_TYPES.map(locType => {
-          const rev = getCrossViewCell(
-            locType,
-            'REVENUES',
-            'REVENUES_TOTAL',
-            'SALE'
-          )
-          const pic = getCrossViewCell(locType, 'TAX', 'PIC_CIT', 'TOTAL')
-          if (rev == null || pic == null) return null
-          return new Decimal(rev)
-            .times(new Decimal(pic))
-            .dividedBy(100)
-            .toNumber()
-        })
-      )
-    }
-
-    if (isOB()) {
-      const cross = getOBCrossViewCell('TAX', 'TAX_TOTAL', targetItem)
-      if (cross !== undefined) return cross
-      return null
-    }
-
     const revenues = getItem({
       sectionKey: 'REVENUES',
       rowKey: 'REVENUES_TOTAL',
@@ -773,9 +607,10 @@ const useFormula = () => {
           .toNumber()
       : null
   }
-
   const getOBTaxDU = ({ targetItem }) => {
-    if (!isOB()) return getTotalTax({ targetItem })
+    return getTotalTax({
+      targetItem,
+    })
     const locType = getOBLocationTypeByDisplayKey(
       getDisplayColumnKey(targetItem)
     )
@@ -800,71 +635,84 @@ const useFormula = () => {
       .dividedBy(100)
       .toNumber()
   }
-
   const getOBTaxInternal = () => {
-    if (!isOB()) return undefined
+    return undefined
     const duItems = getItems({
       sectionKey: 'TAX',
       rowKey: 'TAX_TOTAL',
       filterCallback: item => isDU(item.columnKey),
     })
-    const sum = getSum(...duItems.map(item => getOBTaxDU({ targetItem: item })))
+    const sum = getSum(
+      ...duItems.map(item =>
+        getOBTaxDU({
+          targetItem: item,
+        })
+      )
+    )
     return decimalNegate(sum === null ? 0 : sum)
   }
-
   const getTaxExpensesTotal = ({ targetItem }) => {
-    if (isOB()) {
-      return getTotalTax({
-        targetItem: getItem({
-          sectionKey: 'TAX',
-          rowKey: 'TAX_TOTAL',
-          columnKey: 'TOTAL',
-        }),
-      })
-    }
-    return getTotalTax({ targetItem })
+    if (viewMode === 'OB') return sumCrossViewTotals('TAX', 'TAX_TOTAL')
+    return getTotalTax({
+      targetItem,
+    })
   }
 
+  const getPICCITTotal = () => {
+    if (viewMode === 'OB') return sumCrossViewTotals('TAX', 'PIC_CIT')
+    return undefined
+  }
   const sumOBMarginDU = (rowKey, fn) => {
     const items = getItems({
       sectionKey: 'MARGIN',
       rowKey,
       filterCallback: item => isDU(item.columnKey),
     })
-    return getSum(...items.map(item => fn({ targetItem: item })))
+    return getSum(
+      ...items.map(item =>
+        fn({
+          targetItem: item,
+        })
+      )
+    )
   }
-
   const sumOBRefDU = (rowKey, fn) => {
     const items = getItems({
       sectionKey: 'REFERENCE',
       rowKey,
       filterCallback: item => isDU(item.columnKey),
     })
-    return getSum(...items.map(item => fn({ targetItem: item })))
+    return getSum(
+      ...items.map(item =>
+        fn({
+          targetItem: item,
+        })
+      )
+    )
   }
-
-  const getAllocationOfPoolTotal = () =>
-    sumOBMarginDU('ALLOCATION_OF_POOL_AND_UNBILLABLE', getAllocationOfPoolDU)
-
+  const getAllocationOfPoolTotal = () => {
+    if (viewMode === 'OB') {
+      const cell = getCrossViewCell('Onsite', 'MARGIN', 'ALLOCATION_OF_POOL_AND_UNBILLABLE', 'TOTAL')
+      return cell == null ? null : cell
+    }
+    return sumOBMarginDU('ALLOCATION_OF_POOL_AND_UNBILLABLE', getAllocationOfPoolDU)
+  }
   const getOBAllocationPoolInternal = () => {
-    if (!isOB()) return undefined
+    return undefined
     const sum = sumOBMarginDU(
       'ALLOCATION_OF_POOL_AND_UNBILLABLE',
       getAllocationOfPoolDU
     )
     return sum != null ? decimalNegate(sum) : null
   }
-
   const getOBAllocationPoolCellValue = ({ targetItem, columnKey }) => {
-    if (!isOB()) return undefined
+    return undefined
     const colKey = (targetItem && targetItem.columnKey) || columnKey
     const displayKey = getDisplayColumnKey(targetItem) || colKey
     if (isSaleCol(colKey)) {
       const locType = getOBLocationTypeByDisplayKey(displayKey)
       if (!locType) return undefined
-
       if (locType === 'Offshore') return 0
-
       const cell = getCrossViewCell(
         locType,
         'MARGIN',
@@ -878,7 +726,6 @@ const useFormula = () => {
         getDisplayColumnKey(targetItem)
       )
       if (locType === 'Offshore') return 0
-
       const directLabor = getOBDeliveryExpenseDU({
         targetItem,
         rowKey: 'DIRECT_LABOR_COST',
@@ -910,9 +757,7 @@ const useFormula = () => {
     }
     return 0
   }
-
   const getAllocationOfPoolDU = ({ targetItem }) => {
-    if (isOB()) return getOBAllocationPoolCellValue({ targetItem })
     const directLabor = getItem({
       sectionKey: 'DELIVERY_EXPENSES',
       rowKey: 'DIRECT_LABOR_COST',
@@ -932,120 +777,8 @@ const useFormula = () => {
       .minus(new Decimal(directLabor))
       .toNumber()
   }
-
   const getDirectMargin = ({ targetItem }) => {
     const colKey = targetItem.columnKey
-
-    if (isOB() && colKey === 'INTERNAL') {
-      const internalRevItem = getItem({
-        sectionKey: 'REVENUES',
-        rowKey: 'REVENUES_TOTAL',
-        columnKey: 'INTERNAL',
-      })
-      const internalCostItem = getItem({
-        sectionKey: 'COST_PRICE',
-        rowKey: 'COST_PRICE_TOTAL',
-        columnKey: 'INTERNAL',
-      })
-      const internalSellingItem = getItem({
-        sectionKey: 'SELLING_EXPENSES',
-        rowKey: 'SELLING_EXPENSES_TOTAL',
-        columnKey: 'INTERNAL',
-      })
-      const internalDeliveryItem = getItem({
-        sectionKey: 'DELIVERY_EXPENSES',
-        rowKey: 'DELIVERY_EXPENSES_TOTAL',
-        columnKey: 'INTERNAL',
-      })
-      const revVal = getRevenuesTotalInternal({
-        targetItem: internalRevItem,
-        serviceRowKey: sectionConfig.REVENUES.newRowKey,
-      })
-      const costVal = getTotalColumnAndSet({
-        targetItem: internalCostItem,
-        serviceRowKey:
-          sectionConfig.COST_PRICE && sectionConfig.COST_PRICE.newRowKey,
-      })
-      const sellingVal = getTotalColumnAndSet({
-        targetItem: internalSellingItem,
-        serviceRowKey:
-          sectionConfig.SELLING_EXPENSES &&
-          sectionConfig.SELLING_EXPENSES.newRowKey,
-      })
-      const deliveryVal = getTotalColumnAndSet({
-        targetItem: internalDeliveryItem,
-        serviceRowKey:
-          sectionConfig.DELIVERY_EXPENSES &&
-          sectionConfig.DELIVERY_EXPENSES.newRowKey,
-      })
-      const taxVal = getOBTaxInternal()
-      if (revVal == null) return null
-      return new Decimal(revVal)
-        .minus(new Decimal(costVal || 0))
-        .minus(new Decimal(sellingVal || 0))
-        .minus(new Decimal(deliveryVal || 0))
-        .minus(new Decimal(taxVal || 0))
-        .toNumber()
-    } else if (isOB() && isSaleCol(colKey)) {
-      const ck = targetItem.compareKey
-      const revenuesItem = getItem({
-        sectionKey: 'REVENUES',
-        rowKey: 'REVENUES_TOTAL',
-        columnKey: colKey,
-        compareKey: ck,
-      })
-      const costItem = getItem({
-        sectionKey: 'COST_PRICE',
-        rowKey: 'COST_PRICE_TOTAL',
-        columnKey: colKey,
-        compareKey: ck,
-      })
-      const sellingItem = getItem({
-        sectionKey: 'SELLING_EXPENSES',
-        rowKey: 'SELLING_EXPENSES_TOTAL',
-        columnKey: colKey,
-        compareKey: ck,
-      })
-      const deliveryItem = getItem({
-        sectionKey: 'DELIVERY_EXPENSES',
-        rowKey: 'DELIVERY_EXPENSES_TOTAL',
-        columnKey: colKey,
-        compareKey: ck,
-      })
-      const taxItem = getItem({
-        sectionKey: 'TAX',
-        rowKey: 'TAX_TOTAL',
-        columnKey: colKey,
-        compareKey: ck,
-      })
-      const revenuesValue = getTotalColumnAndSet({
-        targetItem: revenuesItem,
-        serviceRowKey: sectionConfig.REVENUES.newRowKey,
-      })
-      const costValue = getTotalColumnAndSet({
-        targetItem: costItem,
-        serviceRowKey:
-          sectionConfig.COST_PRICE && sectionConfig.COST_PRICE.newRowKey,
-      })
-      const sellingValue = getSellingExpensesTotalSaleOB({
-        targetItem: sellingItem,
-        serviceRowKey:
-          sectionConfig.SELLING_EXPENSES &&
-          sectionConfig.SELLING_EXPENSES.newRowKey,
-      })
-      const deliveryValue = getTotalColumnAndSet({
-        targetItem: deliveryItem,
-        serviceRowKey:
-          sectionConfig.DELIVERY_EXPENSES &&
-          sectionConfig.DELIVERY_EXPENSES.newRowKey,
-      })
-      const tax = getTotalTax({ targetItem: taxItem })
-      const expenseSum = getSum(costValue, sellingValue, deliveryValue, tax)
-      return revenuesValue != null && expenseSum != null
-        ? new Decimal(revenuesValue).minus(new Decimal(expenseSum)).toNumber()
-        : null
-    }
-
     const ck = targetItem.compareKey
     const colItems = {
       revenues: getItem({
@@ -1079,17 +812,13 @@ const useFormula = () => {
         compareKey: ck,
       }),
     }
-
-    const taxFormula =
-      isOB() && colKey === 'TOTAL'
-        ? getTaxExpensesTotal({ targetItem: colItems.tax })
-        : isOB() && colKey === 'INTERNAL'
-          ? getOBTaxInternal()
-          : isOB() && isDU(colKey)
-            ? getOBTaxDU({ targetItem: colItems.tax })
-            : getTotalTax({ targetItem: colItems.tax })
+    let taxFormula = getTotalTax({
+      targetItem: colItems.tax,
+    })
+    if (viewMode === 'OB' && colKey === 'TOTAL') {
+      taxFormula = getTaxExpensesTotal({ targetItem: colItems.tax })
+    }
     const taxValue = taxFormula !== undefined ? taxFormula : colItems.tax.value
-
     const expenseSum = getSum(
       ...[colItems.cost, colItems.selling, colItems.delivery].map(item =>
         getTotalColumnAndSet({
@@ -1101,23 +830,16 @@ const useFormula = () => {
       ),
       taxValue
     )
-
     const revenuesValue = getTotalColumnAndSet({
       targetItem: colItems.revenues,
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
-
     return revenuesValue != null && expenseSum != null
       ? new Decimal(revenuesValue).minus(new Decimal(expenseSum)).toNumber()
       : null
   }
-
   const getDirectMarginBonusDU = ({ targetItem }) => {
-    if (
-      isOBOrTotal() &&
-      !isDU(targetItem.columnKey) &&
-      !(isOB() && targetItem.columnKey === 'INTERNAL')
-    ) {
+    if (isOBOrTotal() && !isDU(targetItem.columnKey) && true) {
       const cross = getOBCrossViewCell(
         'MARGIN',
         'DIRECT_MARGIN_BONUS',
@@ -1145,44 +867,8 @@ const useFormula = () => {
       })
     )
   }
-
   const getDirectMarginBonusSaleInternal = ({ targetItem }) => {
     const colKey = targetItem.columnKey
-    if (isOB() && colKey === 'INTERNAL') {
-      const dm = getDirectMargin({ targetItem })
-      const projectBonus = getOBDeliveryExpenseInternal({
-        sectionKey: 'DELIVERY_EXPENSES',
-        rowKey: 'PROJECT_BONUS',
-      })
-      const incentives = getOBSumDUInternal({
-        sectionKey: 'SELLING_EXPENSES',
-        rowKey: 'INCENTIVES',
-      })
-      return getSum(dm, projectBonus, incentives)
-    }
-    if (isOB() && isSaleCol(colKey)) {
-      const ck = targetItem.compareKey
-      const dm = getDirectMargin({
-        targetItem: getItem({
-          sectionKey: 'MARGIN',
-          rowKey: 'DIRECT_MARGIN',
-          columnKey: colKey,
-          compareKey: ck,
-        }),
-      })
-      const pbItem = getItem({
-        sectionKey: 'DELIVERY_EXPENSES',
-        rowKey: 'PROJECT_BONUS',
-        columnKey: colKey,
-        compareKey: ck,
-      })
-      const projectBonus = getProjectBonusDUByViewMode({
-        targetItem: pbItem,
-        rowKey: 'PROJECT_BONUS',
-      })
-      const incentives = getIncentiveSale()
-      return getSum(dm, projectBonus, incentives)
-    }
     if (isOBOrTotal() && isSaleCol(colKey)) {
       const perLoc = LOC_TYPES.map(locType =>
         getCrossViewCell(locType, 'MARGIN', 'DIRECT_MARGIN', colKey)
@@ -1200,20 +886,8 @@ const useFormula = () => {
       })
     )
   }
-
   const getDirectMarginBonusTotal = () => {
-    if (isOB()) {
-      const dmItem = getItem({
-        sectionKey: 'MARGIN',
-        rowKey: 'DIRECT_MARGIN',
-        columnKey: 'TOTAL',
-      })
-      const dm = getDirectMargin({ targetItem: dmItem })
-      const incentives = getIncentiveTotal()
-      const projectBonus = getProjectBonusTotal()
-      return getSum(dm, incentives, projectBonus)
-    }
-    if (isOBOrTotal())
+    if (viewMode === 'Total')
       return sumCrossViewTotals('MARGIN', 'DIRECT_MARGIN_BONUS')
     return getSum(
       getIncentiveTotal(),
@@ -1227,7 +901,6 @@ const useFormula = () => {
       })
     )
   }
-
   const getIndirectMarginDU = ({ targetItem }) => {
     const dm = getDirectMargin({
       targetItem: getItem({
@@ -1249,84 +922,15 @@ const useFormula = () => {
       ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber()
       : null
   }
-
   const getIndirectMarginTotal = () => {
-    if (isOB()) {
-      const dmOnsite = getCrossViewCell(
-        'Onsite',
-        'MARGIN',
-        'DIRECT_MARGIN',
-        'TOTAL'
-      )
-      const dmOffshore = getCrossViewCell(
-        'Offshore',
-        'MARGIN',
-        'DIRECT_MARGIN',
-        'TOTAL'
-      )
-      if (dmOnsite == null && dmOffshore == null) return null
-
-      let onsiteAdj = 0
-      const onsiteLocData = viewModeDataMap['Onsite']
-      if (onsiteLocData) {
-        const swProdRow =
-          onsiteLocData.businessPlanItems['REVENUES'] &&
-          onsiteLocData.businessPlanItems['REVENUES'].data[
-            'SOFTWARE_PRODUCTION_REVENUES'
-          ]
-        if (swProdRow) {
-          const duSum =
-            getSum(
-              ...swProdRow.data.filter(c => isDU(c.columnKey)).map(c => c.value)
-            ) || 0
-          const internalCell = swProdRow.data.find(
-            c => c.columnKey === 'INTERNAL'
-          )
-          onsiteAdj = new Decimal(duSum)
-            .plus(
-              internalCell && internalCell.value != null
-                ? internalCell.value
-                : 0
-            )
-            .toNumber()
-        }
-      }
-
-      let offshoreAdj = 0
-      const offshoreLocData = viewModeDataMap['Offshore']
-      if (offshoreLocData) {
-        const delivRow =
-          offshoreLocData.businessPlanItems['DELIVERY_EXPENSES'] &&
-          offshoreLocData.businessPlanItems['DELIVERY_EXPENSES'].data[
-            'DELIVERY_EXPENSES_TOTAL'
-          ]
-        if (delivRow) {
-          const duSum =
-            getSum(
-              ...delivRow.data.filter(c => isDU(c.columnKey)).map(c => c.value)
-            ) || 0
-          const internalCell = delivRow.data.find(
-            c => c.columnKey === 'INTERNAL'
-          )
-          offshoreAdj = new Decimal(duSum)
-            .plus(
-              internalCell && internalCell.value != null
-                ? internalCell.value
-                : 0
-            )
-            .toNumber()
-        }
-      }
-
+    if (viewMode === 'Total') return sumCrossViewTotals('MARGIN', 'INDIRECT_MARGIN')
+    if (viewMode === 'OB') {
+      const dmBonus = getDirectMarginBonusTotal()
       const alloc = getAllocationOfPoolTotal()
-
-      return new Decimal(dmOnsite || 0)
-        .minus(onsiteAdj)
-        .plus(new Decimal(dmOffshore || 0).plus(offshoreAdj))
-        .minus(new Decimal(alloc || 0))
-        .toNumber()
+      return dmBonus != null
+        ? new Decimal(dmBonus).plus(new Decimal(alloc || 0)).toNumber()
+        : null
     }
-    if (isOBOrTotal()) return sumCrossViewTotals('MARGIN', 'INDIRECT_MARGIN')
     const dm = getDirectMargin({
       targetItem: getItem({
         sectionKey: 'MARGIN',
@@ -1339,40 +943,7 @@ const useFormula = () => {
       ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber()
       : null
   }
-
   const getIndirectMarginInternalSale = ({ targetItem }) => {
-    if (isOB() && targetItem.columnKey === 'INTERNAL') {
-      const duItems = getItems({
-        sectionKey: 'MARGIN',
-        rowKey: 'INDIRECT_MARGIN',
-        filterCallback: item => isDU(item.columnKey),
-      })
-      const sum = getSum(
-        ...duItems.map(item => getIndirectMarginDU({ targetItem: item }))
-      )
-      return sum != null ? decimalNegate(sum) : null
-    }
-    if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
-      const dm = getDirectMargin({
-        targetItem: getItem({
-          sectionKey: 'MARGIN',
-          rowKey: 'DIRECT_MARGIN',
-          columnKey: targetItem.columnKey,
-          compareKey: targetItem.compareKey,
-        }),
-      })
-      if (saleLocType === 'Onsite') return dm
-      const offshoreSellingExp = getCrossViewCell(
-        'Offshore',
-        'SELLING_EXPENSES',
-        'SELLING_EXPENSES_TOTAL',
-        'SALE'
-      )
-      return dm != null
-        ? new Decimal(dm).minus(new Decimal(offshoreSellingExp || 0)).toNumber()
-        : null
-    }
     if (viewMode === 'Total' && isSaleCol(targetItem.columnKey)) {
       const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
       if (saleLocType) {
@@ -1408,7 +979,6 @@ const useFormula = () => {
       ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber()
       : null
   }
-
   const getMarginRate = ({
     targetItem,
     marginRowKey,
@@ -1418,19 +988,16 @@ const useFormula = () => {
   }) => {
     const colKey = targetItem.columnKey
     const ck = targetItem.compareKey
-
     if (isInternalFn && isInternalFn(colKey))
       return getOBNegativeCrossViewDUSum('MARGIN', rateRowKey)
-
     if (
       colKey === 'TOTAL' &&
       isOBOrTotal() &&
-      (rateRowKey !== 'DIRECT_MARGIN_RATE' || isOB())
+      (rateRowKey !== 'DIRECT_MARGIN_RATE' || false)
     ) {
       const totals = sumCrossViewTotals('MARGIN', rateRowKey)
       if (totals !== undefined) return totals
     }
-
     if (isOBOrTotal() && isSaleCol(colKey)) {
       const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
       if (saleLocType) {
@@ -1443,12 +1010,10 @@ const useFormula = () => {
       if (perLoc.some(v => v !== null)) return getSum(...perLoc)
       return undefined
     }
-
     if (!isDU(colKey) || !isOBOrTotal()) {
       const crossView = getOBCrossViewCell('MARGIN', rateRowKey, targetItem)
       if (crossView !== undefined) return crossView
     }
-
     const marginValue = marginValueFn
       ? marginValueFn({
           targetItem: getItem({
@@ -1459,7 +1024,6 @@ const useFormula = () => {
           }),
         })
       : null
-
     const revenuesValue = getTotalColumnAndSet({
       targetItem: getItem({
         sectionKey: 'REVENUES',
@@ -1469,10 +1033,8 @@ const useFormula = () => {
       }),
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
     })
-
     return decimalDividePercent(marginValue, revenuesValue)
   }
-
   const getOBSaleLocTypeDM = locType => {
     const dm = getCrossViewCell(locType, 'MARGIN', 'DIRECT_MARGIN', 'SALE')
     if (locType === 'Onsite') {
@@ -1487,7 +1049,6 @@ const useFormula = () => {
     }
     return dm
   }
-
   const getOBLocTypeDMTotal = locType => {
     const dmStored = getCrossViewCell(
       locType,
@@ -1532,7 +1093,6 @@ const useFormula = () => {
     }
     return dmStored
   }
-
   const getOBLocTypeRevTotal = locType => {
     const revStored = getCrossViewCell(
       locType,
@@ -1557,106 +1117,8 @@ const useFormula = () => {
     return new Decimal(revStored).minus(adj).toNumber()
   }
 
-  const getOBTotalRateByLocType = marginRowKey => {
-    if (!isOB()) return undefined
-    const allocTotal =
-      marginRowKey === 'INDIRECT_MARGIN' ? getAllocationOfPoolTotal() : 0
-    const parts = LOC_TYPES.map(locType => {
-      const dm = getOBLocTypeDMTotal(locType)
-      if (dm == null) return null
-      const rev = getOBLocTypeRevTotal(locType)
-      if (!rev) return null
-      let value = dm
-      if (marginRowKey === 'DIRECT_MARGIN_BONUS') {
-        const inc = getCrossViewCell(
-          locType,
-          'SELLING_EXPENSES',
-          'INCENTIVES',
-          'TOTAL'
-        )
-
-        const pb =
-          locType === 'Offshore'
-            ? 0
-            : getCrossViewCell(
-                locType,
-                'DELIVERY_EXPENSES',
-                'PROJECT_BONUS',
-                'TOTAL'
-              )
-        value = new Decimal(dm)
-          .plus(inc || 0)
-          .plus(pb || 0)
-          .toNumber()
-      } else if (marginRowKey === 'INDIRECT_MARGIN') {
-        if (locType === 'Onsite') {
-          value = new Decimal(dm).minus(allocTotal || 0).toNumber()
-        }
-      }
-      return decimalDividePercent(value, rev)
-    })
-    return parts.some(v => v !== null) ? getSum(...parts) : null
-  }
-
-  const getOBSaleRateByParts = (marginRowKey, targetItem) => {
-    const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
-    const locTypes = saleLocType ? [saleLocType] : LOC_TYPES
-    const parts = locTypes.map(locType => {
-      const dm = getOBSaleLocTypeDM(locType)
-      let margin
-      if (marginRowKey === 'DIRECT_MARGIN') {
-        margin = dm
-      } else if (marginRowKey === 'DIRECT_MARGIN_BONUS') {
-        const pb = getCrossViewCell(
-          locType,
-          'DELIVERY_EXPENSES',
-          'PROJECT_BONUS',
-          'SALE'
-        )
-        const inc = getCrossViewCell(
-          locType,
-          'SELLING_EXPENSES',
-          'INCENTIVES',
-          'SALE'
-        )
-        margin = dm != null ? getSum(dm, pb, inc) : null
-      } else if (marginRowKey === 'INDIRECT_MARGIN') {
-        const alloc = getCrossViewCell(
-          locType,
-          'MARGIN',
-          'ALLOCATION_OF_POOL_AND_UNBILLABLE',
-          'SALE'
-        )
-        margin =
-          dm != null
-            ? new Decimal(dm).minus(new Decimal(alloc || 0)).toNumber()
-            : null
-      } else {
-        margin = getCrossViewCell(locType, 'MARGIN', marginRowKey, 'SALE')
-      }
-      const rev = getCrossViewCell(
-        locType,
-        'REVENUES',
-        'REVENUES_TOTAL',
-        'SALE'
-      )
-      return decimalDividePercent(margin, rev)
-    })
-    return parts.some(v => v !== null) ? getSum(...parts) : null
-  }
-
   const getDirectMarginRate = ({ targetItem }) => {
     const colKey = targetItem.columnKey
-    if (isOB() && colKey === 'TOTAL')
-      return getOBTotalRateByLocType('DIRECT_MARGIN')
-    if (isOB() && colKey === 'INTERNAL') {
-      const sum = sumOBMarginDU('DIRECT_MARGIN_RATE', getDirectMarginRate)
-      return sum != null ? decimalNegate(sum) : null
-    }
-    if (isOB() && isSaleCol(colKey)) {
-      const byParts = getOBSaleRateByParts('DIRECT_MARGIN', targetItem)
-      if (byParts != null) return byParts
-    }
     return getMarginRate({
       targetItem,
       marginRowKey: 'DIRECT_MARGIN',
@@ -1664,9 +1126,7 @@ const useFormula = () => {
       rateRowKey: 'DIRECT_MARGIN_RATE',
     })
   }
-
   const getDirectMarginBonusRateTotal = () => {
-    if (isOB()) return getOBTotalRateByLocType('DIRECT_MARGIN_BONUS')
     return decimalDividePercent(
       getDirectMarginBonusTotal(),
       getTotalColumnAndSet({
@@ -1679,28 +1139,15 @@ const useFormula = () => {
       })
     )
   }
-
   const getDirectMarginBonusRateSaleInternal = ({ targetItem }) => {
-    if (isOB() && targetItem.columnKey === 'INTERNAL') {
-      const sum = sumOBMarginDU(
-        'DIRECT_MARGIN_BONUS_RATE',
-        getDirectMarginBonusRateDU
-      )
-      return sum != null ? decimalNegate(sum) : null
-    }
-    if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const byParts = getOBSaleRateByParts('DIRECT_MARGIN_BONUS', targetItem)
-      if (byParts != null) return byParts
-    }
     return getMarginRate({
       targetItem,
       marginRowKey: 'DIRECT_MARGIN_BONUS',
       marginValueFn: getDirectMarginBonusSaleInternal,
       rateRowKey: 'DIRECT_MARGIN_BONUS_RATE',
-      isInternalFn: colKey => isOB() && colKey === 'INTERNAL',
+      isInternalFn: colKey => false,
     })
   }
-
   const getDirectMarginBonusRateDU = ({ targetItem }) =>
     getMarginRate({
       targetItem,
@@ -1708,7 +1155,6 @@ const useFormula = () => {
       marginValueFn: getDirectMarginBonusDU,
       rateRowKey: 'DIRECT_MARGIN_BONUS_RATE',
     })
-
   const getIndirectMarginRateDU = ({ targetItem }) =>
     getMarginRate({
       targetItem,
@@ -1716,27 +1162,16 @@ const useFormula = () => {
       marginValueFn: getIndirectMarginDU,
       rateRowKey: 'INDIRECT_MARGIN_RATE',
     })
-
   const getIndirectMarginRateSaleInternal = ({ targetItem }) => {
-    if (isOB() && targetItem.columnKey === 'INTERNAL') {
-      const sum = sumOBMarginDU('INDIRECT_MARGIN_RATE', getIndirectMarginRateDU)
-      return sum != null ? decimalNegate(sum) : null
-    }
-    if (isOB() && isSaleCol(targetItem.columnKey)) {
-      const byParts = getOBSaleRateByParts('INDIRECT_MARGIN', targetItem)
-      if (byParts != null) return byParts
-    }
     return getMarginRate({
       targetItem,
       marginRowKey: 'INDIRECT_MARGIN',
       marginValueFn: getIndirectMarginInternalSale,
       rateRowKey: 'INDIRECT_MARGIN_RATE',
-      isInternalFn: colKey => isOB() && colKey === 'INTERNAL',
+      isInternalFn: colKey => false,
     })
   }
-
   const getIndirectMarginRateTotal = () => {
-    if (isOB()) return getOBTotalRateByLocType('INDIRECT_MARGIN')
     return decimalDividePercent(
       getIndirectMarginTotal(),
       getTotalColumnAndSet({
@@ -1749,7 +1184,6 @@ const useFormula = () => {
       })
     )
   }
-
   const getOBCrossViewRefCell = ({ targetItem, refRowKey }) => {
     if (isOBOrTotal() && isSaleCol(targetItem.columnKey)) {
       const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
@@ -1769,49 +1203,17 @@ const useFormula = () => {
     }
     return getOBCrossViewCell('REFERENCE', refRowKey, targetItem)
   }
-
   const makeRefCrossViewFn =
     refRowKey =>
-    ({ targetItem }) =>
-      getOBCrossViewRefCell({ targetItem, refRowKey })
-
-  const getDeliveryAverageExpensesTotal = () => {
-    if (isOB()) {
-      return getSum(
-        ...LOC_TYPES.map(locType => {
-          const mmTotal = getCrossViewCell(
-            locType,
-            'MAN_MONTH',
-            'MM_PRODUCTION',
-            'TOTAL'
-          )
-          if (locType === 'Onsite') {
-            const delivery = getCrossViewCell(
-              'Onsite',
-              'DELIVERY_EXPENSES',
-              'DELIVERY_EXPENSES_TOTAL',
-              'TOTAL'
-            )
-            return decimalDivide(delivery, mmTotal)
-          }
-          const offshoreData = viewModeDataMap['Offshore']
-          if (!offshoreData) return null
-          const deRow =
-            offshoreData.businessPlanItems['DELIVERY_EXPENSES'] &&
-            offshoreData.businessPlanItems['DELIVERY_EXPENSES'].data[
-              'DELIVERY_EXPENSES_TOTAL'
-            ]
-          if (!deRow) return null
-          const delivery = getSum(
-            ...deRow.data
-              .filter(c => !isDU(c.columnKey) && c.columnKey !== 'TOTAL')
-              .map(c => c.value)
-          )
-          return decimalDivide(delivery, mmTotal)
-        })
-      )
+    ({ targetItem }) => {
+      if (viewMode === 'OB') return null
+      return getOBCrossViewRefCell({
+        targetItem,
+        refRowKey,
+      })
     }
-    if (isOBOrTotal())
+  const getDeliveryAverageExpensesTotal = () => {
+    if (viewMode === 'Total')
       return sumCrossViewTotals('REFERENCE', 'DELIVERY_AVERAGE_EXPENSES')
     return decimalDivide(
       getTotalColumnAndSet({
@@ -1825,44 +1227,15 @@ const useFormula = () => {
       getMMManufactureTotal()
     )
   }
-
   const getDeliveryAverageExpensesInternal = () => {
-    if (!isOB()) return null
+    return null
     const sum = sumOBRefDU(
       'DELIVERY_AVERAGE_EXPENSES',
       getDeliveryAverageExpensesDU
     )
     return sum != null ? decimalNegate(sum) : null
   }
-
   const getDeliveryAverageExpensesSale = ({ targetItem }) => {
-    if (isOB()) {
-      const saleLocType = getSaleLocType(getDisplayColumnKey(targetItem))
-      if (saleLocType === 'Onsite') return 0
-      if (saleLocType === 'Offshore') {
-        const cost = getCrossViewCell(
-          'Offshore',
-          'COST_PRICE',
-          'COST_OF_DU_SOLD',
-          'SALE'
-        )
-        const mm = getCrossViewCell('Offshore', 'MAN_MONTH', 'MM_BILL', 'SALE')
-        return decimalDivide(cost, mm)
-      }
-      return getSum(
-        ...LOC_TYPES.map(locType => {
-          if (locType === 'Onsite') return 0
-          const cost = getCrossViewCell(
-            locType,
-            'COST_PRICE',
-            'COST_OF_DU_SOLD',
-            'SALE'
-          )
-          const mm = getCrossViewCell(locType, 'MAN_MONTH', 'MM_BILL', 'SALE')
-          return decimalDivide(cost, mm)
-        })
-      )
-    }
     const cross = getOBCrossViewRefCell({
       targetItem,
       refRowKey: 'DELIVERY_AVERAGE_EXPENSES',
@@ -1870,27 +1243,7 @@ const useFormula = () => {
     if (cross !== undefined) return cross
     return decimalDivide(getDUCostSale(), getMMManufactureSale())
   }
-
   const getDeliveryAverageExpensesDU = ({ targetItem }) => {
-    if (isOB()) {
-      const locType = getOBLocationTypeByDisplayKey(
-        getDisplayColumnKey(targetItem)
-      )
-      if (!locType) return null
-      if (locType === 'Offshore') return 0
-
-      const delivery = getOBDeliveryExpenseDU({
-        targetItem,
-        rowKey: 'DELIVERY_EXPENSES_TOTAL',
-      })
-      if (delivery === undefined) return undefined
-      const mm = getItem({
-        sectionKey: 'MAN_MONTH',
-        rowKey: 'MM_PRODUCTION',
-        columnKey: targetItem.columnKey,
-      }).value
-      return decimalDivide(delivery, mm)
-    }
     const cross = getOBCrossViewRefCell({
       targetItem,
       refRowKey: 'DELIVERY_AVERAGE_EXPENSES',
@@ -1912,44 +1265,8 @@ const useFormula = () => {
       }).value
     )
   }
-
   const getSalaryAverageExpensesTotal = () => {
-    if (isOB()) {
-      return getSum(
-        ...LOC_TYPES.map(locType => {
-          const mmTotal = getCrossViewCell(
-            locType,
-            'MAN_MONTH',
-            'MM_PRODUCTION',
-            'TOTAL'
-          )
-          if (locType === 'Onsite') {
-            const dlcTotal = getCrossViewCell(
-              'Onsite',
-              'DELIVERY_EXPENSES',
-              'DIRECT_LABOR_COST',
-              'TOTAL'
-            )
-            return decimalDivide(dlcTotal, mmTotal)
-          }
-          const offshoreData = viewModeDataMap['Offshore']
-          if (!offshoreData) return null
-          const dlcRow =
-            offshoreData.businessPlanItems['DELIVERY_EXPENSES'] &&
-            offshoreData.businessPlanItems['DELIVERY_EXPENSES'].data[
-              'DIRECT_LABOR_COST'
-            ]
-          if (!dlcRow) return null
-          const dlc = getSum(
-            ...dlcRow.data
-              .filter(c => !isDU(c.columnKey) && c.columnKey !== 'TOTAL')
-              .map(c => c.value)
-          )
-          return decimalDivide(dlc, mmTotal)
-        })
-      )
-    }
-    if (isOBOrTotal())
+    if (viewMode === 'Total')
       return sumCrossViewTotals('REFERENCE', 'SALARY_AVERAGE_EXPENSES')
     return decimalDivide(
       getDirectLaborCostTotal({
@@ -1959,36 +1276,15 @@ const useFormula = () => {
       getMMManufactureTotal()
     )
   }
-
   const getSalaryAverageExpensesInternal = () => {
-    if (!isOB()) return null
+    return null
     const sum = sumOBRefDU(
       'SALARY_AVERAGE_EXPENSES',
       getSalaryAverageExpensesDU
     )
     return sum != null ? decimalNegate(sum) : null
   }
-
   const getSalaryAverageExpensesDU = ({ targetItem }) => {
-    if (isOB()) {
-      const locType = getOBLocationTypeByDisplayKey(
-        getDisplayColumnKey(targetItem)
-      )
-      if (!locType) return null
-      if (locType === 'Offshore') return 0
-
-      const dlc = getOBDeliveryExpenseDU({
-        targetItem,
-        rowKey: 'DIRECT_LABOR_COST',
-      })
-      if (dlc === undefined) return undefined
-      const mm = getItem({
-        sectionKey: 'MAN_MONTH',
-        rowKey: 'MM_PRODUCTION',
-        columnKey: targetItem.columnKey,
-      }).value
-      return decimalDivide(dlc, mm)
-    }
     const cross = getOBCrossViewRefCell({
       targetItem,
       refRowKey: 'SALARY_AVERAGE_EXPENSES',
@@ -2007,7 +1303,6 @@ const useFormula = () => {
       }).value
     )
   }
-
   const getSalaryAverageExpensesSale = ({ targetItem }) => {
     const cross = getOBCrossViewRefCell({
       targetItem,
@@ -2023,12 +1318,10 @@ const useFormula = () => {
       getMMManufactureSale()
     )
   }
-
   const getBillableRateTotal = () => {
-    if (isOBOrTotal()) return sumCrossViewTotals('REFERENCE', 'BILLABLE_RATE')
+    if (viewMode === 'Total') return sumCrossViewTotals('REFERENCE', 'BILLABLE_RATE')
     return decimalDividePercent(getMMBillSale(), getMMManufactureTotal())
   }
-
   const getBillableRateDU = ({ targetItem }) => {
     const cross = getOBCrossViewRefCell({
       targetItem,
@@ -2050,7 +1343,6 @@ const useFormula = () => {
       }).value
     )
   }
-
   const getBillableRateSale = ({ targetItem }) => {
     const cross = getOBCrossViewRefCell({
       targetItem,
@@ -2059,20 +1351,16 @@ const useFormula = () => {
     if (cross !== undefined) return cross
     return decimalDividePercent(getMMBillSale(), getMMManufactureSale())
   }
-
   const getProductivityTotal = () => {
-    if (isOBOrTotal()) return sumCrossViewTotals('REFERENCE', 'PRODUCTIVITY')
+    if (viewMode === 'Total') return sumCrossViewTotals('REFERENCE', 'PRODUCTIVITY')
     return decimalDivide(getSoftwareProductionTotal(), getMMManufactureTotal())
   }
-
   const getProductivityDU = ({ targetItem }) => {
-    if (!isOB()) {
-      const cross = getOBCrossViewRefCell({
-        targetItem,
-        refRowKey: 'PRODUCTIVITY',
-      })
-      if (cross !== undefined) return cross
-    }
+    const cross = getOBCrossViewRefCell({
+      targetItem,
+      refRowKey: 'PRODUCTIVITY',
+    })
+    if (cross !== undefined) return cross
     return decimalDivide(
       getSoftwareProductionDU({
         targetItem: getItem({
@@ -2090,23 +1378,8 @@ const useFormula = () => {
       }).value
     )
   }
-
   const getEfficiencyTotal = ({ targetItem }) => {
-    if (isOB()) {
-      return getSum(
-        ...LOC_TYPES.map(locType => {
-          const dm = getOBLocTypeDMTotal(locType)
-          const mm = getCrossViewCell(
-            locType,
-            'MAN_MONTH',
-            'MM_PRODUCTION',
-            'TOTAL'
-          )
-          return decimalDivide(dm, mm)
-        })
-      )
-    }
-    if (isOBOrTotal()) return sumCrossViewTotals('REFERENCE', 'EFFICIENCY')
+    if (viewMode === 'Total') return sumCrossViewTotals('REFERENCE', 'EFFICIENCY')
     const dmItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
@@ -2114,19 +1387,18 @@ const useFormula = () => {
     })
     if (!dmItem || !dmItem.sectionKey) return undefined
     return decimalDivide(
-      getDirectMargin({ targetItem: dmItem }),
+      getDirectMargin({
+        targetItem: dmItem,
+      }),
       getMMManufactureTotal()
     )
   }
-
   const getEfficiencyDU = ({ targetItem }) => {
-    if (!isOB()) {
-      const cross = getOBCrossViewRefCell({
-        targetItem,
-        refRowKey: 'EFFICIENCY',
-      })
-      if (cross !== undefined) return cross
-    }
+    const cross = getOBCrossViewRefCell({
+      targetItem,
+      refRowKey: 'EFFICIENCY',
+    })
+    if (cross !== undefined) return cross
     const dmItem = getItem({
       sectionKey: 'MARGIN',
       rowKey: 'DIRECT_MARGIN',
@@ -2135,7 +1407,9 @@ const useFormula = () => {
     })
     if (!dmItem || !dmItem.sectionKey) return undefined
     return decimalDivide(
-      getDirectMargin({ targetItem: dmItem }),
+      getDirectMargin({
+        targetItem: dmItem,
+      }),
       getItem({
         sectionKey: 'MAN_MONTH',
         rowKey: 'MM_PRODUCTION',
@@ -2147,13 +1421,13 @@ const useFormula = () => {
   const getIncentivesRateCell = makeRefCrossViewFn('INCENTIVES_RATE')
   const getProductionMMBonusCell = makeRefCrossViewFn('PRODUCTION_MM_BONUS')
   const getBillRateNormCell = makeRefCrossViewFn('BILL_RATE_NORM')
-
-  const hideInOB = fn => args => (isOB() ? undefined : fn(args))
-  const obOnly = fn => args => (isOB() ? fn(args) : null)
-
+  const hideInOB = fn => args => fn(args)
+  const obOnly = fn => args => null
   const FORMULA_CONFIG = {
     MAN_MONTH: {
-      UNIT_PRICE: { total: getUnitPriceTotal },
+      UNIT_PRICE: {
+        total: getUnitPriceTotal,
+      },
       MM_PRODUCTION: {
         total: getMMManufactureTotal,
         sale: getMMManufactureSale,
@@ -2163,7 +1437,9 @@ const useFormula = () => {
         sale: getMMBillSale,
         delivery_unit: getMMBillDU,
       },
-      SERVICE: { total: getTotalMMBilService },
+      SERVICE: {
+        total: getTotalMMBilService,
+      },
     },
     REVENUES: {
       REVENUES_TOTAL: {
@@ -2183,10 +1459,21 @@ const useFormula = () => {
         sale: getDeductionSale,
         internal: getOBSumDUInternal,
       },
-      ONSITE_FEE: { total: getOBFeeTotal, internal: getOBSumDUInternal },
-      EQUIPMENT_FEE: { total: getOBFeeTotal, internal: getOBSumDUInternal },
-      OTHER_FEE: { total: getOBFeeTotal, internal: getOBSumDUInternal },
-      SERVICE: { total: getSumAllValues },
+      ONSITE_FEE: {
+        total: getOBFeeTotal,
+        internal: getOBSumDUInternal,
+      },
+      EQUIPMENT_FEE: {
+        total: getOBFeeTotal,
+        internal: getOBSumDUInternal,
+      },
+      OTHER_FEE: {
+        total: getOBFeeTotal,
+        internal: getOBSumDUInternal,
+      },
+      SERVICE: {
+        total: getSumAllValues,
+      },
     },
     COST_PRICE: {
       COST_PRICE_TOTAL: {
@@ -2282,7 +1569,10 @@ const useFormula = () => {
         internal: getOBTaxInternal,
         delivery_unit: getOBTaxDU,
       },
-      PIC_CIT: { internal: getOBSumDUInternal },
+      PIC_CIT: {
+        total: getPICCITTotal,
+        internal: getOBSumDUInternal,
+      },
     },
     MARGIN: {
       DIRECT_MARGIN: {
@@ -2367,6 +1657,7 @@ const useFormula = () => {
         delivery_unit: getEfficiencyDU,
       },
       INCENTIVES_RATE: {
+        total: getIncentivesRateCell,
         sale: hideInOB(getIncentivesRateCell),
         internal: obOnly(() => {
           const sum = sumOBRefDU('INCENTIVES_RATE', getIncentivesRateCell)
@@ -2375,6 +1666,7 @@ const useFormula = () => {
         delivery_unit: getIncentivesRateCell,
       },
       PRODUCTION_MM_BONUS: {
+        total: getProductionMMBonusCell,
         sale: hideInOB(getProductionMMBonusCell),
         internal: obOnly(() => {
           const sum = sumOBRefDU(
@@ -2395,22 +1687,18 @@ const useFormula = () => {
       },
     },
   }
-
   const isSpecialSectionFormula = secKey =>
     secKey in FORMULA_CONFIG && secKey !== 'MAN_MONTH'
-
   const getFormula = ({ item, columnKey, sectionKey, rowKey, isService }) => {
     let colKey
     if (isDU(columnKey)) colKey = 'delivery_unit'
     else if (isSaleCol(columnKey)) colKey = 'sale'
     else colKey = columnKey.toLowerCase()
     const effectiveRowKey = isService ? 'SERVICE' : rowKey
-
     const rowConfig =
       FORMULA_CONFIG[sectionKey] && FORMULA_CONFIG[sectionKey][effectiveRowKey]
     const fn = rowConfig && rowConfig[colKey]
     if (!fn) return undefined
-
     const curSectionConfig = sectionConfig[sectionKey] || {}
     return fn({
       targetItem: item,
@@ -2420,8 +1708,9 @@ const useFormula = () => {
       serviceRowKey: curSectionConfig.newRowKey || '',
     })
   }
-
-  return { getFormula, isSpecialSectionFormula }
+  return {
+    getFormula,
+    isSpecialSectionFormula,
+  }
 }
-
 export default useFormula

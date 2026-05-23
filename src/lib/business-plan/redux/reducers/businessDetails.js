@@ -316,10 +316,9 @@ const businessDetailsSlice = createSlice({
         )
 
       if (onsiteRaw && offshoreRaw) {
-        const totalRaw = buildDerivedRawData(onsiteRaw, offshoreRaw, 'Total')
-        const obRaw = buildDerivedRawData(onsiteRaw, offshoreRaw, 'OB')
-        viewModeDataMap['Total'] = buildViewModeEntry(totalRaw, 'Total')
-        viewModeDataMap['OB'] = buildViewModeEntry(obRaw, 'OB')
+        const derivedRaw = buildDerivedRawData(onsiteRaw, offshoreRaw)
+        viewModeDataMap['Total'] = buildViewModeEntry(derivedRaw, 'Total')
+        viewModeDataMap['OB'] = buildViewModeEntry(derivedRaw, 'OB')
       }
 
       state.viewModeDataMap = viewModeDataMap

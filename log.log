@@ -1,4 +1,4 @@
-﻿ Mock permissions initialized: 2 entries
+﻿✅ Mock permissions initialized: 2 entries
 business-plan-detail:200 
 business-plan-detail:201 ========================================
 business-plan-detail:202 🎭 MOCK SYSTEM INITIALIZED
@@ -9,94 +9,421 @@ business-plan-detail:206 Permissions: 2
 business-plan-detail:207 Mode: Standalone Mock
 business-plan-detail:208 ========================================
 business-plan-detail:209 
-bootstrap:851 [HMR] Waiting for update signal from WDS...
-DeliveryPlanReference.js:192 Uncaught Error: Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: E:\SourceCode\CMC\ReactJs\gantt-chart\src\lib\business-plan\BusinessPlanDetail\BusinessPlanDelivery\OtherExpensesTable.js: Unexpected token, expected "," (686:8) (at DeliveryPlanReference.js:192:1)
+log.js:24 [HMR] Waiting for update signal from WDS...
+index.js:1 Warning: Legacy context API has been detected within a strict-mode tree.
 
-[0m [90m 684 |[39m         status[33m,[39m
- [90m 685 |[39m         toggleExpandAll
-[31m[1m>[22m[39m[90m 686 |[39m         calculatedMonthWidth[33m,[39m
- [90m     |[39m         [31m[1m^[22m[39m
- [90m 687 |[39m       ]
- [90m 688 |[39m     )
- [90m 689 |[39m[0m
-    at constructor (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:367:19)
-    at FlowParserMixin.raise (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6624:19)
-    at FlowParserMixin.unexpected (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6644:16)
-    at FlowParserMixin.expect (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6924:12)
-    at FlowParserMixin.parseExprList (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:12215:14)
-    at FlowParserMixin.parseArrayLike (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:12131:26)
-    at FlowParserMixin.parseArrayLike (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:3260:24)
-    at FlowParserMixin.parseExprAtom (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11399:23)
-    at FlowParserMixin.parseExprAtom (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:4793:20)
-    at FlowParserMixin.parseExprSubscripts (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11145:23)
-    at constructor (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:367:19)
-    at FlowParserMixin.raise (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6624:19)
-    at FlowParserMixin.unexpected (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6644:16)
-    at FlowParserMixin.expect (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:6924:12)
-    at FlowParserMixin.parseExprList (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:12215:14)
-    at FlowParserMixin.parseArrayLike (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:12131:26)
-    at FlowParserMixin.parseArrayLike (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:3260:24)
-    at FlowParserMixin.parseExprAtom (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11399:23)
-    at FlowParserMixin.parseExprAtom (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:4793:20)
-    at FlowParserMixin.parseExprSubscripts (E:\SourceCode\CMC\ReactJs\gantt-chart\node_modules\@babel\parser\lib\index.js:11145:23)
-    at ./src/lib/business-plan/BusinessPlanDetail/BusinessPlanDelivery/OtherExpensesTable.js (DeliveryPlanReference.js:192:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at Module.<anonymous> (constants.js:155:1)
-    at ./src/lib/business-plan/BusinessPlanDetail/BusinessPlanDelivery/index.jsx (index.jsx:595:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at Module.<anonymous> (constant.js:73:1)
-    at ./src/lib/business-plan/BusinessPlanDetail/index.jsx (index.jsx:772:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at Module.<anonymous> (Regex.js:2:1)
-    at ./src/pages/BusinessPlanDetailPage.jsx (BusinessPlanDetailPage.jsx:22:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at Module.<anonymous> (App.css:82:1)
-    at ./src/App.js (App.js:62:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at Module.<anonymous> (index.css:82:1)
-    at ./src/index.js (index.js:16:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at fn (bootstrap:150:1)
-    at 1 (mockBusinessPlanData.js:3691:1)
-    at __webpack_require__ (bootstrap:851:1)
-    at checkDeferredModules (bootstrap:45:1)
-    at Array.webpackJsonpCallback [as push] (bootstrap:32:1)
-    at main.chunk.js:1:79
-(anonymous) @ DeliveryPlanReference.js:192
-__webpack_require__ @ bootstrap:851
-(anonymous) @ bootstrap:150
-(anonymous) @ constants.js:155
-(anonymous) @ index.jsx:595
-__webpack_require__ @ bootstrap:851
-(anonymous) @ bootstrap:150
-(anonymous) @ constant.js:73
-(anonymous) @ index.jsx:772
-__webpack_require__ @ bootstrap:851
-(anonymous) @ bootstrap:150
-(anonymous) @ Regex.js:2
-(anonymous) @ BusinessPlanDetailPage.jsx:22
-__webpack_require__ @ bootstrap:851
-(anonymous) @ bootstrap:150
-(anonymous) @ App.css:82
-(anonymous) @ App.js:62
-__webpack_require__ @ bootstrap:851
-(anonymous) @ bootstrap:150
-(anonymous) @ index.css:82
-(anonymous) @ index.js:16
-__webpack_require__ @ bootstrap:851
-(anonymous) @ bootstrap:150
-(anonymous) @ mockBusinessPlanData.js:3691
-__webpack_require__ @ bootstrap:851
-checkDeferredModules @ bootstrap:45
-webpackJsonpCallback @ bootstrap:32
-(anonymous) @ main.chunk.js:1Understand this error
-VM86:2 Uncaught ReferenceError: process is not defined
+The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
+
+Please update the following components: BaseTable, BodyTable, ColGroup, Connect(BaseTable), Connect(ExpandableRow), Connect(ExpandableTable), Connect(MenuItem), Connect(SubPopupMenu), Connect(TableHeaderRow), Connect(TableRow), HeadTable, LocaleProvider, LocaleReceiver, Provider, Table, TableHeader, Trigger
+
+Learn more about this warning here: https://fb.me/react-legacy-context
+    in Trigger (created by SelectTrigger)
+    in SelectTrigger (created by Select)
+    in Select (created by Context.Consumer)
+    in Select (at AppHeader.jsx:27)
+    in div (at AppHeader.jsx:26)
+    in header (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Header (at AppHeader.jsx:10)
+    in AppHeader (at App.js:23)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: Using UNSAFE_componentWillReceiveProps in strict mode is not recommended and may indicate bugs in your code. See https://fb.me/react-unsafe-component-lifecycles for details.
+
+* Move data fetching code or side effects to componentDidUpdate.
+* If you're updating state whenever props change, refactor your code to use memoization techniques or move it to static getDerivedStateFromProps. Learn more at: https://fb.me/react-derived-state
+
+Please update the following components: Animate, Form(WrappedComponent)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of AnimateChild which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in sup (created by Context.Consumer)
+    in ScrollNumber (created by Context.Consumer)
+    in AnimateChild (created by Animate)
+    in Animate (created by Context.Consumer)
+    in span (created by Context.Consumer)
+    in Badge (at AppHeader.jsx:37)
+    in div (at AppHeader.jsx:26)
+    in header (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Header (at AppHeader.jsx:10)
+    in AppHeader (at App.js:23)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Wave which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in button (created by Context.Consumer)
+    in Wave (created by Context.Consumer)
+    in Button (at BusinessPlanVersion/index.jsx:313)
+    in Trigger (created by Dropdown)
+    in Dropdown (created by Context.Consumer)
+    in Dropdown (at BusinessPlanVersion/index.jsx:312)
+    in div (at BusinessPlanVersion/index.jsx:310)
+    in div (at BusinessPlanVersion/index.jsx:297)
+    in div (at BusinessPlanVersion/index.jsx:296)
+    in BusinessPlanVersion (created by Context.Consumer)
+    in withRouter(BusinessPlanVersion) (at BusinessPlanDetail/index.jsx:565)
+    in div (at BusinessPlanDetail/index.jsx:561)
+    in div (at BusinessPlanDetail/index.jsx:560)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:43)
+    in Switch (at App.js:35)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:27)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:26)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of TableRow which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in tr (created by BodyRow)
+    in BodyRow (created by TableRow)
+    in TableRow (created by Connect(TableRow))
+    in Connect(TableRow) (created by ExpandableRow)
+    in ExpandableRow (created by Connect(ExpandableRow))
+    in Connect(ExpandableRow) (created by BaseTable)
+    in tbody (created by BaseTable)
+    in table (created by BaseTable)
+    in BaseTable (created by Connect(BaseTable))
+    in Connect(BaseTable) (created by BodyTable)
+    in div (created by BodyTable)
+    in BodyTable (created by ExpandableTable)
+    in div (created by ExpandableTable)
+    in div (created by ExpandableTable)
+    in ExpandableTable (created by Connect(ExpandableTable))
+    in Connect(ExpandableTable) (created by Table)
+    in Provider (created by Table)
+    in Table (created by LocaleReceiver)
+    in LocaleReceiver (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Spin (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Table (created by withStore(Table))
+    in withStore(Table) (at KpiBonusBodyItem.jsx:94)
+    in Unknown (created by Form(WrappedComponent))
+    in Form(WrappedComponent) (at BusinessPlanGeneralInformation/index.jsx:631)
+    in div (at BusinessPlanGeneralInformation/index.jsx:630)
+    in div (at BusinessPlanGeneralInformation/index.jsx:606)
+    in form (created by Context.Consumer)
+    in Form (at BusinessPlanGeneralInformation/index.jsx:425)
+    in div (at BusinessPlanGeneralInformation/index.jsx:402)
+    in BusinessPlanGeneralInformation (at BusinessPlanDetail/index.jsx:590)
+    in div (created by PanelContent)
+    in div (created by PanelContent)
+    in PanelContent (created by CollapsePanel)
+    in AnimateChild (created by Animate)
+    in Animate (created by CollapsePanel)
+    in div (created by CollapsePanel)
+    in CollapsePanel (created by Context.Consumer)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:585)
+    in div (created by Collapse)
+    in Collapse (created by Context.Consumer)
+    in Collapse (created by Styled(Collapse))
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:581)
+    in div (at BusinessPlanDetail/index.jsx:561)
+    in div (at BusinessPlanDetail/index.jsx:560)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:43)
+    in Switch (at App.js:35)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:27)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:26)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of SelectTrigger which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in div (created by Select)
+    in Trigger (created by SelectTrigger)
+    in SelectTrigger (created by Select)
+    in Select (created by Context.Consumer)
+    in Select (at AppHeader.jsx:27)
+    in div (at AppHeader.jsx:26)
+    in header (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Header (at AppHeader.jsx:10)
+    in AppHeader (at App.js:23)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: Legacy context API has been detected within a strict-mode tree.
+
+The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.
+
+Please update the following components: Radio, RadioButton, RadioGroup
+
+Learn more about this warning here: https://fb.me/react-legacy-context
+    in RadioGroup (created by Styled(RadioGroup))
+    in Styled(RadioGroup) (at BusinessPlanTabWrapper/index.jsx:65)
+    in div (created by styled.div)
+    in styled.div (at BusinessPlanTabWrapper/index.jsx:64)
+    in div (created by Context.Consumer)
+    in TabPane (at BusinessPlanTabWrapper/index.jsx:63)
+    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:602)
+    in div (created by TabContent)
+    in TabContent (created by Tabs)
+    in div (created by Tabs)
+    in Tabs (created by Context.Consumer)
+    in Tabs (at BusinessPlanDetail/index.jsx:596)
+    in div (at BusinessPlanDetail/index.jsx:595)
+    in div (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Spin (at BusinessPlanDetail/index.jsx:594)
+    in div (created by PanelContent)
+    in div (created by PanelContent)
+    in PanelContent (created by CollapsePanel)
+    in AnimateChild (created by Animate)
+    in Animate (created by CollapsePanel)
+    in div (created by CollapsePanel)
+    in CollapsePanel (created by Context.Consumer)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:593)
+    in div (created by Collapse)
+    in Collapse (created by Context.Consumer)
+    in Collapse (created by Styled(Collapse))
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:581)
+    in div (at BusinessPlanDetail/index.jsx:561)
+    in div (at BusinessPlanDetail/index.jsx:560)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:43)
+    in Switch (at App.js:35)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:27)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:26)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+index.js:1 Warning: findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Tabs which is inside StrictMode. Instead, add a ref directly to the element you want to reference. Learn more about using refs safely here: https://fb.me/react-strict-mode-find-node
+    in div (created by Tabs)
+    in Tabs (created by Context.Consumer)
+    in Tabs (at BusinessPlanDetail/index.jsx:596)
+    in div (at BusinessPlanDetail/index.jsx:595)
+    in div (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Spin (at BusinessPlanDetail/index.jsx:594)
+    in div (created by PanelContent)
+    in div (created by PanelContent)
+    in PanelContent (created by CollapsePanel)
+    in AnimateChild (created by Animate)
+    in Animate (created by CollapsePanel)
+    in div (created by CollapsePanel)
+    in CollapsePanel (created by Context.Consumer)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:593)
+    in div (created by Collapse)
+    in Collapse (created by Context.Consumer)
+    in Collapse (created by Styled(Collapse))
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:581)
+    in div (at BusinessPlanDetail/index.jsx:561)
+    in div (at BusinessPlanDetail/index.jsx:560)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:43)
+    in Switch (at App.js:35)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:27)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:26)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+(anonymous) @ index.js:1Understand this error
+useFormula.js:764 Uncaught ReferenceError: getOBCrossViewCell is not defined
+    at getMarginRate (useFormula.js:764:1)
+    at getDirectMarginRate (useFormula.js:795:1)
+    at getFormula (useFormula.js:1358:1)
+    at getCellDisplayValue (index.jsx:625:1)
+    at index.jsx:945:1
+    at Array.map (<anonymous>)
+    at index.jsx:928:1
+    at Array.map (<anonymous>)
+    at renderTableBody (index.jsx:724:1)
+    at BusinessPlanFormSection (index.jsx:1282:1)
+    at renderWithHooks (react-dom.development.js:14803:1)
+    at updateFunctionComponent (react-dom.development.js:17034:1)
+    at beginWork (react-dom.development.js:18610:1)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
+    at invokeGuardedCallback (react-dom.development.js:292:1)
+    at beginWork$1 (react-dom.development.js:23203:1)
+    at performUnitOfWork (react-dom.development.js:22154:1)
+    at workLoopSync (react-dom.development.js:22130:1)
+    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
+    at react-dom.development.js:11089:1
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
+    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
+    at batchedUpdates$1 (react-dom.development.js:21862:1)
+    at Object.notify (Subscription.js:16:1)
+    at Object.notifyNestedSubs (Subscription.js:101:1)
+    at handleChangeWrapper (Subscription.js:106:1)
+    at dispatch (redux.js:297:1)
+    at index.js:20:1
+    at immutableStateInvariantMiddleware.ts:266:1
+    at actionCreatorInvariantMiddleware.ts:32:1
+    at dispatch (redux.js:691:1)
+    at createAsyncThunk.ts:682:1
+    at step (RefreshUtils.js:174:1)
+    at Object.next (RefreshUtils.js:174:1)
+    at fulfilled (RefreshUtils.js:174:1)Understand this error
+index.js:1 The above error occurred in the <BusinessPlanFormSection> component:
+    in BusinessPlanFormSection (at BusinessPlanDetail/index.jsx:626)
+    in div (created by Context.Consumer)
+    in TabPane (at BusinessPlanTabWrapper/index.jsx:63)
+    in BusinessPlanTabWrapper (at BusinessPlanDetail/index.jsx:602)
+    in div (created by TabContent)
+    in TabContent (created by Tabs)
+    in div (created by Tabs)
+    in Tabs (created by Context.Consumer)
+    in Tabs (at BusinessPlanDetail/index.jsx:596)
+    in div (at BusinessPlanDetail/index.jsx:595)
+    in div (created by Context.Consumer)
+    in div (created by Context.Consumer)
+    in Spin (at BusinessPlanDetail/index.jsx:594)
+    in div (created by PanelContent)
+    in div (created by PanelContent)
+    in PanelContent (created by CollapsePanel)
+    in AnimateChild (created by Animate)
+    in Animate (created by CollapsePanel)
+    in div (created by CollapsePanel)
+    in CollapsePanel (created by Context.Consumer)
+    in CollapsePanel (at BusinessPlanDetail/index.jsx:593)
+    in div (created by Collapse)
+    in Collapse (created by Context.Consumer)
+    in Collapse (created by Styled(Collapse))
+    in Styled(Collapse) (at BusinessPlanDetail/index.jsx:581)
+    in div (at BusinessPlanDetail/index.jsx:561)
+    in div (at BusinessPlanDetail/index.jsx:560)
+    in BusinessPlanDetail (at BusinessPlanDetailPage.jsx:18)
+    in BusinessPlanDetailPage (created by Context.Consumer)
+    in Route (at App.js:43)
+    in Switch (at App.js:35)
+    in main (created by Basic)
+    in Basic (created by Context.Consumer)
+    in Content (at App.js:27)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:26)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:24)
+    in section (created by BasicLayout)
+    in BasicLayout (created by Context.Consumer)
+    in Layout (at App.js:22)
+    in Router (created by BrowserRouter)
+    in BrowserRouter (at App.js:21)
+    in App (at src/index.js:14)
+    in Provider (at src/index.js:13)
+    in StrictMode (at src/index.js:12)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://fb.me/react-error-boundaries to learn more about error boundaries.
+(anonymous) @ index.js:1Understand this error
+RefreshUtils.js:174 Uncaught (in promise) ReferenceError: getOBCrossViewCell is not defined
+    at getMarginRate (useFormula.js:764:1)
+    at getDirectMarginRate (useFormula.js:795:1)
+    at getFormula (useFormula.js:1358:1)
+    at getCellDisplayValue (index.jsx:625:1)
+    at index.jsx:945:1
+    at Array.map (<anonymous>)
+    at index.jsx:928:1
+    at Array.map (<anonymous>)
+    at renderTableBody (index.jsx:724:1)
+    at BusinessPlanFormSection (index.jsx:1282:1)
+    at renderWithHooks (react-dom.development.js:14803:1)
+    at updateFunctionComponent (react-dom.development.js:17034:1)
+    at beginWork (react-dom.development.js:18610:1)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:188:1)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js:237:1)
+    at invokeGuardedCallback (react-dom.development.js:292:1)
+    at beginWork$1 (react-dom.development.js:23203:1)
+    at performUnitOfWork (react-dom.development.js:22154:1)
+    at workLoopSync (react-dom.development.js:22130:1)
+    at performSyncWorkOnRoot (react-dom.development.js:21756:1)
+    at react-dom.development.js:11089:1
+    at unstable_runWithPriority (scheduler.development.js:653:1)
+    at runWithPriority$1 (react-dom.development.js:11039:1)
+    at flushSyncCallbackQueueImpl (react-dom.development.js:11084:1)
+    at flushSyncCallbackQueue (react-dom.development.js:11072:1)
+    at batchedUpdates$1 (react-dom.development.js:21862:1)
+    at Object.notify (Subscription.js:16:1)
+    at Object.notifyNestedSubs (Subscription.js:101:1)
+    at handleChangeWrapper (Subscription.js:106:1)
+    at dispatch (redux.js:297:1)
+    at index.js:20:1
+    at immutableStateInvariantMiddleware.ts:266:1
+    at actionCreatorInvariantMiddleware.ts:32:1
+    at dispatch (redux.js:691:1)
+    at createAsyncThunk.ts:682:1
+    at step (RefreshUtils.js:174:1)
+    at Object.next (RefreshUtils.js:174:1)
+    at fulfilled (RefreshUtils.js:174:1)Understand this error
+VM150:2 Uncaught ReferenceError: process is not defined
     at 4043 (<anonymous>:2:13175)
     at r (<anonymous>:2:306606)
     at 8048 (<anonymous>:2:9504)
@@ -107,46 +434,3 @@ VM86:2 Uncaught ReferenceError: process is not defined
     at <anonymous>:2:324254
     at <anonymous>:2:324258
     at e.onload (index.js:1:1)
-4043 @ VM86:2
-r @ VM86:2
-8048 @ VM86:2
-r @ VM86:2
-8641 @ VM86:2
-r @ VM86:2
-(anonymous) @ VM86:2
-(anonymous) @ VM86:2
-(anonymous) @ VM86:2
-(anonymous) @ index.js:1
-be @ index.js:1
-de @ index.js:1
-handleErrors @ webpackHotDevClient.js:169
-(anonymous) @ webpackHotDevClient.js:213
-PendingScript
-(anonymous) @ index.js:1
-be @ index.js:1
-de @ index.js:1
-handleErrors @ webpackHotDevClient.js:169
-(anonymous) @ webpackHotDevClient.js:213Understand this error
-index.js:1 ./src/lib/business-plan/BusinessPlanDetail/BusinessPlanDelivery/OtherExpensesTable.js
-SyntaxError: E:\SourceCode\CMC\ReactJs\gantt-chart\src\lib\business-plan\BusinessPlanDetail\BusinessPlanDelivery\OtherExpensesTable.js: Unexpected token, expected "," (686:8)
-
-  684 |         status,
-  685 |         toggleExpandAll
-> 686 |         calculatedMonthWidth,
-      |         ^
-  687 |       ]
-  688 |     )
-  689 |
-(anonymous) @ index.js:1
-handleErrors @ webpackHotDevClient.js:174
-(anonymous) @ webpackHotDevClient.js:213Understand this error
-index.js:1 src\lib\business-plan\BusinessPlanDetail\BusinessPlanDelivery\OtherExpensesTable.js
-  Line 686:9:  Parsing error: Unexpected token, expected ","
-
-  684 |         status,
-  685 |         toggleExpandAll
-> 686 |         calculatedMonthWidth,
-      |         ^
-  687 |       ]
-  688 |     )
-  689 |
