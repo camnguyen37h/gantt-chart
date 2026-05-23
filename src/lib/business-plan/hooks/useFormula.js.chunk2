@@ -21,13 +21,6 @@ export const COLS = {
   INTERNAL: 'INTERNAL',
 }
 
-export const COL_TYPES = {
-  DELIVERY_UNIT: 'delivery_unit',
-  SALE: 'sale',
-  ONSITE: 'onsite',
-  OFFSHORE: 'offshore',
-}
-
 export const SECTIONS = {
   MAN_MONTH: 'MAN_MONTH',
   REVENUES: 'REVENUES',
@@ -114,9 +107,13 @@ const useFormula = () => {
   const getOBLocationTypeByDisplayKey = displayKey => {
     const meta = getColumnMetaByDisplayKey(displayKey)
     if (!meta || !meta.colCategory) return null
-    const cat = meta.colCategory.toLowerCase()
-    if (cat.includes(COL_TYPES.ONSITE)) return LOCATIONS.ONSITE
-    if (cat.includes(COL_TYPES.OFFSHORE)) return LOCATIONS.OFFSHORE
+    if (meta.colCategory === 'bu_onsite' || meta.colCategory === 'du_onsite')
+      return LOCATIONS.ONSITE
+    if (
+      meta.colCategory === 'bu_offshore' ||
+      meta.colCategory === 'du_offshore'
+    )
+      return LOCATIONS.OFFSHORE
     return null
   }
   const getSaleLocType = compareKey => {
@@ -125,8 +122,8 @@ const useFormula = () => {
   }
   const isOBOrTotal = () => viewMode === VIEWS.OB || viewMode === VIEWS.TOTAL
 
-  const isDU = colKey => colKey.toLowerCase().includes(COL_TYPES.DELIVERY_UNIT)
-  const isSaleCol = colKey => colKey.toLowerCase().includes(COL_TYPES.SALE)
+  const isDU = colKey => colKey.toLowerCase().includes('delivery_unit')
+  const isSaleCol = colKey => colKey.toLowerCase().includes('sale')
   const getSum = (...rest) => {
     if (rest.every(v => v === null || v === undefined)) return null
     return rest
@@ -186,7 +183,7 @@ const useFormula = () => {
     getSumItemValues({
       sectionKey,
       rowKey,
-      filterCallback: item => item.columnKey !== COLS.TOTAL,
+      filterCallback: item => item.columnKey.toLowerCase() !== 'total',
     })
   const getCrossViewCell = (locType, secKey, rowKey, colKey) => {
     const locData = viewModeDataMap[locType]
@@ -218,26 +215,43 @@ const useFormula = () => {
       if (!perLoc.some(v => v !== null)) return undefined
       return getSum(...perLoc)
     }
-    const locType = getOBLocationTypeByDisplayKey(
-      getDisplayColumnKey(targetItem)
-    )
     if (isSaleCol(colKey)) {
-      return locType ? getCrossViewCell(locType, secKey, rowKey, COLS.SALE) : null
+      const locType = getOBLocationTypeByDisplayKey(
+        getDisplayColumnKey(targetItem)
+      )
+      if (!locType) return null
+      return getCrossViewCell(locType, secKey, rowKey, COLS.SALE)
     }
     if (isDU(colKey)) {
-      return locType ? getCrossViewCell(locType, secKey, rowKey, colKey) : null
+      const locType = getOBLocationTypeByDisplayKey(
+        getDisplayColumnKey(targetItem)
+      )
+      if (!locType) return null
+      const locData = viewModeDataMap[locType]
+      if (!locData) return null
+      const section = locData.businessPlanItems[secKey]
+      if (!section) return null
+      const row = section.data[rowKey]
+      if (!row) return null
+      const cell = row.data.find(c => c.columnKey === colKey)
+      return cell ? (cell.value == null ? null : cell.value) : null
     }
-    for (const loc of LOC_TYPES) {
-      const cellVal = getCrossViewCell(loc, secKey, rowKey, colKey)
-      if (cellVal !== null) return cellVal
+    for (let i = 0; i < LOC_TYPES.length; i++) {
+      const locData = viewModeDataMap[LOC_TYPES[i]]
+      if (!locData) continue
+      const section = locData.businessPlanItems[secKey]
+      if (!section) continue
+      const row = section.data[rowKey]
+      if (!row) continue
+      const cell = row.data.find(c => c.columnKey === colKey)
+      if (cell) return cell.value == null ? null : cell.value
     }
     return null
   }
   const getTotalColumnAndSet = ({ targetItem, serviceRowKey }) => {
     const { sectionKey, columnKey, rowKey, compareKey: ck } = targetItem
     const values = []
-    const sectionData = businessPlanItems[sectionKey].data
-    for (const [key, rowData] of Object.entries(sectionData)) {
+    for (const [key, rowData] of Object.entries(businessPlanItems[sectionKey].data)) {
       if (key === rowKey) continue
       const data = rowData.data
       const childItem = ck
@@ -278,6 +292,7 @@ const useFormula = () => {
       values.push(cell ? cell.value : null)
     }
     return getSum(...values)
+  }
   }
   const getMMBillSale = () => {
     if (isOBOrTotal()) return sumCrossViewTotals(SECTIONS.MAN_MONTH, ROWS.MM_BILL)
@@ -909,6 +924,7 @@ const useFormula = () => {
   
 
   const getDirectMarginRate = ({ targetItem }) => {
+    const colKey = targetItem.columnKey
     return getMarginRate({
       targetItem,
       marginRowKey: ROWS.DIRECT_MARGIN,

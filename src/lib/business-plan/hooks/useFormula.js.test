@@ -21,13 +21,6 @@ export const COLS = {
   INTERNAL: 'INTERNAL',
 }
 
-export const COL_TYPES = {
-  DELIVERY_UNIT: 'delivery_unit',
-  SALE: 'sale',
-  ONSITE: 'onsite',
-  OFFSHORE: 'offshore',
-}
-
 export const SECTIONS = {
   MAN_MONTH: 'MAN_MONTH',
   REVENUES: 'REVENUES',
@@ -114,9 +107,13 @@ const useFormula = () => {
   const getOBLocationTypeByDisplayKey = displayKey => {
     const meta = getColumnMetaByDisplayKey(displayKey)
     if (!meta || !meta.colCategory) return null
-    const cat = meta.colCategory.toLowerCase()
-    if (cat.includes(COL_TYPES.ONSITE)) return LOCATIONS.ONSITE
-    if (cat.includes(COL_TYPES.OFFSHORE)) return LOCATIONS.OFFSHORE
+    if (meta.colCategory === 'bu_onsite' || meta.colCategory === 'du_onsite')
+      return LOCATIONS.ONSITE
+    if (
+      meta.colCategory === 'bu_offshore' ||
+      meta.colCategory === 'du_offshore'
+    )
+      return LOCATIONS.OFFSHORE
     return null
   }
   const getSaleLocType = compareKey => {
@@ -125,8 +122,8 @@ const useFormula = () => {
   }
   const isOBOrTotal = () => viewMode === VIEWS.OB || viewMode === VIEWS.TOTAL
 
-  const isDU = colKey => colKey.toLowerCase().includes(COL_TYPES.DELIVERY_UNIT)
-  const isSaleCol = colKey => colKey.toLowerCase().includes(COL_TYPES.SALE)
+  const isDU = colKey => colKey.toLowerCase().includes('delivery_unit')
+  const isSaleCol = colKey => colKey.toLowerCase().includes('sale')
   const getSum = (...rest) => {
     if (rest.every(v => v === null || v === undefined)) return null
     return rest
@@ -186,7 +183,7 @@ const useFormula = () => {
     getSumItemValues({
       sectionKey,
       rowKey,
-      filterCallback: item => item.columnKey !== COLS.TOTAL,
+      filterCallback: item => item.columnKey.toLowerCase() !== 'total',
     })
   const getCrossViewCell = (locType, secKey, rowKey, colKey) => {
     const locData = viewModeDataMap[locType]
@@ -218,36 +215,52 @@ const useFormula = () => {
       if (!perLoc.some(v => v !== null)) return undefined
       return getSum(...perLoc)
     }
-    const locType = getOBLocationTypeByDisplayKey(
-      getDisplayColumnKey(targetItem)
-    )
     if (isSaleCol(colKey)) {
-      return locType ? getCrossViewCell(locType, secKey, rowKey, COLS.SALE) : null
+      const locType = getOBLocationTypeByDisplayKey(
+        getDisplayColumnKey(targetItem)
+      )
+      if (!locType) return null
+      return getCrossViewCell(locType, secKey, rowKey, COLS.SALE)
     }
     if (isDU(colKey)) {
-      return locType ? getCrossViewCell(locType, secKey, rowKey, colKey) : null
+      const locType = getOBLocationTypeByDisplayKey(
+        getDisplayColumnKey(targetItem)
+      )
+      if (!locType) return null
+      const locData = viewModeDataMap[locType]
+      if (!locData) return null
+      const section = locData.businessPlanItems[secKey]
+      if (!section) return null
+      const row = section.data[rowKey]
+      if (!row) return null
+      const cell = row.data.find(c => c.columnKey === colKey)
+      return cell ? (cell.value == null ? null : cell.value) : null
     }
-    for (const loc of LOC_TYPES) {
-      const cellVal = getCrossViewCell(loc, secKey, rowKey, colKey)
-      if (cellVal !== null) return cellVal
+    for (let i = 0; i < LOC_TYPES.length; i++) {
+      const locData = viewModeDataMap[LOC_TYPES[i]]
+      if (!locData) continue
+      const section = locData.businessPlanItems[secKey]
+      if (!section) continue
+      const row = section.data[rowKey]
+      if (!row) continue
+      const cell = row.data.find(c => c.columnKey === colKey)
+      if (cell) return cell.value == null ? null : cell.value
     }
     return null
   }
   const getTotalColumnAndSet = ({ targetItem, serviceRowKey }) => {
     const { sectionKey, columnKey, rowKey, compareKey: ck } = targetItem
-    const values = []
-    const sectionData = businessPlanItems[sectionKey].data
-    for (const [key, rowData] of Object.entries(sectionData)) {
-      if (key === rowKey) continue
-      const data = rowData.data
+    const rowKeys = Object.keys(businessPlanItems[sectionKey].data).filter(
+      key => key !== rowKey
+    )
+    const values = rowKeys.map(key => {
+      const data = businessPlanItems[sectionKey].data[key].data
       const childItem = ck
-        ? data.find(item => item.compareKey === ck) || data.find(item => item.columnKey === columnKey)
+        ? data.find(item => item.compareKey === ck) ||
+          data.find(item => item.columnKey === columnKey)
         : data.find(item => item.columnKey === columnKey)
-      if (!childItem) {
-        values.push(0)
-        continue
-      }
-      const isService = key.startsWith(`${serviceRowKey}_`)
+      if (!childItem) return 0
+      const isService = key.match(new RegExp(`${serviceRowKey}_\\d+`))
       const result = getFormula({
         item: childItem,
         columnKey,
@@ -255,12 +268,16 @@ const useFormula = () => {
         sectionKey,
         isService,
       })
-      values.push(result !== undefined ? result : childItem.value)
-    }
+      return result !== undefined ? result : childItem.value
+    })
     return getSum(...values)
   }
-  
-  
+  const (() => undefined) = ({ sectionKey, rowKey }) => {
+    return undefined
+  }
+  const (() => undefined) = ({ sectionKey, rowKey }) => {
+    return undefined
+  }
   const getUnitPriceTotal = () =>
     getItem({
       sectionKey: SECTIONS.MAN_MONTH,
@@ -268,16 +285,21 @@ const useFormula = () => {
       columnKey: COLS.SALE,
     }).value
   const getMMBillDU = ({ targetItem }) => {
-    const values = []
-    for (const [key, rowData] of Object.entries(businessPlanItems.MAN_MONTH.data)) {
-      if (!key.startsWith('MM_BILL_')) continue
-      const data = rowData.data
-      const cell = targetItem.compareKey
-        ? data.find(item => item.compareKey === targetItem.compareKey)
-        : data.find(item => isDU(item.columnKey) && item.columnKey === targetItem.columnKey)
-      values.push(cell ? cell.value : null)
-    }
-    return getSum(...values)
+    const serviceKeys = Object.keys(businessPlanItems.MAN_MONTH.data).filter(
+      key => key.match(/MM_BILL_\d+/)
+    )
+    return getSum(
+      ...serviceKeys.map(key => {
+        const data = businessPlanItems.MAN_MONTH.data[key].data
+        const cell = targetItem.compareKey
+          ? data.find(item => item.compareKey === targetItem.compareKey)
+          : data.find(
+              item =>
+                isDU(item.columnKey) && item.columnKey === targetItem.columnKey
+            )
+        return cell ? cell.value : null
+      })
+    )
   }
   const getMMBillSale = () => {
     if (isOBOrTotal()) return sumCrossViewTotals(SECTIONS.MAN_MONTH, ROWS.MM_BILL)
@@ -402,7 +424,9 @@ const useFormula = () => {
     const internal = getSoftwareProductionInternal()
     return internal ? -internal : null
   }
-  
+  const (() => undefined) = ({ targetItem }) => {
+    return undefined
+  }
   const getDUCostInternal = () => {
     return getSoftwareProductionInternal()
   }
@@ -465,7 +489,9 @@ const useFormula = () => {
       rowKey,
     })
   }
-  
+  const (() => undefined) = ({ targetItem, rowKey }) => {
+    return undefined
+  }
 
   const makeOBDeliveryTotal = ({ targetItem, sectionKey, rowKey }) => {
     if (viewMode === VIEWS.OB) {
@@ -575,7 +601,9 @@ const useFormula = () => {
       targetItem,
     })
   }
-  
+  const (() => undefined) = () => {
+    return undefined
+  }
   const getTaxExpensesTotal = ({ targetItem }) => {
     if (viewMode === VIEWS.OB) return sumCrossViewTotals(SECTIONS.TAX, ROWS.TAX_TOTAL)
     return getTotalTax({
@@ -622,8 +650,12 @@ const useFormula = () => {
     }
     return sumOBMarginDU(ROWS.ALLOCATION_OF_POOL_AND_UNBILLABLE, getAllocationOfPoolDU)
   }
-  
-  
+  const (() => undefined) = () => {
+    return undefined
+  }
+  const (() => undefined) = ({ targetItem, columnKey }) => {
+    return undefined
+  }
   const getAllocationOfPoolDU = ({ targetItem }) => {
     const directLabor = getItem({
       sectionKey: SECTIONS.DELIVERY_EXPENSES,
@@ -686,19 +718,17 @@ const useFormula = () => {
       taxFormula = getTaxExpensesTotal({ targetItem: colItems.tax })
     }
     const taxValue = taxFormula !== undefined ? taxFormula : colItems.tax.value
-    const costValue = getTotalColumnAndSet({
-      targetItem: colItems.cost,
-      serviceRowKey: sectionConfig[SECTIONS.COST_PRICE]?.newRowKey,
-    })
-    const sellingValue = getTotalColumnAndSet({
-      targetItem: colItems.selling,
-      serviceRowKey: sectionConfig[SECTIONS.SELLING_EXPENSES]?.newRowKey,
-    })
-    const deliveryValue = getTotalColumnAndSet({
-      targetItem: colItems.delivery,
-      serviceRowKey: sectionConfig[SECTIONS.DELIVERY_EXPENSES]?.newRowKey,
-    })
-    const expenseSum = getSum(costValue, sellingValue, deliveryValue, taxValue)
+    const expenseSum = getSum(
+      ...[colItems.cost, colItems.selling, colItems.delivery].map(item =>
+        getTotalColumnAndSet({
+          targetItem: item,
+          serviceRowKey:
+            sectionConfig[item.sectionKey] &&
+            sectionConfig[item.sectionKey].newRowKey,
+        })
+      ),
+      taxValue
+    )
     const revenuesValue = getTotalColumnAndSet({
       targetItem: colItems.revenues,
       serviceRowKey: sectionConfig.REVENUES.newRowKey,
@@ -909,6 +939,7 @@ const useFormula = () => {
   
 
   const getDirectMarginRate = ({ targetItem }) => {
+    const colKey = targetItem.columnKey
     return getMarginRate({
       targetItem,
       marginRowKey: ROWS.DIRECT_MARGIN,
@@ -1017,7 +1048,9 @@ const useFormula = () => {
       getMMManufactureTotal()
     )
   }
-  
+  const getDeliveryAverageExpensesInternal = () => {
+    return null
+  }
   const getDeliveryAverageExpensesSale = ({ targetItem }) => {
     const cross = getOBCrossViewRefCell({
       targetItem,
@@ -1059,7 +1092,9 @@ const useFormula = () => {
       getMMManufactureTotal()
     )
   }
-  
+  const getSalaryAverageExpensesInternal = () => {
+    return null
+  }
   const getSalaryAverageExpensesDU = ({ targetItem }) => {
     const cross = getOBCrossViewRefCell({
       targetItem,
@@ -1398,13 +1433,13 @@ const useFormula = () => {
       DELIVERY_AVERAGE_EXPENSES: {
         total: getDeliveryAverageExpensesTotal,
         sale: getDeliveryAverageExpensesSale,
-        internal: obOnly((() => null)),
+        internal: obOnly(getDeliveryAverageExpensesInternal),
         delivery_unit: getDeliveryAverageExpensesDU,
       },
       SALARY_AVERAGE_EXPENSES: {
         total: getSalaryAverageExpensesTotal,
         sale: getSalaryAverageExpensesSale,
-        internal: obOnly((() => null)),
+        internal: obOnly(getSalaryAverageExpensesInternal),
         delivery_unit: getSalaryAverageExpensesDU,
       },
       BILLABLE_RATE: {
